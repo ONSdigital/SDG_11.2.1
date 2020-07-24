@@ -1,8 +1,13 @@
 # Project: Analysis_SDG_11.2.1
 
-This is project to build a data pipeline to analyse data for the UN Sustainable Development Goal 11.2.1
+This is project to build a data pipeline to analyse data for the UN Sustainable Development Goal indicator 11.2.1, which is part of goal 11:
 
-## Description of 11.2
+> "Make cities and human settlements inclusive, safe, resilient and sustainable"
+
+By asessing geographical and census data with data on public transport access points (stops and stations), an assessment can be made about the degree of acessability individuals in the population have to public transport. 
+
+
+## Description of Target 11.2
 By 2030, provide access to safe, affordable, accessible and sustainable transport systems for all, improving road safety, notably by expanding public transport, with special attention to the needs of those in vulnerable situations, women, children, persons with disabilities and older persons 
 
 
@@ -19,6 +24,14 @@ The aims are:
     * assess the availability of other services across the UK
     * be used to assess the availability of services in other nations
 
+## Deliverables of the project
+
+1. Open source reuseable code which relies only on open source resources
+2. A new dataset with analysis of public transport availability for the UK population
+3. Three additional datasets with analysis of public transport availability disagregated by sex, age and disabilities
+
+
+# Running the script
 
 ## Requirements: 
 
@@ -56,11 +69,4 @@ Note: On on Linux Ubuntu/Mint 18.04 you may have to install rtree from apt inste
 
     (SDG_11.2.1) $ sudo apt install python3-rtree
 
-### Development Method
 
-1. get public transport location data - NAPTAN a) Clean it if necessary
-2. get population location data -  LSOA from ONS
-3. use Fiona to read location data
-4. limit to one or two locations, e.g. London and a more rural area
-5. draw Euclidean Buffers around LSOA polygon centre points
-6. find number of public transport stops in the polygon with “points in polygons” approach
