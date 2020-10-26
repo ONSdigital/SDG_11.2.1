@@ -49,7 +49,7 @@ The aims are:
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
 
-### Create an environment
+### Create an environment 
 
 Here creating an environment called "SDG_11.2.1" with the version of Python that this was developed in
 
