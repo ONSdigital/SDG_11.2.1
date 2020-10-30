@@ -1,5 +1,9 @@
 import pandas as pd
 import geopandas as gpd
+from shapely.geometry import Point, Polygon
+import requests
+import os
+import json
 
 def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ="EPSG:4326"):
     """Function to create a Geo-dataframe from a csv file.
