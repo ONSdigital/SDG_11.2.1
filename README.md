@@ -64,11 +64,31 @@ First go to the project directory
 Then activate the environment
 
     $ conda activate SDG_11.2.1
+    
+Or on Windows this would be
+
+   $ activate SDG_11.2.1
 
 Then you should see the environment name in brackets before the prompt, similar to:
 
     (SDG_11.2.1) $
-    
+
+Make sure you are using the correct Python interpreter by checking your Python path:
+
+In Linux:
+
+    $ which python
+
+And in Windows use the following command in cmd or Anaconda prompt:
+
+    $ where python
+
+Which should return something like:
+
+C:\Python36\envs\SDG_11.2.1\python.exe
+
+Showing your are using the Python from the virtual environment, not the base installation of Python. 
+
 ### Install the dependencies
 
 You should be in correct directory, where `requirements.txt` exists. Run:
