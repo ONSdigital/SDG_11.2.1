@@ -49,7 +49,7 @@ The aims are:
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
 
-### Create an environment
+### Create an environment 
 
 Here creating an environment called "SDG_11.2.1" with the version of Python that this was developed in
 
@@ -64,11 +64,31 @@ First go to the project directory
 Then activate the environment
 
     $ conda activate SDG_11.2.1
+    
+Or on Windows this would be
+
+   $ activate SDG_11.2.1
 
 Then you should see the environment name in brackets before the prompt, similar to:
 
     (SDG_11.2.1) $
-    
+
+Make sure you are using the correct Python interpreter by checking your Python path:
+
+In Linux:
+
+    $ which python
+
+And in Windows use the following command in cmd or Anaconda prompt:
+
+    $ where python
+
+Which should return something like:
+
+C:\Python36\envs\SDG_11.2.1\python.exe
+
+Showing your are using the Python from the virtual environment, not the base installation of Python. 
+
 ### Install the dependencies
 
 You should be in correct directory, where `requirements.txt` exists. Run:
