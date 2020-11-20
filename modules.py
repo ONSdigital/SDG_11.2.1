@@ -5,7 +5,7 @@ import requests
 import os
 import json
 
-def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ="EPSG:4326"):
+def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ='epsg:27700'):
     """Function to create a Geo-dataframe from a csv file.
         The process goes via Pandas
     
@@ -25,7 +25,7 @@ def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ="EPSG:4326"):
     geo_df.crs = crs
     return geo_df
 
-def geo_df_from_geospatialfile(path_to_file, crs="EPSG:4326"):
+def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
     
     """Function to create a Geo-dataframe from a geospatial (geojson, shp) file.
         The process goes via Pandas
@@ -38,7 +38,7 @@ def geo_df_from_geospatialfile(path_to_file, crs="EPSG:4326"):
             """
     geo_df = gpd.read_file(path_to_file)
     if geo_df.crs != crs:
-        geo_df = geo_df.to_crs("EPSG:4326")
+        geo_df = geo_df.to_crs('epsg:27700')
     return geo_df
 
 def find_points_in_poly(geo_df, polygon_obj):
@@ -85,14 +85,9 @@ def get_and_save_geo_dataset(url, localpath, filename):
 
 def draw_5km_buffer(centroid):
     """
-    Draws a 5km (radius) buffer around a point. As EPSG:4326 projections units of measure are degrees
-    the units are first converted from degrees into km.
-    According to:
-    https://stackoverflow.com/questions/1253499/simple-calculations-for-working-with-lat-lon-and-km-distance
-    Latitude: 1 deg = 110.574 km
-    Longitude: 1 deg = 111.320*cos(latitude) km
+    Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections units of km, 
+        500m is 0.5km.
     """
     distance_km = 0.5
-    degrees = distance_km / 110.574
     return centroid.buffer(distance=degrees)
 
