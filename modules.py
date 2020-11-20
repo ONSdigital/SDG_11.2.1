@@ -59,7 +59,7 @@ def find_points_in_poly(geo_df, polygon_obj):
                  (geo_df,
                   polygon_obj,
                   how='left',
-                  op='within'))
+                  op='intersects')) #op = 'within'
     filtered_df = (joined_df
                    [joined_df
                     ['index_right'].notna()])
@@ -92,7 +92,6 @@ def draw_5km_buffer(centroid):
     Latitude: 1 deg = 110.574 km
     Longitude: 1 deg = 111.320*cos(latitude) km
     """
-    distance_km = 5
+    distance_km = 0.5
     degrees = distance_km / 110.574
     return centroid.buffer(distance=degrees)
-
