@@ -95,3 +95,4 @@ def draw_5km_buffer(centroid):
     distance_km = 0.5
     degrees = distance_km / 110.574
     return centroid.buffer(distance=degrees)
+
