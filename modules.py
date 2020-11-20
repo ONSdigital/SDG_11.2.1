@@ -89,5 +89,5 @@ def draw_5km_buffer(centroid):
         500m is 0.5km.
     """
     distance_km = 0.5
-    return centroid.buffer(distance=degrees)
+return centroid.buffer(distance=distance_km)
 
