@@ -4,6 +4,7 @@ from shapely.geometry import Point, Polygon
 import requests
 import os
 import json
+from zipfile import ZipFile
 
 def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ='epsg:27700'):
     """Function to create a Geo-dataframe from a csv file.
@@ -19,6 +20,7 @@ def geo_df_from_csv(path_to_csv, geom_x, geom_y, delim='\t', crs ='epsg:27700'):
         Returns:
             Geopandas Dataframe
             """
+    # possibly useful code pd.read_csv(csv_path, engine='python', usecols=cols, nrows=nrows)
     pd_df = pd.read_csv(path_to_csv, delim)
     geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
     geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
@@ -42,7 +44,10 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
     return geo_df
 
 def find_points_in_poly(geo_df, polygon_obj):
-    """Find points in polygon using geopandas' spatial join.
+    """Find points in polygon using geopandas' spatial join
+        which joins the supplied geo_df (as left_df) and the 
+        polygon (as right_df).
+        
         Then drops all rows where the point is not in the polygon
         (based on column index_right not being NaN). Finally it
         drop all column names from that were created in the join,
@@ -90,3 +95,35 @@ def draw_5km_buffer(centroid):
     """
     distance_km = 0.5
     return centroid.buffer(distance=distance_km)
+
+
+def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
+    """
+    Downloads the zip file (which contains quite a few un-needed datasets)
+    Extracts the needed data set (csv)
+    Deletes the now un-needed zip file
+    Checks if the csv is already download/extracted so it doesn't have to 
+    go through the process again. 
+    Parses the data 
+    """
+    #check if csv exists
+    if os.path.isfile(csv_path):
+        #check if zipfile exists
+        if os.path.isfile(zip_path):
+            print ("File exist")
+        else:
+            #grab the zipfile from gov.uk
+            print(f"Dowloading file from {zip_link}")
+            r = requests.get(zip_link)
+            with open(zip_path,'wb') as output_file:
+                print(f"Saving to {zip_path}")
+                output_file.write(r.content)
+            #open the zip file and extract
+            with ZipFile(zip_path, 'r') as zip: 
+                print(f"Unzipping {zip_name}. Extracting {csv_nm}")
+                data_csv = zip.extract(csv_nm, path=data_dir)
+            # delete the zipfile as it's uneeded now
+            os.remove(zip_path)
+    #'Longitude', 'Latitude'
+    # What does 'StopType' mean, is it useful?
+    return True 
