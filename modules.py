@@ -6,7 +6,7 @@ import os
 import json
 from zipfile import ZipFile
 
-def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs ='epsg:27700'):
+def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs ='EPSG:27700'):
     """Function to create a Geo-dataframe from a csv file.
         The process goes via Pandas
     
@@ -29,7 +29,8 @@ def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs ='epsg:277
                         usecols=cols)
     geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
     geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
-    geo_df.to_crs = crs
+    geo_df.crs = crs
+    geo_df.to_crs(crs, inplace=True)
     return geo_df
 
 def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
