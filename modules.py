@@ -1,26 +1,27 @@
 import pandas as pd
 import geopandas as gpd
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point
 import requests
 import os
 import json
 from zipfile import ZipFile
 
-def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs ='EPSG:27700'):
+
+def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs='EPSG:27700'):
     """Function to create a Geo-dataframe from a csv file.
         The process goes via Pandas
-    
+
         Arguments:
             path_to_csv (string): path to the txt/csv containing geo data
                 to be read
-            delimiter (string): the seperator in the csv file e.g. "," or "\t" 
+            delimiter (string): the seperator in the csv file e.g. "," or "\t"
             geom_x (string):name of the column that contains the longitude data
             geom_y (string):name of the column that contains the latitude data
             crs (string): the coordinate reference system required
         Returns:
             Geopandas Dataframe
             """
-    # possibly useful code pd.read_csv(csv_path, engine='python', usecols=cols, nrows=nrows)
+    # possibly useful code nrows=nrows for getting a sample of csv
     pd_df = pd.read_csv(path_to_csv,
                         delim,
                         engine="python",
@@ -33,13 +34,14 @@ def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, delim=',', crs ='EPSG:277
     geo_df.to_crs(crs, inplace=True)
     return geo_df
 
+
 def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
-    
-    """Function to create a Geo-dataframe from a geospatial (geojson, shp) file.
-        The process goes via Pandas
-    
+    """Function to create a Geo-dataframe from a geospatial
+        (geojson, shp) file. The process goes via Pandas.s
+
         Arguments:
-            path_to_file (string): path to the geojson, shp and other geospatial data files
+            path_to_file (string): path to the geojson, shp and other
+                geospatial data files
 
         Returns:
             Geopandas Dataframe
@@ -49,20 +51,21 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
         geo_df = geo_df.to_crs('epsg:27700')
     return geo_df
 
+
 def find_points_in_poly(geo_df, polygon_obj):
     """Find points in polygon using geopandas' spatial join
-        which joins the supplied geo_df (as left_df) and the 
+        which joins the supplied geo_df (as left_df) and the
         polygon (as right_df).
-        
+
         Then drops all rows where the point is not in the polygon
         (based on column index_right not being NaN). Finally it
         drop all column names from that were created in the join,
         leaving only the columns of the original geo_df
-        
+
         Arguments:
             geo_df (string): name of a geo pandas dataframe
             polygon_obj (string): a geopandas dataframe with a polygon column
-            
+
         Returns:
             A geodata frame with the points inside the supplied polygon"""
     wanted_cols = geo_df.columns.to_list()
@@ -70,18 +73,19 @@ def find_points_in_poly(geo_df, polygon_obj):
                  (geo_df,
                   polygon_obj,
                   how='left',
-                  op='intersects')) #op = 'within'
+                  op='intersects'))  # op = 'within'
     filtered_df = (joined_df
                    [joined_df
                     ['index_right'].notna()])
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
 
+
 def get_and_save_geo_dataset(url, localpath, filename):
-    """Fetches a geodataset in json format from a web resource and 
-        saves it to the local data/ directory and returns the json 
+    """Fetches a geodataset in json format from a web resource and
+        saves it to the local data/ directory and returns the json
         as a dict into memory
-    
+
     Args:
         filename (string): the name of file as it should be saved locally
         url (string): URL of the web resource where json file is hosted
@@ -94,10 +98,11 @@ def get_and_save_geo_dataset(url, localpath, filename):
         json.dump(file, dset)
     return file
 
+
 def draw_5km_buffer(centroid):
     """
-    Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections units of km, 
-        500m is 0.5km.
+    Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
+    units of km so 500m is 0.5km.
     """
     distance_km = 0.5
     return centroid.buffer(distance=distance_km)
@@ -108,7 +113,7 @@ def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
     Downloads the zip file (which contains quite a few un-needed datasets)
     Extracts the needed data set (csv)
     Deletes the now un-needed zip file
-    Checks if the csv is already download/extracted so it doesn't have to 
+    Checks if the csv is already download/extracted so it doesn't have to
     go through the process again.
     """
     # Check if csv exists
@@ -117,22 +122,20 @@ def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
     else:
         # Check if zipfile exists
         if os.path.isfile(zip_path):
-            print ("Zip file already exists")
+            print("Zip file already exists")
         else:
             # Grab the zipfile from gov.uk
             print(f"Dowloading file from {zip_link}")
             r = requests.get(zip_link)
-            with open(zip_path,'wb') as output_file:
+            with open(zip_path, 'wb') as output_file:
                 print(f"Saving to {zip_path}")
                 output_file.write(r.content)
         # Open the zip file and extract
-        with ZipFile(zip_path, 'r') as zip: 
+        with ZipFile(zip_path, 'r') as zip:
             print(f"Unzipping {zip_name}. Extracting {csv_nm}")
-            data_csv = zip.extract(csv_nm, path=data_dir)
+            _ = zip.extract(csv_nm, path=data_dir)
         # Delete the zipfile as it's uneeded now
         print(f"Delecting {zip_name} from {zip_path}")
         os.remove(zip_path)
-        
-    #'Longitude', 'Latitude'
-    # What does 'StopType' mean, is it useful?
-    return True 
+
+    return True
