@@ -108,8 +108,6 @@ birmingham_stops_geo_df = (find_points_in_poly
                            (geo_df=stops_geo_df,
                             polygon_obj=just_birmingham_poly))
 
-birmingham_stops_geo_df.sample(10)
-
 # Getting the west midlands population
 Wmids_pop_df = pd.read_csv(os.path.join
                            (data_dir,
