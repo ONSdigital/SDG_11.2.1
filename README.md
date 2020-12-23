@@ -24,6 +24,15 @@ The aims are:
     * assess the availability of other services across the UK
     * be used to assess the availability of services in other nations
 
+## Process
+
+![step1](https://github.com/james-westwood/SDG_11.2.1/blob/process_diagrams/img_readme/11-2-1%20process%20step1.jpg)
+
+![step2](https://github.com/james-westwood/SDG_11.2.1/blob/process_diagrams/img_readme/11-2-1%20process%20step2.jpg)
+
+![step3](https://github.com/james-westwood/SDG_11.2.1/blob/process_diagrams/img_readme/11-2-1%20process%20step3.jpg)
+
+
 ## Deliverables of the project
 
 1. Open source reuseable code which relies only on open source resources
