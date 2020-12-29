@@ -138,10 +138,6 @@ bham_clean = bham_LSOA_df[['LSOA11CD', 'LSOA11NM']]
 bham_pop_df = Wmids_pop_df.merge(
     bham_clean, how='right', left_on='LSOA11CD', right_on='LSOA11CD')
 
-
-# %%
-# make buffer around stops
-
 def buffer_points(geo_df, distance_km=0.5):
     """
     Provide a Geo Dataframe with points you want buffering.
@@ -168,4 +164,3 @@ fig, ax = plt.subplots()
 _ = just_birmingham_poly.plot(ax=ax, color='gold', markersize=2, alpha=0.1)
 _ = birmingham_buffd_stops.plot(ax=ax, color='red', markersize=2, alpha=0.5)
 
-plt.tight_layout()
