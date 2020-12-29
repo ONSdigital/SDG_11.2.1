@@ -139,3 +139,67 @@ def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
         os.remove(zip_path)
 
     return True
+
+def highly_serv_stops(region):
+    """
+    Retrieves timetable data from the Traveline National Dataset for
+        any region. Filters stops with that have >1 departure per hour
+        on a weekday (Wed is default) between 6am and 8pm.
+    Parameters: 
+        region (str): the name of the region of the UK that the data
+            is needed for
+    Returns:
+        highly serviced stops for region    
+    """
+    day="Wed"
+   
+    return 
+
+
+def demarc_urb_rural(urbDef, ):
+    """
+    Creates spatial clusters of urban environments based on specified
+        definition of 'urban'. 
+        - engwls for the English/Welsh definition of urban
+        - scot for the Scottish definition of urban
+        - eur for the European definition of urban
+    
+    Parameters:
+        urbDef (str): the definition of urban to be used
+    Returns: TBC (probably a polygon)
+            """
+
+
+def create_db_connection(host_name, user_name, user_password, db_name):
+    """Connecting to SQL Server (probably MySQL eventually BigQuery)"""
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password,
+            database=db_name
+        )
+        print("MySQL Database connection successful")
+    except Error as err:
+        print(f"Error: '{err}'")
+
+    return connection
+
+def populate_table():
+    """Populating the SQL Tables"""
+
+
+def read_query(connection, query):
+    """Reading Data formatting Output into a pandas DataFrame"""
+    cursor = connection.cursor()
+    result = None
+    try:
+        cursor.execute(query)
+        result = cursor.fetchall()
+        # Turn into df
+        return result
+    except Error as err:
+        print(f"Error: '{err}'")
+
+
