@@ -203,3 +203,12 @@ def read_query(connection, query):
         print(f"Error: '{err}'")
 
 
+def buffer_points(geo_df, distance_km=0.5):
+    """
+    Provide a Geo Dataframe with points you want buffering.
+    Draws a 5km (radius) buffer around the points.
+    Puts the results into a new column called "buffered"
+    As 'epsg:27700' projections units of km, 500m is 0.5km.
+    """
+    geo_df['geometry'] = geo_df.geometry.buffer(distance_km)
+    return geo_df

@@ -8,7 +8,8 @@ import pandas as pd
 
 # Module importss
 from modules import (dl_csv_make_df, find_points_in_poly, geo_df_from_csv,
-                     geo_df_from_geospatialfile)
+                     geo_df_from_geospatialfile,
+                     buffer_points)
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
@@ -138,18 +139,16 @@ bham_clean = bham_LSOA_df[['LSOA11CD', 'LSOA11NM']]
 bham_pop_df = Wmids_pop_df.merge(
     bham_clean, how='right', left_on='LSOA11CD', right_on='LSOA11CD')
 
-def buffer_points(geo_df, distance_km=0.5):
-    """
-    Provide a Geo Dataframe with points you want buffering.
-    Draws a 5km (radius) buffer around the points.
-    Puts the results into a new column called "buffered"
-    As 'epsg:27700' projections units of km, 500m is 0.5km.
-    """
-    geo_df['geometry'] = geo_df.geometry.buffer(distance_km)
-    return geo_df
+# rename the All Ages column
+bham_pop_df.rename(columns={"All Ages":"pop_count"}, inplace=True)
+
+# change pop_count to number (int)
+bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
 
-birmingham_buffd_stops = buffer_points(birmingham_stops_geo_df)
+# create a buffer around the stops, in column "geometry"
+# the `buffer_points` function changes the df in situ
+_ = buffer_points(birmingham_stops_geo_df)
 
 # TODO: try to join all the birmingham buffered stops together
 # to get the service area, then plot them
