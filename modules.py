@@ -203,7 +203,7 @@ def read_query(connection, query):
         print(f"Error: '{err}'")
 
 
-def buffer_points(geo_df, distance_km=0.5):
+def buffer_points(geo_df, distance_km=500):
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
