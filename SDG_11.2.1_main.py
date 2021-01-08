@@ -22,7 +22,7 @@ data_dir = (os.path.join
             (cwd,
              'data'))
 
-# define some params related to zip download
+# define url, paths and names related to zip download
 zip_link = "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
 zip_name = "Napatan.zip"
 zip_path = os.path.join(data_dir, zip_name)
@@ -122,13 +122,22 @@ uk_pop_wtd_centr_df = (geo_df_from_geospatialfile
                         (data_dir,
                          'pop_weighted_centroids')))
 
-# Joining the population dataframe to the centroids dataframe
+# Get output area boundaries
+OA_df = pd.read_csv('https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D')
+# Merge with uk population df
+uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_df, on="OA11CD", how='left')
+# Clean after merge
+uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
+uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
+
+
+# Joining the West Mids population dataframe to the centroids dataframe
 Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Make B'ham LSOA
 bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
-bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM','geometry']]
+bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
 # merge the two dataframes limiting to just Birmingham
 bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
@@ -137,7 +146,7 @@ bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
                                  right_on='LSOA11CD',
                                  suffixes=('_pop', '_LSOA'))
 # rename the All Ages column
-bham_pop_df.rename(columns={"All Ages":"pop_count"}, inplace=True)
+bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 # change pop_count to number (int)
 bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
