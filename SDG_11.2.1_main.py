@@ -5,10 +5,12 @@ import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+from shapely.ops import unary_union
 
 # Module importss
 from modules import (dl_csv_make_df, find_points_in_poly, geo_df_from_csv,
-                     geo_df_from_geospatialfile)
+                     geo_df_from_geospatialfile,
+                     buffer_points)
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
@@ -120,47 +122,55 @@ uk_pop_wtd_centr_df = (geo_df_from_geospatialfile
                         (data_dir,
                          'pop_weighted_centroids')))
 
-# Understanding was the OA11CD codes look like by taking a sample.
-uk_pop_wtd_centr_df.sample(10)
-
 # Joining the population dataframe to the centroids dataframe
 Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
-# This is the dataframe with the population and the centroids
-Wmids_pop_df.head(20)
-
-# check if this is needed
+# Make B'ham LSOA
 bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
-bham_clean = bham_LSOA_df[['LSOA11CD', 'LSOA11NM']]
+bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM','geometry']]
 
 # merge the two dataframes limiting to just Birmingham
-bham_pop_df = Wmids_pop_df.merge(
-    bham_clean, how='right', left_on='LSOA11CD', right_on='LSOA11CD')
+bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
+                                 how='right',
+                                 left_on='LSOA11CD',
+                                 right_on='LSOA11CD',
+                                 suffixes=('_pop', '_LSOA'))
+# rename the All Ages column
+bham_pop_df.rename(columns={"All Ages":"pop_count"}, inplace=True)
+# change pop_count to number (int)
+bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
-def buffer_points(geo_df, distance_km=0.5):
-    """
-    Provide a Geo Dataframe with points you want buffering.
-    Draws a 5km (radius) buffer around the points.
-    Puts the results into a new column called "buffered"
-    As 'epsg:27700' projections units of km, 500m is 0.5km.
-    """
-    geo_df['geometry'] = geo_df.geometry.buffer(distance_km)
-    return geo_df
+# create a buffer around the stops, in column "geometry"
+# the `buffer_points` function changes the df in situ
+_ = buffer_points(birmingham_stops_geo_df)
 
+# grab some coordinates for a little section of Birmingham: Acocks Green
+ag_east_north = pd.read_csv('Acocks_Green_postcodes.csv', usecols=['Easting', 'Northing'])
+eastings = [easting for easting in ag_east_north.Easting]
+northings = [northing for northing in ag_east_north.Northing]
+east_min = min(eastings)
+east_max = max(eastings)
+north_min = min(northings)
+north_max = max(northings)
+# limit the stops, filtering by the min/max eastings/northings for Acocks Green
+north_mask = (north_min < birmingham_stops_geo_df['Northing']) & (birmingham_stops_geo_df['Northing'] < north_max)
+east_mask = (east_min < birmingham_stops_geo_df['Easting']) & (birmingham_stops_geo_df['Easting'] < east_max)
+# Filter the stops for Acocks Green
+ag_stops_geo_df = birmingham_stops_geo_df[north_mask & east_mask]
 
-birmingham_buffd_stops = buffer_points(birmingham_stops_geo_df)
+# Create the polygon for the combined buffered stops in Acocks Green
+ag_stops_poly = unary_union(list(ag_stops_geo_df.geometry))
 
-# TODO: try to join all the birmingham buffered stops together
-# to get the service area, then plot them
-#
+# Create the polygon for the combined buffered stops in B'ham
+bham_stops_poly = unary_union(list(birmingham_stops_geo_df.geometry))
 
-birmingham_buffd_stops['place'] = 'Birmingham'
-
-birmingham_buffd_stops = birmingham_buffd_stops.dissolve(by='place')
-
-# Get all the buffered stops in Birmingham on to a map of Birmingham
+# Plot all the buffered stops in B'ham and AG on to a map
 fig, ax = plt.subplots()
-_ = just_birmingham_poly.plot(ax=ax, color='gold', markersize=2, alpha=0.1)
-_ = birmingham_buffd_stops.plot(ax=ax, color='red', markersize=2, alpha=0.5)
-
+p = gpd.GeoSeries(bham_stops_poly)
+# Plot Acocks Green only stops
+a = gpd.GeoSeries(ag_stops_poly)
+p.plot(ax=ax)
+a.plot(ax=ax, color='gold')
+plt.show()
+fig.savefig('bham_ag_stops.png') 
