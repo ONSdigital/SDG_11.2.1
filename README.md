@@ -26,11 +26,11 @@ The aims are:
 
 ## Process
 
-![step1](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1%20process%20step1.jpg)
+![step1](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step1.jpg)
 
-![step2](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1%20process%20step2.jpg)
+![step2](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step2.jpg)
 
-![step3](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1%20process%20step3.jpg)
+![step3](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step3.jpg)
 
 
 ## Deliverables of the project
