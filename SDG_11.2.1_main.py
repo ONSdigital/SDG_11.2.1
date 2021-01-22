@@ -165,12 +165,19 @@ col_groups = [(s,f) for s,f in zip(cols_start,cols_fin)]
 # Again adding "90+", doubling it so it's the same as the other tuples
 col_groups.append((cols_start[-1:]*2))
 
-# Hacky Pythonic way of grouping ages in 5 year brackets
+# Grouping ages in 5 year brackets
 for group in col_groups:
     age_df[f"{group[0]}-{group[1]}"] = age_df.loc[:,group[0]:group[1]].sum(axis=1)
-#     print(age_df[f"{group[0]} {group[1]}"])
-age_df.drop(col_nms, axis=1, inplace=True)
 
+# Drop the original age columns
+age_df.drop(col_nms, axis=1, inplace=True)
+age_df.rename(columns={'90+-90+':'90+'}, inplace=True)vv
+
+# Ridding the bham pop df of the same cols
+bham_pop_df.drop(col_nms, axis=1, inplace=True)
+
+# merging summed+grouped ages back in
+bham_pop_df = pd.merge(bham_pop_df,age_df, left_index=True, right_index=True)
 
 # create a buffer around the stops, in column "geometry"
 # the `buffer_points` function changes the df in situ
