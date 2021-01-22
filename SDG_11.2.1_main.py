@@ -150,6 +150,35 @@ bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 # change pop_count to number (int)
 bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
+# Getting a list of columns names which are strings of integers
+col_nms = [str(n) for n in range(90)]
+# Adding '90+' to complete the list 
+col_nms.append('90+')
+# Making an age only df
+age_df = bham_pop_df.loc[:, col_nms]
+
+# Going to make a list of tuples with starting and finishing indexes
+cols_start = list(age_df.columns[0::5])
+cols_fin = list(age_df.columns[4::5])
+# Generating a list of tuples which will be the age groupings
+col_groups = [(s,f) for s,f in zip(cols_start,cols_fin)]
+# Again adding "90+", doubling it so it's the same as the other tuples
+col_groups.append((cols_start[-1:]*2))
+
+# Grouping ages in 5 year brackets
+for group in col_groups:
+    age_df[f"{group[0]}-{group[1]}"] = age_df.loc[:,group[0]:group[1]].sum(axis=1)
+
+# Drop the original age columns
+age_df.drop(col_nms, axis=1, inplace=True)
+age_df.rename(columns={'90+-90+':'90+'}, inplace=True)vv
+
+# Ridding the bham pop df of the same cols
+bham_pop_df.drop(col_nms, axis=1, inplace=True)
+
+# merging summed+grouped ages back in
+bham_pop_df = pd.merge(bham_pop_df,age_df, left_index=True, right_index=True)
+
 # create a buffer around the stops, in column "geometry"
 # the `buffer_points` function changes the df in situ
 _ = buffer_points(birmingham_stops_geo_df)
