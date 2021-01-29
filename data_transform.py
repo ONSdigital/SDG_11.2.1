@@ -1,5 +1,4 @@
-import json
-from zipfile import ZipFile
+
 
 def gen_age_col_lst():
     """Makes the column names for the population df. Names are numbers 0-89 and 90+
@@ -24,14 +23,14 @@ def slice_age_df(df, col_nms):
         col_nms (list of str): column names as string in a list
 
     Returns:
-        pd.DataFrame: A dataframe sliced down to only the columns required.    """    
+        pd.DataFrame: A dataframe sliced down to only the columns required."""
     age_df = df.loc[:, col_nms]
     return age_df
 
 
 def get_col_bins(col_nms):
-    """Groups/bins the ages, with 5 year step, starting at "0" into a list of tuples.
-        Depends on 
+    """Groups/bins the ages, with 5 year step, starting at "0" into a list 
+        of tuples. Depends on yada yada  
 
     Args:
         col_nms (list of str): a list of the age columns as strings
@@ -43,7 +42,7 @@ def get_col_bins(col_nms):
     cols_start = col_nms[0::5]
     cols_fin = col_nms[4::5]
     # Generating a list of tuples which will be the age groupings
-    col_bins = [(s,f) for s,f in zip(cols_start,cols_fin)]
+    col_bins = [(s, f) for s, f in zip(cols_start, cols_fin)]
     # Again adding "90+", doubling it so it's doubled, like the other tuples
     col_bins.append((cols_start[-1:]*2))
     return col_bins
@@ -60,14 +59,15 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     """    
     # Grouping ages in 5 year brackets
     for bin in age_bins:
-        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,bin[0]:bin[1]].sum(axis=1)
+        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
 
     # Drop the original age columns
     age_df.drop(col_nms, axis=1, inplace=True)
     # Rename the '90+' col 
-    age_df.rename(columns={'90+-90+':'90+'}, inplace=True)
+    age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
+
 
 def highly_serv_stops(region):
     """
@@ -80,5 +80,5 @@ def highly_serv_stops(region):
     Returns:
         highly serviced stops for region    
     """
-    day="Wed"
+    #  day="Wed"
     return None 

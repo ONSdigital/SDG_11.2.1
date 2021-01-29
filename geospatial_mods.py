@@ -1,5 +1,7 @@
 # Third party imports for this module
 import geopandas as gpd
+import pandas as pd
+from shapely.ops import unary_union
 
 
 def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
@@ -90,15 +92,16 @@ def find_points_in_poly(geo_df, polygon_obj):
 
 
 def poly_from_polys(geo_df):
-    """Makes a combined polygon from the multiple polygons in a geometry column in a 
-        geo dataframe.
+    """Makes a combined polygon from the multiple polygons in a geometry
+        column in a geo dataframe.
 
     Args:
-        geo_df (gpd.DataFrame): 
+        geo_df (gpd.DataFrame):
 
     Returns:
-        class Polygon : a combined polygon which is the perimter of the polygons provided.
-    """    
+        class Polygon : a combined polygon which is the perimter of the
+            polygons provided.
+    """
     poly = unary_union(list(geo_df.geometry))
     return poly
 
@@ -112,17 +115,16 @@ def ward_nrthng_eastng(district, ward):
 
     Returns:
         [type]: [description]
-    """    
+    """
     csvurl = f"https://www.doogal.co.uk/AdministrativeAreasCSV.ashx?district={district}&ward={ward}"
     df = pd.read_csv(csvurl, usecols=['Easting', 'Northing'])
     eastings = [easting for easting in df.Easting]
     northings = [northing for northing in df.Northing]
     mins_maxs = {
-        "e_min" : min(eastings),
-        "e_max" : max(eastings),
-        "n_min" : min(northings),
-        "n_max" : max(northings)}
-     
+        "e_min": min(eastings),
+        "e_max": max(eastings),
+        "n_min": min(northings),
+        "n_max": max(northings)}
     return mins_maxs
 
 
@@ -138,12 +140,13 @@ def filter_stops_by_ward(df, mins_maxs):
     Returns:
         pd.DataFrame : A filtered dataframe, limited by the eastings and
             northings supplied
-    """    
+    """
     # Limit the stops, filtering by the min/max eastings/northings for ward
-    north_mask = (mins_maxs['n_min'] < df['Northing']) & (df['Northing'] < mins_maxs['n_max'])
-    east_mask = (mins_maxs['e_min'] < df['Easting']) & (df['Easting'] < mins_maxs['e_max'])
+    mm = mins_maxs
+    nrth_mask = (mm['n_min'] < df['Northing']) & (df['Northing'] < mm['n_max'])
+    east_mask = (mm['e_min'] < df['Easting']) & (df['Easting'] < mm['e_max'])
 
     # Filter the stops for the ward
-    filtered_df = df[north_mask & east_mask]
+    filtered_df = df[nrth_mask & east_mask]
 
     return filtered_df

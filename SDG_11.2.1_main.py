@@ -5,14 +5,18 @@ import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-from shapely.ops import unary_union
 
 # Module imports
-from geospatial_mods import find_points_in_poly, buffer_points, get_polygons_of_loccode, poly_from_polys, ward_nrthng_eastng
-from data_ingest import dl_csv_make_df, geo_df_from_csv, geo_df_from_geospatialfile
-from data_transform import bin_pop_ages, gen_age_col_lst, get_col_bins, slice_age_df
+from geospatial_mods import *
+from data_ingest import *
+from data_transform import *
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
+
+
+# Constants
+default_crs = 'EPSG:27700'
+
 
 # get current working directory
 cwd = os.getcwd()
@@ -44,7 +48,8 @@ stops_geo_df = (geo_df_from_csv(path_to_csv=csv_path,
                                 delim=',',
                                 geom_x='Easting',
                                 geom_y='Northing',
-                                cols=cols))
+                                cols=cols,
+                                crs=default_crs))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
 uk_LSOA_shp_file = "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
@@ -129,7 +134,7 @@ _ = buffer_points(birmingham_stops_geo_df)
 # grab some coordinates for a little section of Birmingham: Acocks Green
 
 # Get the needed eastings and northings for Acocks Green for demo
-mins_maxs= (ward_nrthng_eastng(district="E08000025",
+mins_maxs = (ward_nrthng_eastng(district="E08000025",
                                ward="E05011118"))
 
 # Filtering the stops to the ward of Acocks Green for demo
