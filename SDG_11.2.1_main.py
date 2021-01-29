@@ -7,10 +7,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from shapely.ops import unary_union
 
-# Module importss
-from modules import (dl_csv_make_df, find_points_in_poly, geo_df_from_csv,
-                     geo_df_from_geospatialfile,
-                     buffer_points)
+# Module imports
+from geospatial_mods import find_points_in_poly, buffer_points
+from data_ingest import dl_csv_make_df, geo_df_from_csv, geo_df_from_geospatialfile
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
@@ -150,34 +149,84 @@ bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 # change pop_count to number (int)
 bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
-# Getting a list of columns names which are strings of integers
-col_nms = [str(n) for n in range(90)]
-# Adding '90+' to complete the list 
-col_nms.append('90+')
-# Making an age only df
-age_df = bham_pop_df.loc[:, col_nms]
 
-# Going to make a list of tuples with starting and finishing indexes
-cols_start = list(age_df.columns[0::5])
-cols_fin = list(age_df.columns[4::5])
-# Generating a list of tuples which will be the age groupings
-col_groups = [(s,f) for s,f in zip(cols_start,cols_fin)]
-# Again adding "90+", doubling it so it's the same as the other tuples
-col_groups.append((cols_start[-1:]*2))
+def gen_age_col_lst():
+    """Makes the column names for the population df. Names are numbers 0-89 and 90+
+        all as strings. 
 
-# Grouping ages in 5 year brackets
-for group in col_groups:
-    age_df[f"{group[0]}-{group[1]}"] = age_df.loc[:,group[0]:group[1]].sum(axis=1)
+    Returns:
+        list of str: list of the column names for all age count columns in the 
+        population dataframe 
+    """    
+    # Getting a list of columns names (0-90) which are strings of integers
+    age_col_lst = [str(n) for n in range(90)]
+    # Adding '90+' to complete the list
+    age_col_lst.append('90+')
+    return age_col_lst
 
-# Drop the original age columns
-age_df.drop(col_nms, axis=1, inplace=True)
-age_df.rename(columns={'90+-90+':'90+'}, inplace=True)vv
+age_lst = gen_age_col_lst()
+
+def slice_age_df(df, col_nms):
+    """Slices a dataframe according to the list of column names provided.
+
+    Args:
+        df (pd.DataFrame): DataFrame to be sliced
+        col_nms (list of str): column names as string in a list
+
+    Returns:
+        pd.DataFrame: A dataframe sliced down to only the columns required.    """    
+    age_df = df.loc[:, col_nms]
+    return age_df
+
+age_df = slice_age_df(bham_pop_df, age_lst)
+
+def get_col_bins(col_nms):
+    """Groups/bins the ages, with 5 year step, starting at "0" into a list of tuples.
+        Depends on 
+
+    Args:
+        col_nms (list of str): a list of the age columns as strings
+
+    Returns:
+        list of tuples: a list of the ages with 5 year gaps
+    """
+    # Make a lists of starting and finishing indexes
+    cols_start = col_nms[0::5])
+    cols_fin = col_nms[4::5])
+    # Generating a list of tuples which will be the age groupings
+    col_bins = [(s,f) for s,f in zip(cols_start,cols_fin)]
+    # Again adding "90+", doubling it so it's doubled, like the other tuples
+    col_bins.append((cols_start[-1:]*2))
+    return col_bins
+
+def bin_pop_ages(age_df):
+    """ Bins the ages in the age_df, and drops the original age columns
+
+    Args:
+        df (pd.DataFrame): A dataframe of population data 
+            containing only the age columns
+    """    
+    # Getting a list of columns names which are strings of integers
+    age_bins = get_col_bins(df)
+    col_nms = gen_age_col_lst()
+
+    # Grouping ages in 5 year brackets
+    for bin in age_bins:
+        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,bin[0]:bin[1]].sum(axis=1)
+
+    # Drop the original age columns
+    age_df.drop(col_nms, axis=1, inplace=True)
+    age_df.rename(columns={'90+-90+':'90+'}, inplace=True)
+    return binned_df
+
+# get the ages in the age_df binned, and drop the original columns
+age_df = bin_pop_ages(age_df)
 
 # Ridding the bham pop df of the same cols
-bham_pop_df.drop(col_nms, axis=1, inplace=True)
+bham_pop_df.drop(age_lst, axis=1, inplace=True)
 
 # merging summed+grouped ages back in
-bham_pop_df = pd.merge(bham_pop_df,age_df, left_index=True, right_index=True)
+bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
 
 # create a buffer around the stops, in column "geometry"
 # the `buffer_points` function changes the df in situ
