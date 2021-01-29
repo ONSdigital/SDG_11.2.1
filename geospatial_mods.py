@@ -87,3 +87,63 @@ def find_points_in_poly(geo_df, polygon_obj):
                     ['index_right'].notna()])
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
+
+
+def poly_from_polys(geo_df):
+    """Makes a combined polygon from the multiple polygons in a geometry column in a 
+        geo dataframe.
+
+    Args:
+        geo_df (gpd.DataFrame): 
+
+    Returns:
+        class Polygon : a combined polygon which is the perimter of the polygons provided.
+    """    
+    poly = unary_union(list(geo_df.geometry))
+    return poly
+
+
+def ward_nrthng_eastng(district, ward):
+    # TODO: finish this function doctring
+    """Gets the eastings and northings of a ward in a metropolitan area
+    Args:
+        district (str): The district geo code
+        ward (str): The ward geo code
+
+    Returns:
+        [type]: [description]
+    """    
+    csvurl = f"https://www.doogal.co.uk/AdministrativeAreasCSV.ashx?district={district}&ward={ward}"
+    df = pd.read_csv(csvurl, usecols=['Easting', 'Northing'])
+    eastings = [easting for easting in df.Easting]
+    northings = [northing for northing in df.Northing]
+    mins_maxs = {
+        "e_min" : min(eastings),
+        "e_max" : max(eastings),
+        "n_min" : min(northings),
+        "n_max" : max(northings)}
+     
+    return mins_maxs
+
+
+def filter_stops_by_ward(df, mins_maxs):
+    """Makes a filtered dataframe (used for the filtering the stops dataframe)
+        based on northings and eastings.
+
+    Args:
+        df (pd.DataFrame): The full dataframe to be filtered
+        mins_maxs (dict): A dictionary with the mins and maxes of the eastings
+            and northings of the area to be filtered
+
+    Returns:
+        pd.DataFrame : A filtered dataframe, limited by the eastings and
+            northings supplied
+    """    
+    # Limit the stops, filtering by the min/max eastings/northings for ward
+    north_mask = (mins_maxs['n_min'] < df['Northing']) & (df['Northing'] < mins_maxs['n_max'])
+    east_mask = (mins_maxs['e_min'] < df['Easting']) & (df['Easting'] < mins_maxs['e_max'])
+
+    # Filter the stops for the ward
+    filtered_df = df[north_mask & east_mask]
+
+    return filtered_df
