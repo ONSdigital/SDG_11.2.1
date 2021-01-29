@@ -8,8 +8,9 @@ import pandas as pd
 from shapely.ops import unary_union
 
 # Module imports
-from geospatial_mods import find_points_in_poly, buffer_points
+from geospatial_mods import find_points_in_poly, buffer_points, get_polygons_of_loccode
 from data_ingest import dl_csv_make_df, geo_df_from_csv, geo_df_from_geospatialfile
+from data_transform import bin_pop_ages, gen_age_col_lst, get_col_bins, slice_age_df
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
@@ -51,43 +52,9 @@ full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = geo_df_from_geospatialfile(path_to_file=full_path)
 
 
-# geo_df_from_geospatialfile(os.path.join
-#                            (os.getcwd(),
-#                             'data',
-#                             'birmingham_geo_dataset.json'))
-
-# # Manipulating the Birmingham df
-# # splitting the "codes" column into "gss" and "unit_id"
-# # setting "id" as the index
-
-# birmingham_df = pd.DataFrame.from_dict(birmingahm_gsscode_dataset).T
-# gss_code_cols = pd.DataFrame.from_dict(birmingahm_gsscode_dataset).T.codes.apply(pd.Series).drop("ons", axis=1)
-# birmingham_df = birmingham_df.join(gss_code_cols).drop(["codes", "all_names"], axis=1)
-# birmingham_df.set_index('id', inplace=True)
 
 
-def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
-    """
-    Gets the polygon for a place based on it name, LSOA code or OA code
-
-    Parameters:
-    geo_df: (gpd.Datafame):
-    loc_code = LSOA11CD, OA11CD or LSOA11NM
-    search = search terms to find in the LSOA11NM column. Only needed if
-        intending to dissolve on a name in the LSOA11NM column
-    Returns: (gpd.DataFrame) agregated multipolygons, agregated on LSOA,
-        OA code, or a search in the LSOA11NM column
-    """
-    if dissolveby in ['LSOA11CD', 'OA11CD']:
-        polygon_df = geo_df.dissolve(by=dissolveby)
-    else:
-        filtered_df = geo_df[geo_df[f'{dissolveby}'].str.contains(search)]
-        filtered_df.insert(0, 'place_name', search)
-        polygon_df = filtered_df.dissolve(by='place_name')
-    polygon_df = gpd.GeoDataFrame(polygon_df.pop('geometry'))
-    return polygon_df
-
-
+# Get a polygon of Birmingham based on the Location Code
 just_birmingham_poly = (get_polygons_of_loccode(
     geo_df=uk_LSOA_df, dissolveby='LSOA11NM', search="Birmingham"))
 
@@ -104,7 +71,7 @@ just_birmingham_poly = (get_polygons_of_loccode(
 
 
 # Creating a Geo Dataframe of only stops in Birmingham
-# import ipdb; ipdb.set_trace()
+
 birmingham_stops_geo_df = (find_points_in_poly
                            (geo_df=stops_geo_df,
                             polygon_obj=just_birmingham_poly))
@@ -150,74 +117,15 @@ bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
 
-def gen_age_col_lst():
-    """Makes the column names for the population df. Names are numbers 0-89 and 90+
-        all as strings. 
 
-    Returns:
-        list of str: list of the column names for all age count columns in the 
-        population dataframe 
-    """    
-    # Getting a list of columns names (0-90) which are strings of integers
-    age_col_lst = [str(n) for n in range(90)]
-    # Adding '90+' to complete the list
-    age_col_lst.append('90+')
-    return age_col_lst
-
+# Generate a list of ages 
 age_lst = gen_age_col_lst()
 
-def slice_age_df(df, col_nms):
-    """Slices a dataframe according to the list of column names provided.
-
-    Args:
-        df (pd.DataFrame): DataFrame to be sliced
-        col_nms (list of str): column names as string in a list
-
-    Returns:
-        pd.DataFrame: A dataframe sliced down to only the columns required.    """    
-    age_df = df.loc[:, col_nms]
-    return age_df
-
+# Get a datframe limited to the data ages columns only
 age_df = slice_age_df(bham_pop_df, age_lst)
 
-def get_col_bins(col_nms):
-    """Groups/bins the ages, with 5 year step, starting at "0" into a list of tuples.
-        Depends on 
-
-    Args:
-        col_nms (list of str): a list of the age columns as strings
-
-    Returns:
-        list of tuples: a list of the ages with 5 year gaps
-    """
-    # Make a lists of starting and finishing indexes
-    cols_start = col_nms[0::5])
-    cols_fin = col_nms[4::5])
-    # Generating a list of tuples which will be the age groupings
-    col_bins = [(s,f) for s,f in zip(cols_start,cols_fin)]
-    # Again adding "90+", doubling it so it's doubled, like the other tuples
-    col_bins.append((cols_start[-1:]*2))
-    return col_bins
-
-def bin_pop_ages(age_df):
-    """ Bins the ages in the age_df, and drops the original age columns
-
-    Args:
-        df (pd.DataFrame): A dataframe of population data 
-            containing only the age columns
-    """    
-    # Getting a list of columns names which are strings of integers
-    age_bins = get_col_bins(df)
-    col_nms = gen_age_col_lst()
-
-    # Grouping ages in 5 year brackets
-    for bin in age_bins:
-        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,bin[0]:bin[1]].sum(axis=1)
-
-    # Drop the original age columns
-    age_df.drop(col_nms, axis=1, inplace=True)
-    age_df.rename(columns={'90+-90+':'90+'}, inplace=True)
-    return binned_df
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = get_col_bins(age_lst)
 
 # get the ages in the age_df binned, and drop the original columns
 age_df = bin_pop_ages(age_df)
@@ -233,18 +141,54 @@ bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
 _ = buffer_points(birmingham_stops_geo_df)
 
 # grab some coordinates for a little section of Birmingham: Acocks Green
-ag_east_north = pd.read_csv('Acocks_Green_postcodes.csv', usecols=['Easting', 'Northing'])
-eastings = [easting for easting in ag_east_north.Easting]
-northings = [northing for northing in ag_east_north.Northing]
-east_min = min(eastings)
-east_max = max(eastings)
-north_min = min(northings)
-north_max = max(northings)
-# limit the stops, filtering by the min/max eastings/northings for Acocks Green
-north_mask = (north_min < birmingham_stops_geo_df['Northing']) & (birmingham_stops_geo_df['Northing'] < north_max)
-east_mask = (east_min < birmingham_stops_geo_df['Easting']) & (birmingham_stops_geo_df['Easting'] < east_max)
-# Filter the stops for Acocks Green
-ag_stops_geo_df = birmingham_stops_geo_df[north_mask & east_mask]
+
+def ward_nrthng_eastng(district, ward):
+    # TODO: finish this function doctring
+    """Gets the eastings and northings of a ward in a metropolitan area
+    Args:
+        district (str): The district geo code
+        ward (str): The ward geo code
+
+    Returns:
+        [type]: [description]
+    """    
+    csvurl = f"https://www.doogal.co.uk/AdministrativeAreasCSV.ashx?district={district}&ward={ward}"
+    df = pd.read_csv(csvurl, usecols=['Easting', 'Northing'])
+    eastings = [easting for easting in df.Easting]
+    northings = [northing for northing in df.Northing]
+    mins_maxs = {
+        "e_min" : min(eastings),
+        "e_max" : max(eastings),
+        "n_min" : min(northings),
+        "n_max" : max(northings)}
+     
+    return mins_maxs
+
+# Get the needed eastings and northings for Acocks Green
+mins_maxs= (ward_nrthng_eastng(district="E08000025",
+                               ward="E05011118")
+
+def filter_stops_by_ward(df, mins_maxs):
+    """Makes a filtered dataframe (used for the filtering the stops dataframe)
+        based on northings and eastings.
+
+    Args:
+        df (pd.DataFrame): The full dataframe to be filtered
+        mins_maxs (dict): A dictionary with the mins and maxes of the eastings
+            and northings of the area to be filtered
+
+    Returns:
+        pd.DataFrame : A filtered dataframe, limited by the eastings and
+            northings supplied
+    """    
+    # Limit the stops, filtering by the min/max eastings/northings for ward
+    north_mask = (mins_maxs['n_min'] < df['Northing']) & (df['Northing'] < mins_maxs['n_max'])
+    east_mask = (mins_maxs['e_min'] < df['Easting']) & (df['Easting'] < mins_maxs['e_max'])
+
+    # Filter the stops for the ward
+    filtered_df = df[north_mask & east_mask]
+
+    return df
 
 # Create the polygon for the combined buffered stops in Acocks Green
 ag_stops_poly = unary_union(list(ag_stops_geo_df.geometry))
@@ -255,6 +199,7 @@ bham_stops_poly = unary_union(list(birmingham_stops_geo_df.geometry))
 # Plot all the buffered stops in B'ham and AG on to a map
 fig, ax = plt.subplots()
 p = gpd.GeoSeries(bham_stops_poly)
+
 # Plot Acocks Green only stops
 a = gpd.GeoSeries(ag_stops_poly)
 p.plot(ax=ax)

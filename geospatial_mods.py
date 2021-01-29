@@ -1,15 +1,43 @@
+# Third party imports for this module
+import geopandas as gpd
+
+
+def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
+    """
+    Gets the polygon for a place based on it name, LSOA code or OA code
+
+    Parameters:
+    geo_df: (gpd.Datafame):
+    loc_code = LSOA11CD, OA11CD or LSOA11NM
+    search = search terms to find in the LSOA11NM column. Only needed if
+        intending to dissolve on a name in the LSOA11NM column
+    Returns: (gpd.DataFrame) agregated multipolygons, agregated on LSOA,
+        OA code, or a search in the LSOA11NM column
+    """
+    if dissolveby in ['LSOA11CD', 'OA11CD']:
+        polygon_df = geo_df.dissolve(by=dissolveby)
+    else:
+        filtered_df = geo_df[geo_df[f'{dissolveby}'].str.contains(search)]
+        filtered_df.insert(0, 'place_name', search)
+        polygon_df = filtered_df.dissolve(by='place_name')
+    polygon_df = gpd.GeoDataFrame(polygon_df.pop('geometry'))
+    return polygon_df
+
+
 def demarc_urb_rural(urbDef, ):
     """
     Creates spatial clusters of urban environments based on specified
         definition of 'urban'. 
-        - engwls for the English/Welsh definition of urban
-        - scot for the Scottish definition of urban
-        - eur for the European definition of urban
+        - 'engwls' for the English/Welsh definition of urban
+        - 'scott' for the Scottish definition of urban
+        - 'euro' for the European definition of urban
     
     Parameters:
         urbDef (str): the definition of urban to be used
     Returns: TBC (probably a polygon)
             """
+
+    return None
 
 
 def buffer_points(geo_df, distance_km=500):
@@ -22,6 +50,7 @@ def buffer_points(geo_df, distance_km=500):
     geo_df['geometry'] = geo_df.geometry.buffer(distance_km)
     return geo_df
 
+
 def draw_5km_buffer(centroid):
     """
     Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
@@ -29,6 +58,7 @@ def draw_5km_buffer(centroid):
     """
     distance_km = 0.5
     return centroid.buffer(distance=distance_km)
+
 
 def find_points_in_poly(geo_df, polygon_obj):
     """Find points in polygon using geopandas' spatial join
@@ -41,7 +71,7 @@ def find_points_in_poly(geo_df, polygon_obj):
         leaving only the columns of the original geo_df
 
         Arguments:
-            geo_df (string): name of a geo pandas dataframe
+            geo_df (gpg.DatFrame): a geo pandas dataframe
             polygon_obj (string): a geopandas dataframe with a polygon column
 
         Returns:
