@@ -5,14 +5,18 @@ import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
-from shapely.ops import unary_union
 
-# Module importss
-from modules import (dl_csv_make_df, find_points_in_poly, geo_df_from_csv,
-                     geo_df_from_geospatialfile,
-                     buffer_points)
+# Module imports
+from geospatial_mods import *
+from data_ingest import *
+from data_transform import *
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
+
+
+# Constants
+default_crs = 'EPSG:27700'
+
 
 # get current working directory
 cwd = os.getcwd()
@@ -37,75 +41,27 @@ _ = dl_csv_make_df(csv_nm,
                    zip_link,
                    data_dir)
 
-# Create the geo dataframe with the stops data
+# Create the geo dataframe with the stoppoly_from_polyss data
 cols = ['NaptanCode', 'CommonName', 'Easting', 'Northing']
 
 stops_geo_df = (geo_df_from_csv(path_to_csv=csv_path,
                                 delim=',',
                                 geom_x='Easting',
                                 geom_y='Northing',
-                                cols=cols))
+                                cols=cols,
+                                crs=default_crs))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
 uk_LSOA_shp_file = "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
 full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = geo_df_from_geospatialfile(path_to_file=full_path)
 
-
-# geo_df_from_geospatialfile(os.path.join
-#                            (os.getcwd(),
-#                             'data',
-#                             'birmingham_geo_dataset.json'))
-
-# # Manipulating the Birmingham df
-# # splitting the "codes" column into "gss" and "unit_id"
-# # setting "id" as the index
-
-# birmingham_df = pd.DataFrame.from_dict(birmingahm_gsscode_dataset).T
-# gss_code_cols = pd.DataFrame.from_dict(birmingahm_gsscode_dataset).T.codes.apply(pd.Series).drop("ons", axis=1)
-# birmingham_df = birmingham_df.join(gss_code_cols).drop(["codes", "all_names"], axis=1)
-# birmingham_df.set_index('id', inplace=True)
-
-
-def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
-    """
-    Gets the polygon for a place based on it name, LSOA code or OA code
-
-    Parameters:
-    geo_df: (gpd.Datafame):
-    loc_code = LSOA11CD, OA11CD or LSOA11NM
-    search = search terms to find in the LSOA11NM column. Only needed if
-        intending to dissolve on a name in the LSOA11NM column
-    Returns: (gpd.DataFrame) agregated multipolygons, agregated on LSOA,
-        OA code, or a search in the LSOA11NM column
-    """
-    if dissolveby in ['LSOA11CD', 'OA11CD']:
-        polygon_df = geo_df.dissolve(by=dissolveby)
-    else:
-        filtered_df = geo_df[geo_df[f'{dissolveby}'].str.contains(search)]
-        filtered_df.insert(0, 'place_name', search)
-        polygon_df = filtered_df.dissolve(by='place_name')
-    polygon_df = gpd.GeoDataFrame(polygon_df.pop('geometry'))
-    return polygon_df
-
-
+# Get a polygon of Birmingham based on the Location Code
 just_birmingham_poly = (get_polygons_of_loccode(
     geo_df=uk_LSOA_df, dissolveby='LSOA11NM', search="Birmingham"))
 
-
-# Creating Birmingham polygon
-
-# just_birmingham_geom = just_birmingham_LSOA.drop(["FID","LSOA11CD","LSOA11NMW","Age_Indica", "Shape__Are","Shape__Len","LSOA11NM"], axis=1)
-# # just_birmingham_geom = just_birmingham_LSOA.pop('geometry')
-
-# just_birmingham_geom['city'] = "birmingham"
-# # just_birmingham_geom['new_column'] = 0
-# just_birmingham_geom = just_birmingham_geom.dissolve(by='city')
-# just_birmingham_geom
-
-
 # Creating a Geo Dataframe of only stops in Birmingham
-# import ipdb; ipdb.set_trace()
+
 birmingham_stops_geo_df = (find_points_in_poly
                            (geo_df=stops_geo_df,
                             polygon_obj=just_birmingham_poly))
@@ -124,12 +80,13 @@ uk_pop_wtd_centr_df = (geo_df_from_geospatialfile
 
 # Get output area boundaries
 OA_df = pd.read_csv('https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D')
+
 # Merge with uk population df
 uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_df, on="OA11CD", how='left')
+
 # Clean after merge
 uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
 uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
-
 
 # Joining the West Mids population dataframe to the centroids dataframe
 Wmids_pop_df = Wmids_pop_df.join(
@@ -145,67 +102,54 @@ bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
                                  left_on='LSOA11CD',
                                  right_on='LSOA11CD',
                                  suffixes=('_pop', '_LSOA'))
-# rename the All Ages column
+# rename the "All Ages" column to pop_count as it's the population count
 bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
+
 # change pop_count to number (int)
 bham_pop_df['pop_count'] = pd.to_numeric(bham_pop_df.pop_count.str.replace(",", ""))
 
-# Getting a list of columns names which are strings of integers
-col_nms = [str(n) for n in range(90)]
-# Adding '90+' to complete the list 
-col_nms.append('90+')
-# Making an age only df
-age_df = bham_pop_df.loc[:, col_nms]
+# Generate a list of ages 
+age_lst = gen_age_col_lst()
 
-# Going to make a list of tuples with starting and finishing indexes
-cols_start = list(age_df.columns[0::5])
-cols_fin = list(age_df.columns[4::5])
-# Generating a list of tuples which will be the age groupings
-col_groups = [(s,f) for s,f in zip(cols_start,cols_fin)]
-# Again adding "90+", doubling it so it's the same as the other tuples
-col_groups.append((cols_start[-1:]*2))
+# Get a datframe limited to the data ages columns only
+age_df = slice_age_df(bham_pop_df, age_lst)
 
-# Grouping ages in 5 year brackets
-for group in col_groups:
-    age_df[f"{group[0]}-{group[1]}"] = age_df.loc[:,group[0]:group[1]].sum(axis=1)
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = get_col_bins(age_lst)
 
-# Drop the original age columns
-age_df.drop(col_nms, axis=1, inplace=True)
-age_df.rename(columns={'90+-90+':'90+'}, inplace=True)vv
+# get the ages in the age_df binned, and drop the original columns
+age_df = bin_pop_ages(age_df, age_bins, age_lst)
 
 # Ridding the bham pop df of the same cols
-bham_pop_df.drop(col_nms, axis=1, inplace=True)
+bham_pop_df.drop(age_lst, axis=1, inplace=True)
 
 # merging summed+grouped ages back in
-bham_pop_df = pd.merge(bham_pop_df,age_df, left_index=True, right_index=True)
+bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
 
 # create a buffer around the stops, in column "geometry"
 # the `buffer_points` function changes the df in situ
 _ = buffer_points(birmingham_stops_geo_df)
+# TODO: Ask DataScience people why this is changed in situ
 
 # grab some coordinates for a little section of Birmingham: Acocks Green
-ag_east_north = pd.read_csv('Acocks_Green_postcodes.csv', usecols=['Easting', 'Northing'])
-eastings = [easting for easting in ag_east_north.Easting]
-northings = [northing for northing in ag_east_north.Northing]
-east_min = min(eastings)
-east_max = max(eastings)
-north_min = min(northings)
-north_max = max(northings)
-# limit the stops, filtering by the min/max eastings/northings for Acocks Green
-north_mask = (north_min < birmingham_stops_geo_df['Northing']) & (birmingham_stops_geo_df['Northing'] < north_max)
-east_mask = (east_min < birmingham_stops_geo_df['Easting']) & (birmingham_stops_geo_df['Easting'] < east_max)
-# Filter the stops for Acocks Green
-ag_stops_geo_df = birmingham_stops_geo_df[north_mask & east_mask]
 
-# Create the polygon for the combined buffered stops in Acocks Green
-ag_stops_poly = unary_union(list(ag_stops_geo_df.geometry))
+# Get the needed eastings and northings for Acocks Green for demo
+mins_maxs = (ward_nrthng_eastng(district="E08000025",
+                               ward="E05011118"))
+
+# Filtering the stops to the ward of Acocks Green for demo
+ag_stops_geo_df = (filter_stops_by_ward(birmingham_stops_geo_df, mins_maxs))
+
+# Create the polygon for the combined buffered stops in Acocks Green for demo
+ag_stops_poly = poly_from_polys(ag_stops_geo_df)
 
 # Create the polygon for the combined buffered stops in B'ham
-bham_stops_poly = unary_union(list(birmingham_stops_geo_df.geometry))
+bham_stops_poly = poly_from_polys(birmingham_stops_geo_df)
 
 # Plot all the buffered stops in B'ham and AG on to a map
 fig, ax = plt.subplots()
 p = gpd.GeoSeries(bham_stops_poly)
+
 # Plot Acocks Green only stops
 a = gpd.GeoSeries(ag_stops_poly)
 p.plot(ax=ax)
