@@ -11,4 +11,4 @@ requests
 Rtree #==0.9.4
 Shapely #==1.7.0
 urllib3
-zipp
+zipp #
