@@ -126,7 +126,7 @@ Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Make B'ham LSOA just #forthedemo
-bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
+bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")] 
 bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
 # merge the two dataframes limiting to just Birmingham #forthedemo
@@ -158,34 +158,26 @@ bham_pop_df.drop(age_lst, axis=1, inplace=True)
 
 # merging summed+grouped ages back in
 bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
+# converting into GeoDataFrame
+bham_pop_df = gpd.GeoDataFrame(bham_pop_df)
 
-# create a buffer around the stops, in column "geometry"
+# create a buffer around the stops, in column "geometry" #forthedemo
 # the `buffer_points` function changes the df in situ
 _ = buffer_points(birmingham_stops_geo_df)
 # TODO: Ask DataScience people why this is changed in situ
 
-# grab some coordinates for a little section of Birmingham: Acocks Green
-
-# Get the needed eastings and northings for Acocks Green #forthedemo
-mins_maxs = (ward_nrthng_eastng(district="E08000025",
-                               ward="E05011118"))
-
-# Filtering the stops to the ward of Acocks Green #forthedemo
-ag_stops_geo_df = (filter_stops_by_ward(birmingham_stops_geo_df, mins_maxs))
-
-# Create the polygon for the combined buffered stops in Acocks Green #forthedemo
-ag_stops_poly = poly_from_polys(ag_stops_geo_df)
-
 # Create the polygon for the combined buffered stops in B'ham
 bham_stops_poly = poly_from_polys(birmingham_stops_geo_df)
 
-# Plot all the buffered stops in B'ham and AG on to a map
+# find all the pop centroids which are in the bham_stops_poly
+pop_in_poly_df = find_points_in_poly(bham_pop_df, bham_stops_poly)
+
+print(pop_in_poly_df.head(20))
+
+
+# Plot all the buffered stops in B'ham and AG on to a map #forthedemo
 fig, ax = plt.subplots()
 p = gpd.GeoSeries(bham_stops_poly)
-
-# Plot Acocks Green only stops
-a = gpd.GeoSeries(ag_stops_poly)
 p.plot(ax=ax)
-a.plot(ax=ax, color='gold')
 plt.show()
 fig.savefig('bham_ag_stops.png') 

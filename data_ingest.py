@@ -8,7 +8,6 @@ import requests
 from shapely.geometry import Point
 from zipfile import ZipFile
 
-
 def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
     """
     Downloads the zip file (which contains quite a few un-needed datasets)
@@ -40,7 +39,6 @@ def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
         os.remove(zip_path)
 
     return True
-
 
 def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, crs, delim=','):
     """Function to create a Geo-dataframe from a csv file.

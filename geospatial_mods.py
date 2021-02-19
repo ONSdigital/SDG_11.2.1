@@ -42,24 +42,24 @@ def demarc_urb_rural(urbDef, ):
     return None
 
 
-def buffer_points(geo_df, distance_km=500):
+def buffer_points(geo_df, metres=500):
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
     Puts the results into a new column called "buffered"
     As 'epsg:27700' projections units of km, 500m is 0.5km.
     """
-    geo_df['geometry'] = geo_df.geometry.buffer(distance_km)
+    geo_df['geometry'] = geo_df.geometry.buffer(metres)
     return geo_df
 
-
-def draw_5km_buffer(centroid):
-    """
-    Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
-    units of km so 500m is 0.5km.
-    """
-    distance_km = 0.5
-    return centroid.buffer(distance=distance_km)
+# TODO: remove this if it's junk code
+# def draw_5km_buffer(centroid):
+#     """
+#     Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
+#     units of km so 500m is 0.5km.
+#     """
+#     distance_km = 0.5
+#     return centroid.buffer(distance=distance_km)
 
 
 def find_points_in_poly(geo_df, polygon_obj):
