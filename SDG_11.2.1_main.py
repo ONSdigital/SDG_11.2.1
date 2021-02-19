@@ -13,7 +13,6 @@ from data_transform import *
 
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
-
 # Constants
 default_crs = 'EPSG:27700'
 
@@ -88,21 +87,55 @@ uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_df, on="OA11CD", how='left')
 uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
 uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
 
-# Joining the West Mids population dataframe to the centroids dataframe
+# Getting the urban-rural classification by OA for England and Wales
+zip_link = "https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data"
+zip_name = "RUC11_OA11_EW.zip"
+zip_path = os.path.join(data_dir, zip_name)
+csv_nm = 'RUC11_OA11_EW.csv'
+csv_path = os.path.join(data_dir, csv_nm)
+_ = dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir)
+# Make a df of the urban-rural classification
+urb_rur_df = pd.read_csv(csv_path)
+
+# These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
+# I could make this more succinct, but leaving here for clarity and maintainability
+urban_dictionary = {'A1': 'Urban major conurbation', 
+                    'C1': 'Urban city and town', 
+                    'B1': 'Urban minor conurbation',
+                    'C2': 'Urban city and town in a sparse setting'}
+rural_dictionary = {'F1': 'Rural hamlets and isolated dwellings',
+                    'E1': 'Rural village',
+                    'D1': 'Rural town and fringe',
+                    'E2': 'Rural village in a sparse setting',
+                    'F2': 'Rural hamlets and isolated dwellings in a sparse setting',
+                    'D2': 'Rural town and fringe in a sparse setting'}
+
+# mapping to a simple urban or rural classification
+urb_rur_df["urb_rur_class"] =  (urb_rur_df.RUC11CD.map
+                                (lambda x: "urban" 
+                                if x in urban_dictionary.keys() 
+                                else "rural"))
+# filter the df. We only want OA11CD and an urban/rurual classification
+urb_rur_df = urb_rur_df[['OA11CD','urb_rur_class']]
+
+# joining urban rural classification onto the pop df
+uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(urb_rur_df, on="OA11CD", how='left')
+
+# Joining the West Mids population dataframe to the centroids dataframe, #forthedemo
 Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
-# Make B'ham LSOA
+# Make B'ham LSOA just #forthedemo
 bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
 bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
-# merge the two dataframes limiting to just Birmingham
+# merge the two dataframes limiting to just Birmingham #forthedemo
 bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
                                  how='right',
                                  left_on='LSOA11CD',
                                  right_on='LSOA11CD',
                                  suffixes=('_pop', '_LSOA'))
-# rename the "All Ages" column to pop_count as it's the population count
+# rename the "All Ages" column to pop_count as it's the population count 
 bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
 # change pop_count to number (int)
@@ -133,14 +166,14 @@ _ = buffer_points(birmingham_stops_geo_df)
 
 # grab some coordinates for a little section of Birmingham: Acocks Green
 
-# Get the needed eastings and northings for Acocks Green for demo
+# Get the needed eastings and northings for Acocks Green #forthedemo
 mins_maxs = (ward_nrthng_eastng(district="E08000025",
                                ward="E05011118"))
 
-# Filtering the stops to the ward of Acocks Green for demo
+# Filtering the stops to the ward of Acocks Green #forthedemo
 ag_stops_geo_df = (filter_stops_by_ward(birmingham_stops_geo_df, mins_maxs))
 
-# Create the polygon for the combined buffered stops in Acocks Green for demo
+# Create the polygon for the combined buffered stops in Acocks Green #forthedemo
 ag_stops_poly = poly_from_polys(ag_stops_geo_df)
 
 # Create the polygon for the combined buffered stops in B'ham
