@@ -166,18 +166,29 @@ bham_pop_df = gpd.GeoDataFrame(bham_pop_df)
 _ = buffer_points(birmingham_stops_geo_df)
 # TODO: Ask DataScience people why this is changed in situ
 
-# Create the polygon for the combined buffered stops in B'ham
-bham_stops_poly = poly_from_polys(birmingham_stops_geo_df)
+# renaming the column to geometry so the point in polygon func gets expected
+bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
 # find all the pop centroids which are in the bham_stops_poly
-pop_in_poly_df = find_points_in_poly(bham_pop_df, bham_stops_poly)
+pop_in_poly_df = find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
 
-print(pop_in_poly_df.head(20))
+# TODO: pop_in_poly_df has a lot of duplicates. Find out why
+# Dropping duplicates
+pop_in_poly_df.drop_duplicates(inplace=True)
 
+
+# Count the population served by public transport
+served = pop_in_poly_df.pop_count.count()
+full_pop = bham_pop_df.pop_count.count()
+not_served = full_pop - served
+
+print(f"""The number of people who are served by public transport is {served}. \n 
+        The full population of Birmingham is calculated as {full_pop}
+        While the number of people who are not served is {not_served}""")
 
 # Plot all the buffered stops in B'ham and AG on to a map #forthedemo
-fig, ax = plt.subplots()
-p = gpd.GeoSeries(bham_stops_poly)
-p.plot(ax=ax)
-plt.show()
-fig.savefig('bham_ag_stops.png') 
+# fig, ax = plt.subplots()
+# p = gpd.GeoSeries(pop_in_poly_df)
+# p.plot(ax=ax)
+# plt.show()
+# fig.savefig('bham_ag_stops.png') 
