@@ -126,7 +126,7 @@ Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Make B'ham LSOA just #forthedemo
-bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
+bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")] 
 bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
 # merge the two dataframes limiting to just Birmingham #forthedemo
@@ -158,34 +158,37 @@ bham_pop_df.drop(age_lst, axis=1, inplace=True)
 
 # merging summed+grouped ages back in
 bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
+# converting into GeoDataFrame
+bham_pop_df = gpd.GeoDataFrame(bham_pop_df)
 
-# create a buffer around the stops, in column "geometry"
+# create a buffer around the stops, in column "geometry" #forthedemo
 # the `buffer_points` function changes the df in situ
 _ = buffer_points(birmingham_stops_geo_df)
 # TODO: Ask DataScience people why this is changed in situ
 
-# grab some coordinates for a little section of Birmingham: Acocks Green
+# renaming the column to geometry so the point in polygon func gets expected
+bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
-# Get the needed eastings and northings for Acocks Green #forthedemo
-mins_maxs = (ward_nrthng_eastng(district="E08000025",
-                               ward="E05011118"))
+# find all the pop centroids which are in the bham_stops_poly
+pop_in_poly_df = find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
 
-# Filtering the stops to the ward of Acocks Green #forthedemo
-ag_stops_geo_df = (filter_stops_by_ward(birmingham_stops_geo_df, mins_maxs))
+# TODO: pop_in_poly_df has a lot of duplicates. Find out why
+# Dropping duplicates
+pop_in_poly_df.drop_duplicates(inplace=True)
 
-# Create the polygon for the combined buffered stops in Acocks Green #forthedemo
-ag_stops_poly = poly_from_polys(ag_stops_geo_df)
 
-# Create the polygon for the combined buffered stops in B'ham
-bham_stops_poly = poly_from_polys(birmingham_stops_geo_df)
+# Count the population served by public transport
+served = pop_in_poly_df.pop_count.sum()
+full_pop = bham_pop_df.pop_count.sum()
+not_served = full_pop - served
 
-# Plot all the buffered stops in B'ham and AG on to a map
-fig, ax = plt.subplots()
-p = gpd.GeoSeries(bham_stops_poly)
+print(f"""The number of people who are served by public transport is {served}. \n 
+        The full population of Birmingham is calculated as {full_pop}
+        While the number of people who are not served is {not_served}""")
 
-# Plot Acocks Green only stops
-a = gpd.GeoSeries(ag_stops_poly)
-p.plot(ax=ax)
-a.plot(ax=ax, color='gold')
-plt.show()
-fig.savefig('bham_ag_stops.png') 
+# Plot all the buffered stops in B'ham and AG on to a map #forthedemo
+# fig, ax = plt.subplots()
+# p = gpd.GeoSeries(pop_in_poly_df)
+# p.plot(ax=ax)
+# plt.show()
+# fig.savefig('bham_ag_stops.png') 
