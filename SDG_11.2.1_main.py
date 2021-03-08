@@ -178,8 +178,8 @@ pop_in_poly_df.drop_duplicates(inplace=True)
 
 
 # Count the population served by public transport
-served = pop_in_poly_df.pop_count.count()
-full_pop = bham_pop_df.pop_count.count()
+served = pop_in_poly_df.pop_count.sum()
+full_pop = bham_pop_df.pop_count.sum()
 not_served = full_pop - served
 
 print(f"""The number of people who are served by public transport is {served}. \n 
