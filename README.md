@@ -4,7 +4,7 @@ This is project to build a data pipeline to analyse data for the UN Sustainable 
 
 > "Make cities and human settlements inclusive, safe, resilient and sustainable"
 
-By asessing geographical and census data with data on public transport access points (stops and stations), an assessment can be made about the degree of acessability individuals in the population have to public transport. 
+By assessing geographical and census data with data on public transport access points (stops and stations), an assessment can be made about the degree of acessability individuals in the population have to public transport. 
 
 
 ## Description of Target 11.2
