@@ -189,8 +189,13 @@ print(f"""The number of people who are served by public transport is {served}. \
 
 
 # Calculating those served and not served by age
-tot_servd_df = served_proportions_age(pop_df=bham_pop_df, 
-                                      pop_in_poly_df=pop_in_poly_df)
+age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
+       '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64',
+       '65-69', '70-74', '75-79', '80-84', '85-89', '90+']
+
+tot_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=age_bins_)
 
 print(tot_servd_df)
 # Plot all the buffered stops in B'ham and AG on to a map #forthedemo
@@ -227,3 +232,4 @@ sex_df.rename(columns=replacements, inplace=True)
 
 # merge the sex data with the rest of the population data
 bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
+
