@@ -1,4 +1,4 @@
-
+import pandas as pd
 
 def gen_age_col_lst():
     """Makes the column names for the population df. Names are numbers 0-89 and 90+
@@ -67,6 +67,50 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
+
+def served_proportions_age(pop_df, pop_in_poly_df):
+    """Calculates the number of people in each age bin who are served and 
+        not served by public transport, and gives those as a proportion. 
+
+    Parameters:
+        pop_df (pd.DataFrame) : population dataframe
+
+        pop_in_poly_df (pd.DataFrame) : dataframe resulting in the points
+            in polygons enquiry to count (sum) the population within the
+            service area polygon.  
+
+    Returns:
+        pd.DataFrame: a dataframe summarising
+        i) the total number of people in each age bin
+        ii) the number served by public transport
+        iii) the proportion who are served by public transport
+        iv) the proportion who are not served by public transport
+    """    
+    # First list the age bin columns
+    age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
+       '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64',
+       '65-69', '70-74', '75-79', '80-84', '85-89', '90+']
+    age_pop = {}
+    for age_bin in age_bins_:
+        # Total pop
+        t = pop_df[age_bin].sum()
+        # Served pop
+        c = pop_in_poly_df[age_bin].sum()
+        # Unserved pop
+        u_p = t-c
+        # Get proportion served
+        s = c/t
+        # Get proportion unserved
+        u = (t-c)/t
+        age_pop[age_bin] = {"total":t,
+                            "served":c,
+                            "unserved":u_p,
+                            "proportion served": s,
+                            "prportion unserved":u}
+    # Make a df from the total and served pop
+    tot_servd_df = pd.DataFrame(age_pop)
+    return tot_servd_df
+
 
 
 def highly_serv_stops(region):
