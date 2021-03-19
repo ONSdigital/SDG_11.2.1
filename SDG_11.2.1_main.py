@@ -224,6 +224,7 @@ print(f"""The number of people who are served by public transport is {served}. \
 
 
 # Disaggregations!
+pd.set_option("precision", 4)
 
 # Calculating those served and not served by age
 age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
