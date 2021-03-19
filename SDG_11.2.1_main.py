@@ -215,3 +215,15 @@ disability_df.rename(columns=replacements, inplace=True)
 
 # Merge the disability df into main the pop df with a left join 
 bham_pop_df = bham_pop_df.merge(disability_df, on='OA11CD', how="left")
+
+# import the sex data
+sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"), header=6, usecols=["2011 output area", "Males", "Females"])
+replacements = {"2011 output area":'OA11CD',
+                "Males":"male",
+                "Females":"female"}
+
+# # renaming the dodgy col names with their replacements
+sex_df.rename(columns=replacements, inplace=True)
+
+# merge the sex data with the rest of the population data
+bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
