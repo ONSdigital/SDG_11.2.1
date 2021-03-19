@@ -245,3 +245,12 @@ sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       cols_lst=sex_cols)
 
 print(sex_servd_df.head())
+
+# Calculating those served and not served by age
+disab_cols = ["disab_all", "disab_ltd_lot", "disab_ltd_little", "disab_not_ltd"]
+
+disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=disab_cols)
+
+print(disab_servd_df.head())
