@@ -169,30 +169,6 @@ _ = buffer_points(birmingham_stops_geo_df)
 # renaming the column to geometry so the point in polygon func gets expected
 bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
-# find all the pop centroids which are in the bham_stops_poly
-pop_in_poly_df = find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
-
-# TODO: pop_in_poly_df has a lot of duplicates. Find out why
-# Dropping duplicates
-pop_in_poly_df.drop_duplicates(inplace=True)
-
-# Count the population served by public transport
-served = pop_in_poly_df.pop_count.sum()
-full_pop = bham_pop_df.pop_count.sum()
-not_served = full_pop - served
-pct_not_served = "{:.2%}".format(not_served/full_pop)
-pct_served = "{:.2%}".format(served/full_pop)
-
-print(f"""The number of people who are served by public transport is {served}. \n 
-        The full population of Birmingham is calculated as {full_pop}
-        While the number of people who are not served is {not_served}""")
-
-
-# Calculating those served and not served by age
-tot_servd_df = served_proportions_age(pop_df=bham_pop_df, 
-                                      pop_in_poly_df=pop_in_poly_df)
-
-print(tot_servd_df)
 # Plot all the buffered stops in B'ham and AG on to a map #forthedemo
 # fig, ax = plt.subplots()
 # p = gpd.GeoSeries(pop_in_poly_df)
@@ -227,3 +203,45 @@ sex_df.rename(columns=replacements, inplace=True)
 
 # merge the sex data with the rest of the population data
 bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
+
+# find all the pop centroids which are in the bham_stops_poly
+pop_in_poly_df = find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
+
+# TODO: pop_in_poly_df has a lot of duplicates. Find out why
+# Dropping duplicates
+pop_in_poly_df.drop_duplicates(inplace=True)
+
+# Count the population served by public transport
+served = pop_in_poly_df.pop_count.sum()
+full_pop = bham_pop_df.pop_count.sum()
+not_served = full_pop - served
+pct_not_served = "{:.2%}".format(not_served/full_pop)
+pct_served = "{:.2%}".format(served/full_pop)
+
+print(f"""The number of people who are served by public transport is {served}. \n 
+        The full population of Birmingham is calculated as {full_pop}
+        While the number of people who are not served is {not_served}""")
+
+
+# Disaggregations!
+pd.set_option("precision", 4)
+
+# Calculating those served and not served by age
+age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
+       '25-29', '30-34', '35-39', '40-44', '45-49', '50-54', '55-59', '60-64',
+       '65-69', '70-74', '75-79', '80-84', '85-89', '90+']
+
+age_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=age_bins_)
+
+print(age_servd_df)
+
+# Calculating those served and not served by sex
+sex_cols = ['male', 'female']
+
+sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=sex_cols)
+
+print(sex_servd_df.head())
