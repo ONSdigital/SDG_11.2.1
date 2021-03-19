@@ -200,7 +200,18 @@ print(tot_servd_df)
 # plt.show()
 # fig.savefig('bham_ag_stops.png') 
 
-
+# import the disability data
 disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
+# drop the column "mnemonic" as it seems to be a duplicate of the OA code
+disability_df.drop("mnemonic", axis=1, inplace=True)
+# the col headers are database unfriendly. Defining their replacement names
+replacements = {"2011 output area":'OA11CD',
+                "All categories: Long-term health problem or disability":"disab_all",
+                "Day-to-day activities limited a lot":"disab_ltd_lot",
+                "Day-to-day activities limited a little":"disab_ltd_little",
+                "Day-to-day activities not limited":"disab_not_ltd"}
+# renaming the dodgy col names with their replacements
+disability_df.rename(columns=replacements, inplace=True)
 
-print(disability_df.head(10))
+# Merge the disability df into main the pop df with a left join 
+bham_pop_df = bham_pop_df.merge(disability_df, on='OA11CD', how="left")
