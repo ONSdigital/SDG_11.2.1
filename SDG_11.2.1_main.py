@@ -227,6 +227,3 @@ sex_df.rename(columns=replacements, inplace=True)
 
 # merge the sex data with the rest of the population data
 bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
-
-print(sex_df.head())
-print(bham_pop_df.columns)
