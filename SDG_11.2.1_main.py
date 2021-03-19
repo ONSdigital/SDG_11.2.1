@@ -14,15 +14,15 @@ from data_transform import *
 # TODO: inventory check: why is get_and_save_geo_dataset not used
 
 # Constants
-default_crs = 'EPSG:27700'
+DEFAULT_CRS = 'EPSG:27700'
 
 
 # get current working directory
-cwd = os.getcwd()
+CWD = os.getcwd()
 
 # define data directory
 data_dir = (os.path.join
-            (cwd,
+            (CWD,
              'data'))
 
 # define url, paths and names related to zip download
@@ -48,7 +48,7 @@ stops_geo_df = (geo_df_from_csv(path_to_csv=csv_path,
                                 geom_x='Easting',
                                 geom_y='Northing',
                                 cols=cols,
-                                crs=default_crs))
+                                crs=DEFAULT_CRS))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
 uk_LSOA_shp_file = "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
@@ -199,3 +199,8 @@ print(tot_servd_df)
 # p.plot(ax=ax)
 # plt.show()
 # fig.savefig('bham_ag_stops.png') 
+
+
+disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
+
+print(disability_df.head(10))
