@@ -169,13 +169,6 @@ _ = buffer_points(birmingham_stops_geo_df)
 # renaming the column to geometry so the point in polygon func gets expected
 bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
-# Plot all the buffered stops in B'ham and AG on to a map #forthedemo
-# fig, ax = plt.subplots()
-# p = gpd.GeoSeries(pop_in_poly_df)
-# p.plot(ax=ax)
-# plt.show()
-# fig.savefig('bham_ag_stops.png') 
-
 # import the disability data
 disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
@@ -191,6 +184,10 @@ replacements = {"2011 output area":'OA11CD',
                 "Day-to-day activities limited a little":"disab_ltd_little"}
 # renaming the dodgy col names with their replacements
 disability_df.rename(columns=replacements, inplace=True)
+
+# Summing the two columns to get total disabled (which is what I thought
+#   "All categories:..." was!)
+disability_df["disb_total"] = disability_df["disab_ltd_lot"] + disability_df["disab_ltd_little"]
 
 # Merge the disability df into main the pop df with a left join 
 bham_pop_df = bham_pop_df.merge(disability_df, on='OA11CD', how="left")
@@ -227,7 +224,7 @@ print(f"""The number of people who are served by public transport is {served}. \
 
 
 # Disaggregations!
-pd.set_option("precision", 4)
+pd.set_option("precision", 1)
 
 # Calculating those served and not served by age
 age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
@@ -247,10 +244,10 @@ sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=sex_cols)
 
-print(sex_servd_df.head())
 
-# Calculating those served and not served by age
-disab_cols = ["disab_all", "disab_ltd_lot", "disab_ltd_little", "disab_not_ltd"]
+
+# Calculating those served and not served by disability
+disab_cols = ["disab_ltd_lot", "disab_ltd_little", "disb_total"]
 
 disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
                                       pop_in_poly_df=pop_in_poly_df,
