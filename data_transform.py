@@ -92,20 +92,20 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
     pop_sums = {}
     for col in cols_lst:
         # Total pop
-        t = int(pop_df[col].sum())
+        total_pop = int(pop_df[col].sum())
         # Served pop
-        c = int(pop_in_poly_df[col].sum())
+        servd_pop = int(pop_in_poly_df[col].sum())
         # Unserved pop
-        u_p = int(t-c)
+        unsrvd_pop = int(total_pop-servd_pop)
         # Get proportion served
-        s = c/t
+        portion_srvd = servd_pop/total_pop
         # Get proportion unserved
-        u = (t-c)/t
-        pop_sums[col] = {"total":t,
-                            "served":c,
-                            "unserved":u_p,
-                            "proportion served": round(s,4),
-                            "prportion unserved":round(u,4)}
+        unserved = (total_pop-servd_pop)/total_pop
+        pop_sums[col] = {"total":total_pop,
+                            "Served":servd_pop,
+                            "Unserved":unsrvd_pop,
+                            "Proportion served": round(portion_srvd,4),
+                            "Prportion unserved":round(unserved,4)}
     # Make a df from the total and served pop
     tot_servd_df = pd.DataFrame(pop_sums)
     return tot_servd_df
