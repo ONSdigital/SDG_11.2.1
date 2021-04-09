@@ -179,13 +179,16 @@ bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 # import the disability data
 disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
-disability_df.drop("mnemonic", axis=1, inplace=True)
+# also "All categories: Long-term health problem or disability" is not needed, nor is
+# "Day-to-day activities not limited"
+drop_lst = ["mnemonic",
+            "All categories: Long-term health problem or disability",
+            "Day-to-day activities not limited"]
+disability_df.drop(drop_lst, axis=1, inplace=True)
 # the col headers are database unfriendly. Defining their replacement names
 replacements = {"2011 output area":'OA11CD',
-                "All categories: Long-term health problem or disability":"disab_all",
                 "Day-to-day activities limited a lot":"disab_ltd_lot",
-                "Day-to-day activities limited a little":"disab_ltd_little",
-                "Day-to-day activities not limited":"disab_not_ltd"}
+                "Day-to-day activities limited a little":"disab_ltd_little"}
 # renaming the dodgy col names with their replacements
 disability_df.rename(columns=replacements, inplace=True)
 
