@@ -235,6 +235,9 @@ age_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=age_bins_)
 
+# Setting the data types for the df
+age_servd_df = age_servd_df.astype('int32')
+
 print(age_servd_df)
 
 # Calculating those served and not served by sex
@@ -244,7 +247,10 @@ sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=sex_cols)
 
+# Setting the data types for the df
+sex_servd_df = sex_servd_df.astype('int32')
 
+print(sex_servd_df)
 
 # Calculating those served and not served by disability
 disab_cols = ["disab_ltd_lot", "disab_ltd_little", "disb_total"]
@@ -253,4 +259,7 @@ disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=disab_cols)
 
-print(disab_servd_df.head())
+# Setting the data types for the df
+disab_servd_df = disab_servd_df.astype('int32')
+
+print(disab_servd_df)
