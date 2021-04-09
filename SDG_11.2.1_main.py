@@ -263,3 +263,23 @@ disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
 disab_servd_df = disab_servd_df.astype('int32')
 
 print(disab_servd_df)
+
+# Calculating those served and not served by urban/rural
+urb_col = ["urb_rur_class"]
+
+urb_df = bham_pop_df[bham_pop_df.urb_rur_class == "urban"]
+rur_df = bham_pop_df[bham_pop_df.urb_rur_class == "rural"]
+
+urb_servd_df = served_proportions_disagg(pop_df=urb_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=['pop_count'])
+
+rur_servd_df = served_proportions_disagg(pop_df=rur_df, 
+                                      pop_in_poly_df=pop_in_poly_df,
+                                      cols_lst=['pop_count'])
+
+urb_servd_df = urb_servd_df.astype('int32')
+rur_servd_df = rur_servd_df.astype('int32')
+
+print(urb_servd_df)
+print(rur_servd_df)
