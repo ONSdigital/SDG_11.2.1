@@ -7,6 +7,7 @@ import pandas as pd
 import requests
 from shapely.geometry import Point
 from zipfile import ZipFile
+import pyarrow.feather as feather
 
 def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
     """
@@ -39,6 +40,37 @@ def dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir):
         os.remove(zip_path)
 
     return True
+
+def persistent_exists(feather_path, feath_nm):
+    """Checks if a persistent file already exists or not. 
+        Since persistent files will be Apache feather format 
+        currently the function just checks for those"""
+    if os.path.isfile(feather_path):
+        print(f"{feath_nm} already exists")
+        return True
+    else:
+        print(f"{feath_nm} does not exist")
+        return False 
+
+def pd_to_feather(pd_df, feather_path):
+    """
+    Writes a Pandas dataframe to feather for quick reading and retrieval later.
+    """
+    print(f"Writing Pandas dataframe to feather at {feather_path}")
+    feather.write_feather(pd_df, feather_path)
+
+def feather_to_pd_df(feather_path):
+    """[summary]
+
+    Args:
+        feather_path ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """    
+    print("Converting feather to Pandas")
+    pd_df = pd.read_feather(feather_path)
+    return pd_df
 
 def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, crs, delim=','):
     """Function to create a Geo-dataframe from a csv file.
