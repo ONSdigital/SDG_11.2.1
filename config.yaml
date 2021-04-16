@@ -1,1 +1,2 @@
 zip_link : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
+DEFAULT_CRS : 'EPSG:27700'

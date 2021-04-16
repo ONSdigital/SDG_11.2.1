@@ -12,45 +12,29 @@ from geospatial_mods import *
 from data_ingest import *
 from data_transform import *
 
-# TODO: inventory check: why is get_and_save_geo_dataset not used
-
-# Constants
-DEFAULT_CRS = 'EPSG:27700'
-
 # get current working directory
 CWD = os.getcwd()
+# TODO: find out best practice on CWD
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     print("Config loaded")
 
+# Constants
+DEFAULT_CRS = config["DEFAULT_CRS"]
 
-# define data directory
-# data_dir = (os.path.join
-#             (CWD,
-#              'data'))
 
-# define url, paths and names related to zip download
+
+# define url for zip download
 zip_link = config["zip_link"]
-# zip_path = os.path.join(data_dir, zip_name)
-# csv_file_nm = 'Stops.csv'
-# csv_path = os.path.join(data_dir, csv_file_nm)
 
-test_df = any_to_pd("stops", zip_link=config['zip_link'])
-
-# Download the zip file and extract the stops csv
-_ = dl_csv_make_df(csv_file_nm,
-                   csv_path,
-                   zip_name,
-                   zip_path,
-                   zip_link,
-                   data_dir)
+stops_df = any_to_pd("stops", zip_link=zip_link)
 
 # Create the geo dataframe with the stoppoly_from_polyss data
 cols = ['NaptanCode', 'CommonName', 'Easting', 'Northing']
 
-stops_geo_df = (geo_df_from_csv(path_to_csv=csv_path,
+stops_geo_df = (geo_df_from_csv(pd_df=stops_df,
                                 delim=',',
                                 geom_x='Easting',
                                 geom_y='Northing',

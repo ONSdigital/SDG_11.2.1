@@ -121,13 +121,12 @@ def feather_to_pd(feather_path):
     pd_df = pd.read_feather(feather_path)
     return pd_df
 
-def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, crs, delim=','):
+def geo_df_from_csv(pd_df, geom_x, geom_y, cols, crs, delim=','):
     """Function to create a Geo-dataframe from a csv file.
         The process goes via Pandas
 
         Arguments:
-            path_to_csv (string): path to the txt/csv containing geo data
-                to be read
+            pd_df (pd.DataFrame): a pandas dataframe object to be converted
             delimiter (string): the seperator in the csv file e.g. "," or "\t"
             geom_x (string):name of the column that contains the longitude data
             geom_y (string):name of the column that contains the latitude data
@@ -135,12 +134,7 @@ def geo_df_from_csv(path_to_csv, geom_x, geom_y, cols, crs, delim=','):
         Returns:
             Geopandas Dataframe
             """
-    pd_df = pd.read_csv(path_to_csv,
-                        delim,
-                        engine="python",
-                        error_bad_lines=False,
-                        quotechar='"',
-                        usecols=cols)
+
     geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
     geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
     geo_df.crs = crs
