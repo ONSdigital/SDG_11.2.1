@@ -238,6 +238,8 @@ age_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
 # Setting the data types for the df
 age_servd_df = age_servd_df.astype('int32')
 
+print("\n\n==========Age Disaggregation===========\n\n")
+
 print(age_servd_df)
 
 # Calculating those served and not served by sex
@@ -249,6 +251,8 @@ sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
 
 # Setting the data types for the df
 sex_servd_df = sex_servd_df.astype('int32')
+
+print("\n\n==========Sex Disaggregation===========\n\n")
 
 print(sex_servd_df)
 
@@ -262,24 +266,40 @@ disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
 # Setting the data types for the df
 disab_servd_df = disab_servd_df.astype('int32')
 
+print("\n\n==========Disability Disaggregation===========\n\n")
+
 print(disab_servd_df)
 
 # Calculating those served and not served by urban/rural
 urb_col = ["urb_rur_class"]
 
+# Filtering by urban and rural to make 2 dfs 
 urb_df = bham_pop_df[bham_pop_df.urb_rur_class == "urban"]
 rur_df = bham_pop_df[bham_pop_df.urb_rur_class == "rural"]
 
+# Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
+# filtered in the same way
+urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
+                    on="OA11CD", how="left")
+                    .loc[:,['OA11CD','pop_count_y']])
+urb_pop_in_poly_df.rename(columns={'pop_count_y':'pop_count'}, inplace=True)
+rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df, 
+                    on="OA11CD", how="left")
+                    .loc[:,['OA11CD','pop_count_y']])
+rur_pop_in_poly_df.rename(columns={'pop_count_y':'pop_count'}, inplace=True)
+
 urb_servd_df = served_proportions_disagg(pop_df=urb_df, 
-                                      pop_in_poly_df=pop_in_poly_df,
+                                      pop_in_poly_df=urb_pop_in_poly_df,
                                       cols_lst=['pop_count'])
 
 rur_servd_df = served_proportions_disagg(pop_df=rur_df, 
-                                      pop_in_poly_df=pop_in_poly_df,
+                                      pop_in_poly_df=rur_pop_in_poly_df,
                                       cols_lst=['pop_count'])
 
 urb_servd_df = urb_servd_df.astype('int32')
 rur_servd_df = rur_servd_df.astype('int32')
+
+print("\n\n==========Urban/Rural Disaggregation===========\n\n")
 
 print(urb_servd_df)
 print(rur_servd_df)

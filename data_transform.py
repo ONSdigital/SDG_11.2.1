@@ -80,6 +80,10 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
             in polygons enquiry to count (sum) the population within the
             service area polygon.  
 
+        cols_lst (list): a list of the column names in the population 
+            dataframe supplied which are to be summed and assessed for
+            as served/unserved by public transport
+
     Returns:
         pd.DataFrame: a dataframe summarising
         i) the total number of people in each age bin
