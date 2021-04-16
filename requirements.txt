@@ -13,3 +13,4 @@ Shapely #==1.7.0
 urllib3
 zipp
 feather-format
+pyyaml

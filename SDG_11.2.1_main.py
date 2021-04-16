@@ -5,6 +5,7 @@ import os
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import pandas as pd
+import yaml
 
 # Module imports
 from geospatial_mods import *
@@ -16,24 +17,30 @@ from data_transform import *
 # Constants
 DEFAULT_CRS = 'EPSG:27700'
 
-
 # get current working directory
 CWD = os.getcwd()
 
+# Load config
+with open(os.path.join(CWD, "config.yaml")) as yamlfile:
+    config = yaml.load(yamlfile, Loader=yaml.FullLoader)
+    print("Config loaded")
+
+
 # define data directory
-data_dir = (os.path.join
-            (CWD,
-             'data'))
+# data_dir = (os.path.join
+#             (CWD,
+#              'data'))
 
 # define url, paths and names related to zip download
-zip_link = "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
-zip_name = "Napatan.zip"
-zip_path = os.path.join(data_dir, zip_name)
-csv_nm = 'Stops.csv'
-csv_path = os.path.join(data_dir, csv_nm)
+zip_link = config["zip_link"]
+# zip_path = os.path.join(data_dir, zip_name)
+# csv_file_nm = 'Stops.csv'
+# csv_path = os.path.join(data_dir, csv_file_nm)
+
+test_df = any_to_pd("stops", zip_link=config['zip_link'])
 
 # Download the zip file and extract the stops csv
-_ = dl_csv_make_df(csv_nm,
+_ = dl_csv_make_df(csv_file_nm,
                    csv_path,
                    zip_name,
                    zip_path,
@@ -57,7 +64,9 @@ uk_LSOA_df = geo_df_from_geospatialfile(path_to_file=full_path)
 
 # Get a polygon of Birmingham based on the Location Code
 just_birmingham_poly = (get_polygons_of_loccode(
-    geo_df=uk_LSOA_df, dissolveby='LSOA11NM', search="Birmingham"))
+                        geo_df=uk_LSOA_df, 
+                        dissolveby='LSOA11NM',
+                        search="Birmingham"))
 
 # Creating a Geo Dataframe of only stops in Birmingham
 
@@ -91,9 +100,10 @@ uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
 zip_link = "https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data"
 zip_name = "RUC11_OA11_EW.zip"
 zip_path = os.path.join(data_dir, zip_name)
-csv_nm = 'RUC11_OA11_EW.csv'
-csv_path = os.path.join(data_dir, csv_nm)
-_ = dl_csv_make_df(csv_nm, csv_path, zip_name, zip_path, zip_link, data_dir)
+csv_file_nm = 'RUC11_OA11_EW.csv'
+csv_path = os.path.join(data_dir, csv_file_nm)
+_ = dl_csv_make_df(csv_file_nm, csv_path, zip_name, zip_path, zip_link, data_dir)
+
 # Make a df of the urban-rural classification
 urb_rur_df = pd.read_csv(csv_path)
 
