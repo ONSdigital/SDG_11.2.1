@@ -80,6 +80,10 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
             in polygons enquiry to count (sum) the population within the
             service area polygon.  
 
+        cols_lst (list): a list of the column names in the population 
+            dataframe supplied which are to be summed and assessed for
+            as served/unserved by public transport
+
     Returns:
         pd.DataFrame: a dataframe summarising
         i) the total number of people in each age bin
@@ -92,20 +96,20 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
     pop_sums = {}
     for col in cols_lst:
         # Total pop
-        t = int(pop_df[col].sum())
+        total_pop = int(pop_df[col].sum())
         # Served pop
-        c = int(pop_in_poly_df[col].sum())
+        servd_pop = int(pop_in_poly_df[col].sum())
         # Unserved pop
-        u_p = int(t-c)
+        unsrvd_pop = int(total_pop-servd_pop)
         # Get proportion served
-        s = c/t
+        portion_srvd = servd_pop/total_pop
         # Get proportion unserved
-        u = (t-c)/t
-        pop_sums[col] = {"total":t,
-                            "served":c,
-                            "unserved":u_p,
-                            "proportion served": round(s,4),
-                            "prportion unserved":round(u,4)}
+        unserved = (total_pop-servd_pop)/total_pop
+        pop_sums[col] = {"total":total_pop,
+                            "Served":servd_pop,
+                            "Unserved":unsrvd_pop,
+                            "Proportion served": round(portion_srvd,4),
+                            "Prportion unserved":round(unserved,4)}
     # Make a df from the total and served pop
     tot_servd_df = pd.DataFrame(pop_sums)
     return tot_servd_df
