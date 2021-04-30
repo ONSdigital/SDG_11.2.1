@@ -23,13 +23,14 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
-
+DATA_DIR = config["DATA_DIR"]
+EXT_ORDER = config['EXT_ORDER']
 
 # define url for zip download
 zip_link = config["zip_link"]
 
 # Get the pandas dataframe for the stops data
-stops_df = any_to_pd("stops", zip_link=zip_link)
+stops_df = any_to_pd("stops", zip_link=zip_link, ext_order=EXT_ORDER)
 
 # Create the geo dataframe with the stoppoly_from_polyss data
 cols = ['NaptanCode', 'CommonName', 'Easting', 'Northing']
@@ -60,14 +61,14 @@ birmingham_stops_geo_df = (find_points_in_poly
 
 # Getting the west midlands population
 Wmids_pop_df = pd.read_csv(os.path.join
-                           (data_dir,
+                           (DATA_DIR,
                             'population_estimates',
                             'westmids_pop_only.csv'))
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (geo_df_from_geospatialfile
                        (os.path.join
-                        (data_dir,
+                        (DATA_DIR,
                          'pop_weighted_centroids')))
 
 # Get output area boundaries
@@ -83,10 +84,10 @@ uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
 # Getting the urban-rural classification by OA for England and Wales
 zip_link = "https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data"
 zip_name = "RUC11_OA11_EW.zip"
-zip_path = os.path.join(data_dir, zip_name)
+zip_path = os.path.join(DATA_DIR, zip_name)
 csv_file_nm = 'RUC11_OA11_EW.csv'
-csv_path = os.path.join(data_dir, csv_file_nm)
-_ = dl_csv_make_df(csv_file_nm, csv_path, zip_name, zip_path, zip_link, data_dir)
+csv_path = os.path.join(DATA_DIR, csv_file_nm)
+_ = dl_csv_make_df(csv_file_nm, csv_path, zip_name, zip_path, zip_link, DATA_DIR)
 
 # Make a df of the urban-rural classification
 urb_rur_df = pd.read_csv(csv_path)

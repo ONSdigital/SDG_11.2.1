@@ -1,6 +1,7 @@
 # Core imports for this module
 import os
 import json
+from functools import lru_cache
 
 # Third party imports for this module
 import geopandas as gpd
@@ -9,8 +10,12 @@ import requests
 from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
+from typing import Union
 
-def any_to_pd(data_file_nm, zip_link):
+# Types
+PathLike = Union[str, bytes, os.PathLike]
+
+def any_to_pd(data_file_nm: str, zip_link: str, ext_order: list):
     """
     A function which ties together many other data ingest related functions.
         The main purpose is to check for locally stored persistent data 
@@ -29,29 +34,39 @@ def any_to_pd(data_file_nm, zip_link):
     """
 
     # Make the load order (lists are ordered) to prioritise
-    load_order = [f"{data_file_nm}.{ext}" for ext in ['feather','csv','zip']]
+    load_order = [f"{data_file_nm}.{ext}" for ext in ext_order]
     # make a list of functions that apply to these files
-    load_funcs = [pd.read_feather, pd.read_csv, import_extract_delete_zip]
+    load_funcs = [feath_to_df, csv_to_df, import_extract_delete_zip]
     # create a dictionary ready to dispatch functions
     load_func_dict = {f"{file_name}":load_func for file_name, load_func in zip(load_order, load_funcs)}
-    args_dict = 
+    # args_dict = 
     # Iterate through files that might exist
-    for data_file_nm in load_order:
+    for i in range(len(load_order)):
+        data_file_nm = load_order[i] # Indexing because the list was loading in the wrong order
         data_file_path = make_data_path("data", data_file_nm)
         if persistent_exists(data_file_path): # Check if each persistent file exists
             # load the persistent file by dispatching the correct function
             pd_df = load_func_dict[data_file_nm](data_file_path)
-            pd_to_feather(pd_df, data_file_path)
             return pd_df
-        continue # Persistent not found. Continue onto the next file type
-    # None of the persistent files has been found. 
+        continue # None of the persistent files has been found. 
+    # Continue onto the next file type 
     # A zip must be downloaded, extracted, and turned into pd_df
     pd_df = load_func_dict[data_file_nm](data_file_path,
                                         persistent_exists=False,
                                         zip_url=zip_link)
     return pd_df
 
-def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None, **kwargs):
+def feath_to_df(feather_path: PathLike):
+    print(f"Reading feather from {feather_path}.")
+    pd_df = pd.read_feather(feather_path)
+    return pd_df
+
+def csv_to_df(csv_path: PathLike):
+    print(f"Reading csv from {csv_path}.")
+    pd_df = pd.read_csv(csv_path)
+    return pd_df
+    
+def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None):
     if not persistent_exists:
         print(f"Downloading zip from {zip_url}")
         grab_zip(zip_url, zip_path)
@@ -59,6 +74,7 @@ def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None, **
     extract_zip(zip_path)
     delete_junk(zip_path)
     pd_df = pd.read_csv(zip_path)
+    pd_to_feather(pd_df, zip_path)
     return pd_df
 
 def grab_zip(zip_link, zip_path):
@@ -80,31 +96,42 @@ def delete_junk(zip_name, zip_path):
     print(f"Deleting {zip_name} from {zip_path}")
     os.remove(zip_path)
 
-def make_data_path(data_dir, data_file_nm):
+@lru_cache
+def make_data_path(data_dir: str, data_file_nm: str) -> PathLike:
+    """Makes a relative path pointing to the data directory
+
+    Args:
+        data_dir (str): name of the data directory
+        data_file_nm (str): name of the file
+
+    Returns:
+        PathLike: a combination of the data directory and the 
+            filename, suitable for the operating system.
+    """    
     data_path = os.path.join(data_dir, data_file_nm)
     return data_path
 
-def get_file_ext(persistent_file_path):
-    """Get file extension. Returns a tuple of root[0] and extension[1]"""
-    file_ext =  os.path.splitext(persistent_file_path)[1]
-    return file_ext
+# def get_file_ext(persistent_file_path):
+#     """Get file extension. Returns a tuple of root[0] and extension[1]"""
+#     file_ext =  os.path.splitext(persistent_file_path)[1]
+#     return file_ext
 
 def persistent_exists(persistent_file_path):
     """Checks if a persistent file already exists or not. 
         Since persistent files will be Apache feather format 
         currently the function just checks for those"""
-    file_type = get_file_ext(persistent_file_path)
     if os.path.isfile(persistent_file_path):
-        print(f"{file_type[1:]} already exists")
+        print(f"{persistent_file_path} already exists")
         return True
     else:
-        print(f"{file_type[1:]} does not exist")
+        print(f"{persistent_file_path} does not exist")
         return False 
 
-def pd_to_feather(pd_df, feather_path):
+def pd_to_feather(pd_df, current_file_path):
     """Writes a Pandas dataframe to feather for quick reading 
         and retrieval later.
     """
+    feather_path = os.path.splitext(current_file_path)[0]+'.feather'
     if not os.path.isfile(feather_path):
         print(f"Writing Pandas dataframe to feather at {feather_path}")
         feather.write_feather(pd_df, feather_path)
