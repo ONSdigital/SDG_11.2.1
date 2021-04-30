@@ -31,33 +31,36 @@ def any_to_pd(data_file_nm, zip_link):
     # Make the load order (lists are ordered) to prioritise
     load_order = [f"{data_file_nm}.{ext}" for ext in ['feather','csv','zip']]
     # make a list of functions that apply to these files
-    load_funcs = [feather_to_pd , csv_to_df, import_extract_delete_zip]
+    load_funcs = [pd.read_feather, pd.read_csv, import_extract_delete_zip]
     # create a dictionary ready to dispatch functions
     load_func_dict = {f"{file_name}":load_func for file_name, load_func in zip(load_order, load_funcs)}
+    args_dict = 
     # Iterate through files that might exist
     for data_file_nm in load_order:
         data_file_path = make_data_path("data", data_file_nm)
         if persistent_exists(data_file_path): # Check if each persistent file exists
-            # load the persistent file by dispatching the correct function 
+            # load the persistent file by dispatching the correct function
             pd_df = load_func_dict[data_file_nm](data_file_path)
+            pd_to_feather(pd_df, data_file_path)
             return pd_df
         continue # Persistent not found. Continue onto the next file type
     # None of the persistent files has been found. 
     # A zip must be downloaded, extracted, and turned into pd_df
-    pd_df = load_func_dict[data_file_nm](data_file_path, persistent_exists=False, zip_url=zip_link)
+    pd_df = load_func_dict[data_file_nm](data_file_path,
+                                        persistent_exists=False,
+                                        zip_url=zip_link)
     return pd_df
 
-def csv_to_df(csv_path):
-    return pd.read_csv(csv_path)
-
-def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None):
+def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None, **kwargs):
     if not persistent_exists:
+        print(f"Downloading zip from {zip_url}")
         grab_zip(zip_url, zip_path)
+    print("Extracting csv from zip returning pd_df")
     extract_zip(zip_path)
     delete_junk(zip_path)
-    pd_df = csv_to_df(zip_path)
+    pd_df = pd.read_csv(zip_path)
     return pd_df
-    
+
 def grab_zip(zip_link, zip_path):
     # Grab the zipfile from gov.uk
     print(f"Dowloading file from {zip_link}")
@@ -66,7 +69,7 @@ def grab_zip(zip_link, zip_path):
         print(f"Saving to {zip_path}")
         output_file.write(r.content)
 
-def extract_zip(zip_name, csv_nm):
+def extract_zip(zip_name):
     # Open the zip file and extract
     with ZipFile(zip_path, 'r') as zip:
         print(f"Unzipping {zip_name}. Extracting {csv_nm}")
@@ -102,24 +105,11 @@ def pd_to_feather(pd_df, feather_path):
     """Writes a Pandas dataframe to feather for quick reading 
         and retrieval later.
     """
-    print(f"Writing Pandas dataframe to feather at {feather_path}")
-    feather.write_feather(pd_df, feather_path)
-    return True
-
-def feather_to_pd(feather_path):
-    """
-    Imports data from a an Apache feather file 
-        and returns a datafame into memory
-
-    Args:
-        feather_path (string): the path to the feather file
-
-    Returns:
-        pd.DataFrame: pandas dataframe of the data  
-    """    
-    print("Converting feather to Pandas")
-    pd_df = pd.read_feather(feather_path)
-    return pd_df
+    if not os.path.isfile(feather_path):
+        print(f"Writing Pandas dataframe to feather at {feather_path}")
+        feather.write_feather(pd_df, feather_path)
+        return True
+    print("Feather already exists")
 
 def geo_df_from_csv(pd_df, geom_x, geom_y, cols, crs, delim=','):
     """Function to create a Geo-dataframe from a csv file.

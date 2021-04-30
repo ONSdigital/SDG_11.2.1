@@ -25,10 +25,10 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 DEFAULT_CRS = config["DEFAULT_CRS"]
 
 
-
 # define url for zip download
 zip_link = config["zip_link"]
 
+# Get the pandas dataframe for the stops data
 stops_df = any_to_pd("stops", zip_link=zip_link)
 
 # Create the geo dataframe with the stoppoly_from_polyss data
