@@ -10,12 +10,12 @@ import requests
 from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
-from typing import Union
+from typing import List, Set, Dict, Tuple, Optional, Union
 
 # Types
 PathLike = Union[str, bytes, os.PathLike]
 
-def any_to_pd(data_file_nm: str, zip_link: str, ext_order: list):
+def any_to_pd(file_nm: str, zip_link: str, ext_order: List, dtypes:Optional[Dict]) -> pd.DataFrame:
     """
     A function which ties together many other data ingest related functions.
         The main purpose is to check for locally stored persistent data 
@@ -34,11 +34,13 @@ def any_to_pd(data_file_nm: str, zip_link: str, ext_order: list):
     """
 
     # Make the load order (lists are ordered) to prioritise
-    load_order = [f"{data_file_nm}.{ext}" for ext in ext_order]
+    load_order = [f"{file_nm}.{ext}" for ext in ext_order]
     # make a list of functions that apply to these files
-    load_funcs = [feath_to_df, csv_to_df, import_extract_delete_zip]
+    load_funcs = {"feather":feath_to_df,
+                  "csv":csv_to_df,
+                  "zip":import_extract_delete_zip}
     # create a dictionary ready to dispatch functions
-    load_func_dict = {f"{file_name}":load_func for file_name, load_func in zip(load_order, load_funcs)}
+    # load_func_dict = {f"{file_name}":load_func for file_name, load_func in zip(load_order, load_funcs)}
     # args_dict = 
     # Iterate through files that might exist
     for i in range(len(load_order)):
@@ -46,76 +48,86 @@ def any_to_pd(data_file_nm: str, zip_link: str, ext_order: list):
         data_file_path = make_data_path("data", data_file_nm)
         if persistent_exists(data_file_path): # Check if each persistent file exists
             # load the persistent file by dispatching the correct function
-            pd_df = load_func_dict[data_file_nm](data_file_path)
+            if dtypes and ext_order[i]=="csv":
+                pd_df = load_funcs[ext_order[i]](file_nm, data_file_path, dtypes=dtypes)
+            else:
+                pd_df = load_funcs[ext_order[i]](file_nm, data_file_path)
             return pd_df
         continue # None of the persistent files has been found. 
     # Continue onto the next file type 
     # A zip must be downloaded, extracted, and turned into pd_df
-    pd_df = load_func_dict[data_file_nm](data_file_path,
+    pd_df = load_func_dict[data_file_nm](file_nm, 
+                                        data_file_path,
                                         persistent_exists=False,
-                                        zip_url=zip_link)
+                                        zip_url=zip_link,
+                                        dtypes=dtypes)
     return pd_df
 
-def feath_to_df(feather_path: PathLike):
-    print(f"Reading feather from {feather_path}.")
+def feath_to_df(file_nm, feather_path: PathLike):
+    print(f"Reading {file_nm}.feather from {feather_path}.")
     pd_df = pd.read_feather(feather_path)
     return pd_df
 
-def csv_to_df(csv_path: PathLike):
-    print(f"Reading csv from {csv_path}.")
-    pd_df = pd.read_csv(csv_path)
+def csv_to_df(file_nm, csv_path: PathLike, dtypes: Optional[Dict]): #*cols: Optional[List],
+    print(f"Reading {file_nm}.csv from {csv_path}.")
+    if dtypes:
+        cols = list(dtypes.keys())
+        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes)
+    else:
+        pd_df = pd.read_csv(csv_path)
+    pd_to_feather(pd_df, csv_path)
     return pd_df
     
-def import_extract_delete_zip(zip_path, persistent_exists=True, zip_url=None):
+def import_extract_delete_zip(file_nm: str, zip_path:PathLike, 
+                              persistent_exists=True, 
+                              zip_url=None,
+                              *cols,
+                              **dtypes):
     if not persistent_exists:
-        print(f"Downloading zip from {zip_url}")
-        grab_zip(zip_url, zip_path)
-    print("Extracting csv from zip returning pd_df")
-    extract_zip(zip_path)
-    delete_junk(zip_path)
-    pd_df = pd.read_csv(zip_path)
-    pd_to_feather(pd_df, zip_path)
+        grab_zip(file_nm, zip_url, zip_path)
+    
+    csv_nm = file_nm + ".csv"
+    csv_path = make_data_path("data", csv_nm)
+    extract_zip(file_nm, csv_nm, zip_path, csv_path)
+    delete_junk(file_nm, zip_path)
+    pd_df = csv_to_df(file_nm, csv_path, cols, dtypes)
     return pd_df
 
-def grab_zip(zip_link, zip_path):
+def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     # Grab the zipfile from gov.uk
-    print(f"Dowloading file from {zip_link}")
+    print(f"Dowloading {file_nm} from {zip_link}")
     r = requests.get(zip_link)
     with open(zip_path, 'wb') as output_file:
-        print(f"Saving to {zip_path}")
+        print(f"Saving {file_nm} to {zip_path}")
         output_file.write(r.content)
 
-def extract_zip(zip_name):
+def extract_zip(file_nm: str, csv_nm, zip_path, csv_path):
     # Open the zip file and extract
     with ZipFile(zip_path, 'r') as zip:
-        print(f"Unzipping {zip_name}. Extracting {csv_nm}")
-        _ = zip.extract(csv_nm, path=data_dir)
+        print(f"Extracting {csv_nm} from {zip_path}")
+        _ = zip.extract(csv_nm, "data")
 
-def delete_junk(zip_name, zip_path):
+def delete_junk(file_nm: str, zip_path):
     # Delete the zipfile as it's uneeded now
-    print(f"Deleting {zip_name} from {zip_path}")
+    print(f"Deleting {file_nm} from {zip_path}")
     os.remove(zip_path)
 
 @lru_cache
-def make_data_path(data_dir: str, data_file_nm: str) -> PathLike:
+def make_data_path(*data_dir_files: str) -> PathLike:
     """Makes a relative path pointing to the data directory
 
     Args:
-        data_dir (str): name of the data directory
-        data_file_nm (str): name of the file
+        data_dir_files (str): folder name(s) (e.g. name(s) of the 
+            data directory) and name of the file to build a path to
 
     Returns:
         PathLike: a combination of the data directory and the 
             filename, suitable for the operating system.
     """    
-    data_path = os.path.join(data_dir, data_file_nm)
+    data_path = os.path.join(*data_dir_files)
     return data_path
 
-# def get_file_ext(persistent_file_path):
-#     """Get file extension. Returns a tuple of root[0] and extension[1]"""
-#     file_ext =  os.path.splitext(persistent_file_path)[1]
-#     return file_ext
-
+@lru_cache 
 def persistent_exists(persistent_file_path):
     """Checks if a persistent file already exists or not. 
         Since persistent files will be Apache feather format 
@@ -138,13 +150,11 @@ def pd_to_feather(pd_df, current_file_path):
         return True
     print("Feather already exists")
 
-def geo_df_from_csv(pd_df, geom_x, geom_y, cols, crs, delim=','):
-    """Function to create a Geo-dataframe from a csv file.
-        The process goes via Pandas
+def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
+    """Function to create a Geo-dataframe from a Pandas DataFrame.
 
         Arguments:
             pd_df (pd.DataFrame): a pandas dataframe object to be converted
-            delimiter (string): the seperator in the csv file e.g. "," or "\t"
             geom_x (string):name of the column that contains the longitude data
             geom_y (string):name of the column that contains the latitude data
             crs (string): the coordinate reference system required

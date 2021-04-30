@@ -27,19 +27,20 @@ DATA_DIR = config["DATA_DIR"]
 EXT_ORDER = config['EXT_ORDER']
 
 # define url for zip download
-zip_link = config["zip_link"]
+NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
 
+# Define the columns wanted from Naptan
+COLS = list(config["NAPTAN_TYPES"].keys())
+NAPTAN_DTYPES = config["NAPTAN_TYPES"]
 # Get the pandas dataframe for the stops data
-stops_df = any_to_pd("stops", zip_link=zip_link, ext_order=EXT_ORDER)
+stops_df = any_to_pd(file_nm="Stops", 
+                     zip_link=NAPT_ZIP_LINK, 
+                     ext_order=EXT_ORDER,
+                     dtypes=NAPTAN_DTYPES)
 
-# Create the geo dataframe with the stoppoly_from_polyss data
-cols = ['NaptanCode', 'CommonName', 'Easting', 'Northing']
-
-stops_geo_df = (geo_df_from_csv(pd_df=stops_df,
-                                delim=',',
+stops_geo_df = (geo_df_from_pd_df(pd_df=stops_df,
                                 geom_x='Easting',
                                 geom_y='Northing',
-                                cols=cols,
                                 crs=DEFAULT_CRS))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
@@ -82,15 +83,11 @@ uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
 uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
 
 # Getting the urban-rural classification by OA for England and Wales
-zip_link = "https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data"
-zip_name = "RUC11_OA11_EW.zip"
-zip_path = os.path.join(DATA_DIR, zip_name)
-csv_file_nm = 'RUC11_OA11_EW.csv'
-csv_path = os.path.join(DATA_DIR, csv_file_nm)
-_ = dl_csv_make_df(csv_file_nm, csv_path, zip_name, zip_path, zip_link, DATA_DIR)
+Urb_Rur_ZIP_LINK = config["Urb_Rur_ZIP_LINK"]
+URB_RUR_TYPES = config["URB_RUR_TYPES"]
 
 # Make a df of the urban-rural classification
-urb_rur_df = pd.read_csv(csv_path)
+urb_rur_df = any_to_pd("RUC11_OA11_EW", Urb_Rur_ZIP_LINK, ['csv'], URB_RUR_TYPES)
 
 # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
 # I could make this more succinct, but leaving here for clarity and maintainability
@@ -165,6 +162,7 @@ _ = buffer_points(birmingham_stops_geo_df)
 bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
 # import the disability data
+# TODO: use new csv_to_df func to make disability_df
 disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
 # also "All categories: Long-term health problem or disability" is not needed, nor is
@@ -188,6 +186,7 @@ disability_df["disb_total"] = disability_df["disab_ltd_lot"] + disability_df["di
 bham_pop_df = bham_pop_df.merge(disability_df, on='OA11CD', how="left")
 
 # import the sex data
+# TODO: use new csv_to_df func to make the sex_df
 sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"), header=6, usecols=["2011 output area", "Males", "Females"])
 replacements = {"2011 output area":'OA11CD',
                 "Males":"male",

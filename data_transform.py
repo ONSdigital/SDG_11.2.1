@@ -115,7 +115,6 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
     return tot_servd_df
 
 
-
 def highly_serv_stops(region):
     """
     Retrieves timetable data from the Traveline National Dataset for
