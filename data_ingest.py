@@ -2,6 +2,7 @@
 import os
 import json
 from functools import lru_cache
+from time import perf_counter
 
 # Third party imports for this module
 import geopandas as gpd
@@ -56,7 +57,7 @@ def any_to_pd(file_nm: str, zip_link: str, ext_order: List, dtypes:Optional[Dict
         continue # None of the persistent files has been found. 
     # Continue onto the next file type 
     # A zip must be downloaded, extracted, and turned into pd_df
-    pd_df = load_func_dict[data_file_nm](file_nm, 
+    pd_df = load_funcs[ext_order[i]](file_nm, 
                                         data_file_path,
                                         persistent_exists=False,
                                         zip_url=zip_link,
@@ -65,16 +66,24 @@ def any_to_pd(file_nm: str, zip_link: str, ext_order: List, dtypes:Optional[Dict
 
 def feath_to_df(file_nm, feather_path: PathLike):
     print(f"Reading {file_nm}.feather from {feather_path}.")
+    tic = perf_counter()
     pd_df = pd.read_feather(feather_path)
+    toc = perf_counter()
+    print(f"Time taken for feather reading is {toc - tic:.2f} seconds")
     return pd_df
 
 def csv_to_df(file_nm, csv_path: PathLike, dtypes: Optional[Dict]): #*cols: Optional[List],
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
+        tic = perf_counter()
         pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes)
+        toc = perf_counter()
+        print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
         pd_df = pd.read_csv(csv_path)
+    # Calling the pd_to_feather function to make a persistent feather file
+    # for faster retrieval
     pd_to_feather(pd_df, csv_path)
     return pd_df
     
@@ -90,7 +99,7 @@ def import_extract_delete_zip(file_nm: str, zip_path:PathLike,
     csv_path = make_data_path("data", csv_nm)
     extract_zip(file_nm, csv_nm, zip_path, csv_path)
     delete_junk(file_nm, zip_path)
-    pd_df = csv_to_df(file_nm, csv_path, cols, dtypes)
+    pd_df = csv_to_df(file_nm, csv_path, dtypes)
     return pd_df
 
 def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
