@@ -70,8 +70,8 @@ def bin_pop_ages(age_df, age_bins, col_nms):
 
 def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
     """Calculates the number of people in each category, as specified by the column
-        (e.g age range, or disability status) who are served and not served by public 
-        transport, and gives those as a proportion of the total. 
+        (e.g age range, or disability status) who are served and not served by 
+        public transport, and gives those as a proportion of the total. 
 
     Parameters:
         pop_df (pd.DataFrame) : population dataframe
@@ -102,14 +102,14 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
         # Unserved pop
         unsrvd_pop = int(total_pop-servd_pop)
         # Get proportion served
-        portion_srvd = servd_pop/total_pop
+        pct_servd = round((servd_pop/total_pop)*100, 2)
         # Get proportion unserved
-        unserved = (total_pop-servd_pop)/total_pop
-        pop_sums[col] = {"total":total_pop,
-                            "Served":servd_pop,
-                            "Unserved":unsrvd_pop,
-                            "Proportion served": round(portion_srvd,4),
-                            "Prportion unserved":round(unserved,4)}
+        pct_unserved = round(((total_pop-servd_pop)/total_pop)*100, 2)
+        pop_sums[col] = {"Total": str(total_pop),
+                         "Served": str(servd_pop),
+                         "Unserved": str(unsrvd_pop),
+                         "Percentage served": str(pct_servd),
+                         "Percentage unserved": str(pct_unserved)}
     # Make a df from the total and served pop
     tot_servd_df = pd.DataFrame(pop_sums)
     return tot_servd_df

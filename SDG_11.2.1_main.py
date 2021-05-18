@@ -229,9 +229,6 @@ age_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=age_bins_)
 
-# Setting the data types for the df
-age_servd_df = age_servd_df.astype('int32')
-
 print("\n\n==========Age Disaggregation===========\n\n")
 
 print(age_servd_df)
@@ -243,8 +240,6 @@ sex_servd_df = served_proportions_disagg(pop_df=bham_pop_df,
                                       pop_in_poly_df=pop_in_poly_df,
                                       cols_lst=sex_cols)
 
-# Setting the data types for the df
-sex_servd_df = sex_servd_df.astype('int32')
 
 print("\n\n==========Sex Disaggregation===========\n\n")
 
@@ -254,11 +249,8 @@ print(sex_servd_df)
 disab_cols = ["disab_ltd_lot", "disab_ltd_little", "disb_total"]
 
 disab_servd_df = served_proportions_disagg(pop_df=bham_pop_df, 
-                                      pop_in_poly_df=pop_in_poly_df,
-                                      cols_lst=disab_cols)
-
-# Setting the data types for the df
-disab_servd_df = disab_servd_df.astype('int32')
+                                        pop_in_poly_df=pop_in_poly_df,
+                                        cols_lst=disab_cols)
 
 print("\n\n==========Disability Disaggregation===========\n\n")
 
@@ -290,8 +282,6 @@ rur_servd_df = served_proportions_disagg(pop_df=rur_df,
                                       pop_in_poly_df=rur_pop_in_poly_df,
                                       cols_lst=['pop_count'])
 
-urb_servd_df = urb_servd_df.astype('int32')
-rur_servd_df = rur_servd_df.astype('int32')
 
 print("\n\n==========Urban/Rural Disaggregation===========\n\n")
 
