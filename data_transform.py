@@ -1,13 +1,14 @@
 import pandas as pd
 
+
 def gen_age_col_lst():
     """Makes the column names for the population df. Names are numbers 0-89 and 90+
-        all as strings. 
+        all as strings.
 
     Returns:
-        list of str: list of the column names for all age count columns in the 
-        population dataframe 
-    """    
+        list of str: list of the column names for all age count columns in the
+        population dataframe
+    """
     # Getting a list of columns names (0-90) which are strings of integers
     age_col_lst = [str(n) for n in range(90)]
     # Adding '90+' to complete the list
@@ -29,8 +30,8 @@ def slice_age_df(df, col_nms):
 
 
 def get_col_bins(col_nms):
-    """Groups/bins the ages, with 5 year step, starting at "0" into a list 
-        of tuples. Depends on yada yada  
+    """Groups/bins the ages, with 5 year step, starting at "0" into a list
+        of tuples. Depends on yada yada
 
     Args:
         col_nms (list of str): a list of the age columns as strings
@@ -56,31 +57,32 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     Args:
         df (pd.DataFrame): A dataframe of population data
             containing only the age columns
-    """    
+    """
     # Grouping ages in 5 year brackets
     for bin in age_bins:
         age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
 
     # Drop the original age columns
     age_df.drop(col_nms, axis=1, inplace=True)
-    # Rename the '90+' col 
+    # Rename the '90+' col
     age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
 
+
 def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
     """Calculates the number of people in each category, as specified by the column
-        (e.g age range, or disability status) who are served and not served by 
-        public transport, and gives those as a proportion of the total. 
+        (e.g age range, or disability status) who are served and not served by
+        public transport, and gives those as a proportion of the total.
 
     Parameters:
         pop_df (pd.DataFrame) : population dataframe
 
         pop_in_poly_df (pd.DataFrame) : dataframe resulting in the points
             in polygons enquiry to count (sum) the population within the
-            service area polygon.  
+            service area polygon.
 
-        cols_lst (list): a list of the column names in the population 
+        cols_lst (list): a list of the column names in the population
             dataframe supplied which are to be summed and assessed for
             as served/unserved by public transport
 
@@ -90,9 +92,9 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
         ii) the number served by public transport
         iii) the proportion who are served by public transport
         iv) the proportion who are not served by public transport
-    """    
+    """
     # First list the age bin columns
-    
+
     pop_sums = {}
     for col in cols_lst:
         # Total pop
@@ -120,11 +122,11 @@ def highly_serv_stops(region):
     Retrieves timetable data from the Traveline National Dataset for
         any region. Filters stops with that have >1 departure per hour
         on a weekday (Wed is default) between 6am and 8pm.
-    Parameters: 
+    Parameters:
         region (str): the name of the region of the UK that the data
             is needed for
     Returns:
-        highly serviced stops for region    
+        highly serviced stops for region
     """
     #  day="Wed"
-    return None 
+    return None

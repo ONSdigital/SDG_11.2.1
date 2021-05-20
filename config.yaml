@@ -14,3 +14,4 @@ NAPTAN_TYPES :
 URB_RUR_TYPES:
   OA11CD: str
   RUC11CD: category
+uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
