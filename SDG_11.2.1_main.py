@@ -44,9 +44,12 @@ stops_geo_df = (geo_df_from_pd_df(pd_df=stops_df,
                                 crs=DEFAULT_CRS))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
-uk_LSOA_shp_file = "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
+uk_LSOA_shp_file = config['uk_LSOA_shp_file']
 full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = geo_df_from_geospatialfile(path_to_file=full_path)
+
+
+
 
 # Get a polygon of Birmingham based on the Location Code
 just_birmingham_poly = (get_polygons_of_loccode(
@@ -95,12 +98,6 @@ urban_dictionary = {'A1': 'Urban major conurbation',
                     'C1': 'Urban city and town', 
                     'B1': 'Urban minor conurbation',
                     'C2': 'Urban city and town in a sparse setting'}
-rural_dictionary = {'F1': 'Rural hamlets and isolated dwellings',
-                    'E1': 'Rural village',
-                    'D1': 'Rural town and fringe',
-                    'E2': 'Rural village in a sparse setting',
-                    'F2': 'Rural hamlets and isolated dwellings in a sparse setting',
-                    'D2': 'Rural town and fringe in a sparse setting'}
 
 # mapping to a simple urban or rural classification
 urb_rur_df["urb_rur_class"] =  (urb_rur_df.RUC11CD.map
@@ -113,15 +110,15 @@ urb_rur_df = urb_rur_df[['OA11CD','urb_rur_class']]
 # joining urban rural classification onto the pop df
 uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(urb_rur_df, on="OA11CD", how='left')
 
-# Joining the West Mids population dataframe to the centroids dataframe, #forthedemo
+# Joining the West Mids population dataframe to the centroids dataframe, 
 Wmids_pop_df = Wmids_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
-# Make B'ham LSOA just #forthedemo
+# Make B'ham LSOA just 
 bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")] 
 bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
-# merge the two dataframes limiting to just Birmingham #forthedemo
+# merge the two dataframes limiting to just Birmingham 
 bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
                                  how='right',
                                  left_on='LSOA11CD',
@@ -161,7 +158,7 @@ _ = buffer_points(birmingham_stops_geo_df)
 # renaming the column to geometry so the point in polygon func gets expected
 bham_pop_df.rename(columns = {"geometry_pop": "geometry"}, inplace=True)
 
-# import the disability data
+# import the disability data - this is the based on the 2011 census
 # TODO: use new csv_to_df func to make disability_df
 disability_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS303.csv"), header=5)
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
