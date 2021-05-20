@@ -29,11 +29,11 @@ def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
 def demarc_urb_rural(urbDef, ):
     """
     Creates spatial clusters of urban environments based on specified
-        definition of 'urban'. 
+        definition of 'urban'.
         - 'engwls' for the English/Welsh definition of urban
         - 'scott' for the Scottish definition of urban
         - 'euro' for the European definition of urban
-    
+
     Parameters:
         urbDef (str): the definition of urban to be used
     Returns: TBC (probably a polygon)
