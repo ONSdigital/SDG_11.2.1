@@ -195,23 +195,32 @@ disability_df.rename(columns=replacements, inplace=True)
 disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
                                + disability_df["disab_ltd_little"])
 
+# Importing the population data for each OA for 2011
 normal_pop_OA_2011_df = (pd.read_csv(
                          os.path.join
                          ("data","KS101EW-usual_resident_population.csv"),
                          header=6,
                          engine="python"))
+# Cutting out text at the end of the csv
+normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
 
 # Renaming columns for clarity and consistency before join
 normal_pop_OA_2011_df.rename(columns={'2011 output area':'OA11CD','2011':'population_2011'},inplace=True)
 
-# Cutting out text at the end of the csv
-normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
-
 # Casting population numbers in 2011 data as int
 normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(int)
 
-# Merge the disability df into main the pop df with a left join
-bham_pop_df = bham_pop_df.merge(disability_df, on='OA11CD', how="left")
+# Joining the 2011 total population numbers on to disability df
+disability_df = pd.merge(disability_df, normal_pop_OA_2011_df, how='inner', left_on="OA11CD", right_on="OA11CD")
+
+# Ticket #97 - calculating the proportion of disabled people in each OA
+disability_df["proportion_disabled"] = disability_df['disb_total'] / disability_df['population_2011']
+
+# Making a version of the disability df that only has the proportion disabled columna dnthe OA11CD col
+disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
+
+# Merge the proportion disability df into main the pop df with a left join
+bham_pop_df = bham_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
 # import the sex data
 # TODO: use new csv_to_df func to make the sex_df
