@@ -292,7 +292,7 @@ print("\n\n==========Sex Disaggregation===========\n\n")
 print(sex_servd_df)
 
 # Calculating those served and not served by disability
-disab_cols = ["disab_ltd_lot", "disab_ltd_little", "disb_total"]
+disab_cols = ["number_disabled"]
 
 disab_servd_df = dt.served_proportions_disagg(pop_df=bham_pop_df,
                                               pop_in_poly_df=pop_in_poly_df,
