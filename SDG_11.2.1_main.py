@@ -77,7 +77,8 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
 
 # Links were changed at the source site which made the script fail. 
 # Manually downloading the csv for now
-OA_df = pd.read_csv(os.path.join("data", "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+OA_df = pd.read_csv(os.path.join("data",
+                                 "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
 
 # Merge with uk population df
 uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_df, on="OA11CD", how='left')
@@ -222,6 +223,11 @@ disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
 # Merge the proportion disability df into main the pop df with a left join
 bham_pop_df = bham_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
+# Make the calculation of the number of people with disabilities in the year of the
+# population estimates
+bham_pop_df["number_disabled"] = round(bham_pop_df["pop_count"] * bham_pop_df["proportion_disabled"])
+bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
+
 # import the sex data
 # TODO: use new csv_to_df func to make the sex_df
 sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"),
@@ -287,7 +293,7 @@ print("\n\n==========Sex Disaggregation===========\n\n")
 print(sex_servd_df)
 
 # Calculating those served and not served by disability
-disab_cols = ["disab_ltd_lot", "disab_ltd_little", "disb_total"]
+disab_cols = ["number_disabled"]
 
 disab_servd_df = dt.served_proportions_disagg(pop_df=bham_pop_df,
                                               pop_in_poly_df=pop_in_poly_df,
