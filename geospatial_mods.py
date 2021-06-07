@@ -67,25 +67,27 @@ def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
 
+# TODO: delete this function if it is no longer needed.
+# def poly_from_polys(geo_df):
+#     """Makes a combined polygon from the multiple polygons in a geometry
+#         column in a geo dataframe.
 
-def poly_from_polys(geo_df):
-    """Makes a combined polygon from the multiple polygons in a geometry
-        column in a geo dataframe.
+#     Args:
+#         geo_df (gpd.DataFrame):
 
-    Args:
-        geo_df (gpd.DataFrame):
-
-    Returns:
-        class Polygon : a combined polygon which is the perimter of the
-            polygons provided. (shapely.geometry.polygon.Polygon)
-    """
-    poly = unary_union(list(geo_df.geometry))
-    return poly
+#     Returns:
+#         class Polygon : a combined polygon which is the perimter of the
+#             polygons provided. (shapely.geometry.polygon.Polygon)
+#     """
+#     poly = unary_union(list(geo_df.geometry))
+#     return poly
 
 
 def ward_nrthng_eastng(district: str, ward: str):
     # TODO: finish this function doctring
     """Gets the eastings and northings of a ward in a metropolitan area
+    
+    THIS WILL GET DELETED FOR VERSION 1.0
     Args:
         district (str): The district geo code
         ward (str): The ward geo code
