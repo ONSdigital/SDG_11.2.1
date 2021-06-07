@@ -105,25 +105,3 @@ def ward_nrthng_eastng(district: str, ward: str):
     return mins_maxs
 
 
-def filter_stops_by_ward(df: pd.DataFrame, mins_maxs: dict):
-    """Makes a filtered dataframe (used for the filtering the stops dataframe)
-        based on northings and eastings.
-
-    Args:
-        df (pd.DataFrame): The full dataframe to be filtered
-        mins_maxs (dict): A dictionary with the mins and maxes of the eastings
-            and northings of the area to be filtered
-
-    Returns:
-        pd.DataFrame : A filtered dataframe, limited by the eastings and
-            northings supplied
-    """
-    # Limit the stops, filtering by the min/max eastings/northings for ward
-    mm = mins_maxs
-    nrth_mask = (mm['n_min'] < df['Northing']) & (df['Northing'] < mm['n_max'])
-    east_mask = (mm['e_min'] < df['Easting']) & (df['Easting'] < mm['e_max'])
-
-    # Filter the stops for the ward
-    filtered_df = df[nrth_mask & east_mask]
-
-    return filtered_df
