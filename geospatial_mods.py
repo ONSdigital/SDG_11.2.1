@@ -28,23 +28,8 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
     return polygon_df
 
 
-def demarc_urb_rural(urbDef, ):
-    """
-    Creates spatial clusters of urban environments based on specified
-        definition of 'urban'.
-        - 'engwls' for the English/Welsh definition of urban
-        - 'scott' for the Scottish definition of urban
-        - 'euro' for the European definition of urban
-
-    Parameters:
-        urbDef (str): the definition of urban to be used
-    Returns: TBC (probably a polygon)
-            """
-
-    return None
-
-
-def buffer_points(geo_df, metres=500):
+def buffer_points((geo_df: gpd.GeoDataFrame,
+                  metres=500: int) -> gpd.GeoDataFrame):
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
@@ -54,17 +39,7 @@ def buffer_points(geo_df, metres=500):
     geo_df['geometry'] = geo_df.geometry.buffer(metres)
     return geo_df
 
-# TODO: remove this if it's junk code
-# def draw_5km_buffer(centroid):
-#     """
-#     Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
-#     units of km so 500m is 0.5km.
-#     """
-#     distance_km = 0.5
-#     return centroid.buffer(distance=distance_km)
-
-
-def find_points_in_poly(geo_df, polygon_obj):
+def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
     """Find points in polygon using geopandas' spatial join
         which joins the supplied geo_df (as left_df) and the
         polygon (as right_df).
@@ -102,13 +77,13 @@ def poly_from_polys(geo_df):
 
     Returns:
         class Polygon : a combined polygon which is the perimter of the
-            polygons provided.
+            polygons provided. (shapely.geometry.polygon.Polygon)
     """
     poly = unary_union(list(geo_df.geometry))
     return poly
 
 
-def ward_nrthng_eastng(district, ward):
+def ward_nrthng_eastng(district: str, ward: str):
     # TODO: finish this function doctring
     """Gets the eastings and northings of a ward in a metropolitan area
     Args:
@@ -130,7 +105,7 @@ def ward_nrthng_eastng(district, ward):
     return mins_maxs
 
 
-def filter_stops_by_ward(df, mins_maxs):
+def filter_stops_by_ward(df: pd.DataFrame, mins_maxs: dict):
     """Makes a filtered dataframe (used for the filtering the stops dataframe)
         based on northings and eastings.
 
