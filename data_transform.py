@@ -61,10 +61,15 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     return age_df
 
 
-def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
+def served_proportions_disagg(pop_df: pd.DataFrame,
+                              pop_in_poly_df: pd.DataFrame,
+                              cols_lst: List[str]):
     """Calculates the number of people in each category, as specified by the column
         (e.g age range, or disability status) who are served and not served by
         public transport, and gives those as a proportion of the total.
+        
+        Note: the numeric values in the dataframe are return as strings for
+        formatting reasons
 
     Parameters:
         pop_df (pd.DataFrame) : population dataframe
@@ -73,7 +78,7 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
             in polygons enquiry to count (sum) the population within the
             service area polygon.
 
-        cols_lst (list): a list of the column names in the population
+        cols_lst (List[str]): a list of the column names in the population
             dataframe supplied which are to be summed and assessed for
             as served/unserved by public transport
 
@@ -83,6 +88,7 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
         ii) the number served by public transport
         iii) the proportion who are served by public transport
         iv) the proportion who are not served by public transport
+    
     """
     # First list the age bin columns
 
