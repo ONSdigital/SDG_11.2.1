@@ -4,7 +4,9 @@ import pandas as pd
 from shapely.ops import unary_union
 
 
-def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
+def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
+                            dissolveby='OA11CD',
+                            search=None) -> gpd.GeoDataFrame:
     """
     Gets the polygon for a place based on it name, LSOA code or OA code
 
@@ -26,23 +28,8 @@ def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
     return polygon_df
 
 
-def demarc_urb_rural(urbDef, ):
-    """
-    Creates spatial clusters of urban environments based on specified
-        definition of 'urban'.
-        - 'engwls' for the English/Welsh definition of urban
-        - 'scott' for the Scottish definition of urban
-        - 'euro' for the European definition of urban
-
-    Parameters:
-        urbDef (str): the definition of urban to be used
-    Returns: TBC (probably a polygon)
-            """
-
-    return None
-
-
-def buffer_points(geo_df, metres=500):
+def buffer_points((geo_df: gpd.GeoDataFrame,
+                  metres=500: int) -> gpd.GeoDataFrame):
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
@@ -52,17 +39,7 @@ def buffer_points(geo_df, metres=500):
     geo_df['geometry'] = geo_df.geometry.buffer(metres)
     return geo_df
 
-# TODO: remove this if it's junk code
-# def draw_5km_buffer(centroid):
-#     """
-#     Draws a 5km (radius) buffer around a point. As 'epsg:27700' projections
-#     units of km so 500m is 0.5km.
-#     """
-#     distance_km = 0.5
-#     return centroid.buffer(distance=distance_km)
-
-
-def find_points_in_poly(geo_df, polygon_obj):
+def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
     """Find points in polygon using geopandas' spatial join
         which joins the supplied geo_df (as left_df) and the
         polygon (as right_df).
@@ -100,13 +77,13 @@ def poly_from_polys(geo_df):
 
     Returns:
         class Polygon : a combined polygon which is the perimter of the
-            polygons provided.
+            polygons provided. (shapely.geometry.polygon.Polygon)
     """
     poly = unary_union(list(geo_df.geometry))
     return poly
 
 
-def ward_nrthng_eastng(district, ward):
+def ward_nrthng_eastng(district: str, ward: str):
     # TODO: finish this function doctring
     """Gets the eastings and northings of a ward in a metropolitan area
     Args:
@@ -128,25 +105,3 @@ def ward_nrthng_eastng(district, ward):
     return mins_maxs
 
 
-def filter_stops_by_ward(df, mins_maxs):
-    """Makes a filtered dataframe (used for the filtering the stops dataframe)
-        based on northings and eastings.
-
-    Args:
-        df (pd.DataFrame): The full dataframe to be filtered
-        mins_maxs (dict): A dictionary with the mins and maxes of the eastings
-            and northings of the area to be filtered
-
-    Returns:
-        pd.DataFrame : A filtered dataframe, limited by the eastings and
-            northings supplied
-    """
-    # Limit the stops, filtering by the min/max eastings/northings for ward
-    mm = mins_maxs
-    nrth_mask = (mm['n_min'] < df['Northing']) & (df['Northing'] < mm['n_max'])
-    east_mask = (mm['e_min'] < df['Easting']) & (df['Easting'] < mm['e_max'])
-
-    # Filter the stops for the ward
-    filtered_df = df[nrth_mask & east_mask]
-
-    return filtered_df

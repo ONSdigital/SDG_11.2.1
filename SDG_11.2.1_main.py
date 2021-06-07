@@ -143,8 +143,8 @@ bham_pop_df['pop_count'] = (pd.to_numeric
                              .pop_count.str
                              .replace(",", "")))
 
-# Generate a list of ages
-age_lst = dt.gen_age_col_lst()
+# Get a list of ages from config
+age_lst = config['age_lst']
 
 # Get a datframe limited to the data ages columns only
 age_df = dt.slice_age_df(bham_pop_df, age_lst)
