@@ -4,7 +4,9 @@ import pandas as pd
 from shapely.ops import unary_union
 
 
-def get_polygons_of_loccode(geo_df, dissolveby='OA11CD', search=None):
+def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
+                            dissolveby='OA11CD',
+                            search=None) -> gpd.GeoDataFrame:
     """
     Gets the polygon for a place based on it name, LSOA code or OA code
 
