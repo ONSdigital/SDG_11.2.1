@@ -1,6 +1,6 @@
 # Project: Analysis_SDG_11.2.1
 
-This is project to build a data pipeline to analyse data for the UN Sustainable Development Goal indicator 11.2.1, which is part of goal 11:
+This project is to build a data pipeline to analyse data for the UN Sustainable Development Goal indicator 11.2.1, which is part of goal 11:
 
 > "Make cities and human settlements inclusive, safe, resilient and sustainable"
 
