@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Third party imports for this module
 import geopandas as gpd
 import pandas as pd
@@ -28,8 +29,7 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
     return polygon_df
 
 
-def buffer_points((geo_df: gpd.GeoDataFrame,
-                  metres=500: int) -> gpd.GeoDataFrame):
+def buffer_points(geo_df: gpd.GeoDataFrame, metres=500) -> gpd.GeoDataFrame:
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
@@ -38,6 +38,7 @@ def buffer_points((geo_df: gpd.GeoDataFrame,
     """
     geo_df['geometry'] = geo_df.geometry.buffer(metres)
     return geo_df
+
 
 def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
     """Find points in polygon using geopandas' spatial join
@@ -86,7 +87,7 @@ def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
 def ward_nrthng_eastng(district: str, ward: str):
     # TODO: finish this function doctring
     """Gets the eastings and northings of a ward in a metropolitan area
-    
+
     THIS WILL GET DELETED FOR VERSION 1.0
     Args:
         district (str): The district geo code
@@ -105,5 +106,3 @@ def ward_nrthng_eastng(district: str, ward: str):
         "n_min": min(northings),
         "n_max": max(northings)}
     return mins_maxs
-
-
