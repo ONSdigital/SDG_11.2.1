@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Core imports
 import os
 
@@ -60,7 +61,19 @@ birmingham_stops_geo_df = (gs.find_points_in_poly
                            (geo_df=stops_geo_df,
                             polygon_obj=just_birmingham_poly))
 
-# Getting the west midlands population estimates for 2019
+# Getting the entire population estimates for 2019
+pop_est_data_sources = open(os.path.join("data",
+                                         "population_estimates",
+                                         "population_estimates_data_sources.txt"))
+source_urls = pop_est_data_sources.readlines()
+
+for url in source_urls:
+    re_pattern = re.compile("\/([a-zA-Z0-9_]*\.zip)")
+    file_name = re.search(re_pattern, url[:-1])
+    file_name = file_name.group(1)
+    save_path = os.path.join("data\population_estimates", file_name)
+    _grab_zip(file_nm=file_name, zip_link=url, zip_path=save_path)
+
 Wmids_pop_df = pd.read_csv(os.path.join
                            (DATA_DIR,
                             'population_estimates',
@@ -75,7 +88,7 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
 
-# Links were changed at the source site which made the script fail. 
+# Links were changed at the source site which made the script fail.
 # Manually downloading the csv for now
 OA_df = pd.read_csv(os.path.join("data",
                                  "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
@@ -199,23 +212,27 @@ disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
 # Importing the population data for each OA for 2011
 normal_pop_OA_2011_df = (pd.read_csv(
                          os.path.join
-                         ("data","KS101EW-usual_resident_population.csv"),
+                         ("data", "KS101EW-usual_resident_population.csv"),
                          header=6,
                          engine="python"))
 # Cutting out text at the end of the csv
 normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
 
 # Renaming columns for clarity and consistency before join
-normal_pop_OA_2011_df.rename(columns={'2011 output area':'OA11CD','2011':'population_2011'},inplace=True)
+normal_pop_OA_2011_df.rename(
+    columns={'2011 output area': 'OA11CD', '2011': 'population_2011'}, inplace=True)
 
 # Casting population numbers in 2011 data as int
-normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(int)
+normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(
+    int)
 
 # Joining the 2011 total population numbers on to disability df
-disability_df = pd.merge(disability_df, normal_pop_OA_2011_df, how='inner', left_on="OA11CD", right_on="OA11CD")
+disability_df = pd.merge(disability_df, normal_pop_OA_2011_df,
+                         how='inner', left_on="OA11CD", right_on="OA11CD")
 
 # Ticket #97 - calculating the proportion of disabled people in each OA
-disability_df["proportion_disabled"] = disability_df['disb_total'] / disability_df['population_2011']
+disability_df["proportion_disabled"] = disability_df['disb_total'] / \
+    disability_df['population_2011']
 
 # Making a version of the disability df that only has the proportion disabled columna dnthe OA11CD col
 disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
@@ -225,7 +242,8 @@ bham_pop_df = bham_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
 # Make the calculation of the number of people with disabilities in the year of the
 # population estimates
-bham_pop_df["number_disabled"] = round(bham_pop_df["pop_count"] * bham_pop_df["proportion_disabled"])
+bham_pop_df["number_disabled"] = round(
+    bham_pop_df["pop_count"] * bham_pop_df["proportion_disabled"])
 bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
 
 # import the sex data
