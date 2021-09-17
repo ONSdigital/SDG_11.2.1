@@ -112,13 +112,13 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict]) -> pd.DataFrame:
+def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
     
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
-        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes)
+        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
         print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
