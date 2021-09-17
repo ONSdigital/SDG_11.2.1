@@ -98,12 +98,21 @@ C:\Python36\envs\SDG_11.2.1\python.exe
 
 Showing your are using the Python from the virtual environment, not the base installation of Python. 
 
-### Install the dependencies
+### Create the environment from the yaml file
 
-You should be in correct directory, where `requirements.txt` exists. Run:
+Run the following to get the environment set up 
 
-    (SDG_11.2.1) $ pip install -r requirements.txt
+`conda env create --file=environment.yml`
 
+and 
+
+`conda activate SDG_11.2.1` 
+
+or on Windows
+
+`activate SDG_11.2.1` 
+
+to activate it. 
 
 Note: On on Linux Ubuntu/Mint 18.04 you may have to install rtree from apt instead of pip. Run: 
 
