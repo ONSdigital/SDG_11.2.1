@@ -28,8 +28,7 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
     return polygon_df
 
 
-def buffer_points((geo_df: gpd.GeoDataFrame,
-                  metres=500: int) -> gpd.GeoDataFrame):
+def buffer_points(geo_df: gpd.GeoDataFrame, metres=int(500)) -> gpd.GeoDataFrame:
     """
     Provide a Geo Dataframe with points you want buffering.
     Draws a 5km (radius) buffer around the points.
