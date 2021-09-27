@@ -3,7 +3,7 @@ from ftplib import FTP
 
 ftp_host = '162.241.253.72'
 ftp_user = 'ons@ainslierockwell.com'
-ftp_pass = 'u(f}rwY1^glh'
+ftp_pass = ftp_pass.txt
 
 def ftp_connect():
     ftp = FTP(ftp_host)
