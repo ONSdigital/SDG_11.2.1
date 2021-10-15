@@ -136,3 +136,10 @@ Stops.csv
 
 #ftp_password
 ftp_pass.txt
+
+#conda environment
+envs
+
+#data files
+data/
+.SDG_11.2.1
