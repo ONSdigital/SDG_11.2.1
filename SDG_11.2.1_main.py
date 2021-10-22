@@ -143,6 +143,12 @@ bham_pop_df['pop_count'] = (pd.to_numeric
                              .pop_count.str
                              .replace(",", "")))
 
+# Ticket #112 Map OA codes to Local Authority Names
+LA_df = pd.read_csv("data/Output_Area_to_Lower_Layer_Super_Output_Area_to_Middle_Layer_Super_Output_Area_to_Local_Authority_District__December_2020__Lookup_in_England_and_Wales.csv", usecols=["OA11CD", "LAD20NM"])
+
+bham_pop_df = pd.merge(bham_pop_df, LA_df, how="left", on="OA11CD")
+
+
 # Get a list of ages from config
 age_lst = config['age_lst']
 
@@ -214,7 +220,7 @@ normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_201
 # Joining the 2011 total population numbers on to disability df
 disability_df = pd.merge(disability_df, normal_pop_OA_2011_df, how='inner', left_on="OA11CD", right_on="OA11CD")
 
-# Ticket #97 - calculating the proportion of disabled people in each OA
+# Calculating the proportion of disabled people in each OA
 disability_df["proportion_disabled"] = (
                                         disability_df['disb_total'] 
                                         / 
