@@ -22,38 +22,55 @@ def any_to_pd(file_nm: str,
               ext_order: List,
               dtypes: Optional[Dict]) -> pd.DataFrame:
     """
-    A function which ties together many other data ingest related functions.
+    A function which ties together many other data ingest related functions to 
+        to import data. 
+
+        Currently this function can handle the remote or local import of data 
+        from zip (containing csv files), and csv files.
+        
         The main purpose is to check for locally stored persistent data
-        files and get that data into a dataframe.
-        Each time checking for download/extracted data so it doesn't have to
-        go through the process again.
-        Firstly it checks for a feather file and loads that if available.
-        If the feather is not available the scipt may not have been run
-        before, so it checks for a csv file, then loads that if available.
+        files and get that data into a dataframe for further processing.
+
+        Each time the function checks for download/extracted data so it 
+        doesn't have to go through the process again.
+
+        Firstly the function checks for a feather file and loads that if 
+        available.
+
+        If the feather is not available the function checks for a csv file,
+        then loads that if available.
+
         If no csv file is available it checks for a zip file, from which to
-        extract the csv from. If the zip is not available locally it falls back
-        downloading the zip file (which contains several un-needed datasets)
-        then extracts the needed data set (csv) and eletes the now un-needed
-        zip file.
+        extract the csv from.
+        
+        If a zip file is not available locally it falls back to downloading
+        the zip file (which could contains other un-needed datasets)
+        then extracts the specified/needed data set (csv) and deletes the
+        now un-needed zip file.
+
+        This function should be used in place of pd.read_csv for example.
+
+    TODO: extend this function to handle API import of json data - may already be done in get_and_save_geo_dataset function
+    
+    Returns:
+        pd.DataFrame: A dataframe of the data that has been imported
     """
 
     # Make the load order (lists are ordered) to prioritise
     load_order = [f"{file_nm}.{ext}" for ext in ext_order]
     # make a list of functions that apply to these files
-    load_funcs = {"feather": feath_to_df,
-                  "csv": csv_to_df,
-                  "zip": import_extract_delete_zip}
+    load_funcs = {"feather": _feath_to_df,
+                  "csv": _csv_to_df,
+                  "zip": _import_extract_delete_zip}
     # create a dictionary ready to dispatch functions
     # load_func_dict = {f"{file_name}": load_func
-    # for file_name, load_func
-    # in zip(load_order, load_funcs)}
 
     # Iterate through files that might exist
     for i in range(len(load_order)):
         # Indexing with i because the list loading in the wrong order
         data_file_nm = load_order[i]
-        data_file_path = make_data_path("data", data_file_nm)
-        if persistent_exists(data_file_path):
+        data_file_path = _make_data_path("data", data_file_nm)
+        if _persistent_exists(data_file_path):
             # Check if each persistent file exists
             # load the persistent file by dispatching the correct function
             if dtypes and ext_order[i] == "csv":
@@ -75,49 +92,73 @@ def any_to_pd(file_nm: str,
     return pd_df
 
 
-def feath_to_df(file_nm, feather_path: PathLike):
+def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
+    """Feather reading function used by the any_to_pd
+        fucntion.
+
+    Args:
+        file_nm (str): the name of the file without extension
+        feather_path (PathLike): the path/to/the/featherfile
+
+    Returns:
+        pd.DataFrame: Pandas dataframe read from the persistent feather file
+    """        
     print(f"Reading {file_nm}.feather from {feather_path}.")
     tic = perf_counter()
     pd_df = pd.read_feather(feather_path)
     toc = perf_counter()
-    print(f"Time taken for feather reading is {toc - tic:.2f} seconds")
+    print(f"""Time taken for {file_nm}.feather 
+          reading is {toc - tic:.2f} seconds""")
     return pd_df
 
 
-def csv_to_df(file_nm, csv_path: PathLike, dtypes: Optional[Dict]):
+def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
+    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
-        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes)
+        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
         print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
         pd_df = pd.read_csv(csv_path)
     # Calling the pd_to_feather function to make a persistent feather file
     # for faster retrieval
-    pd_to_feather(pd_df, csv_path)
+    _pd_to_feather(pd_df, csv_path)
     return pd_df
 
 
-def import_extract_delete_zip(file_nm: str, zip_path: PathLike,
+def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                               persistent_exists=True,
                               zip_url=None,
                               *cols,
-                              **dtypes):
+                              **dtypes) -> pd.DataFrame:
     if not persistent_exists:
-        grab_zip(file_nm, zip_url, zip_path)
+        # checking if a persistent zip exists to save downloading
+        _grab_zip(file_nm, zip_url, zip_path)
 
     csv_nm = file_nm + ".csv"
-    csv_path = make_data_path("data", csv_nm)
-    extract_zip(file_nm, csv_nm, zip_path, csv_path)
-    delete_junk(file_nm, zip_path)
-    pd_df = csv_to_df(file_nm, csv_path, dtypes)
+    csv_path = _make_data_path("data", csv_nm)
+    _extract_zip(file_nm, csv_nm, zip_path, csv_path)
+    _delete_junk(file_nm, zip_path)
+    pd_df = _csv_to_df(file_nm, csv_path, dtypes)
     return pd_df
 
 
-def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
-    # Grab the zipfile from gov.uk
+def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
+    """Used by _import_extract_delete_zip function to download
+        a zip file from the URI specified in the the zip_link 
+        parameter.
+        
+       This function does not return anything but 
+
+    Args:
+        file_nm (str): the name of the file without extension
+        zip_link (str): URI to the zip to be downloaded
+        zip_path (PathLike): path/to/the/write/directory, e.g. '/data/'
+    """    
+    # Grab the zipfile from URI
     print(f"Dowloading {file_nm} from {zip_link}")
     r = requests.get(zip_link)
     with open(zip_path, 'wb') as output_file:
@@ -125,22 +166,44 @@ def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         output_file.write(r.content)
 
 
-def extract_zip(file_nm: str, csv_nm, zip_path, csv_path):
+def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLike):
+    """Used by _import_extract_delete_zip function to extract
+        the needed csv dataset from the locally stored zip file.
+
+    Args:
+        file_nm (str): the name of the file without extension
+        csv_nm (str): the name of the csv file that is 
+                      expected inside the zip file
+        zip_path (PathLike): path/to/local/zip/file.zip
+        csv_path (PathLike): The path where the csv should be written to, e.g. /data/
+    """    
     # Open the zip file and extract
+    # TODO: Correction: zip.extract should be writing to the csv_path, not to "data".
     with ZipFile(zip_path, 'r') as zip:
         print(f"Extracting {csv_nm} from {zip_path}")
         _ = zip.extract(csv_nm, "data")
 
 
-def delete_junk(file_nm: str, zip_path):
+def _delete_junk(file_nm: str, zip_path: PathLike):
+    """Used by _import_extract_delete_zip function to delete the
+        zip file after it was downloaded and the needed data extracted
+        it.
+
+    Args:
+        file_nm (str): the name of the file without extension
+        zip_path (PathLike): path/to/local/zip/file.zip that is to deleted
+    """   
     # Delete the zipfile as it's uneeded now
     print(f"Deleting {file_nm} from {zip_path}")
     os.remove(zip_path)
 
 
 @lru_cache
-def make_data_path(*data_dir_files: str) -> PathLike:
-    """Makes a relative path pointing to the data directory
+def _make_data_path(*data_dir_files: str) -> PathLike:
+    """Makes a relative path pointing to the data directory.
+    
+    This was created to avoid repeated using
+        os.path.join(somepath, somefile) all over the script.
 
     Args:
         data_dir_files (str): folder name(s) (e.g. name(s) of the
@@ -148,14 +211,15 @@ def make_data_path(*data_dir_files: str) -> PathLike:
 
     Returns:
         PathLike: a combination of the data directory and the
-            filename, suitable for the operating system.
+            filename, suitable for the operating system. Note: PathLike
+            has been defined as a custom data type in this script.
     """
     data_path = os.path.join(*data_dir_files)
     return data_path
 
 
 @lru_cache
-def persistent_exists(persistent_file_path):
+def _persistent_exists(persistent_file_path):
     """Checks if a persistent file already exists or not.
         Since persistent files will be Apache feather format
         currently the function just checks for those"""
@@ -167,15 +231,18 @@ def persistent_exists(persistent_file_path):
         return False
 
 
-def pd_to_feather(pd_df, current_file_path):
-    """Writes a Pandas dataframe to feather for quick reading
-        and retrieval later.
-    """
+def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
+    """Used by the any_to_pd function to writes a Pandas dataframe
+        to feather for quick reading and retrieval later.
+
+        This function returns nothing because it simply writes to disk.
+    """    
     feather_path = os.path.splitext(current_file_path)[0]+'.feather'
+    
+    # TODO: this function should make use of _persistent_existsD    
     if not os.path.isfile(feather_path):
         print(f"Writing Pandas dataframe to feather at {feather_path}")
         feather.write_feather(pd_df, feather_path)
-        return True
     print("Feather already exists")
 
 

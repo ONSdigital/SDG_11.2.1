@@ -1,27 +1,13 @@
+from typing import List
 import pandas as pd
 
 
-def gen_age_col_lst():
-    """Makes the column names for the population df. Names are numbers 0-89 and 90+
-        all as strings.
-
-    Returns:
-        list of str: list of the column names for all age count columns in the
-        population dataframe
-    """
-    # Getting a list of columns names (0-90) which are strings of integers
-    age_col_lst = [str(n) for n in range(90)]
-    # Adding '90+' to complete the list
-    age_col_lst.append('90+')
-    return age_col_lst
-
-
-def slice_age_df(df, col_nms):
+def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
     """Slices a dataframe according to the list of column names provided.
 
     Args:
         df (pd.DataFrame): DataFrame to be sliced
-        col_nms (list of str): column names as string in a list
+        col_nms (List[str]): column names as string in a list
 
     Returns:
         pd.DataFrame: A dataframe sliced down to only the columns required."""
@@ -29,9 +15,13 @@ def slice_age_df(df, col_nms):
     return age_df
 
 
-def get_col_bins(col_nms):
-    """Groups/bins the ages, with 5 year step, starting at "0" into a list
-        of tuples. Depends on yada yada
+def get_col_bins(col_nms: List[str]) -> List[tuple]:
+    """Function to groups or bin the ages together in 5 
+        year steps. Starts the sequence at age "0". 
+        Will return the ages in a list of tuples.
+        The 0th position of the tuple being the lower limit
+        of the age bin, the 1st position of the tuple being
+        the upper limit.
 
     Args:
         col_nms (list of str): a list of the age columns as strings
@@ -46,6 +36,7 @@ def get_col_bins(col_nms):
     col_bins = [(s, f) for s, f in zip(cols_start, cols_fin)]
     # Again adding "90+", doubling it so it's doubled, like the other tuples
     col_bins.append((cols_start[-1:]*2))
+    # TODO: make this more intelligent. Only if there is one col name left over it should be doubled. 
     return col_bins
 
 
@@ -70,10 +61,15 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     return age_df
 
 
-def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
+def served_proportions_disagg(pop_df: pd.DataFrame,
+                              pop_in_poly_df: pd.DataFrame,
+                              cols_lst: List[str]):
     """Calculates the number of people in each category, as specified by the column
         (e.g age range, or disability status) who are served and not served by
         public transport, and gives those as a proportion of the total.
+        
+        Note: the numeric values in the dataframe are return as strings for
+        formatting reasons
 
     Parameters:
         pop_df (pd.DataFrame) : population dataframe
@@ -82,7 +78,7 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
             in polygons enquiry to count (sum) the population within the
             service area polygon.
 
-        cols_lst (list): a list of the column names in the population
+        cols_lst (List[str]): a list of the column names in the population
             dataframe supplied which are to be summed and assessed for
             as served/unserved by public transport
 
@@ -92,6 +88,7 @@ def served_proportions_disagg(pop_df, pop_in_poly_df, cols_lst):
         ii) the number served by public transport
         iii) the proportion who are served by public transport
         iv) the proportion who are not served by public transport
+    
     """
     # First list the age bin columns
 
