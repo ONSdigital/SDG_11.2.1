@@ -114,6 +114,8 @@ if not os.path.exists(national_pop_feather_path):
         region_dfs_dict[region] = df_final
     # Concat all regions into national pop df
     whole_nation_pop_df = pd.concat(region_dfs_dict.values())
+    # Create the pop_year column to show which year the data is from
+    whole_nation_pop_df["pop_year"] = pop_year
     # Write df out to feather for quicker reading
     whole_nation_pop_df.reset_index().to_feather(national_pop_feather_path)
 else:
