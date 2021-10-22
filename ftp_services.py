@@ -24,7 +24,13 @@ file_dict = {"data/" : ["KS101EW-usual_resident_population.csv",
              "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp",
              "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shx",
              "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.xml"],
-             "data/population_estimates/" : ["westmids_pop_only.csv"]}
+             "data/population_estimates/" : ["westmids_pop_only.csv"],
+             "data/pop_weighted_centroids/" : ["*.*"]}
+
+dir_list = ["data/", 
+            "data/LSOA_shp/", 
+            "data/population_estimates/", 
+            "data/pop_weighted_centroids/"]
 
 def retrieve_pass(pass_path):
     if os.path.isfile(pass_path):
@@ -94,11 +100,12 @@ def ftp_listdir():
     ftp.quit()
 
 def list_datasets(directories):
-    ftp_connect()
-    ftp.dir(*directories)
+    ftp.dir(directories)
+
+def quit_ftp():
     ftp.quit()
 
-dict_iter(file_dict)
+#dict_iter(file_dict)
 
 #ftp_get_directory(local_data_dir, remote_data_dir, file_list)
 #ftp_getfile('readme.txt')
