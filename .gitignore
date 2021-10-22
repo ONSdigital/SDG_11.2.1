@@ -143,3 +143,8 @@ envs
 #data files
 data/
 .SDG_11.2.1
+
+# VS Code stuff
+workspace.code-workspace
+sdg-11-2-1.code-workspace
+.vscode/launch.json
