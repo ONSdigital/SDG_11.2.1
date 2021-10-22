@@ -215,17 +215,26 @@ normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_201
 disability_df = pd.merge(disability_df, normal_pop_OA_2011_df, how='inner', left_on="OA11CD", right_on="OA11CD")
 
 # Ticket #97 - calculating the proportion of disabled people in each OA
-disability_df["proportion_disabled"] = disability_df['disb_total'] / disability_df['population_2011']
+disability_df["proportion_disabled"] = (
+                                        disability_df['disb_total'] 
+                                        / 
+                                        disability_df['population_2011']
+                                        )
 
-# Making a version of the disability df that only has the proportion disabled columna dnthe OA11CD col
+# Slice disability df that only has the proportion disabled column and the OA11CD col
 disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
 
 # Merge the proportion disability df into main the pop df with a left join
 bham_pop_df = bham_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
-# Make the calculation of the number of people with disabilities in the year of the
-# population estimates
-bham_pop_df["number_disabled"] = round(bham_pop_df["pop_count"] * bham_pop_df["proportion_disabled"])
+# Make the calculation of the number of people with disabilities in the year 
+# of the population estimates
+bham_pop_df["number_disabled"] = (
+                                  round
+                                  (bham_pop_df["pop_count"]
+                                  *
+                                  bham_pop_df["proportion_disabled"])
+                                  )
 bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
 
 # import the sex data
