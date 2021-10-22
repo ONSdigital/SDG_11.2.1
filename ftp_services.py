@@ -105,6 +105,38 @@ def list_datasets(directories):
 def quit_ftp():
     ftp.quit()
 
+def get_missing_files(remote_data_dir, file_list):
+    #print(f"\nTransfer will deposit files to: {os.getcwd()}")
+    home_dir = os.getcwd()
+    ftp_home = ftp.pwd()
+
+    ftp.cwd(remote_data_dir)
+    for f in file_list:
+        if "/" in f:
+            list = f.split("/")
+            dir = list[0] + "/"
+            file = list[1]
+
+            if not os.path.isdir(dir):
+                os.mkdir(dir)
+                os.chdir(dir)
+                ftp.cwd(dir)
+                ftp_get_file(file)
+                ftp.cwd(ftp_home + remote_data_dir)
+                os.chdir(os.path.pardir)
+            else:
+                os.chdir(dir)
+                ftp.cwd(dir)
+                ftp_get_file(file)
+                ftp.cwd(ftp_home + remote_data_dir)
+                os.chdir(os.path.pardir)
+
+        else:
+            ftp_get_file(f)
+    
+    
+
+
 #dict_iter(file_dict)
 
 #ftp_get_directory(local_data_dir, remote_data_dir, file_list)
