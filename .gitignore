@@ -128,9 +128,18 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-
 # csv data files
-; *.csv
+Stops.csv
 
 #mac os system files
 .DS_Store
+
+#ftp_password
+ftp_pass.txt
+
+#conda environment
+envs
+
+#data files
+data/
+.SDG_11.2.1
