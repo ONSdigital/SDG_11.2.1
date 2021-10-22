@@ -1,5 +1,6 @@
 # Core imports
 import os
+import re
 
 # Third party imports
 import geopandas as gpd
@@ -61,10 +62,39 @@ birmingham_stops_geo_df = (gs.find_points_in_poly
                             polygon_obj=just_birmingham_poly))
 
 # Getting the west midlands population estimates for 2019
+pop_year = 2019
 Wmids_pop_df = pd.read_csv(os.path.join
                            (DATA_DIR,
-                            'population_estimates',
-                            'westmids_pop_only.csv'))
+                            pop_data_source))
+
+# Get list of all pop_estimate files for target year
+pop_files = os.listdir(os.path.join(
+                                    "data/population_estimates",
+                                    str(pop_year)
+                                    )
+                       )
+
+
+# Function to capture the region name from the filename
+def capture_region(file_nm: str):
+    patt = re.compile("^(.*estimates-)(?P<region>.*)(\.xls)")
+    region = re.search(patt, file_nm).group("region")
+    return region
+
+
+# Dict of region:file_name
+region_dict = {capture_region(file):file for file in pop_files}
+
+# make a df of each region then concat
+region_dfs_dict = {}
+for region in region_dict:
+    region_dfs_dict[region] =(
+      pd.read_csv(os.path.join
+                           (DATA_DIR,
+                            "population_estimates",
+                            region_dict[region]))  
+    )
+
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
