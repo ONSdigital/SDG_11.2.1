@@ -2,7 +2,7 @@
 import os
 import re
 import json
-from functools import lru_cache
+from functools import lru_cache, reduce
 from time import perf_counter
 from attr import resolve_types
 import yaml
