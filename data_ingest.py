@@ -317,7 +317,7 @@ def capture_region(file_nm: str):
     region = region.replace("-", " ").capitalize()
     return region
 
-def get_whole_nation_pop_df(pop_files):
+def get_whole_nation_pop_df(pop_files, pop_year):
     """Gets the population data for all regions in the country and puts them into one dataframe
 
     Returns:
