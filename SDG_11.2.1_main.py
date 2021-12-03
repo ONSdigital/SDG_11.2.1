@@ -1,6 +1,5 @@
 # Core imports
 import os
-import re
 from functools import reduce
 
 # Third party imports
@@ -73,7 +72,7 @@ pop_files = os.listdir(os.path.join(
                        )
 
 # Get the population data for the whole nation for the specified year
-whole_nation_pop_df = di.get_whole_nation_pop_df()
+whole_nation_pop_df = di.get_whole_nation_pop_df(pop_files)
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile

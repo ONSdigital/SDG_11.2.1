@@ -1,9 +1,11 @@
 # Core imports for this module
 import os
+import re
 import json
 from functools import lru_cache
 from time import perf_counter
 from attr import resolve_types
+import yaml
 
 # Third party imports for this module
 import geopandas as gpd
@@ -16,6 +18,13 @@ from typing import List, Dict, Optional, Union
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
+
+#Config
+CWD = os.getcwd()
+with open(os.path.join(CWD, "config.yaml")) as yamlfile:
+    config = yaml.load(yamlfile, Loader=yaml.FullLoader)
+    print("Config loaded")
+DATA_DIR = config["DATA_DIR"]
 
 
 def any_to_pd(file_nm: str,
@@ -308,7 +317,7 @@ def capture_region(file_nm: str):
     region = region.replace("-", " ").capitalize()
     return region
 
-def get_whole_nation_pop_df():
+def get_whole_nation_pop_df(pop_files):
     """Gets the population data for all regions in the country and puts them into one dataframe
 
     Returns:
