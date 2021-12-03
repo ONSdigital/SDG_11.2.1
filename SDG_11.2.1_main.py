@@ -64,7 +64,7 @@ birmingham_stops_geo_df = (gs.find_points_in_poly
 
 # Getting the west midlands population estimates for 2019
 pop_year = 2019
-# Wmids_pop_df = pd.read_csv(os.path.join
+# whole_nation_pop_df = pd.read_csv(os.path.join
 #                            (DATA_DIR,
 #                             pop_data_source))
 
@@ -78,8 +78,10 @@ pop_files = os.listdir(os.path.join(
 
 # Function to capture the region name from the filename
 def capture_region(file_nm: str):
+    "Extracts the region name from the ONS population estimate excel files."
     patt = re.compile("^(.*estimates-)(?P<region>.*)(\.xls)")
     region = re.search(patt, file_nm).group("region")
+    region = region.replace("-", " ").capitalize()
     return region
 
 
@@ -89,6 +91,7 @@ region_dict = {capture_region(file):file for file in pop_files}
 # make a df of each region then concat
 national_pop_feather_path = os.path.join(DATA_DIR, "whole_nation.feather")
 if not os.path.exists(national_pop_feather_path):
+    print("No national_pop_feather found")
     region_dfs_dict = {}
     for region in region_dict:
         print(f"Reading {region} Excel file")
@@ -100,11 +103,11 @@ if not os.path.exists(national_pop_feather_path):
         # Read Excel file as object
         xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
-        total_pop = pd.read_excel(xlFile, "Mid-2019 Persons", header=4, usecols=["OA11CD", "All Ages"])
-        males_pop = pd.read_excel(xlFile, "Mid-2019 Males", header=4, usecols=["OA11CD", "All Ages"])
-        fem_pop = pd.read_excel(xlFile, "Mid-2019 Females", header=4, usecols=["OA11CD", "All Ages"])
+        total_pop = pd.read_excel(xlFile, "Mid-2019 Persons", header=4)
+        males_pop = pd.read_excel(xlFile, "Mid-2019 Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+        fem_pop = pd.read_excel(xlFile, "Mid-2019 Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
-        total_pop.rename(columns={"All Ages": "total_pop"}, inplace=True)
+        total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
         males_pop.rename(columns={"All Ages": "males_pop"}, inplace=True)
         fem_pop.rename(columns={"All Ages": "fem_pop"}, inplace=True)
         # Merge the data from different sheets
@@ -116,11 +119,17 @@ if not os.path.exists(national_pop_feather_path):
     whole_nation_pop_df = pd.concat(region_dfs_dict.values())
     # Create the pop_year column to show which year the data is from
     whole_nation_pop_df["pop_year"] = pop_year
+    # Change all column names to str
+    whole_nation_pop_df.columns = whole_nation_pop_df.columns.astype(str)
     # Write df out to feather for quicker reading
+    print("Writing whole_nation_pop_df.feather")
     whole_nation_pop_df.reset_index().to_feather(national_pop_feather_path)
 else:
     # if it exists, read from a feather for quicker data retreval
+    print(f"Reading whole_nation_pop_df from {national_pop_feather_path}")
     whole_nation_pop_df = pd.read_feather(national_pop_feather_path)
+    # Temporary TODO: remove this line
+    whole_nation_pop_df.rename(columns={"total_pop": "pop_count"}, inplace=True)
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
@@ -177,27 +186,28 @@ uk_pop_wtd_centr_df = (uk_pop_wtd_centr_df.merge
                         how='left'))
 
 # Joining the West Mids population dataframe to the centroids dataframe,
-Wmids_pop_df = Wmids_pop_df.join(
+whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Make B'ham LSOA just
+LA_nm = "Birmingham"
 bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
 bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
 # merge the two dataframes limiting to just Birmingham
-bham_pop_df = Wmids_pop_df.merge(bham_LSOA_df,
-                                 how='right',
-                                 left_on='LSOA11CD',
-                                 right_on='LSOA11CD',
-                                 suffixes=('_pop', '_LSOA'))
+bham_pop_df = whole_nation_pop_df.merge(bham_LSOA_df,
+                                        how='right',
+                                        left_on='LSOA11CD',
+                                        right_on='LSOA11CD',
+                                        suffixes=('_pop', '_LSOA'))
 # rename the "All Ages" column to pop_count as it's the population count
 bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
 # change pop_count to number (int)
-bham_pop_df['pop_count'] = (pd.to_numeric
-                            (bham_pop_df
-                             .pop_count.str
-                             .replace(",", "")))
+# bham_pop_df['pop_count'] = (pd.to_numeric
+#                             (bham_pop_df
+#                              .pop_count.str
+#                              .replace(",", "")))
 
 # Get a list of ages from config
 age_lst = config['age_lst']
@@ -222,7 +232,6 @@ bham_pop_df = gpd.GeoDataFrame(bham_pop_df)
 # create a buffer around the stops, in column "geometry" #forthedemo
 # the `buffer_points` function changes the df in situ
 _ = gs.buffer_points(birmingham_stops_geo_df)
-# TODO: Ask DataScience people why this is changed in situ
 
 # renaming the column to geometry so the point in polygon func gets expected
 bham_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
