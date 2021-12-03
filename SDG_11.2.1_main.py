@@ -64,9 +64,6 @@ birmingham_stops_geo_df = (gs.find_points_in_poly
 
 # Getting the west midlands population estimates for 2019
 pop_year = 2019
-# whole_nation_pop_df = pd.read_csv(os.path.join
-#                            (DATA_DIR,
-#                             pop_data_source))
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(
@@ -75,61 +72,8 @@ pop_files = os.listdir(os.path.join(
                                     )
                        )
 
-
-# Function to capture the region name from the filename
-def capture_region(file_nm: str):
-    "Extracts the region name from the ONS population estimate excel files."
-    patt = re.compile("^(.*estimates-)(?P<region>.*)(\.xls)")
-    region = re.search(patt, file_nm).group("region")
-    region = region.replace("-", " ").capitalize()
-    return region
-
-
-# Dict of region:file_name
-region_dict = {capture_region(file):file for file in pop_files}
-
-# make a df of each region then concat
-national_pop_feather_path = os.path.join(DATA_DIR, "whole_nation.feather")
-if not os.path.exists(national_pop_feather_path):
-    print("No national_pop_feather found")
-    region_dfs_dict = {}
-    for region in region_dict:
-        print(f"Reading {region} Excel file")
-        xls_path = os.path.join(
-                                DATA_DIR,
-                                "population_estimates",
-                                str(pop_year),
-                                region_dict[region])
-        # Read Excel file as object
-        xlFile = pd.ExcelFile(xls_path)
-        # Access sheets in Excel file
-        total_pop = pd.read_excel(xlFile, "Mid-2019 Persons", header=4)
-        males_pop = pd.read_excel(xlFile, "Mid-2019 Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
-        fem_pop = pd.read_excel(xlFile, "Mid-2019 Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
-        # Rename the "All Ages" columns appropriately before concating
-        total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
-        males_pop.rename(columns={"All Ages": "males_pop"}, inplace=True)
-        fem_pop.rename(columns={"All Ages": "fem_pop"}, inplace=True)
-        # Merge the data from different sheets
-        dfs_to_merge = [total_pop, males_pop, fem_pop]
-        df_final = reduce(lambda left, right: pd.merge(left, right, on='OA11CD'), dfs_to_merge)
-        # Store merged df in dict under region name
-        region_dfs_dict[region] = df_final
-    # Concat all regions into national pop df
-    whole_nation_pop_df = pd.concat(region_dfs_dict.values())
-    # Create the pop_year column to show which year the data is from
-    whole_nation_pop_df["pop_year"] = pop_year
-    # Change all column names to str
-    whole_nation_pop_df.columns = whole_nation_pop_df.columns.astype(str)
-    # Write df out to feather for quicker reading
-    print("Writing whole_nation_pop_df.feather")
-    whole_nation_pop_df.reset_index().to_feather(national_pop_feather_path)
-else:
-    # if it exists, read from a feather for quicker data retreval
-    print(f"Reading whole_nation_pop_df from {national_pop_feather_path}")
-    whole_nation_pop_df = pd.read_feather(national_pop_feather_path)
-    # Temporary TODO: remove this line
-    whole_nation_pop_df.rename(columns={"total_pop": "pop_count"}, inplace=True)
+# Get the population data for the whole nation for the specified year
+whole_nation_pop_df = di.get_whole_nation_pop_df()
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
