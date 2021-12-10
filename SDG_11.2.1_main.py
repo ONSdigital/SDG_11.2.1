@@ -1,6 +1,6 @@
 # Core imports
 import os
-from functools import reduce
+
 
 # Third party imports
 import geopandas as gpd
@@ -44,6 +44,7 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      crs=DEFAULT_CRS))
 
 # # Getting the Lower Super Output Area for the UK into a dataframe
+# TODO: check if the LSOA df needs to be imported and used - may be junk?
 uk_LSOA_shp_file = config['uk_LSOA_shp_file']
 full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = di.geo_df_from_geospatialfile(path_to_file=full_path)
@@ -56,7 +57,6 @@ just_birmingham_poly = (gs.get_polygons_of_loccode(
                         search="Birmingham"))
 
 # Creating a Geo Dataframe of only stops in Birmingham
-
 birmingham_stops_geo_df = (gs.find_points_in_poly
                            (geo_df=stops_geo_df,
                             polygon_obj=just_birmingham_poly))
@@ -78,18 +78,19 @@ whole_nation_pop_df = di.get_whole_nation_pop_df(pop_files, pop_year)
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
-                         'pop_weighted_centroids')))
+                         'pop_weighted_centroids',
+                         '2011')))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
 
 # Links were changed at the source site which made the script fail. 
 # Manually downloading the csv for now
-OA_df = pd.read_csv(os.path.join("data",
+OA_boundaries_df = pd.read_csv(os.path.join("data",
                                  "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
 
 # Merge with uk population df
-uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_df, on="OA11CD", how='left')
+uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_boundaries_df, on="OA11CD", how='left')
 
 # Clean after merge
 uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
@@ -246,27 +247,30 @@ bham_pop_df["number_disabled"] = (
 bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
 
 # import the sex data
-# TODO: use new csv_to_df func to make the sex_df
-sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"),
-                     header=6,
-                     usecols=["2011 output area",
-                              "Males", "Females"])
-replacements = {"2011 output area": 'OA11CD',
-                "Males": "male",
-                "Females": "female"}
+# # TODO: use new csv_to_df func to make the sex_df
+# sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"),
+#                      header=6,
+#                      usecols=["2011 output area",
+#                               "Males", "Females"])
 
-# # renaming the dodgy col names with their replacements
-sex_df.rename(columns=replacements, inplace=True)
+# sex_df = bham_pop_df['OA11CD', 'males_pop', 'fem_pop']
 
-# merge the sex data with the rest of the population data
-bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
 
-# find all the pop centroids which are in the bham_stops_poly
+# # # renaming the dodgy col names with their replacements
+replacements = {"males_pop": "male",
+                "fem_pop": "female"}
+bham_pop_df.rename(columns=replacements, inplace=True)
+
+# # merge the sex data with the rest of the population data
+# bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
+
+# Make a polygon object from the geometry column of the stops df 
+# all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
+
+# # find all the pop centroids which are in the bham_stops_poly
 pop_in_poly_df = gs.find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
-
-# TODO: pop_in_poly_df has a lot of duplicates. Find out why
-# Dropping duplicates
-pop_in_poly_df.drop_duplicates(inplace=True)
+# Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
+pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
 # Count the population served by public transport
 served = pop_in_poly_df.pop_count.sum()
