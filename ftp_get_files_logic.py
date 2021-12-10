@@ -80,15 +80,15 @@ def check_missing_files():
     missing_files = set_remot.difference(set_local)
 
     if len(missing_files) == 0:
-        print("you are not missing any files")
+        print("You are not missing any files")
 
     elif len(missing_files) >=1:
-        print("you are missing the following required data files:")
+        print("You are missing the following required data files:")
         for f in missing_files:
             print(f)
         return list(missing_files)
 
-missing_files = check_missing_files()
-data_dir = "data/"
-
-ftp_services.get_missing_files(data_dir, missing_files)
+def execute_file_grab():
+    missing_files = check_missing_files()
+    data_dir = "data/"
+    ftp_services.get_missing_files(data_dir, missing_files)
