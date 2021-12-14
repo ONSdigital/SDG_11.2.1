@@ -23,7 +23,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print("Config loaded")
 
 # Retrieve Missing Data Files via FTP
-fpts.execute_file_grab()
+fpts.execute_file_grab(CWD)
 
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]

@@ -88,7 +88,9 @@ def check_missing_files():
             print(f)
         return list(missing_files)
 
-def execute_file_grab():
+def execute_file_grab(CWD):
     missing_files = check_missing_files()
     data_dir = "data/"
     ftp_services.get_missing_files(data_dir, missing_files)
+    os.chdir(CWD)
+    
