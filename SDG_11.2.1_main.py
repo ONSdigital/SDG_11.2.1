@@ -49,18 +49,6 @@ uk_LSOA_shp_file = config['uk_LSOA_shp_file']
 full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = di.geo_df_from_geospatialfile(path_to_file=full_path)
 
-
-# Get a polygon of Birmingham based on the Location Code
-just_birmingham_poly = (gs.get_polygons_of_loccode(
-                        geo_df=uk_LSOA_df,
-                        dissolveby='LSOA11NM',
-                        search="Birmingham"))
-
-# Creating a Geo Dataframe of only stops in Birmingham
-birmingham_stops_geo_df = (gs.find_points_in_poly
-                           (geo_df=stops_geo_df,
-                            polygon_obj=just_birmingham_poly))
-
 # Getting the west midlands population estimates for 2019
 pop_year = 2019
 
@@ -133,19 +121,34 @@ uk_pop_wtd_centr_df = (uk_pop_wtd_centr_df.merge
 whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
-# Make B'ham LSOA just
-LA_nm = "Birmingham"
-bham_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains("Birmingham")]
-bham_LSOA_df = bham_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
-# merge the two dataframes limiting to just Birmingham
-bham_pop_df = whole_nation_pop_df.merge(bham_LSOA_df,
+local_auth="North Devon"
+
+# Get a polygon of la based on the Location Code
+la_poly = (gs.get_polygons_of_loccode(
+                        geo_df=uk_LSOA_df,
+                        dissolveby='LSOA11NM',
+                        search=local_auth))
+
+# Creating a Geo Dataframe of only stops in la
+la_stops_geo_df = (gs.find_points_in_poly
+                           (geo_df=stops_geo_df,
+                            polygon_obj=la_poly))
+
+# Make LA LSOA just
+la_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains(local_auth)]
+print(la_LSOA_df.head())
+la_LSOA_df = la_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
+
+# merge the two dataframes limiting to just the la
+la_pop_df = whole_nation_pop_df.merge(la_LSOA_df,
                                         how='right',
                                         left_on='LSOA11CD',
                                         right_on='LSOA11CD',
                                         suffixes=('_pop', '_LSOA'))
+
 # rename the "All Ages" column to pop_count as it's the population count
-bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
+la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
 # change pop_count to number (int)
 # bham_pop_df['pop_count'] = (pd.to_numeric
@@ -157,7 +160,7 @@ bham_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 age_lst = config['age_lst']
 
 # Get a datframe limited to the data ages columns only
-age_df = dt.slice_age_df(bham_pop_df, age_lst)
+age_df = dt.slice_age_df(la_pop_df, age_lst)
 
 # Create a list of tuples of the start and finish indexes for the age bins
 age_bins = dt.get_col_bins(age_lst)
@@ -166,19 +169,19 @@ age_bins = dt.get_col_bins(age_lst)
 age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
 # Ridding the bham pop df of the same cols
-bham_pop_df.drop(age_lst, axis=1, inplace=True)
+la_pop_df.drop(age_lst, axis=1, inplace=True)
 
 # merging summed+grouped ages back in
-bham_pop_df = pd.merge(bham_pop_df, age_df, left_index=True, right_index=True)
+la_pop_df = pd.merge(la_pop_df, age_df, left_index=True, right_index=True)
 # converting into GeoDataFrame
-bham_pop_df = gpd.GeoDataFrame(bham_pop_df)
+la_pop_df = gpd.GeoDataFrame(la_pop_df)
 
 # create a buffer around the stops, in column "geometry" #forthedemo
 # the `buffer_points` function changes the df in situ
-_ = gs.buffer_points(birmingham_stops_geo_df)
+la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
 # renaming the column to geometry so the point in polygon func gets expected
-bham_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
+la_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
 
 # import the disability data - this is the based on the 2011 census
 # TODO: use new csv_to_df func to make disability_df
@@ -234,17 +237,17 @@ disability_df["proportion_disabled"] = (
 disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
 
 # Merge the proportion disability df into main the pop df with a left join
-bham_pop_df = bham_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
+la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
 # Make the calculation of the number of people with disabilities in the year 
 # of the population estimates
-bham_pop_df["number_disabled"] = (
+la_pop_df["number_disabled"] = (
                                   round
-                                  (bham_pop_df["pop_count"]
+                                  (la_pop_df["pop_count"]
                                   *
-                                  bham_pop_df["proportion_disabled"])
+                                  la_pop_df["proportion_disabled"])
                                   )
-bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
+la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
 
 # import the sex data
 # # TODO: use new csv_to_df func to make the sex_df
@@ -259,7 +262,7 @@ bham_pop_df["number_disabled"] = bham_pop_df["number_disabled"].astype(int)
 # # # renaming the dodgy col names with their replacements
 replacements = {"males_pop": "male",
                 "fem_pop": "female"}
-bham_pop_df.rename(columns=replacements, inplace=True)
+la_pop_df.rename(columns=replacements, inplace=True)
 
 # # merge the sex data with the rest of the population data
 # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
@@ -268,19 +271,19 @@ bham_pop_df.rename(columns=replacements, inplace=True)
 # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
 # # find all the pop centroids which are in the bham_stops_poly
-pop_in_poly_df = gs.find_points_in_poly(bham_pop_df, birmingham_stops_geo_df)
+pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
 # Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
 pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
 # Count the population served by public transport
 served = pop_in_poly_df.pop_count.sum()
-full_pop = bham_pop_df.pop_count.sum()
+full_pop = la_pop_df.pop_count.sum()
 not_served = full_pop - served
 pct_not_served = "{:.2%}".format(not_served/full_pop)
 pct_served = "{:.2%}".format(served/full_pop)
 
 print(f"""The number of people who are served by public transport is {served}.\n
-        The full population of Birmingham is calculated as {full_pop}
+        The full population of {local_auth} is calculated as {full_pop}
         While the number of people who are not served is {not_served}""")
 
 
@@ -293,7 +296,7 @@ age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
              '55-59', '60-64', '65-69', '70-74', '75-79',
              '80-84', '85-89', '90+']
 
-age_servd_df = dt.served_proportions_disagg(pop_df=bham_pop_df,
+age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                             pop_in_poly_df=pop_in_poly_df,
                                             cols_lst=age_bins_)
 
@@ -304,7 +307,7 @@ print(age_servd_df)
 # Calculating those served and not served by sex
 sex_cols = ['male', 'female']
 
-sex_servd_df = dt.served_proportions_disagg(pop_df=bham_pop_df,
+sex_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                             pop_in_poly_df=pop_in_poly_df,
                                             cols_lst=sex_cols)
 
@@ -316,7 +319,7 @@ print(sex_servd_df)
 # Calculating those served and not served by disability
 disab_cols = ["number_disabled"]
 
-disab_servd_df = dt.served_proportions_disagg(pop_df=bham_pop_df,
+disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                               pop_in_poly_df=pop_in_poly_df,
                                               cols_lst=disab_cols)
 
@@ -328,8 +331,8 @@ print(disab_servd_df)
 urb_col = ["urb_rur_class"]
 
 # Filtering by urban and rural to make 2 dfs
-urb_df = bham_pop_df[bham_pop_df.urb_rur_class == "urban"]
-rur_df = bham_pop_df[bham_pop_df.urb_rur_class == "rural"]
+urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
+rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
 
 # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
 # filtered in the same way
