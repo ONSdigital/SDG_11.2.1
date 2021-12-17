@@ -1,6 +1,5 @@
 # Core imports
 import os
-from threading import local
 
 
 # Third party imports
@@ -76,8 +75,9 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
 
 # Links were changed at the source site which made the script fail. 
 # Manually downloading the csv for now
-OA_boundaries_df = pd.read_csv(os.path.join("data",
-                                 "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+OA_boundaries_df = pd.read_csv(
+                               os.path.join("data",
+                                            "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
 
 # Merge with uk population df
 uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_boundaries_df, on="OA11CD", how='left')
