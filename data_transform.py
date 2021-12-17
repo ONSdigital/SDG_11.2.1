@@ -109,6 +109,10 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
                          "Unserved": str(unsrvd_pop),
                          "Percentage served": str(pct_servd),
                          "Percentage unserved": str(pct_unserved)}
+
+        {"Year"= ,
+         "Sex"=	"Age"	"Disability Status"	"Local Authority"	"Rural/Urban"	"Series"	"Observation Status"	"Unit Multiplier"	"Unit Measure"	"Value"
+
     # Make a df from the total and served pop
     tot_servd_df = pd.DataFrame(pop_sums)
     return tot_servd_df

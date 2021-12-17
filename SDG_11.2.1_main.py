@@ -130,7 +130,16 @@ list_local_auth=local_authority_list["LAD19NM"].unique()
 
 output_df_list=[]
 
-#list_local_auth=["Birmingham", "North Devon"]
+list_local_auth=["North Devon"]
+
+
+# define output dicts to capture dfs
+total_df_dict={}
+sex_df_dict={}
+urb_df_dict={}
+rur_df_dict={}
+disab_df_dict={}
+age_df_dict={}
 
 for local_auth in list_local_auth:
     print(local_auth)
@@ -302,9 +311,120 @@ for local_auth in list_local_auth:
                             "pct_served":[pct_served],
                             "pct_not_served":[pct_not_served]})
 
-    output_df_list.append(la_results_df)
+    # Output this iteration's df to the dict
+    total_df_dict[local_auth]=la_results_df
 
-all_la=pd.concat(output_df_list)
+
+    # # Disaggregations!
+    pd.set_option("precision", 1)
+
+    # Calculating those served and not served by age
+    age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
+                '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                '55-59', '60-64', '65-69', '70-74', '75-79',
+                '80-84', '85-89', '90+']
+
+    age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=age_bins_)
+    # Create an LA column 
+    age_servd_df["LA"]=local_auth
+
+    print("\n\n==========Age Disaggregation===========\n\n")
+
+    # Output this iteration's age df to the dict
+    age_df_dict[local_auth]=age_servd_df
+
+    # print(age_servd_df)
+
+    # # Calculating those served and not served by sex
+    sex_cols = ['male', 'female']
+
+    sex_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=sex_cols)
+
+    # Create an LA column 
+    sex_servd_df["LA"]=local_auth
+
+    print("\n\n==========Sex Disaggregation===========\n\n")
+
+    # print(sex_servd_df)
+
+    # Output this iteration's age df to the dict
+    sex_df_dict[local_auth]=sex_servd_df
+
+    # Calculating those served and not served by disability
+    disab_cols = ["number_disabled"]
+
+    disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=disab_cols)
+
+    # Create an LA column 
+    disab_servd_df["LA"]=local_auth
+
+    print("\n\n==========Disability Disaggregation===========\n\n")
+
+    # Output this iteration's age df to the dict
+    disab_df_dict[local_auth]=disab_servd_df
+
+    print(disab_servd_df)
+
+    # Calculating those served and not served by urban/rural
+    urb_col = ["urb_rur_class"]
+
+    # Filtering by urban and rural to make 2 dfs
+    urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
+    rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
+
+    # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
+    # filtered in the same way
+    urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
+                        on="OA11CD", how="left")
+                        .loc[:, ['OA11CD', 'pop_count_y']])
+    urb_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
+    rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df,
+                        on="OA11CD", how="left")
+                        .loc[:, ['OA11CD', 'pop_count_y']])
+    rur_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
+
+    urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
+                                                pop_in_poly_df=urb_pop_in_poly_df,
+                                                cols_lst=['pop_count'])
+
+    rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
+                                                pop_in_poly_df=rur_pop_in_poly_df,
+                                                cols_lst=['pop_count'])
+
+
+    print("\n\n==========Urban/Rural Disaggregation===========\n\n")
+
+    print("Urban")
+    print(urb_servd_df)
+    print("Rural")
+    print(rur_servd_df)
+
+        # Create an LA column 
+    urb_servd_df["LA"]=local_auth
+    rur_servd_df["LA"]=local_auth
+
+    print("\n\n==========Disability Disaggregation===========\n\n")
+
+    # Output this iteration's urb and rur df to the dict
+    urb_df_dict[local_auth]=urb_servd_df
+    rur_df_dict[local_auth]=rur_servd_df
+
+all_la = pd.concat(total_df_dict.values())
+sex_all_la = pd.concat(sex_df_dict.values())
+urb_all_la = pd.concat(urb_df_dict.values())
+rur_all_la = pd.concat(rur_df_dict.values())
+disab_all_la = pd.concat(disab_df_dict.values())
+age_all_la = pd.concat(age_df_dict.values())
+print(disab_all_la)
+print(age_all_la)
+print(rur_all_la)
+print(urb_all_la)
 
 all_la=all_la.reset_index()
 
@@ -321,79 +441,3 @@ output_tabs["local_auth"] = gpt.GPTable(
 gpt.write_workbook(filename="SDG.xlsx",
                     sheets=output_tabs,
                     auto_width=True)
-
-    # # Disaggregations!
-    # pd.set_option("precision", 1)
-
-    # # Calculating those served and not served by age
-    # age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
-    #             '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
-    #             '55-59', '60-64', '65-69', '70-74', '75-79',
-    #             '80-84', '85-89', '90+']
-
-    # age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-    #                                             pop_in_poly_df=pop_in_poly_df,
-    #                                             cols_lst=age_bins_)
-
-    # print("\n\n==========Age Disaggregation===========\n\n")
-
-    # print(age_servd_df)
-
-    # # Calculating those served and not served by sex
-    # sex_cols = ['male', 'female']
-
-    # sex_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-    #                                             pop_in_poly_df=pop_in_poly_df,
-    #                                             cols_lst=sex_cols)
-
-
-    # print("\n\n==========Sex Disaggregation===========\n\n")
-
-    # print(sex_servd_df)
-
-    # # Calculating those served and not served by disability
-    # disab_cols = ["number_disabled"]
-
-    # disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-    #                                             pop_in_poly_df=pop_in_poly_df,
-    #                                             cols_lst=disab_cols)
-
-    # print("\n\n==========Disability Disaggregation===========\n\n")
-
-    # print(disab_servd_df)
-
-    # # Calculating those served and not served by urban/rural
-    # urb_col = ["urb_rur_class"]
-
-    # # Filtering by urban and rural to make 2 dfs
-    # urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
-    # rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
-
-    # # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
-    # # filtered in the same way
-    # urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
-    #                     on="OA11CD", how="left")
-    #                     .loc[:, ['OA11CD', 'pop_count_y']])
-    # urb_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
-    # rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df,
-    #                     on="OA11CD", how="left")
-    #                     .loc[:, ['OA11CD', 'pop_count_y']])
-    # rur_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
-
-    # urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
-    #                                             pop_in_poly_df=urb_pop_in_poly_df,
-    #                                             cols_lst=['pop_count'])
-
-    # rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
-    #                                             pop_in_poly_df=rur_pop_in_poly_df,
-    #                                             cols_lst=['pop_count'])
-
-
-    # print("\n\n==========Urban/Rural Disaggregation===========\n\n")
-
-    # print("Urban")
-    # print(urb_servd_df)
-    # print("Rural")
-    # print(rur_servd_df)
-
-
