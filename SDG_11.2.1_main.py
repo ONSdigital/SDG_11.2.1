@@ -119,9 +119,14 @@ uk_pop_wtd_centr_df = (uk_pop_wtd_centr_df.merge
                         on="OA11CD",
                         how='left'))
 
-# Joining the West Mids population dataframe to the centroids dataframe,
+# Joining the population dataframe to the centroids dataframe,
 whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
+
+# Map OA codes to Local Authority Names
+LA_df = pd.read_csv("data/Output_Area_to_Lower_Layer_Super_Output_Area_to_Middle_Layer_Super_Output_Area_to_Local_Authority_District__December_2020__Lookup_in_England_and_Wales.csv", usecols=["OA11CD", "LAD20NM"])
+whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
+
 
 # All of England LA areas
 la_list_path="data/la_lookup_england_2019.csv"
