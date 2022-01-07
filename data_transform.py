@@ -36,7 +36,8 @@ def get_col_bins(col_nms: List[str]) -> List[tuple]:
     col_bins = [(s, f) for s, f in zip(cols_start, cols_fin)]
     # Again adding "90+", doubling it so it's doubled, like the other tuples
     col_bins.append((cols_start[-1:]*2))
-    # TODO: make this more intelligent. Only if there is one col name left over it should be doubled. 
+    # TODO: make this more intelligent. Only if there is one col name left
+    # over it should be doubled. 
     return col_bins
 
 
@@ -109,6 +110,7 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
                          "Unserved": str(unsrvd_pop),
                          "Percentage served": str(pct_servd),
                          "Percentage unserved": str(pct_unserved)}
+
     # Make a df from the total and served pop
     tot_servd_df = pd.DataFrame(pop_sums)
     return tot_servd_df
