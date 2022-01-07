@@ -62,7 +62,7 @@ birmingham_stops_geo_df = (gs.find_points_in_poly
                             polygon_obj=just_birmingham_poly))
 
 # Getting the west midlands population estimates for 2019
-pop_year = 2019
+pop_year = config["calculation_year"]
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(
