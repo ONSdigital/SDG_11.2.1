@@ -51,7 +51,7 @@ full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
 uk_LSOA_df = di.geo_df_from_geospatialfile(path_to_file=full_path)
 
 # Getting the west midlands population estimates for 2019
-pop_year = 2019
+pop_year = config["calculation_year"]
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(

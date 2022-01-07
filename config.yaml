@@ -1,3 +1,4 @@
+calculation_year : 2019
 NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
 DEFAULT_CRS : 'EPSG:27700'
 DATA_DIR :  "./data"
