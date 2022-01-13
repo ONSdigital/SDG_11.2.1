@@ -1,5 +1,6 @@
 #logic to download all of the files from data directory on the remote server
 
+from re import sub
 import ftp_services as ftp_services
 import os, os.path
 
@@ -25,6 +26,36 @@ def create_data_file_list():
     entries = list(ftp_services.ftp.mlsd(data_dir))
     entries = [entry for entry in entries if entry[1]["type"] == "dir"]
     entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+    print(entries)
+
+    def recursive_list(remotepath):
+        sub_directories = []
+        for entry in entries:
+            if entry[1]['type'] == 'dir':
+                remotepath = data_dir + entry[0]
+                sub_directories.append(remotepath)
+            else:
+                print(entry)
+        return sub_directories
+
+    sub_directories = recursive_list('data/')
+    
+    print(sub_directories)
+    
+    for d in sub_directories:
+        print(d)
+        list(ftp_services.ftp.mlsd(d))
+        entries = [entry for entry in entries if entry[1]["type"] == "dir"]
+        entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+        for entry in entries:
+            if entry[1]['type'] == 'dir':
+                remotepath = d + entry[0]
+                print(remotepath)
+                #sub_directories.append(remotepath)
+            else:
+                print(entry)
+    
+    #print(list(ftp_services.ftp.mlsd(sub_directories[0])))
 
     files = (list(ftp_services.ftp.mlsd(data_dir)))
     files = [entry for entry in files if entry[1]["type"] == "file"]
