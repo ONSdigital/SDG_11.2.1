@@ -17,17 +17,34 @@ def grab_files():
 
     ftp_services.quit_ftp()
 
-def create_data_file_list():
+
+def create_recursive_data_file_list():
 
     file_list = []
-    data_dir = "data/"
+    data_dir = "test_directory/"
 
     ftp_services.ftp_connect()
     entries = list(ftp_services.ftp.mlsd(data_dir))
     entries = [entry for entry in entries if entry[1]["type"] == "dir"]
     entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
-    print(entries)
 
+    def sub_get(entries, data_dir):
+        for e in entries:
+            print(e[0])
+            sub_entries = list(ftp_services.ftp.mlsd(data_dir + e[0]))
+            sub_entries = [entry for entry in sub_entries if entry[1]["type"] == "dir"]
+            sub_entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+
+            print (len(sub_entries))
+
+            if (len(sub_entries)) >= 1:
+                new_ddir = data_dir + e[0] + '/'
+                #print(new_ddir)
+                sub_get(sub_entries, new_ddir)
+    
+    sub_get(entries, data_dir)
+    
+    """
     def recursive_list(remotepath):
         sub_directories = []
         for entry in entries:
@@ -39,23 +56,49 @@ def create_data_file_list():
         return sub_directories
 
     sub_directories = recursive_list('data/')
-    
+    print(f"subdir length: {len(sub_directories)}")
     print(sub_directories)
     
-    for d in sub_directories:
-        print(d)
-        list(ftp_services.ftp.mlsd(d))
-        entries = [entry for entry in entries if entry[1]["type"] == "dir"]
-        entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
-        for entry in entries:
-            if entry[1]['type'] == 'dir':
-                remotepath = d + entry[0]
-                print(remotepath)
-                #sub_directories.append(remotepath)
-            else:
-                print(entry)
+    def sub_sub_list(sub_directories):
+        for d in sub_directories:
+            sub_directories = []
+            print(f"sub-directory: {d}")
+            entries = list(ftp_services.ftp.mlsd(d))
+            entries = [entry for entry in entries if entry[1]["type"] == "dir"]
+            entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+            for entry in entries:
+                if entry[1]['type'] == 'dir':
+                    remotepath = d + '/' + entry[0]
+                    print(remotepath)
+                    sub_directories.append(remotepath)
+                else:
+                    print(entry)
+            
+            return sub_directories
+
+    sub_sub_directories = sub_sub_list(sub_directories)
+
+    print(len(sub_directories))
+    print(sub_directories)
+    print(len(sub_sub_directories))
+    print(sub_sub_directories)
+
+    if len(sub_sub_directories) >= 1:
+        print(sub_sub_list(sub_sub_directories))
     
     #print(list(ftp_services.ftp.mlsd(sub_directories[0])))
+    """
+
+def create_data_file_list():
+
+    file_list = []
+    data_dir = "data/"
+
+    ftp_services.ftp_connect()
+    entries = list(ftp_services.ftp.mlsd(data_dir))
+    entries = [entry for entry in entries if entry[1]["type"] == "dir"]
+    entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+    print(entries)
 
     files = (list(ftp_services.ftp.mlsd(data_dir)))
     files = [entry for entry in files if entry[1]["type"] == "file"]
@@ -72,6 +115,9 @@ def create_data_file_list():
 
         for fl in range(len(files)):
             file_list.append(f"{entries[num][0]}/{files[fl][0]}")
+
+
+    #print (file_list)
 
     return file_list
 
@@ -98,6 +144,8 @@ def create_local_file_list():
             local_list.append(f"{d}/{f}")
         os.chdir(os.path.pardir)
 
+    #print(local_dirs)
+
     return local_list
 
 def check_missing_files():
@@ -120,8 +168,10 @@ def check_missing_files():
         return list(missing_files)
 
 def execute_file_grab(CWD):
-    missing_files = check_missing_files()
-    data_dir = "data/"
-    ftp_services.get_missing_files(data_dir, missing_files)
-    os.chdir(CWD)
+
+    create_recursive_data_file_list()
+    #missing_files = check_missing_files()
+    #data_dir = "data/"
+    #ftp_services.get_missing_files(data_dir, missing_files)
+    #os.chdir(CWD)
     
