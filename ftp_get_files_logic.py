@@ -30,16 +30,17 @@ def create_recursive_data_file_list():
 
     def sub_get(entries, data_dir):
         for e in entries:
-            print(e[0])
-            sub_entries = list(ftp_services.ftp.mlsd(data_dir + e[0]))
+            dir_list = data_dir + e[0]
+            sub_entries = list(ftp_services.ftp.mlsd(dir_list))
             sub_entries = [entry for entry in sub_entries if entry[1]["type"] == "dir"]
             sub_entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
 
+            print(e[0])
+            print (dir_list)
             print (len(sub_entries))
 
             if (len(sub_entries)) >= 1:
                 new_ddir = data_dir + e[0] + '/'
-                #print(new_ddir)
                 sub_get(sub_entries, new_ddir)
     
     sub_get(entries, data_dir)
