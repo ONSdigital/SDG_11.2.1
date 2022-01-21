@@ -333,11 +333,12 @@ for local_auth in list_local_auth:
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
+    age_servd_df_out = do.reshape_for_output(age_servd_df, id_col="Age")
 
     print("\n\n==========Age Disaggregation===========\n\n")
 
     # Output this iteration's age df to the dict
-    age_df_dict[local_auth]=age_servd_df
+    age_df_dict[local_auth] = age_servd_df_out
 
     # print(age_servd_df)
 
