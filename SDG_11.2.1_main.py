@@ -12,6 +12,7 @@ import gptables as gpt
 import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
+import data_output as do
 
 # get current working directory
 CWD = os.getcwd()
