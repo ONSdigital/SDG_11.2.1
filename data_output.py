@@ -13,7 +13,5 @@ def reshape_for_output(df, id_col="Age"):
     df = df.rename(columns={"index":id_col})
     df = pd.melt(df, id_vars=id_col, value_vars=["Total", "Served", "Unserved", "Percentage served", "Percentage unserved"])
     df = df.replace({"Total":""})
-    df["Unit Multiplier"] = np.where(df.variable.str.contains("Percentage"), df.variable, "percent")
-    df["Unit Multiplier"] = np.where(df.variable.str.contains("Unserved"), df.variable, "people")
-    df["Unit Multiplier"] = np.where(df.variable.str.contains("Served"), df.variable, "people")
+    df["Unit Multiplier"] = np.where(df.variable.str.contains("Percentage"), "percent", "individual")
     return df
