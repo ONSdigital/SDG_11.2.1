@@ -191,7 +191,7 @@ for local_auth in list_local_auth:
     # get the ages in the age_df binned, and drop the original columns
     age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
-    # Ridding the bham pop df of the same cols
+    # Ridding the la_pop df of the same cols
     la_pop_df.drop(age_lst, axis=1, inplace=True)
 
     # merging summed+grouped ages back in
@@ -332,8 +332,6 @@ for local_auth in list_local_auth:
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
-    # Create an LA column 
-    age_servd_df["LA"]=local_auth
 
     print("\n\n==========Age Disaggregation===========\n\n")
 
@@ -349,9 +347,6 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
 
-    # Create an LA column 
-    sex_servd_df["LA"]=local_auth
-
     print("\n\n==========Sex Disaggregation===========\n\n")
 
     # print(sex_servd_df)
@@ -366,8 +361,6 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=disab_cols)
 
-    # Create an LA column 
-    disab_servd_df["LA"]=local_auth
 
     print("\n\n==========Disability Disaggregation===========\n\n")
 
@@ -410,9 +403,6 @@ for local_auth in list_local_auth:
     print("Rural")
     print(rur_servd_df)
 
-        # Create an LA column 
-    urb_servd_df["LA"]=local_auth
-    rur_servd_df["LA"]=local_auth
 
     print("\n\n==========Disability Disaggregation===========\n\n")
 
