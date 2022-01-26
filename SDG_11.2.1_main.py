@@ -160,16 +160,18 @@ for local_auth in list_local_auth:
                                 polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    la_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains(local_auth)]
-    la_LSOA_df = la_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
+    uk_LSOA_df = uk_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    la_pop_df = whole_nation_pop_df.merge(la_LSOA_df,
+    la_pop_df = whole_nation_pop_df.merge(uk_LSOA_df,
                                             how='right',
                                             left_on='LSOA11CD',
                                             right_on='LSOA11CD',
                                             suffixes=('_pop', '_LSOA'))
 
+    # subset by the local authority name needed
+    la_pop_df=la_pop_df.loc[la_pop_df["LAD20NM"]==local_auth]                                        
+  
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
