@@ -298,7 +298,7 @@ for local_auth in list_local_auth:
     # Make a polygon object from the geometry column of the stops df 
     # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
-    # # find all the pop centroids which are in the bham_stops_poly
+    # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
     # Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
@@ -314,15 +314,28 @@ for local_auth in list_local_auth:
             The full population of {local_auth} is calculated as {full_pop}
             While the number of people who are not served is {not_served}""")
 
-    la_results_df=pd.DataFrame({"LA":[local_auth],
-                            "pop":[full_pop],
-                            "pop_served":[served],
-                            "pop_not_served":[not_served],
-                            "pct_served":[pct_served],
-                            "pct_not_served":[pct_not_served]})
+    la_results_df = pd.DataFrame({"All_pop":[full_pop],
+                                  "Served":[served],
+                                  "Unserved":[not_served],
+                                  "Percentage served":[pct_served],
+                                  "Percentage unserved":[pct_not_served]})
+    
+    # Re-orienting the df to what's accepted by the reshaper and renaming col
+    la_results_df = la_results_df.T.rename(columns={0:"Total"})
+
+    # Feeding the la_results_df to the reshaper
+    la_results_df_out = do.reshape_for_output(la_results_df,
+                                              id_col="Total",
+                                              local_auth=local_auth)
+
+    # Finally for the local authority totals the id_col can be dropped
+    # That's because the disaggregations each have their own column, 
+    # but "Total" is not a disaggregation so doesn't have a column.
+    # It will simply show up as blanks (i.e. Total) in all disagg columns
+    la_results_df_out.drop("Total", axis=1, inplace=True)
 
     # Output this iteration's df to the dict
-    total_df_dict[local_auth]=la_results_df
+    total_df_dict[local_auth] = la_results_df_out
 
 
     # # Disaggregations!
