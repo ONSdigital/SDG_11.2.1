@@ -148,7 +148,7 @@ disab_df_dict={}
 age_df_dict={}
 
 for local_auth in list_local_auth:
-    print(local_auth)
+    print(f"Processing: {local_auth}")
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
                             geo_df=uk_LSOA_df,
