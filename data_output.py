@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def reshape_for_output(df, id_col="Age"):
+def reshape_for_output(df, id_col, local_auth):
     # 1) Transpose the df
     # 2) reset index 
     # 3) rename column from index to Age or other id column
@@ -15,6 +15,6 @@ def reshape_for_output(df, id_col="Age"):
     df = df.replace({"Total":""})
     df["Unit Multiplier"] = np.where(df.variable.str.contains("Percentage"), "percent", "individual")
     # Rename the variables in the "variable" column
-    df["variable"].replace(to_replace="Percentage served", value="Served")
-    df["variable"].replace(to_replace="Percentage unserved", value="Unserved")
+    df["variable"].replace(to_replace="Percentage served", value="Served", inplace=True)
+    df["variable"].replace(to_replace="Percentage unserved", value="Unserved", inplace=True)
     return df
