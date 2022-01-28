@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def reshape_for_output(df, id_col, local_auth):
+def reshape_for_output(df, id_col, local_auth, id_rename=None):
     # 1) Transpose the df
     # 2) reset index 
     # 3) rename column from index to Age or other id column
@@ -9,6 +9,7 @@ def reshape_for_output(df, id_col, local_auth):
     # 5) Replace word "Total" with blanks, "variable" with "Series"
     # 6) Create "Unit Multiplier" map across from variable (percent or individual)
     # 7) Create the local auth col with this iteration's LA
+    # 8) rename column header of ID var
     df = df.T
     df = df.reset_index()
     df = df.rename(columns={"index":id_col})
@@ -22,4 +23,6 @@ def reshape_for_output(df, id_col, local_auth):
     df.rename(columns={"variable":"Series"},inplace=True)
     # Add and populate the "Local Authority" column
     df["Local Authority"]=local_auth
+    if id_rename:
+        df.rename(columns={id_col:id_rename}, inplace=True)
     return df

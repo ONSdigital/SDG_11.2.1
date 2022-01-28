@@ -388,11 +388,11 @@ for local_auth in list_local_auth:
     # Feeding the results to the reshaper
     disab_servd_df_out = do.reshape_for_output(disab_servd_df,
                                                id_col=disab_cols[0],
-                                               local_auth=local_auth)
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
     
     # The disability df is unusual. I think all rows correspond to people with
     # disabilities only. There is no "not-disabled" status here (I think)
-    disab_servd_df_out.rename(columns={"number_disabled":"Disability Status"})
     disab_servd_df_out.replace(to_replace="number_disabled", value="Disabled", inplace=True)
     
     # Output this local auth's disab df to the dict
