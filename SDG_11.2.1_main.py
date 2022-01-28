@@ -150,8 +150,7 @@ list_local_auth=["Kingston upon Hull, City of"]
 # define output dicts to capture dfs
 total_df_dict={}
 sex_df_dict={}
-urb_df_dict={}
-rur_df_dict={}
+urb_rur_df_dict={}
 disab_df_dict={}
 age_df_dict={}
 
@@ -391,16 +390,6 @@ for local_auth in list_local_auth:
     # Output this local auth's disab df to the dict
     disab_df_dict[local_auth] = disab_servd_df_out
 
-
-
-    # Output this iteration's disab df to the dict
-    disab_df_dict[local_auth]=sex_servd_df
-
-    # Output this iteration's age df to the dict
-    disab_df_dict[local_auth]=disab_servd_df
-
-    print(disab_servd_df)
-
     # Calculating those served and not served by urban/rural
     urb_col = ["urb_rur_class"]
 
@@ -427,31 +416,35 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=rur_pop_in_poly_df,
                                                 cols_lst=['pop_count'])
 
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count":"Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count":"Rural"}, inplace=True)
 
-    """==========Urban/Rural Disaggregation==========="""
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
 
-    print("Urban")
-    print(urb_servd_df)
-    print("Rural")
-    print(rur_servd_df)
-
-
-    """==========Disability Disaggregation==========="""
+    #Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
 
     # Output this iteration's urb and rur df to the dict
-    urb_df_dict[local_auth]=urb_servd_df
-    rur_df_dict[local_auth]=rur_servd_df
+    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
 
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
-urb_all_la = pd.concat(urb_df_dict.values())
-rur_all_la = pd.concat(rur_df_dict.values())
+urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 age_all_la = pd.concat(age_df_dict.values())
 print(disab_all_la)
 print(age_all_la)
-print(rur_all_la)
-print(urb_all_la)
+print(urb_rur_all_la)
 
 all_la=all_la.reset_index()
 
