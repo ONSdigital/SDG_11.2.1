@@ -136,7 +136,7 @@ list_local_auth=local_authority_list["LAD19NM"].unique()
 
 output_df_list=[]
 
-list_local_auth=["North Devon"]
+list_local_auth=["Flintshire", "North Devon"]
 
 
 # define output dicts to capture dfs
@@ -332,7 +332,6 @@ for local_auth in list_local_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
-
     # # Disaggregations!
     pd.set_option("precision", 1)
 
@@ -350,7 +349,6 @@ for local_auth in list_local_auth:
     age_servd_df_out = do.reshape_for_output(age_servd_df,
                                              id_col="Age",
                                              local_auth=local_auth)
-
 
     # Output this local auth's age df to the dict
     age_df_dict[local_auth] = age_servd_df_out
