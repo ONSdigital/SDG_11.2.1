@@ -333,11 +333,14 @@ for local_auth in list_local_auth:
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
-    age_servd_df_out = do.reshape_for_output(age_servd_df, id_col="Age")
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
 
-    print("\n\n==========Age Disaggregation===========\n\n")
 
-    # Output this iteration's age df to the dict
+    # Output this local auth's age df to the dict
     age_df_dict[local_auth] = age_servd_df_out
 
     # print(age_servd_df)
@@ -348,6 +351,15 @@ for local_auth in list_local_auth:
     sex_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
+
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df, 
+                                             id_col="Sex",
+                                             local_auth=local_auth)
+
+
+    # Output this local auth's age df to the dict
+    sex_df_dict[local_auth] = sex_servd_df_out
 
     print("\n\n==========Sex Disaggregation===========\n\n")
 
