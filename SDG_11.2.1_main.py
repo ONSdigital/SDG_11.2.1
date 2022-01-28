@@ -358,7 +358,7 @@ for local_auth in list_local_auth:
                                                 cols_lst=sex_cols)
 
     # Feeding the results to the reshaper
-    sex_servd_df_out = do.reshape_for_output(sex_servd_df, 
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
                                              id_col="Sex",
                                              local_auth=local_auth)
 
@@ -366,11 +366,9 @@ for local_auth in list_local_auth:
     # Output this local auth's age df to the dict
     sex_df_dict[local_auth] = sex_servd_df_out
 
-    print("\n\n==========Sex Disaggregation===========\n\n")
-
     # print(sex_servd_df)
 
-    # Output this iteration's age df to the dict
+    # Output this iteration's sex df to the dict
     sex_df_dict[local_auth]=sex_servd_df
 
     # Calculating those served and not served by disability
@@ -380,8 +378,23 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=disab_cols)
 
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                             id_col="number_disabled",
+                                             local_auth=local_auth)
+    
+    # The disability df is unusual. I think all rows correspond to people with 
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.rename(columns={"number_disabled":"Disability Status"})
+    disab_servd_df_out.replace(to_replace="number_disabled", value="Disabled", inplace=True)
+    
+    # Output this local auth's disab df to the dict
+    disab_df_dict[local_auth] = disab_servd_df_out
 
-    """==========Disability Disaggregation==========="""
+
+
+    # Output this iteration's disab df to the dict
+    disab_df_dict[local_auth]=sex_servd_df
 
     # Output this iteration's age df to the dict
     disab_df_dict[local_auth]=disab_servd_df
