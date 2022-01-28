@@ -370,15 +370,15 @@ for local_auth in list_local_auth:
     disab_cols = ["number_disabled"]
 
     disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-                                                pop_in_poly_df=pop_in_poly_df,
-                                                cols_lst=disab_cols)
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=disab_cols)
 
     # Feeding the results to the reshaper
     disab_servd_df_out = do.reshape_for_output(disab_servd_df,
-                                             id_col="number_disabled",
-                                             local_auth=local_auth)
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth)
     
-    # The disability df is unusual. I think all rows correspond to people with 
+    # The disability df is unusual. I think all rows correspond to people with
     # disabilities only. There is no "not-disabled" status here (I think)
     disab_servd_df_out.rename(columns={"number_disabled":"Disability Status"})
     disab_servd_df_out.replace(to_replace="number_disabled", value="Disabled", inplace=True)
