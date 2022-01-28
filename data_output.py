@@ -18,6 +18,8 @@ def reshape_for_output(df, id_col, local_auth):
     # Rename the variables in the "variable" column
     df["variable"].replace(to_replace="Percentage served", value="Served", inplace=True)
     df["variable"].replace(to_replace="Percentage unserved", value="Unserved", inplace=True)
+    # Rename the variable col to "Series"
+    df.rename(columns={"variable":"Series"},inplace=True)
     # Add and populate the "Local Authority" column
     df["Local Authority"]=local_auth
     return df
