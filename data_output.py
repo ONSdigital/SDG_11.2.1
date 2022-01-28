@@ -7,7 +7,8 @@ def reshape_for_output(df, id_col, local_auth):
     # 3) rename column from index to Age or other id column
     # 4) melt df with Age as ID vars, all the rest value vars
     # 5) Replace word "Total" with blanks, "variable" with "Series"
-    # 6) Create "Unit Multiplier" map across "Unserved" to 
+    # 6) Create "Unit Multiplier" map across from variable (percent or individual)
+    # 7) Create the local auth col with this iteration's LA
     df = df.T
     df = df.reset_index()
     df = df.rename(columns={"index":id_col})
@@ -17,4 +18,6 @@ def reshape_for_output(df, id_col, local_auth):
     # Rename the variables in the "variable" column
     df["variable"].replace(to_replace="Percentage served", value="Served", inplace=True)
     df["variable"].replace(to_replace="Percentage unserved", value="Unserved", inplace=True)
+    # Add and populate the "Local Authority" column
+    df["Local Authority"]=local_auth
     return df
