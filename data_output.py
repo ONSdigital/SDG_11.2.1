@@ -30,8 +30,7 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     df.rename(columns={"value":"Value"},inplace=True)
     # Add and populate the "Local Authority" column
     df["Local Authority"]=local_auth
-    df = df[id_col,"Local Authority", "Series", "Observation Status", "Unit Multiplier","Unit Measure",]
+    df = df[[id_col,"Local Authority", "Series", "Observation Status", "Unit Multiplier", "Unit Measure", "Value"]]
     if id_rename:
         df.rename(columns={id_col:id_rename}, inplace=True)
-    
     return df

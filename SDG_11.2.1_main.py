@@ -393,7 +393,9 @@ for local_auth in list_local_auth:
     
     # The disability df is unusual. I think all rows correspond to people with
     # disabilities only. There is no "not-disabled" status here (I think)
-    disab_servd_df_out.replace(to_replace="number_disabled", value="Disabled", inplace=True)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
     
     # Output this local auth's disab df to the dict
     disab_df_dict[local_auth] = disab_servd_df_out
