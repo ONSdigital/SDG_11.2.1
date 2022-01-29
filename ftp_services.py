@@ -1,5 +1,6 @@
 # Core imports for this module
 from ftplib import FTP
+from math import comb
 import os
 
 # FTP Variables
@@ -109,6 +110,11 @@ def get_missing_files(remote_data_dir, file_list):
     #print(f"\nTransfer will deposit files to: {os.getcwd()}")
     home_dir = os.getcwd()
     ftp_home = ftp.pwd()
+    print("about to retrieve missing files")
+
+    print(home_dir)
+
+    #print(file_list)
 
     ftp.cwd(remote_data_dir)
 
@@ -117,6 +123,35 @@ def get_missing_files(remote_data_dir, file_list):
 
     else: 
         for f in file_list:
+
+            head_tail = os.path.split(f)
+            dir = head_tail[0]
+            file = head_tail[1]
+
+            home_split = os.path.split(home_dir)
+            home_split = home_split[0]
+            
+            combined_path = (f"{home_split}/{dir}")
+
+            #print(f"ftp dir: {ftp.pwd()}")
+            #print(f"remote: data dir: {remote_data_dir}")
+            #print(f"ftp_home: {ftp_home}")
+
+            if not os.path.isdir(combined_path):
+                    os.makedirs(combined_path)
+                    os.chdir(combined_path)
+                    ftp.cwd(ftp_home + dir)
+                    ftp_get_file(file)
+                    #os.chdir(os.path.pardir)
+            
+            elif os.path.isdir(combined_path):
+                    print("directory_exists")
+                    os.chdir(combined_path)
+                    ftp.cwd(ftp_home + dir)
+                    ftp_get_file(file)
+
+            """
+            
             if "/" in f:
                 list = f.split("/")
                 dir = list[0] + "/"
@@ -138,4 +173,4 @@ def get_missing_files(remote_data_dir, file_list):
 
             else:
                 ftp_get_file(f)
-    
+            """
