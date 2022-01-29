@@ -6,6 +6,7 @@ import os, os.path
 
 keys = list(ftp_services.dir_list)
 
+
 def grab_files():
 
     ftp_services.ftp_connect()
@@ -48,6 +49,7 @@ def create_recursive_data_directory_list():
                 sub_get(sub_entries, new_ddir)
     
     sub_get(entries, data_dir)
+    append_list.append(data_dir)
 
     return append_list
     
@@ -111,6 +113,11 @@ def create_local_file_list():
     for file in list(filter(os.path.isfile, os.listdir())):
         local_list.append(f"{data_dir}{file}")
 
+    def recursive_dir_check():
+        if len(local_dirs) >=1:
+            for dir in list(filter(os.path.isdir, os.listdir())):
+                local_dirs.append(dir)
+
     for d in local_dirs:
         
         os.chdir(d)
@@ -133,13 +140,10 @@ def check_missing_files(search_dirs):
     set_remot = set(data_files)
     set_local = set(locl_files)
 
-    #print(len(data_files))
-    #print(len(locl_files))
+    print(f"number of remote files: {len(data_files)}")
+    print(f"number of local files: {len(locl_files)}")
 
     missing_files = set_remot.difference(set_local)
-
-    #print(missing_files)
-    #print(len(missing_files))
 
     if len(missing_files) == 0:
         print("You are not missing any files")
