@@ -1,6 +1,8 @@
 #logic to download all of the files from data directory on the remote server
 
 from re import sub
+
+from numpy import append
 import ftp_services as ftp_services
 import os, os.path
 
@@ -50,6 +52,8 @@ def create_recursive_data_directory_list():
     
     sub_get(entries, data_dir)
     append_list.append(data_dir)
+
+    print(append_list)
 
     return append_list
     
@@ -108,15 +112,20 @@ def create_local_file_list():
     os.chdir(data_dir)
 
     for dir in list(filter(os.path.isdir, os.listdir())):
+        print("local dir check")
         local_dirs.append(dir)
+        print(dir)
+        (print("subdir list:"))
+        sub_dir_contents = os.scandir(dir)
+        print(sub_dir_contents)
+        for sdc in sub_dir_contents:
+            if os.path.isdir(sdc):
+                print(sdc.path)
+                local_dirs.append(sdc.path)
 
     for file in list(filter(os.path.isfile, os.listdir())):
+        print("local file check")
         local_list.append(f"{data_dir}{file}")
-
-    def recursive_dir_check():
-        if len(local_dirs) >=1:
-            for dir in list(filter(os.path.isdir, os.listdir())):
-                local_dirs.append(dir)
 
     for d in local_dirs:
         
@@ -130,6 +139,8 @@ def create_local_file_list():
     #print(local_dirs)
     #print(local_list)
     #print(len(local_list))
+
+    print (local_list)
     return local_list
 
 def check_missing_files(search_dirs):
