@@ -44,11 +44,11 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-# # Getting the Lower Super Output Area for the UK into a dataframe
-# TODO: check if the LSOA df needs to be imported and used - may be junk?
-uk_LSOA_shp_file = config['uk_LSOA_shp_file']
-full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
-uk_LSOA_df = di.geo_df_from_geospatialfile(path_to_file=full_path)
+
+# getting the coordinates for all LA's
+uk_la_file_conf = config['uk_la_shp_file']
+full_path_uk_la=os.path.join(os.getcwd(), "data", "LA_shp", uk_la_file_conf)
+uk_la_file=di.geo_df_from_geospatialfile(path_to_file=full_path_uk_la)
 
 # Getting the west midlands population estimates for 2019
 pop_year = config["calculation_year"]
@@ -150,8 +150,8 @@ for local_auth in list_local_auth:
     print(local_auth)
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
-                            geo_df=uk_LSOA_df,
-                            dissolveby='LSOA11NM',
+                            geo_df=uk_la_file,
+                            dissolveby='LAD21NM',
                             search=local_auth))
 
     # Creating a Geo Dataframe of only stops in la
@@ -160,16 +160,19 @@ for local_auth in list_local_auth:
                                 polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    la_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains(local_auth)]
-    la_LSOA_df = la_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
+    uk_la_file = uk_la_file[['LAD21NM', 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    la_pop_df = whole_nation_pop_df.merge(la_LSOA_df,
+    #TODO: mismatch of 2020 LA's and 2021 LA's
+    la_pop_df = whole_nation_pop_df.merge(uk_la_file,
                                             how='right',
-                                            left_on='LSOA11CD',
-                                            right_on='LSOA11CD',
+                                            left_on='LAD20NM',
+                                            right_on='LAD21NM',
                                             suffixes=('_pop', '_LSOA'))
 
+    # subset by the local authority name needed
+    la_pop_df=la_pop_df.loc[la_pop_df["LAD20NM"]==local_auth]                                        
+  
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
