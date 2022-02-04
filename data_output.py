@@ -34,3 +34,7 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     if id_rename:
         df.rename(columns={id_col:id_rename}, inplace=True)
     return df
+
+def reorder_final_df(df):
+    df = df[["Year","Sex", "Age", "Disability Status", "Local Authority", "Urban/Rural", "Series", "Observation Status", "Unit Multiplier", "Unit Measure", "Value"]]
+    return df
