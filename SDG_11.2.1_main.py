@@ -357,13 +357,8 @@ for local_auth in list_local_auth:
                                              local_auth=local_auth)
 
 
-    # Output this local auth's age df to the dict
-    sex_df_dict[local_auth] = sex_servd_df_out
-
-    # print(sex_servd_df)
-
     # Output this iteration's sex df to the dict
-    sex_df_dict[local_auth]=sex_servd_df
+    sex_df_dict[local_auth]=sex_servd_df_out
 
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
@@ -437,16 +432,19 @@ sex_all_la = pd.concat(sex_df_dict.values())
 urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 age_all_la = pd.concat(age_df_dict.values())
-print(disab_all_la)
-print(age_all_la)
-print(urb_rur_all_la)
 
-all_la=all_la.reset_index()
+
+# Stacking the dataframes
+all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_all_la]
+final_result = pd.concat(all_results_dfs)
+
+# Resetting index for gptables
+final_result.reset_index(inplace=True)
 
 output_tabs={}
 
 output_tabs["local_auth"] = gpt.GPTable(
-                                table=all_la,
+                                table=final_result,
                                 title="local_auth",
                                 scope=None,
                                 units=None,
