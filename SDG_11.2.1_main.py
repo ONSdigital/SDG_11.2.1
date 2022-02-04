@@ -1,6 +1,6 @@
 # Core imports
 import os
-
+import time
 
 # Third party imports
 import geopandas as gpd
@@ -13,6 +13,8 @@ import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
 import data_output as do
+
+start_time = time.time()
 
 # get current working directory
 CWD = os.getcwd()
@@ -132,14 +134,30 @@ whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11C
 # All of England LA areas
 la_list_path="data/la_lookup_england_2019.csv"
 local_authority_list=pd.read_csv(la_list_path)
+
+# Making the LA list from the local auth list 2019
 list_local_auth=local_authority_list["LAD19NM"].unique()
+
+# Making the LA list from the names in LA_df
+# list_local_auth = LA_df['LAD20NM'].unique()
+
 
 output_df_list=[]
 
-list_local_auth=["Flintshire", "North Devon"]
+# Random list of local auths. 
+list_local_auth=["Flintshire", 
+                 "North Devon",
+                 "Birmingham",
+                 "Middlesbrough",
+                 "Peterborough",
+                 "Cornwall",
+                 "Forest of Dean",
+                 "North West Leicestershire",
+                 "East Staffordshire"]
 
 
-# define output dicts to capture dfs
+
+# Define output dicts to capture dfs
 total_df_dict={}
 sex_df_dict={}
 urb_rur_df_dict={}
@@ -172,12 +190,6 @@ for local_auth in list_local_auth:
 
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
-
-    # change pop_count to number (int)
-    # bham_pop_df['pop_count'] = (pd.to_numeric
-    #                             (bham_pop_df
-    #                              .pop_count.str
-    #                              .replace(",", "")))
 
     # Get a list of ages from config
     age_lst = config['age_lst']
@@ -302,8 +314,8 @@ for local_auth in list_local_auth:
     served = pop_in_poly_df.pop_count.sum()
     full_pop = la_pop_df.pop_count.sum()
     not_served = full_pop - served
-    pct_not_served = "{:.2%}".format(not_served/full_pop)
-    pct_served = "{:.2%}".format(served/full_pop)
+    pct_not_served = "{:.2}".format(not_served/full_pop)
+    pct_served = "{:.2}".format(served/full_pop)
 
     print(f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
@@ -450,6 +462,7 @@ age_all_la = pd.concat(age_df_dict.values())
 # Stacking the dataframes
 all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_all_la]
 final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
 
 # Resetting index for gptables
 final_result.reset_index(inplace=True)
@@ -467,3 +480,9 @@ output_tabs["local_auth"] = gpt.GPTable(
 gpt.write_workbook(filename="SDG.xlsx",
                     sheets=output_tabs,
                     auto_width=True)
+
+# Outputting to CSV
+final_result = do.reorder_final_df(final_result)
+final_result.to_csv("All_results.csv")
+
+print(f"Time taken is {time.time() - start_time}")
