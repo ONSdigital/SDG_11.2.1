@@ -13,7 +13,7 @@ ftp = FTP(ftp_host)
 
 #local_data_dir = "data/"
 #remote_data_dir = "data/"
-
+"""
 file_dict = {"data/" : ["KS101EW-usual_resident_population.csv",
              "Output_Areas__December_2011__Boundaries_EW_BGC.csv",
              "RUC11_OA11_EW.csv",
@@ -32,7 +32,7 @@ dir_list = ["data/",
             "data/LSOA_shp/", 
             "data/population_estimates/", 
             "data/pop_weighted_centroids/"]
-
+"""
 def retrieve_pass(pass_path):
     if os.path.isfile(pass_path):
         text_file = open(pass_path, 'r')
@@ -133,12 +133,12 @@ def get_missing_files(remote_data_dir, file_list):
             from ftp_get_files_logic.py
             """
 
-            if os.path.split(dir_split[0])[0] == 'data':
-                sub_dir = os.path.split(dir_split[0])[1]
-                combined_path = (f"{home_split}/{sub_dir}/{dir_split[1]}")
-                
-            elif dir_split[0] == 'data': 
+            if dir_split[0] == 'data': 
                 combined_path = (f"{home_split}/{dir_split[1]}")
+
+                if os.path.split(dir_split[0])[0] == 'data':
+                    sub_dir = os.path.split(dir_split[0])[1]
+                    combined_path = (f"{home_split}/{sub_dir}/{dir_split[1]}")
 
             elif dir_split[0] != 'data':
                 combined_path = (f"{home_split}/{dir}")

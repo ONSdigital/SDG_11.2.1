@@ -1,12 +1,13 @@
 #logic to download all of the files from data directory on the remote server
 
+from html import entities
 from re import sub
 
 from numpy import append
 import ftp_services as ftp_services
 import os, os.path
 
-keys = list(ftp_services.dir_list)
+#keys = list(ftp_services.dir_list)
 
 def create_recursive_data_directory_list():
 
@@ -17,6 +18,8 @@ def create_recursive_data_directory_list():
     entries = list(ftp_services.ftp.mlsd(data_dir))
     entries = [entry for entry in entries if entry[1]["type"] == "dir"]
     entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
+
+    print(entries)
 
     append_list = []
 
@@ -35,7 +38,8 @@ def create_recursive_data_directory_list():
     
     sub_get(entries, data_dir)
     append_list.append(data_dir)
-
+    
+    print(append_list)
     return append_list
     
 
