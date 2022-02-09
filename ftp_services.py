@@ -11,8 +11,8 @@ ftp = FTP(ftp_host)
 
 # File Variables - move to file where function is called
 
-local_data_dir = "data/"
-remote_data_dir = "data/"
+#local_data_dir = "data/"
+#remote_data_dir = "data/"
 
 file_dict = {"data/" : ["KS101EW-usual_resident_population.csv",
              "Output_Areas__December_2011__Boundaries_EW_BGC.csv",
@@ -107,21 +107,15 @@ def quit_ftp():
     ftp.quit()
 
 def get_missing_files(remote_data_dir, file_list):
-    #print(f"\nTransfer will deposit files to: {os.getcwd()}")
     home_dir = os.getcwd()
     ftp_home = ftp.pwd()
-    print("about to retrieve missing files")
-
-    print(home_dir)
-
-    #print(file_list)
-
     ftp.cwd(remote_data_dir)
 
     if file_list is None:
-        print("You are not missing any data files! Congratulationss")
+        print("Proceeding with processing pipeline...")
 
-    else: 
+    else:
+        print("Initiating file transfer...") 
         for f in file_list:
 
             head_tail = os.path.split(f)
@@ -130,12 +124,24 @@ def get_missing_files(remote_data_dir, file_list):
 
             home_split = os.path.split(home_dir)
             home_split = home_split[0]
-            
-            combined_path = (f"{home_split}/{dir}")
 
-            #print(f"ftp dir: {ftp.pwd()}")
-            #print(f"remote: data dir: {remote_data_dir}")
-            #print(f"ftp_home: {ftp_home}")
+            dir_split = os.path.split(dir)
+
+            """
+            there is messyness here due to how 'data/' is passed through
+            this should be cleaned up before being passed to this function
+            from ftp_get_files_logic.py
+            """
+
+            if os.path.split(dir_split[0])[0] == 'data':
+                sub_dir = os.path.split(dir_split[0])[1]
+                combined_path = (f"{home_split}/{sub_dir}/{dir_split[1]}")
+                
+            elif dir_split[0] == 'data': 
+                combined_path = (f"{home_split}/{dir_split[1]}")
+
+            elif dir_split[0] != 'data':
+                combined_path = (f"{home_split}/{dir}")
 
             if not os.path.isdir(combined_path):
                     os.makedirs(combined_path)
@@ -145,32 +151,9 @@ def get_missing_files(remote_data_dir, file_list):
                     #os.chdir(os.path.pardir)
             
             elif os.path.isdir(combined_path):
-                    print("directory_exists")
                     os.chdir(combined_path)
                     ftp.cwd(ftp_home + dir)
                     ftp_get_file(file)
-
-            """
-            
-            if "/" in f:
-                list = f.split("/")
-                dir = list[0] + "/"
-                file = list[1]
-
-                if not os.path.isdir(dir):
-                    os.mkdir(dir)
-                    os.chdir(dir)
-                    ftp.cwd(dir)
-                    ftp_get_file(file)
-                    ftp.cwd(ftp_home + remote_data_dir)
-                    os.chdir(os.path.pardir)
-                else:
-                    os.chdir(dir)
-                    ftp.cwd(dir)
-                    ftp_get_file(file)
-                    ftp.cwd(ftp_home + remote_data_dir)
-                    os.chdir(os.path.pardir)
-
-            else:
-                ftp_get_file(f)
-            """
+        
+        print("All missing files transfered...")
+        print("Proceeding with processing pipeline...")
