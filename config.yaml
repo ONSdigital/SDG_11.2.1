@@ -1,3 +1,4 @@
+calculation_year : 2019
 NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
 DEFAULT_CRS : 'EPSG:27700'
 DATA_DIR :  "./data"
@@ -15,6 +16,7 @@ URB_RUR_TYPES:
   OA11CD: str
   RUC11CD: category
 uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
+uk_la_shp_file: "LAD_DEC_2021_UK_BFC.shp"
 OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D'
 POPULATION_DATA:
   - 2019
