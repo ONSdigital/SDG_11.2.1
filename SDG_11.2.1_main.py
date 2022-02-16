@@ -138,10 +138,8 @@ LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
 whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
 
 
-# All of England LA areas
-la_list_path="data/la_lookup_england_2019.csv"
-local_authority_list=pd.read_csv(la_list_path)
-list_local_auth=local_authority_list["LAD19NM"].unique()
+# Unique list of LA's to iterate through
+list_local_auth=uk_la_file[lad_col].unique()
 
 output_df_list=[]
 
