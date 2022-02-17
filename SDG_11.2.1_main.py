@@ -145,17 +145,16 @@ list_local_auth=local_authority_list["LAD19NM"].unique()
 output_df_list=[]
 
 # # Random list of local auths. 
-# list_local_auth=["City of London",
-#                  "Flintshire", 
-#                  "North Devon",
-#                  "Birmingham",
-#                  "Middlesbrough",
-#                  "Peterborough",
-#                  "Cornwall",
-#                  "Forest of Dean",
-#                  "North West Leicestershire",
-#                  "East Staffordshire"]
-
+list_local_auth=["City of London",
+                 "Flintshire", 
+                 "North Devon",
+                 "Birmingham",
+                 "Middlesbrough",
+                 "Peterborough",
+                 "Cornwall",
+                 "Forest of Dean",
+                 "North West Leicestershire",
+                 "East Staffordshire"][0:1]
 
 
 # Define output dicts to capture dfs
