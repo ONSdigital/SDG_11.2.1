@@ -26,6 +26,11 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 EXT_ORDER = config['EXT_ORDER']
+# Years
+# Getting the year for population data
+pop_year = str(config["calculation_year"])
+# Getting the year for centroid data
+centroid_year = str(config["centroid_year"])
 
 # define url for zip download
 NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
@@ -50,13 +55,10 @@ uk_la_file_conf = config['uk_la_shp_file']
 full_path_uk_la=os.path.join(os.getcwd(), "data", "LA_shp", uk_la_file_conf)
 uk_la_file=di.geo_df_from_geospatialfile(path_to_file=full_path_uk_la)
 
-# Getting the west midlands population estimates for 2019
-pop_year = config["calculation_year"]
-
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(
                                     "data/population_estimates",
-                                    str(pop_year)
+                                    pop_year
                                     )
                        )
 
@@ -68,7 +70,7 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
                          'pop_weighted_centroids',
-                         '2011')))
+                         centroid_year)))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
