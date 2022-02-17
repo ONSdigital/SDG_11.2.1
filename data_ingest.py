@@ -312,7 +312,7 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
 
 def capture_region(file_nm: str):
     "Extracts the region name from the ONS population estimate excel files."
-    patt = re.compile("^(.*estimates-)(?P<region>.*)(\.xls)")
+    patt = re.compile("^(.*estimates[-]?)(?P<region>.*)(\.xls)")
     region = re.search(patt, file_nm).group("region")
     region = region.replace("-", " ").capitalize()
     return region
@@ -326,7 +326,7 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     # Dict of region:file_name. Capture the region name from the filename
     region_dict = {capture_region(file):file for file in pop_files}
     # make a df of each region then concat
-    national_pop_feather_path = os.path.join(DATA_DIR, "whole_nation.feather")
+    national_pop_feather_path = os.path.join(DATA_DIR, f"whole_nation_{pop_year}.feather")
     if not os.path.exists(national_pop_feather_path):
         print("No national_pop_feather found")
         region_dfs_dict = {}
@@ -340,9 +340,9 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
-            total_pop = pd.read_excel(xlFile, "Mid-2019 Persons", header=4)
-            males_pop = pd.read_excel(xlFile, "Mid-2019 Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
-            fem_pop = pd.read_excel(xlFile, "Mid-2019 Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+            total_pop = pd.read_excel(xlFile, f"Mid-{pop_year} Persons", header=4)
+            males_pop = pd.read_excel(xlFile, f"Mid-{pop_year} Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+            fem_pop = pd.read_excel(xlFile,  f"Mid-{pop_year} Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
             total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
             males_pop.rename(columns={"All Ages": "males_pop"}, inplace=True)
@@ -368,3 +368,30 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     # Temporary TODO: remove this line
         whole_nation_pop_df.rename(columns={"total_pop": "pop_count"}, inplace=True)
     return whole_nation_pop_df
+
+def get_shp_file_name(dir):
+    """
+    Passed a directory into the function and returns the absolute path
+    of where the shp file is within that directory
+    """
+    files=os.listdir(dir)
+    shp_files=[file for file in files if file.endswith(".shp")]
+    shp_file=shp_files[0]
+
+    absolute_path=os.path.join(dir,shp_file)
+
+    return absolute_path
+
+def get_oa_la_file_name(dir):
+    """
+    Passed a directory into the function and returns the absolute path
+    of where the shp file is within that directory
+    
+    """
+    files=os.listdir(dir)
+    csv_files=[file for file in files if file.endswith(".csv")]
+    csv_file=csv_files[0]
+
+    absolute_path=os.path.join(dir,csv_file)
+
+    return absolute_path

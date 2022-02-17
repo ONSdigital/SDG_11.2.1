@@ -44,17 +44,23 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-
-# getting the coordinates for all LA's
-uk_la_file_conf = config['uk_la_shp_file']
-full_path_uk_la=os.path.join(os.getcwd(), "data", "LA_shp", uk_la_file_conf)
-uk_la_file=di.geo_df_from_geospatialfile(path_to_file=full_path_uk_la)
-
-# Getting the west midlands population estimates for 2019
+# Getting the west midlands population estimates for the configs year
 pop_year = config["calculation_year"]
 
+# define la col which is LADXXNM where XX is last 2 digits of year e.g 21 from 2021
+lad_col=f'LAD{str(pop_year)[-2:]}NM'
+
+# getting path for .shp file for LA's
+uk_la_path=di.get_shp_file_name(dir=os.path.join(os.getcwd(), 
+                                                        "data", 
+                                                        "LA_shp",
+                                                        str(pop_year)))
+# getting the coordinates for all LA's
+uk_la_file=di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
+
+
 # Get list of all pop_estimate files for target year
-pop_files = os.listdir(os.path.join(
+pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data/population_estimates",
                                     str(pop_year)
                                     )
@@ -124,14 +130,16 @@ whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Map OA codes to Local Authority Names
-LA_df = pd.read_csv("data/Output_Area_to_Lower_Layer_Super_Output_Area_to_Middle_Layer_Super_Output_Area_to_Local_Authority_District__December_2020__Lookup_in_England_and_Wales.csv", usecols=["OA11CD", "LAD20NM"])
+oa_la_lookup_path=di.get_oa_la_file_name(os.path.join(os.getcwd(),
+                                                "data/oa_la_mapping",
+                                                 str(pop_year)))
+
+LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
 whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
 
 
-# All of England LA areas
-la_list_path="data/la_lookup_england_2019.csv"
-local_authority_list=pd.read_csv(la_list_path)
-list_local_auth=local_authority_list["LAD19NM"].unique()
+# Unique list of LA's to iterate through
+list_local_auth=uk_la_file[lad_col].unique()
 
 output_df_list=[]
 
@@ -147,11 +155,13 @@ disab_df_dict={}
 age_df_dict={}
 
 for local_auth in list_local_auth:
+
     print(local_auth)
+
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
                             geo_df=uk_la_file,
-                            dissolveby='LAD21NM',
+                            dissolveby=lad_col,
                             search=local_auth))
 
     # Creating a Geo Dataframe of only stops in la
@@ -160,18 +170,17 @@ for local_auth in list_local_auth:
                                 polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    uk_la_file = uk_la_file[['LAD21NM', 'geometry']]
+    uk_la_file = uk_la_file[[lad_col, 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    #TODO: mismatch of 2020 LA's and 2021 LA's
     la_pop_df = whole_nation_pop_df.merge(uk_la_file,
                                             how='right',
-                                            left_on='LAD20NM',
-                                            right_on='LAD21NM',
-                                            suffixes=('_pop', '_LSOA'))
+                                            left_on=lad_col,
+                                            right_on=lad_col,
+                                            suffixes=('_pop', '_LA'))
 
     # subset by the local authority name needed
-    la_pop_df=la_pop_df.loc[la_pop_df["LAD20NM"]==local_auth]                                        
+    la_pop_df=la_pop_df.loc[la_pop_df[lad_col]==local_auth]                                        
   
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
