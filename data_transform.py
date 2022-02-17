@@ -10,14 +10,17 @@ def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
         col_nms (List[str]): column names as string in a list
 
     Returns:
-        pd.DataFrame: A dataframe sliced down to only the columns required."""
+        pd.DataFrame: A dataframe sliced down to only the columns required.
+    """
     age_df = df.loc[:, col_nms]
     return age_df
 
 
-def get_col_bins(col_nms: List[str]) -> List[tuple]:
-    """Function to groups or bin the ages together in 5 
-        year steps. Starts the sequence at age "0". 
+def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this doctring not to work 
+    """Function to group/bin the ages together in 5
+        year steps. 
+        
+    Starts the sequence at age 0. 
         Will return the ages in a list of tuples.
         The 0th position of the tuple being the lower limit
         of the age bin, the 1st position of the tuple being
@@ -29,7 +32,8 @@ def get_col_bins(col_nms: List[str]) -> List[tuple]:
     Returns:
         list of tuples: a list of the ages with 5 year gaps
     """
-    # Make a lists of starting and finishing indexes
+    
+    ## Make a lists of starting and finishing indexes
     cols_start = col_nms[0::5]
     cols_fin = col_nms[4::5]
     # Generating a list of tuples which will be the age groupings
@@ -65,7 +69,8 @@ def bin_pop_ages(age_df, age_bins, col_nms):
 def served_proportions_disagg(pop_df: pd.DataFrame,
                               pop_in_poly_df: pd.DataFrame,
                               cols_lst: List[str]):
-    """Calculates the number of people in each category, as specified by the column
+    """
+    Calculates the number of people in each category, as specified by the column
         (e.g age range, or disability status) who are served and not served by
         public transport, and gives those as a proportion of the total.
         
@@ -89,10 +94,9 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         ii) the number served by public transport
         iii) the percentage of who are served by public transport
         iv) the percentage ofwho are not served by public transport
-    
     """
     # First list the age bin columns
-
+   
     pop_sums = {}
     for col in cols_lst:
         # Total pop
@@ -107,8 +111,8 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
             pop_sums[col] = {"Total": str(total_pop),
                              "Served": str(servd_pop),
                              "Unserved": str(unsrvd_pop),
-                             "Percentage served": None,
-                             "Percentage unserved": None}
+                             "Percentage served": "None",
+                             "Percentage unserved": "None"}
         elif total_pop > 0:
             pop_sums[col] = _calc_proprtn_srvd_unsrvd(total_pop,
                                                       servd_pop,
@@ -138,16 +142,16 @@ def _calc_proprtn_srvd_unsrvd(total_pop,
                 iii) the percentage of who are served by public transport
                 iv) the percentage ofwho are not served by public transport
     """
-        # Get proportion served
-        pct_servd = round((servd_pop/total_pop)*100, 2)
-        # Get proportion unserved
-        pct_unserved = round(((total_pop-servd_pop)/total_pop)*100, 2)
-        results_dict = {"Total": str(total_pop),
-                         "Served": str(servd_pop),
-                         "Unserved": str(unsrvd_pop),
-                         "Percentage served": str(pct_servd),
-                         "Percentage unserved": str(pct_unserved)}
-        return results_dict
+    # Get proportion served
+    pct_servd = round((servd_pop/total_pop)*100, 2)
+    # Get proportion unserved
+    pct_unserved = round(((total_pop-servd_pop)/total_pop)*100, 2)
+    results_dict = {"Total": str(total_pop),
+                        "Served": str(servd_pop),
+                        "Unserved": str(unsrvd_pop),
+                        "Percentage served": str(pct_servd),
+                        "Percentage unserved": str(pct_unserved)}
+    return results_dict
 
 
 def highly_serv_stops(region):
