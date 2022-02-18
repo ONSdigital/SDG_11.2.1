@@ -13,26 +13,7 @@ ftp = FTP(ftp_host)
 
 #local_data_dir = "data/"
 #remote_data_dir = "data/"
-"""
-file_dict = {"data/" : ["KS101EW-usual_resident_population.csv",
-             "Output_Areas__December_2011__Boundaries_EW_BGC.csv",
-             "RUC11_OA11_EW.csv",
-             "nomis_QS104EW.csv",
-             "nomis_QS303.csv"],
-             "data/LSOA_shp/" : ["Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.cpg",
-             "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.dbf",
-             "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.prj",
-             "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp",
-             "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shx",
-             "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.xml"],
-             "data/population_estimates/" : ["westmids_pop_only.csv"],
-             "data/pop_weighted_centroids/" : ["*.*"]}
 
-dir_list = ["data/", 
-            "data/LSOA_shp/", 
-            "data/population_estimates/", 
-            "data/pop_weighted_centroids/"]
-"""
 def retrieve_pass(pass_path):
     if os.path.isfile(pass_path):
         text_file = open(pass_path, 'r')
@@ -127,21 +108,15 @@ def get_missing_files(remote_data_dir, file_list):
 
             dir_split = os.path.split(dir)
 
-            """
-            there is messyness here due to how 'data/' is passed through
-            this should be cleaned up before being passed to this function
-            from ftp_get_files_logic.py
-            """
-
             if dir_split[0] == 'data': 
-                combined_path = (f"{home_split}/{dir_split[1]}")
+                combined_path = (f"{home_split}/{dir}")
 
                 if os.path.split(dir_split[0])[0] == 'data':
                     sub_dir = os.path.split(dir_split[0])[1]
                     combined_path = (f"{home_split}/{sub_dir}/{dir_split[1]}")
 
             elif dir_split[0] != 'data':
-                combined_path = (f"{home_split}/{dir}")
+                combined_path = (f"{home_dir}/{dir}")
 
             if not os.path.isdir(combined_path):
                     os.makedirs(combined_path)

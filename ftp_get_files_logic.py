@@ -3,7 +3,7 @@
 from html import entities
 from re import sub
 
-from numpy import append
+from numpy import append, short
 import ftp_services as ftp_services
 import os, os.path
 
@@ -63,7 +63,7 @@ def create_data_file_list(data_dirs):
 
 
     return file_list
-
+"""
 def create_local_file_list():
 
     data_dir = "data/"
@@ -90,6 +90,7 @@ def create_local_file_list():
             print(f"setting root data dir")
 
         else:
+            print(os.getcwd())            
             os.chdir(d)
             files = list(filter(os.path.isfile, os.listdir()))
             
@@ -97,7 +98,26 @@ def create_local_file_list():
                 local_list.append(f"{data_dir}{d}/{f}")
             os.chdir(os.path.pardir)
 
-    return local_list
+    return local_list"""
+
+def create_local_file_list():
+    path = f"{os.getcwd()}/data"
+    sys_dir = f"{os.getcwd()}"
+    #we shall store all the file names in this list
+    #print(path)
+    filelist = []
+    
+    for root, dirs, files in os.walk(path):
+    
+        for file in files:
+            #append the file name to the list
+            root = root.replace((sys_dir+'/'),"")
+            print(root)
+            filelist.append(os.path.join(root,file))
+    
+    print(filelist)
+    return filelist
+
 
 def check_missing_files(search_dirs):
 

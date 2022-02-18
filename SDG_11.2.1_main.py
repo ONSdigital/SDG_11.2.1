@@ -6,7 +6,7 @@ import os
 import geopandas as gpd
 import pandas as pd
 import yaml
-import gptables as gpt
+#import gptables as gpt
 
 # Module imports
 import geospatial_mods as gs
@@ -441,7 +441,7 @@ print(urb_all_la)
 all_la=all_la.reset_index()
 
 output_tabs={}
-
+"""
 output_tabs["local_auth"] = gpt.GPTable(
                                 table=all_la,
                                 title="local_auth",
@@ -453,3 +453,4 @@ output_tabs["local_auth"] = gpt.GPTable(
 gpt.write_workbook(filename="SDG.xlsx",
                     sheets=output_tabs,
                     auto_width=True)
+"""
