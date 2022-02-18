@@ -26,6 +26,11 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 EXT_ORDER = config['EXT_ORDER']
+# Years
+# Getting the year for population data
+pop_year = str(config["calculation_year"])
+# Getting the year for centroid data
+centroid_year = str(config["centroid_year"])
 
 # define url for zip download
 NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
@@ -44,25 +49,22 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-# Getting the west midlands population estimates for the configs year
-pop_year = config["calculation_year"]
 
 # define la col which is LADXXNM where XX is last 2 digits of year e.g 21 from 2021
-lad_col=f'LAD{str(pop_year)[-2:]}NM'
+lad_col=f'LAD{pop_year[-2:]}NM'
 
 # getting path for .shp file for LA's
 uk_la_path=di.get_shp_file_name(dir=os.path.join(os.getcwd(), 
                                                         "data", 
                                                         "LA_shp",
-                                                        str(pop_year)))
+                                                        pop_year))
 # getting the coordinates for all LA's
 uk_la_file=di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
-
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data/population_estimates",
-                                    str(pop_year)
+                                    pop_year
                                     )
                        )
 
@@ -74,7 +76,7 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
                          'pop_weighted_centroids',
-                         '2011')))
+                         centroid_year)))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
@@ -132,7 +134,7 @@ whole_nation_pop_df = whole_nation_pop_df.join(
 # Map OA codes to Local Authority Names
 oa_la_lookup_path=di.get_oa_la_file_name(os.path.join(os.getcwd(),
                                                 "data/oa_la_mapping",
-                                                 str(pop_year)))
+                                                 pop_year))
 
 LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
 whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
