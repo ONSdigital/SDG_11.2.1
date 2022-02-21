@@ -144,8 +144,9 @@ list_local_auth=local_authority_list["LAD19NM"].unique()
 
 output_df_list=[]
 
-# Random list of local auths. 
-list_local_auth=["Flintshire", 
+# # Random list of local auths. 
+list_local_auth=["City of London",
+                 "Flintshire", 
                  "North Devon",
                  "Birmingham",
                  "Middlesbrough",
@@ -153,8 +154,7 @@ list_local_auth=["Flintshire",
                  "Cornwall",
                  "Forest of Dean",
                  "North West Leicestershire",
-                 "East Staffordshire"]
-
+                 "East Staffordshire"][0:1]
 
 
 # Define output dicts to capture dfs
@@ -314,8 +314,8 @@ for local_auth in list_local_auth:
     served = pop_in_poly_df.pop_count.sum()
     full_pop = la_pop_df.pop_count.sum()
     not_served = full_pop - served
-    pct_not_served = "{:.2}".format(not_served/full_pop)
-    pct_served = "{:.2}".format(served/full_pop)
+    pct_not_served = "{:.2f}".format(not_served/full_pop*100)
+    pct_served = "{:.2f}".format(served/full_pop*100)
 
     print(f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
@@ -485,4 +485,4 @@ gpt.write_workbook(filename="SDG.xlsx",
 final_result = do.reorder_final_df(final_result)
 final_result.to_csv("All_results.csv")
 
-print(f"Time taken is {time.time() - start_time}")
+print(f"Time taken is {time.time()-start_time:.2f} seconds")
