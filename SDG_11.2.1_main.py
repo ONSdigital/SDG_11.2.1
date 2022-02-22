@@ -142,9 +142,8 @@ whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11C
 # Unique list of LA's to iterate through
 list_local_auth=uk_la_file[lad_col].unique()
 
-output_df_list=[]
 
-list_local_auth=["North Devon"]
+list_local_auth=["Kingston upon Hull, City of"]
 
 
 # define output dicts to capture dfs
@@ -442,6 +441,9 @@ print(urb_all_la)
 all_la=all_la.reset_index()
 
 output_tabs={}
+
+# Write all results out to csv
+all_la.to_csv("All_results.csv")
 
 output_tabs["local_auth"] = gpt.GPTable(
                                 table=all_la,
