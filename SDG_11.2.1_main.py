@@ -186,11 +186,6 @@ for local_auth in list_local_auth:
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
-    # change pop_count to number (int)
-    # bham_pop_df['pop_count'] = (pd.to_numeric
-    #                             (bham_pop_df
-    #                              .pop_count.str
-    #                              .replace(",", "")))
 
     # Get a list of ages from config
     age_lst = config['age_lst']
