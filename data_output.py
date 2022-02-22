@@ -36,9 +36,9 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     # Replace word "Total" with blanks
     df = df.replace({"Total":""})
     # Create "Unit Multiplier" map across from variable (percent or individual)
-    df["Unit Multiplier"] = np.where(df.variable.str.contains("Percentage"), "percent", "individual")
+    df["Unit Measure"] = np.where(df.variable.str.contains("Percentage"), "percent", "individual")
     # Create "Unit Measure" and "Observation Status" columns
-    df["Unit Measure"] = "Units"
+    df["Unit Multiplier"] = "Units"
     df["Observation Status"] = "Undefined"
     # Rename the variables in the "variable" column
     df["variable"].replace(to_replace="Percentage served", value="Served", inplace=True)
