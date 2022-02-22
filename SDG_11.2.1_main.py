@@ -1,6 +1,6 @@
 # Core imports
 import os
-
+import time
 
 # Third party imports
 import geopandas as gpd
@@ -12,6 +12,9 @@ import gptables as gpt
 import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
+import data_output as do
+
+start_time = time.time()
 
 # get current working directory
 CWD = os.getcwd()
@@ -147,18 +150,15 @@ list_local_auth=uk_la_file[lad_col].unique()
 list_local_auth=["Kingston upon Hull, City of"]
 
 
-# define output dicts to capture dfs
+# Define output dicts to capture dfs
 total_df_dict={}
 sex_df_dict={}
-urb_df_dict={}
-rur_df_dict={}
+urb_rur_df_dict={}
 disab_df_dict={}
 age_df_dict={}
 
 for local_auth in list_local_auth:
-
-    print(local_auth)
-
+    print(f"Processing: {local_auth}")
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
                             geo_df=uk_la_file,
@@ -186,7 +186,6 @@ for local_auth in list_local_auth:
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
-
     # Get a list of ages from config
     age_lst = config['age_lst']
 
@@ -199,7 +198,7 @@ for local_auth in list_local_auth:
     # get the ages in the age_df binned, and drop the original columns
     age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
-    # Ridding the bham pop df of the same cols
+    # Ridding the la_pop df of the same cols
     la_pop_df.drop(age_lst, axis=1, inplace=True)
 
     # merging summed+grouped ages back in
@@ -301,7 +300,7 @@ for local_auth in list_local_auth:
     # Make a polygon object from the geometry column of the stops df 
     # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
-    # # find all the pop centroids which are in the bham_stops_poly
+    # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
     # Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
@@ -310,23 +309,35 @@ for local_auth in list_local_auth:
     served = pop_in_poly_df.pop_count.sum()
     full_pop = la_pop_df.pop_count.sum()
     not_served = full_pop - served
-    pct_not_served = "{:.2%}".format(not_served/full_pop)
-    pct_served = "{:.2%}".format(served/full_pop)
+    pct_not_served = "{:.2}".format(not_served/full_pop)
+    pct_served = "{:.2}".format(served/full_pop)
 
     print(f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
             While the number of people who are not served is {not_served}""")
 
-    la_results_df=pd.DataFrame({"LA":[local_auth],
-                            "pop":[full_pop],
-                            "pop_served":[served],
-                            "pop_not_served":[not_served],
-                            "pct_served":[pct_served],
-                            "pct_not_served":[pct_not_served]})
+    la_results_df = pd.DataFrame({"All_pop":[full_pop],
+                                  "Served":[served],
+                                  "Unserved":[not_served],
+                                  "Percentage served":[pct_served],
+                                  "Percentage unserved":[pct_not_served]})
+    
+    # Re-orienting the df to what's accepted by the reshaper and renaming col
+    la_results_df = la_results_df.T.rename(columns={0:"Total"})
+
+    # Feeding the la_results_df to the reshaper
+    la_results_df_out = do.reshape_for_output(la_results_df,
+                                              id_col="Total",
+                                              local_auth=local_auth)
+
+    # Finally for the local authority totals the id_col can be dropped
+    # That's because the disaggregations each have their own column, 
+    # but "Total" is not a disaggregation so doesn't have a column.
+    # It will simply show up as blanks (i.e. Total) in all disagg columns
+    la_results_df_out.drop("Total", axis=1, inplace=True)
 
     # Output this iteration's df to the dict
-    total_df_dict[local_auth]=la_results_df
-
+    total_df_dict[local_auth] = la_results_df_out
 
     # # Disaggregations!
     pd.set_option("precision", 1)
@@ -340,13 +351,14 @@ for local_auth in list_local_auth:
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
-    # Create an LA column 
-    age_servd_df["LA"]=local_auth
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
 
-    print("\n\n==========Age Disaggregation===========\n\n")
-
-    # Output this iteration's age df to the dict
-    age_df_dict[local_auth]=age_servd_df
+    # Output this local auth's age df to the dict
+    age_df_dict[local_auth] = age_servd_df_out
 
     # print(age_servd_df)
 
@@ -357,32 +369,36 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
 
-    # Create an LA column 
-    sex_servd_df["LA"]=local_auth
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
+                                             id_col="Sex",
+                                             local_auth=local_auth)
 
-    print("\n\n==========Sex Disaggregation===========\n\n")
 
-    # print(sex_servd_df)
-
-    # Output this iteration's age df to the dict
-    sex_df_dict[local_auth]=sex_servd_df
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth]=sex_servd_df_out
 
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
 
     disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-                                                pop_in_poly_df=pop_in_poly_df,
-                                                cols_lst=disab_cols)
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=disab_cols)
 
-    # Create an LA column 
-    disab_servd_df["LA"]=local_auth
-
-    print("\n\n==========Disability Disaggregation===========\n\n")
-
-    # Output this iteration's age df to the dict
-    disab_df_dict[local_auth]=disab_servd_df
-
-    print(disab_servd_df)
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+    
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    
+    # Output this local auth's disab df to the dict
+    disab_df_dict[local_auth] = disab_servd_df_out
 
     # Calculating those served and not served by urban/rural
     urb_col = ["urb_rur_class"]
@@ -410,36 +426,41 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=rur_pop_in_poly_df,
                                                 cols_lst=['pop_count'])
 
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count":"Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count":"Rural"}, inplace=True)
 
-    print("\n\n==========Urban/Rural Disaggregation===========\n\n")
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
 
-    print("Urban")
-    print(urb_servd_df)
-    print("Rural")
-    print(rur_servd_df)
-
-        # Create an LA column 
-    urb_servd_df["LA"]=local_auth
-    rur_servd_df["LA"]=local_auth
-
-    print("\n\n==========Disability Disaggregation===========\n\n")
+    #Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
 
     # Output this iteration's urb and rur df to the dict
-    urb_df_dict[local_auth]=urb_servd_df
-    rur_df_dict[local_auth]=rur_servd_df
+    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
 
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
-urb_all_la = pd.concat(urb_df_dict.values())
-rur_all_la = pd.concat(rur_df_dict.values())
+urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 age_all_la = pd.concat(age_df_dict.values())
-print(disab_all_la)
-print(age_all_la)
-print(rur_all_la)
-print(urb_all_la)
 
-all_la=all_la.reset_index()
+
+# Stacking the dataframes
+all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_all_la]
+final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
+
+# Resetting index for gptables
+final_result.reset_index(inplace=True)
 
 output_tabs={}
 
@@ -447,7 +468,7 @@ output_tabs={}
 all_la.to_csv("All_results.csv")
 
 output_tabs["local_auth"] = gpt.GPTable(
-                                table=all_la,
+                                table=final_result,
                                 title="local_auth",
                                 scope=None,
                                 units=None,
@@ -457,3 +478,9 @@ output_tabs["local_auth"] = gpt.GPTable(
 gpt.write_workbook(filename="SDG.xlsx",
                     sheets=output_tabs,
                     auto_width=True)
+
+# Outputting to CSV
+final_result = do.reorder_final_df(final_result)
+final_result.to_csv("All_results.csv")
+
+print(f"Time taken is {time.time() - start_time}")
