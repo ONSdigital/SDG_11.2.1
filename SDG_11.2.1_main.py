@@ -29,6 +29,11 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 EXT_ORDER = config['EXT_ORDER']
+# Years
+# Getting the year for population data
+pop_year = str(config["calculation_year"])
+# Getting the year for centroid data
+centroid_year = str(config["centroid_year"])
 
 # define url for zip download
 NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
@@ -47,19 +52,22 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-# # Getting the Lower Super Output Area for the UK into a dataframe
-# TODO: check if the LSOA df needs to be imported and used - may be junk?
-uk_LSOA_shp_file = config['uk_LSOA_shp_file']
-full_path = os.path.join(os.getcwd(), "data", "LSOA_shp", uk_LSOA_shp_file)
-uk_LSOA_df = di.geo_df_from_geospatialfile(path_to_file=full_path)
 
-# Getting the west midlands population estimates for 2019
-pop_year = config["calculation_year"]
+# define la col which is LADXXNM where XX is last 2 digits of year e.g 21 from 2021
+lad_col=f'LAD{pop_year[-2:]}NM'
+
+# getting path for .shp file for LA's
+uk_la_path=di.get_shp_file_name(dir=os.path.join(os.getcwd(), 
+                                                        "data", 
+                                                        "LA_shp",
+                                                        pop_year))
+# getting the coordinates for all LA's
+uk_la_file=di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
 # Get list of all pop_estimate files for target year
-pop_files = os.listdir(os.path.join(
+pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data/population_estimates",
-                                    str(pop_year)
+                                    pop_year
                                     )
                        )
 
@@ -71,7 +79,7 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
                          'pop_weighted_centroids',
-                         '2011')))
+                         centroid_year)))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
@@ -127,34 +135,19 @@ whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Map OA codes to Local Authority Names
-LA_df = pd.read_csv("data/Output_Area_to_Lower_Layer_Super_Output_Area_to_Middle_Layer_Super_Output_Area_to_Local_Authority_District__December_2020__Lookup_in_England_and_Wales.csv", usecols=["OA11CD", "LAD20NM"])
+oa_la_lookup_path=di.get_oa_la_file_name(os.path.join(os.getcwd(),
+                                                "data/oa_la_mapping",
+                                                 pop_year))
+
+LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
 whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
 
 
-# All of England LA areas
-la_list_path="data/la_lookup_england_2019.csv"
-local_authority_list=pd.read_csv(la_list_path)
-
-# Making the LA list from the local auth list 2019
-list_local_auth=local_authority_list["LAD19NM"].unique()
-
-# Making the LA list from the names in LA_df
-# list_local_auth = LA_df['LAD20NM'].unique()
+# Unique list of LA's to iterate through
+list_local_auth=uk_la_file[lad_col].unique()
 
 
-output_df_list=[]
-
-# # Random list of local auths. 
-list_local_auth=["City of London",
-                 "Flintshire", 
-                 "North Devon",
-                 "Birmingham",
-                 "Middlesbrough",
-                 "Peterborough",
-                 "Cornwall",
-                 "Forest of Dean",
-                 "North West Leicestershire",
-                 "East Staffordshire"][0:1]
+list_local_auth=["Kingston upon Hull, City of"]
 
 
 # Define output dicts to capture dfs
@@ -168,8 +161,8 @@ for local_auth in list_local_auth:
     print(f"Processing: {local_auth}")
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
-                            geo_df=uk_LSOA_df,
-                            dissolveby='LSOA11NM',
+                            geo_df=uk_la_file,
+                            dissolveby=lad_col,
                             search=local_auth))
 
     # Creating a Geo Dataframe of only stops in la
@@ -178,16 +171,18 @@ for local_auth in list_local_auth:
                                 polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    la_LSOA_df = uk_LSOA_df[uk_LSOA_df.LSOA11NM.str.contains(local_auth)]
-    la_LSOA_df = la_LSOA_df[['LSOA11CD', 'LSOA11NM', 'geometry']]
+    uk_la_file = uk_la_file[[lad_col, 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    la_pop_df = whole_nation_pop_df.merge(la_LSOA_df,
+    la_pop_df = whole_nation_pop_df.merge(uk_la_file,
                                             how='right',
-                                            left_on='LSOA11CD',
-                                            right_on='LSOA11CD',
-                                            suffixes=('_pop', '_LSOA'))
+                                            left_on=lad_col,
+                                            right_on=lad_col,
+                                            suffixes=('_pop', '_LA'))
 
+    # subset by the local authority name needed
+    la_pop_df=la_pop_df.loc[la_pop_df[lad_col]==local_auth]                                        
+  
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
@@ -468,6 +463,9 @@ final_result["Year"] = pop_year
 final_result.reset_index(inplace=True)
 
 output_tabs={}
+
+# Write all results out to csv
+all_la.to_csv("All_results.csv")
 
 output_tabs["local_auth"] = gpt.GPTable(
                                 table=final_result,
