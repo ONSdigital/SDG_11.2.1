@@ -98,26 +98,13 @@ def get_missing_files(remote_data_dir, file_list):
     else:
         print("Initiating file transfer...") 
         for f in file_list:
-
+            
             head_tail = os.path.split(f)
             dir = head_tail[0]
             file = head_tail[1]
-
-            home_split = os.path.split(home_dir)
-            home_split = home_split[0]
-
-            dir_split = os.path.split(dir)
-
-            if dir_split[0] == 'data': 
-                combined_path = (f"{home_split}/{dir}")
-
-                if os.path.split(dir_split[0])[0] == 'data':
-                    sub_dir = os.path.split(dir_split[0])[1]
-                    combined_path = (f"{home_split}/{sub_dir}/{dir_split[1]}")
-
-            elif dir_split[0] != 'data':
-                combined_path = (f"{home_dir}/{dir}")
-
+            
+            combined_path = (f"{home_dir}/{dir}")
+            
             if not os.path.isdir(combined_path):
                     os.makedirs(combined_path)
                     os.chdir(combined_path)
