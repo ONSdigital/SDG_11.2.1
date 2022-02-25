@@ -1,7 +1,5 @@
 # Core imports
 import os
-import time
-from datetime import datetime 
 
 # Third party imports
 import geopandas as gpd
@@ -37,6 +35,9 @@ pop_year = str(config["calculation_year"])
 centroid_year = str(config["centroid_year"])
 
 
+# Define the columns wanted from Naptan
+NAPTAN_DTYPES = config["NAPTAN_TYPES"]
+COLS = list(NAPTAN_DTYPES.keys())
 # Get the pandas dataframe for the stops data
 stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                              dir=os.path.join(os.getcwd(),
@@ -354,11 +355,10 @@ for local_auth in list_local_auth:
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
-    
-    # Feeding the results to the reshaper
-    age_servd_df_out = do.reshape_for_output(age_servd_df,
-                                             id_col="Age",
-                                             local_auth=local_auth)
+    # Create an LA column 
+    age_servd_df["LA"]=local_auth
+
+    """==========Age Disaggregation==========="""
 
     # Output this local auth's age df to the dict
     age_df_dict[local_auth] = age_servd_df_out
@@ -377,6 +377,7 @@ for local_auth in list_local_auth:
                                              id_col="Sex",
                                              local_auth=local_auth)
 
+    """==========Sex Disaggregation==========="""
 
     # Output this iteration's sex df to the dict
     sex_df_dict[local_auth]=sex_servd_df_out
@@ -385,23 +386,18 @@ for local_auth in list_local_auth:
     disab_cols = ["number_disabled"]
 
     disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-                                                  pop_in_poly_df=pop_in_poly_df,
-                                                  cols_lst=disab_cols)
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=disab_cols)
 
-    # Feeding the results to the reshaper
-    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
-                                               id_col=disab_cols[0],
-                                               local_auth=local_auth,
-                                               id_rename="Disability Status")
-    
-    # The disability df is unusual. I think all rows correspond to people with
-    # disabilities only. There is no "not-disabled" status here (I think)
-    disab_servd_df_out.replace(to_replace="number_disabled",
-                               value="Disabled",
-                               inplace=True)
-    
-    # Output this local auth's disab df to the dict
-    disab_df_dict[local_auth] = disab_servd_df_out
+    # Create an LA column 
+    disab_servd_df["LA"]=local_auth
+
+    ""==========Disability Disaggregation==========="""
+
+    # Output this iteration's age df to the dict
+    disab_df_dict[local_auth]=disab_servd_df
+
+    print(disab_servd_df)
 
     # Calculating those served and not served by urban/rural
     urb_col = ["urb_rur_class"]
@@ -435,19 +431,18 @@ for local_auth in list_local_auth:
     urb_servd_df.rename(columns={"pop_count":"Urban"}, inplace=True)
     rur_servd_df.rename(columns={"pop_count":"Rural"}, inplace=True)
 
-    # Sending each to reshaper
-    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
-                                             id_col="Urban",
-                                             local_auth=local_auth)
-    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
-                                             id_col="Rural",
-                                             local_auth=local_auth)
-    # Renaming their columns to Urban/Rural
-    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
-    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
+    """==========Urban/Rural Disaggregation==========="""
 
-    #Combining urban and rural dfs
-    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
+    print("Urban")
+    print(urb_servd_df)
+    print("Rural")
+    print(rur_servd_df)
+
+        # Create an LA column 
+    urb_servd_df["LA"]=local_auth
+    rur_servd_df["LA"]=local_auth
+
+   """==========Disability Disaggregation==========="""
 
     # Output this iteration's urb and rur df to the dict
     urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
