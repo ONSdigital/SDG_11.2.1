@@ -123,8 +123,12 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
-
+def _csv_to_df(file_nm: str, 
+               csv_path: PathLike,
+               dtypes: Optional[Dict],
+               persistent_exists=None,
+               zip_url=None) -> pd.DataFrame:
+    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
