@@ -15,6 +15,7 @@ NAPTAN_TYPES :
   Easting: int32
   Northing: int32
   Status : str
+  StopType: category
 URB_RUR_TYPES:
   OA11CD: str
   RUC11CD: category
