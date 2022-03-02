@@ -395,3 +395,42 @@ def get_oa_la_file_name(dir):
     absolute_path=os.path.join(dir,csv_file)
 
     return absolute_path
+
+def get_stops_from_api(url,file_name):
+    """Gets stops data from the NaPTAN API
+
+    Returns:
+        None - just saves into the data folder.
+    """
+    # requests page
+    r = requests.get(url)
+
+    # gets content and then writes to csv
+    url_content = r.content
+    csv_file = open(file_name, 'wb')
+    csv_file.write(url_content)
+    csv_file.close()
+
+    return csv_file
+
+def get_latest_stop_file_date(dir):
+    """Gets the latest stop dataset 
+    Returns:
+        None - just saves into the data folder.
+    """
+    # get's a list of files from the directory
+    # files are in the format stops_YYYYMMDD
+    # attempts to extracts all the dates
+    file_list=os.listdir(dir)
+    p = re.compile(r'\d+')
+    dates=[p.findall(i)[0] for i in file_list]
+
+    # convert to integers and get latest date
+    dates_int=[int(date) for date in dates]
+    dates_sorted=dates_int.sort(reverse=True)
+    latest=dates_sorted[0]
+
+    return latest
+
+
+

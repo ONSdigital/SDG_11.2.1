@@ -1,6 +1,7 @@
 # Core imports
 import os
 import time
+from datetime import datetime 
 
 # Third party imports
 import geopandas as gpd
@@ -46,6 +47,14 @@ stops_df = di.any_to_pd(file_nm="Stops",
                         zip_link=NAPT_ZIP_LINK,
                         ext_order=EXT_ORDER,
                         dtypes=NAPTAN_DTYPES)
+
+today=datetime.now().strftime('%Y%m%d')
+di.get_stops_from_api(url=config["NAPTAN_API"],file_name=os.path.join(os.getcwd(),
+                                                                    "data",
+                                                                    "stops",
+                                                                    f"stops_{today}.csv"))
+dir=r"C:\Users\44752\Desktop\git_repos\SDG_11.2.1\data\stops"
+di.get_latest_stop_file_date(dir)
 
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_x='Easting',
