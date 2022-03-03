@@ -36,26 +36,19 @@ pop_year = str(config["calculation_year"])
 # Getting the year for centroid data
 centroid_year = str(config["centroid_year"])
 
-# define url for zip download
-NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
 
-# Define the columns wanted from Naptan
-COLS = list(config["NAPTAN_TYPES"].keys())
-NAPTAN_DTYPES = config["NAPTAN_TYPES"]
 # Get the pandas dataframe for the stops data
-stops_df = di.any_to_pd(file_nm="Stops",
-                        zip_link=NAPT_ZIP_LINK,
-                        ext_order=EXT_ORDER,
-                        dtypes=NAPTAN_DTYPES)
+today = datetime.now().strftime('%Y%m%d')
+stops_df = di.get_stops_file(url=config["NAPTAN_API"],
+                          file_name=os.path.join(os.getcwd(),
+                                                "data",
+                                                "stops",
+                                                f"stops_{today}.csv"),
+                          dir=os.path.join(os.getcwd(),
+                                                "data",
+                                                "stops"))
 
-today=datetime.now().strftime('%Y%m%d')
-di.get_stops_from_api(url=config["NAPTAN_API"],file_name=os.path.join(os.getcwd(),
-                                                                    "data",
-                                                                    "stops",
-                                                                    f"stops_{today}.csv"))
-dir=r"C:\Users\44752\Desktop\git_repos\SDG_11.2.1\data\stops"
-di.get_latest_stop_file_date(dir)
-
+# coverts from pandas df to geo df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_x='Easting',
                                      geom_y='Northing',
