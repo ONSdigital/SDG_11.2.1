@@ -6,6 +6,7 @@ from functools import lru_cache, reduce
 from time import perf_counter
 from attr import resolve_types
 import yaml
+from datetime import datetime 
 
 # Third party imports for this module
 import geopandas as gpd
@@ -396,7 +397,7 @@ def get_oa_la_file_name(dir):
 
     return absolute_path
 
-def get_stops_from_api(url,file_name):
+def _get_stops_from_api(url,file_name):
     """Gets stops data from the NaPTAN API
 
     Returns:
@@ -413,7 +414,7 @@ def get_stops_from_api(url,file_name):
 
     return csv_file
 
-def get_latest_stop_file_date(dir):
+def _get_latest_stop_file_date(dir):
     """Gets the latest stop dataset 
     Returns:
         None - just saves into the data folder.
@@ -427,10 +428,60 @@ def get_latest_stop_file_date(dir):
 
     # convert to integers and get latest date
     dates_int=[int(date) for date in dates]
-    dates_sorted=dates_int.sort(reverse=True)
-    latest=dates_sorted[0]
+    dates_int.sort(reverse=True)
+    latest=dates_int[0]
 
     return latest
+
+
+def save_latest_stops_as_feather(file_name):
+    """Saves the latest stop file as a feather file into 
+            the data folder
+    Returns:
+        None - just saves into the data folder.
+    """
+    # read in csv
+    file=pd.read_csv(file_name,
+                    usecols=config["NAPTAN_TYPES"].keys(), 
+                    dtype=config["NAPTAN_TYPES"])
+    
+    # get output path
+    output_path=os.path.join(os.getcwd(),
+                            "data",
+                            "Stops.feather")
+    # output to feather
+    file.to_feather(output_path)
+
+
+
+def get_stops_file(url, file_name, dir):
+    """Gets the latest stop dataset 
+    if the latest stop df from the api is older then 28 days
+    then function grabs a new version of file from API and 
+    saves this as a feather file
+
+    If the latest stop df from the api is less then 28 days old
+    then just grabs the feather file
+    Returns:
+        None - just saves into the data folder.
+    """
+    # gets todays date and latest date of stops df
+    today=int(datetime.now().strftime('%Y%m%d'))
+    latest_date=_get_latest_stop_file_date(dir)
+
+    # gets feather stop path
+    feather_path=os.path.join(os.getcwd(),
+                                    "data",
+                                    "Stops.feather")
+
+    if today-latest_date<28:
+        stops_df = pd.read_feather(feather_path)
+    else:
+        _get_stops_from_api(url,file_name)
+        save_latest_stops_as_feather(file_name)
+        stops_df = pd.read_feather(feather_path)
+
+    return stops_df
 
 
 
