@@ -92,14 +92,9 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         pd.DataFrame: a dataframe summarising
         i) the total number of people that column (e.g. age range, sex)
         ii) the number served by public transport
-<<<<<<< HEAD
-        iii) the percentage of who are served by public transport
-        iv) the percentage ofwho are not served by public transport
-=======
         iii) the proportion who are served by public transport
         iv) the proportion who are not served by public transport
 
->>>>>>> e831c59... linting data transform
     """
     # First list the age bin columns
    
