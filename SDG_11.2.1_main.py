@@ -1,7 +1,12 @@
 # Core imports
 import os
+<<<<<<< HEAD
 import time
 from datetime import datetime 
+=======
+from datetime import datetime
+from re import S 
+>>>>>>> 2729bab... filtering inactive stops out
 
 # Third party imports
 import geopandas as gpd
@@ -48,8 +53,10 @@ stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                                                 "data",
                                                 "stops"))
 
+filtered_stops=dt.filter_stops(stops=stops_df)
+
 # coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
+stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
                                      geom_x='Easting',
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
