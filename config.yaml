@@ -14,6 +14,7 @@ NAPTAN_TYPES :
   CommonName: str
   Easting: int32
   Northing: int32
+  Status : str
 URB_RUR_TYPES:
   OA11CD: str
   RUC11CD: category
