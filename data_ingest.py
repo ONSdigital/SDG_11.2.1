@@ -398,10 +398,14 @@ def get_shp_file_name(dir):
     return absolute_path
 
 def get_oa_la_file_name(dir):
-    """
-    Passed a directory into the function and returns the absolute path
+    """Passed a directory into the function and returns the absolute path
     of where the shp file is within that directory
-    
+
+    Args:
+        dir (_type_): _description_
+
+    Returns:
+        _type_: _description_
     """
     files=os.listdir(dir)
     csv_files=[file for file in files if file.endswith(".csv")]
