@@ -52,7 +52,7 @@ stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                           dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
-
+# filter out on inactive stops
 filtered_stops=dt.filter_stops(stops=stops_df)
 
 # coverts from pandas df to geo df
