@@ -129,3 +129,24 @@ def highly_serv_stops(region):
     """
     #  day="Wed"
     return None
+
+
+def filter_stops(stops):
+    """
+    filters the stops dataframe based on the status column. 
+    Wewant to keep stops which are active, pending or new.
+    Parameters:
+        stops_df the dataframe wanting to filter on
+    Returns:
+        filtered_stops which meet the criteria
+        of keeping based on status column
+    """
+   
+    filtered_stops=stops[(stops["Status"]=="active") |
+                           (stops["Status"]=="pending") |
+                           (stops["Status"]==None) |
+                           (stops["Status"]=="new")]
+
+   
+
+    return filtered_stops
