@@ -128,7 +128,18 @@ def _csv_to_df(file_nm: str,
                dtypes: Optional[Dict],
                persistent_exists=None,
                zip_url=None) -> pd.DataFrame:
-    
+    """Sub-function to create a pd dataframe from csv.
+
+    Args:
+        file_nm (str): the name of the file
+        csv_path (PathLike): the path to the file
+        dtypes (Optional[Dict]): a dictionary of the dtypes of cols to be imported
+        persistent_exists (Bool, optional): whether or not there is a persistent feather file. Defaults to None.
+        zip_url (str, optional): URL of where the file can be downloaded. Defaults to None.
+
+    Returns:
+        pd.DataFrame: _description_
+    """
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
