@@ -401,7 +401,7 @@ def _get_stops_from_api(url,file_name):
     """Gets stops data from the NaPTAN API
 
     Returns:
-        None - just saves into the data folder.
+        None - just saves into the data/stops folder.
     """
     # requests page
     r = requests.get(url)
@@ -412,7 +412,7 @@ def _get_stops_from_api(url,file_name):
     csv_file.write(url_content)
     csv_file.close()
 
-    return csv_file
+
 
 def _get_latest_stop_file_date(dir):
     """Gets the latest stop dataset 
@@ -420,10 +420,12 @@ def _get_latest_stop_file_date(dir):
         None - just saves into the data folder.
     """
     # get's a list of files from the directory
+    file_list = os.listdir(dir)
+
     # files are in the format stops_YYYYMMDD
-    # attempts to extracts all the dates
-    file_list=os.listdir(dir)
     p = re.compile(r'\d+')
+
+     # attempts to extracts all the dates
     dates=[p.findall(i)[0] for i in file_list]
 
     # convert to integers and get latest date
@@ -438,7 +440,7 @@ def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
             the data folder
     Returns:
-        None - just saves into the data folder.
+        None - just saves feather into the data folder.
     """
     # read in csv
     file=pd.read_csv(file_name,
@@ -452,9 +454,9 @@ def save_latest_stops_as_feather(file_name):
     # output to feather
     file.to_feather(output_path)
 
+  
 
-
-def get_stops_file(url, file_name, dir):
+def get_stops_file(url, dir):
     """Gets the latest stop dataset 
     if the latest stop df from the api is older then 28 days
     then function grabs a new version of file from API and 
@@ -477,6 +479,10 @@ def get_stops_file(url, file_name, dir):
     if today-latest_date<28:
         stops_df = pd.read_feather(feather_path)
     else:
+        file_name=os.path.join(os.getcwd(),
+                                "data",
+                                "stops",
+                                f"stops_{today}.csv")
         _get_stops_from_api(url,file_name)
         save_latest_stops_as_feather(file_name)
         stops_df = pd.read_feather(feather_path)
