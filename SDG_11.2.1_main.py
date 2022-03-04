@@ -1,7 +1,5 @@
 # Core imports
 import os
-from datetime import datetime
-from re import S 
 
 # Third party imports
 import geopandas as gpd
@@ -35,13 +33,8 @@ centroid_year = str(config["centroid_year"])
 
 
 # Get the pandas dataframe for the stops data
-today = datetime.now().strftime('%Y%m%d')
 stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                          file_name=os.path.join(os.getcwd(),
-                                                "data",
-                                                "stops",
-                                                f"stops_{today}.csv"),
-                          dir=os.path.join(os.getcwd(),
+                             dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
 # filter out on inactive stops
