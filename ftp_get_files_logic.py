@@ -1,29 +1,38 @@
-#logic to download all of the files from data directory on the remote server
-
+#core imports for this module
 from html import entities
 from re import sub
-
 from numpy import append, short
 import ftp_services as ftp_services
 import os, os.path
 
-#keys = list(ftp_services.dir_list)
-
 def create_recursive_data_directory_list():
+    """
+    This function creates a list of all the sub directories that are contained
+    on the remote ftp server within the root data directroy.
 
-    file_list = []
+    Returns:
+        append_list: list containing strings of all the remote directories.
+    """
     data_dir = "data/"
 
+    #the following four lines create a list of entries which are the remote directories
     ftp_services.ftp_connect()
     entries = list(ftp_services.ftp.mlsd(data_dir))
     entries = [entry for entry in entries if entry[1]["type"] == "dir"]
     entries.sort(key = lambda entry: entry[1]['modify'], reverse = True)
-
-    print(entries)
-
+    
     append_list = []
 
     def sub_get(entries, data_dir):
+        """
+        Retrives directory listings for all subdirectoreis within the data_dir.
+
+        Directories are appended to append_list as strings.
+
+        Args:
+            entries: list of remote sub directories.
+            data_dir: string containing the root remote data direcory.
+        """
         
         for e in entries:
             dir_list = data_dir + e[0]
@@ -39,14 +48,23 @@ def create_recursive_data_directory_list():
     sub_get(entries, data_dir)
     append_list.append(data_dir)
     
-    print(append_list)
     return append_list
-    
+
 
 def create_data_file_list(data_dirs):
+    """
+    Takes the passed list of remote data directories and generates a list
+    of all files which are contained within these directories.
+
+    Args:
+        data_dirs: list containing strings of all the remote directories.
+
+    Returns: 
+        file_list: list containing strings of files with their full directory
+        listing and extension.
+    """
 
     file_list = []
-    #data_dir = "data/"
 
     for d in data_dirs:
 
@@ -61,50 +79,19 @@ def create_data_file_list(data_dirs):
             elif d[-1] != '/':
                 file_list.append(f"{d}/{files[fl][0]}")
 
-
     return file_list
-"""
-def create_local_file_list():
-
-    data_dir = "data/"
-    local_list = []
-    local_dirs = []
-
-    os.chdir(data_dir)
-
-    for dir in list(filter(os.path.isdir, os.listdir())):
-        local_dirs.append(dir)
-        sub_dir_contents = os.scandir(dir)
-    
-        for sdc in sub_dir_contents:
-            if os.path.isdir(sdc):
-                #print(sdc.path)
-                local_dirs.append(sdc.path)
-
-    for file in list(filter(os.path.isfile, os.listdir())):
-        local_list.append(f"{data_dir}{file}")
-
-    for d in local_dirs:
-        
-        if d == data_dir[:-1]:
-            print(f"setting root data dir")
-
-        else:
-            print(os.getcwd())            
-            os.chdir(d)
-            files = list(filter(os.path.isfile, os.listdir()))
-            
-            for f in files:
-                local_list.append(f"{data_dir}{d}/{f}")
-            os.chdir(os.path.pardir)
-
-    return local_list"""
 
 def create_local_file_list():
+    """
+    Creates a list of the local data files
+
+    Returns:
+        filelist: list containing strings of the local data files
+    """
+
     path = f"{os.getcwd()}/data"
     sys_dir = f"{os.getcwd()}"
     #we shall store all the file names in this list
-    #print(path)
     filelist = []
     
     for root, dirs, files in os.walk(path):
@@ -112,14 +99,24 @@ def create_local_file_list():
         for file in files:
             #append the file name to the list
             root = root.replace((sys_dir+'/'),"")
-            print(root)
             filelist.append(os.path.join(root,file))
     
-    print(filelist)
     return filelist
 
-
 def check_missing_files(search_dirs):
+    """
+    Checks which files are missing by comparing set of the remote data files with
+    set of the local data files.
+
+    Any missing files are appended to the list of missing files.
+
+    Args:
+        search_dirs: list of the remote data directories to search to generate file list.
+
+    Returns:
+        missing_files: list containing strings of all the missing files, including their
+        enclosing directroy structure and extension.
+    """
 
     data_files = create_data_file_list(search_dirs)
     locl_files = create_local_file_list()
