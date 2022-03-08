@@ -134,8 +134,10 @@ Stops.csv
 #mac os system files
 .DS_Store
 
-#ftp_password
-ftp_pass.txt
+#ftp login details
+sdg_dstore_01.sdg
+sdg_dstore_02.sdg
+sdg_dstore_03.sdg
 
 #conda environment
 envs
