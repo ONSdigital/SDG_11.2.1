@@ -4,14 +4,13 @@ from math import comb
 import os
 
 # FTP Details Required for Login
-ftp_host = '162.241.253.72'
-ftp_user = 'ons@ainslierockwell.com'
-pass_path = 'ftp_pass.txt'
-ftp = FTP(ftp_host)
+host_path = 'sdg_dstore_03.sdg'
+user_path = 'sdg_dstore_02.sdg'
+pass_path = 'sdg_dstore_01.sdg'
 
 def retrieve_pass(pass_path):
     """
-    Retrieves the text of ftp password from the text file that contains it.
+    Retrieves the text of passed path from the text file that contains it.
 
     Args:
         pass_path: the full name of text file containing password.
@@ -30,15 +29,16 @@ def retrieve_pass(pass_path):
     else:
         raise Exception("check login details are being passed correctly")
 
+ftp = FTP(retrieve_pass(host_path))
+
 def ftp_connect():
     """
     Function that connects to the ftp server.
     """
     ftp_pass = retrieve_pass(pass_path)
-    print('connecting to...')
-    print(ftp_host+'\n')
-    print('attempting to connect as...')
-    print(ftp_user+'\n')
+    ftp_host = retrieve_pass(host_path)
+    ftp_user = retrieve_pass(user_path)
+    print('Connecting to remote server')
     ftp.login(user=ftp_user, passwd=ftp_pass)
     print(ftp.getwelcome())
 
