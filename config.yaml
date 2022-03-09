@@ -7,12 +7,14 @@ EXT_ORDER :
   - feather
   - csv
   - zip
+NAPTAN_API: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
 Urb_Rur_ZIP_LINK : https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data
 NAPTAN_TYPES :
   NaptanCode: str
   CommonName: str
   Easting: int32
   Northing: int32
+  Status : str
 URB_RUR_TYPES:
   OA11CD: str
   RUC11CD: category

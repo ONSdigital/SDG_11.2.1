@@ -41,7 +41,7 @@ def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this 
     # Again adding "90+", doubling it so it's doubled, like the other tuples
     col_bins.append((cols_start[-1:]*2))
     # TODO: make this more intelligent. Only if there is one col name left
-    # over it should be doubled. 
+    # over it should be doubled.
     return col_bins
 
 
@@ -73,7 +73,7 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
     Calculates the number of people in each category, as specified by the column
         (e.g age range, or disability status) who are served and not served by
         public transport, and gives those as a proportion of the total.
-        
+
         Note: the numeric values in the dataframe are return as strings for
         formatting reasons
 
@@ -92,8 +92,9 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         pd.DataFrame: a dataframe summarising
         i) the total number of people that column (e.g. age range, sex)
         ii) the number served by public transport
-        iii) the percentage of who are served by public transport
-        iv) the percentage ofwho are not served by public transport
+        iii) the proportion who are served by public transport
+        iv) the proportion who are not served by public transport
+
     """
     # First list the age bin columns
    
@@ -167,3 +168,22 @@ def highly_serv_stops(region):
     """
     #  day="Wed"
     return None
+
+
+def filter_stops(stops):
+    """
+    filters the stops dataframe based on the status column. 
+    Wewant to keep stops which are active, pending or new.
+    Parameters:
+        stops_df the dataframe wanting to filter on
+    Returns:
+        filtered_stops which meet the criteria
+        of keeping based on status column
+    """
+
+    filtered_stops = stops[(stops["Status"] == "active") |
+                           (stops["Status"] == "pending") |
+                           (stops["Status"] == None) |
+                           (stops["Status"] == "new")]
+
+    return filtered_stops
