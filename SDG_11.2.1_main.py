@@ -244,27 +244,6 @@ for local_auth in list_local_auth:
     # Putting the result back into the disability df
     disability_df["non-disabled"] = disability_df["pop_count"] - disability_df['disb_total']
 
-    # Importing the population data for each OA for 2011
-    normal_pop_OA_2011_df = (pd.read_csv(
-        os.path.join
-                            ("data", "KS101EW-usual_resident_population.csv"),
-        header=6,
-        engine="python"))
-    # Cutting out text at the end of the csv
-    normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
-
-    # Renaming columns for clarity and consistency before join
-    normal_pop_OA_2011_df.rename(
-        columns={'2011 output area': 'OA11CD', '2011': 'population_2011'}, inplace=True)
-
-    # Casting population numbers in 2011 data as int
-    normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(
-        int)
-
-    # Joining the 2011 total population numbers on to disability df
-    disability_df = pd.merge(disability_df, normal_pop_OA_2011_df,
-                             how='inner', left_on="OA11CD", right_on="OA11CD")
-
     # Calculating the proportion of disabled people in each OA
     disability_df["proportion_disabled"] = (
         disability_df['disb_total']
