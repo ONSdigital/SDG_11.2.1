@@ -224,20 +224,25 @@ for local_auth in list_local_auth:
     # also "All categories: Long-term health problem or disability" is not needed,
     # nor is "Day-to-day activities not limited"
     drop_lst = ["mnemonic",
-                "All categories: Long-term health problem or disability",
-                "Day-to-day activities not limited"]
+                "All categories: Long-term health problem or disability"]
     disability_df.drop(drop_lst, axis=1, inplace=True)
     # the col headers are database unfriendly. Defining their replacement names
     replacements = {"2011 output area": 'OA11CD',
                     "Day-to-day activities limited a lot": "disab_ltd_lot",
-                    "Day-to-day activities limited a little": "disab_ltd_little"}
+                    "Day-to-day activities limited a little": "disab_ltd_little",
+                    'Day-to-day activities not limited': "disab_not_ltd"}
     # renaming the dodgy col names with their replacements
     disability_df.rename(columns=replacements, inplace=True)
 
-    # Summing the two columns to get total disabled (which is what I thought
-    #   "All categories:..." was!)
+    # Getting the disab total
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
                                    + disability_df["disab_ltd_little"])
+
+    # Calcualting the total "non-disabled"
+    la_pop_only = la_pop_df[['OA11CD','pop_count']]
+    disability_df = la_pop_only.merge(disability_df, on="OA11CD")
+    # Putting the result back into the disability df
+    disability_df["non-disabled"] = disab_with_total_pop["pop_count"] - disab_with_total_pop['disb_total']
 
     # Importing the population data for each OA for 2011
     normal_pop_OA_2011_df = (pd.read_csv(
