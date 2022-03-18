@@ -242,7 +242,7 @@ for local_auth in list_local_auth:
     la_pop_only = la_pop_df[['OA11CD','pop_count']]
     disability_df = la_pop_only.merge(disability_df, on="OA11CD")
     # Putting the result back into the disability df
-    disability_df["non-disabled"] = disab_with_total_pop["pop_count"] - disab_with_total_pop['disb_total']
+    disability_df["non-disabled"] = disability_df["pop_count"] - disability_df['disb_total']
 
     # Importing the population data for each OA for 2011
     normal_pop_OA_2011_df = (pd.read_csv(
@@ -265,11 +265,11 @@ for local_auth in list_local_auth:
     disability_df = pd.merge(disability_df, normal_pop_OA_2011_df,
                              how='inner', left_on="OA11CD", right_on="OA11CD")
 
-    # Ticket #97 - calculating the proportion of disabled people in each OA
+    # Calculating the proportion of disabled people in each OA
     disability_df["proportion_disabled"] = (
         disability_df['disb_total']
         /
-        disability_df['population_2011']
+        disability_df['pop_count']
     )
 
     # Slice disability df that only has the proportion disabled column and the OA11CD col
