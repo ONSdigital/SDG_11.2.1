@@ -250,9 +250,16 @@ for local_auth in list_local_auth:
         /
         disability_df['pop_count']
     )
-
+    
+    # Calcualting the proportion of non-disabled people in each OA
+    disability_df["proportion_non-disabled"] = (
+        disability_df['non-disabled']
+        /
+        disability_df['pop_count']
+    )
+    
     # Slice disability df that only has the proportion disabled column and the OA11CD col
-    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
+    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled', 'proportion_non-disabled']]
 
     # Merge the proportion disability df into main the pop df with a left join
     la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
@@ -266,6 +273,17 @@ for local_auth in list_local_auth:
          la_pop_df["proportion_disabled"])
     )
     la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
+
+    # Make the calculation of the number of non-disabled people in the year
+    # of the population estimates
+    la_pop_df["number_non-disabled"] = (
+        round
+        (la_pop_df["pop_count"]
+         *
+         la_pop_df["proportion_non-disabled"])
+    )
+    la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(int)
+
 
     # import the sex data
     # # TODO: use new csv_to_df func to make the sex_df
