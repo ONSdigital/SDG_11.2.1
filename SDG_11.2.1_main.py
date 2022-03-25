@@ -482,5 +482,3 @@ gpt.write_workbook(filename="SDG.xlsx",
 # Outputting to CSV
 final_result = do.reorder_final_df(final_result)
 final_result.to_csv("All_results.csv", index=False)
-
-print(f"Time taken is {time.time()-start_time:.2f} seconds")
