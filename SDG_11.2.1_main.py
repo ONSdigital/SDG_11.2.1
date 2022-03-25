@@ -144,7 +144,7 @@ list_local_auth=uk_la_file[lad_col].unique()
 
 output_df_list=[]
 
-list_local_auth=["North Devon"]
+list_local_auth=["North Devon", "Birmingham"]
 
 
 # define output dicts to capture dfs
