@@ -58,6 +58,11 @@ The aims are:
 
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
+### Preliminaries
+Before starting, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. 
+
+### Cloning the repository
+
 
 ### Create an environment 
 
