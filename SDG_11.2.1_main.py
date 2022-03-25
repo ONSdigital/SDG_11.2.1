@@ -149,7 +149,7 @@ whole_nation_pop_df = pd.merge(
 list_local_auth = uk_la_file[lad_col].unique()
 
 
-list_local_auth=["North Devon", "Birmingham"]
+list_local_auth=["North Devon"]
 
 
 # define output dicts to capture dfs
