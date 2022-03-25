@@ -59,10 +59,12 @@ The aims are:
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
 ### Preliminaries
-Before starting, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. 
+Before starting this process, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable [here](https://code.visualstudio.com/download).
 
 ### Cloning the repository
+The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
 
+After creating the SSH key, you will need to go into Source Control in VSCode and click "Clone Repository". 
 
 ### Create an environment 
 
