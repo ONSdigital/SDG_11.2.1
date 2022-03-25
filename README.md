@@ -66,7 +66,7 @@ If you are using Windows, you will have to add the conda and python into your Wi
 ### Cloning the repository
 The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
 
-You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved).
+You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your desktop).
 
     $ cd project-directory
 Then activate use the SSH address to clone the repository 
@@ -85,15 +85,11 @@ Here creating an environment called "SDG_11.2.1" with the version of Python that
 
 First go to the project directory 
 
-    $ cd project-directory
+    $ cd C:\Users\name\project-directory
     
 Then activate the environment
 
     $ conda activate SDG_11.2.1
-    
-Or on Windows this would be
-
-    $ activate SDG_11.2.1
 
 Then you should see the environment name in brackets before the prompt, similar to:
 
@@ -113,27 +109,24 @@ Which should return something like:
 
 C:\Python36\envs\SDG_11.2.1\python.exe
 
-Showing your are using the Python from the virtual environment, not the base installation of Python. 
+Showing your are using the Python from the virtual environment, not the base installation of Python.
 
-### Create the environment from the yaml file
+### Installing dependencies
+First, ensure you are in the project directory
 
-Run the following to get the environment set up 
+    $ cd C:\Users\name\project-directory
 
-`conda env create --file=environment.yml`
+To install the requirements write
 
-and 
+    conda install --file requirements.txt
 
-`conda activate SDG_11.2.1` 
+This may throw an error because you do not have all the packages required
 
-or on Windows
+    PackageNotFoundError: The following packages are not available from current channels
 
-`activate SDG_11.2.1` 
+In Anaconda Prompt, write the following with the package names that the error has shown you are missing:
 
-to activate it. 
+    pip install packagename
 
-Note: On on Linux Ubuntu/Mint 18.04 you may have to install rtree from apt instead of pip. Run: 
-
-    (SDG_11.2.1) $ sudo apt install python3-rtree
-
-
+This should now be set up to use.
 
