@@ -58,10 +58,9 @@ The aims are:
 
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
-### Preliminaries
 Before starting this process, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable [here](https://code.visualstudio.com/download).
 
-If you are using Windows, you will have to add the conda and python into your Windows Path environment which is shown [here](https://www.datacamp.com/community/tutorials/installing-anaconda-windows).
+If you are using Windows, you will have to add the conda and python into your Windows Path environment. For guidance, follow the tutorial [here](https://www.datacamp.com/community/tutorials/installing-anaconda-windows).
 
 ### Cloning the repository
 The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
@@ -73,11 +72,13 @@ Then activate use the SSH address to clone the repository
 
     $ git clone SSH_address
 
-You can then open the folder SDG_11.2.1 within VSCode.
+You can then open the folder SDG_11.2.1 within VSCode using "Open Folder" in Source Control.
 
 ### Create an environment 
 
-Here creating an environment called "SDG_11.2.1" with the version of Python that this was developed in
+Virtual environments are extremely useful when working on different projects as they can be set up in a way to only have packages installed in that environment and not globally - it does not affect base Python installation in any way.
+
+Create an environment called "SDG_11.2.1" with the version of Python that this was developed in
 
     conda create --name SDG_11.2.1 python=3.8
 
@@ -120,13 +121,13 @@ To install the requirements write
 
     conda install --file requirements.txt
 
-This may throw an error because you do not have all the packages required
+This may throw an error if you do not have all the packages required
 
     PackageNotFoundError: The following packages are not available from current channels
 
-In Anaconda Prompt, write the following with the package names that the error has shown you are missing:
+If this does, write the following with the package names that the error has shown you are missing:
 
     pip install packagename
 
-This should now be set up to use.
+The script should now be set up to use.
 
