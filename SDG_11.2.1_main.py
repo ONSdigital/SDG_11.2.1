@@ -459,3 +459,7 @@ output_tabs["local_auth"] = gpt.GPTable(
 gpt.write_workbook(filename="SDG.xlsx",
                     sheets=output_tabs,
                     auto_width=True)
+
+# Outputting to CSV
+final_result = do.reorder_final_df(final_result)
+final_result.to_csv("All_results.csv", index=False)
