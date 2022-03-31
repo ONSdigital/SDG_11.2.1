@@ -1,6 +1,7 @@
 # Core imports
 import os
-
+import time
+from datetime import datetime 
 
 # Third party imports
 import geopandas as gpd
@@ -13,6 +14,10 @@ import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
 import ftp_get_files_logic as fpts
+import data_output as do
+
+start_time = time.time()
+
 
 # get current working directory
 CWD = os.getcwd()
@@ -30,37 +35,43 @@ fpts.execute_file_grab(CWD)
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 EXT_ORDER = config['EXT_ORDER']
+# Years
+# Getting the year for population data
+pop_year = str(config["calculation_year"])
+# Getting the year for centroid data
+centroid_year = str(config["centroid_year"])
 
-# define url for zip download
-NAPT_ZIP_LINK = config["NAPT_ZIP_LINK"]
 
-# Define the columns wanted from Naptan
-COLS = list(config["NAPTAN_TYPES"].keys())
-NAPTAN_DTYPES = config["NAPTAN_TYPES"]
 # Get the pandas dataframe for the stops data
-stops_df = di.any_to_pd(file_nm="Stops",
-                        zip_link=NAPT_ZIP_LINK,
-                        ext_order=EXT_ORDER,
-                        dtypes=NAPTAN_DTYPES)
+stops_df = di.get_stops_file(url=config["NAPTAN_API"],
+                             dir=os.path.join(os.getcwd(),
+                                              "data",
+                                              "stops"))
+# filter out on inactive stops
+filtered_stops = dt.filter_stops(stops=stops_df)
 
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops_df,
+# coverts from pandas df to geo df
+stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
                                      geom_x='Easting',
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
 
-# getting the coordinates for all LA's
-uk_la_file_conf = config['uk_la_shp_file']
-full_path_uk_la=os.path.join(os.getcwd(), "data", "LA_shp", uk_la_file_conf)
-uk_la_file=di.geo_df_from_geospatialfile(path_to_file=full_path_uk_la)
+# define la col which is LADXXNM where XX is last 2 digits of year e.g 21 from 2021
+lad_col = f'LAD{pop_year[-2:]}NM'
 
-# Getting the west midlands population estimates for 2019
-pop_year = config["calculation_year"]
+# getting path for .shp file for LA's
+uk_la_path = di.get_shp_file_name(dir=os.path.join(os.getcwd(),
+                                                   "data",
+                                                   "LA_shp",
+                                                   pop_year))
+# getting the coordinates for all LA's
+uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
 # Get list of all pop_estimate files for target year
-pop_files = os.listdir(os.path.join(
+pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data/population_estimates",
-                                    str(pop_year)
+                                    pop_year
                                     )
                        )
 
@@ -72,19 +83,20 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
                          'pop_weighted_centroids',
-                         '2011')))
+                         centroid_year)))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
 
-# Links were changed at the source site which made the script fail. 
+# Links were changed at the source site which made the script fail.
 # Manually downloading the csv for now
 OA_boundaries_df = pd.read_csv(
-                               os.path.join("data",
-                                            "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+    os.path.join("data",
+                 "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
 
 # Merge with uk population df
-uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(OA_boundaries_df, on="OA11CD", how='left')
+uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(
+    OA_boundaries_df, on="OA11CD", how='left')
 
 # Clean after merge
 uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
@@ -128,63 +140,57 @@ whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Map OA codes to Local Authority Names
-LA_df = pd.read_csv("data/Output_Area_to_Lower_Layer_Super_Output_Area_to_Middle_Layer_Super_Output_Area_to_Local_Authority_District__December_2020__Lookup_in_England_and_Wales.csv", usecols=["OA11CD", "LAD20NM"])
-whole_nation_pop_df = pd.merge(whole_nation_pop_df, LA_df, how="left", on="OA11CD")
+oa_la_lookup_path = di.get_oa_la_file_name(os.path.join(os.getcwd(),
+                                                        "data/oa_la_mapping",
+                                                        pop_year))
+
+LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
+whole_nation_pop_df = pd.merge(
+    whole_nation_pop_df, LA_df, how="left", on="OA11CD")
 
 
-# All of England LA areas
-la_list_path="data/la_lookup_england_2019.csv"
-local_authority_list=pd.read_csv(la_list_path)
-list_local_auth=local_authority_list["LAD19NM"].unique()
+# Unique list of LA's to iterate through
+list_local_auth = uk_la_file[lad_col].unique()
 
-output_df_list=[]
 
-list_local_auth=["North Devon"]
+list_local_auth=["Kingston upon Hull, City of"]
 
 
 # define output dicts to capture dfs
-total_df_dict={}
-sex_df_dict={}
-urb_df_dict={}
-rur_df_dict={}
-disab_df_dict={}
-age_df_dict={}
+total_df_dict = {}
+sex_df_dict = {}
+urb_rur_df_dict={}
+disab_df_dict = {}
+age_df_dict = {}
 
 for local_auth in list_local_auth:
-    print(local_auth)
+    print(f"Processing: {local_auth}")
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
-                            geo_df=uk_la_file,
-                            dissolveby='LAD21NM',
-                            search=local_auth))
+        geo_df=uk_la_file,
+        dissolveby=lad_col,
+        search=local_auth))
 
     # Creating a Geo Dataframe of only stops in la
     la_stops_geo_df = (gs.find_points_in_poly
-                            (geo_df=stops_geo_df,
-                                polygon_obj=la_poly))
+                       (geo_df=stops_geo_df,
+                        polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    uk_la_file = uk_la_file[['LAD21NM', 'geometry']]
+    uk_la_file = uk_la_file[[lad_col, 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    #TODO: mismatch of 2020 LA's and 2021 LA's
     la_pop_df = whole_nation_pop_df.merge(uk_la_file,
-                                            how='right',
-                                            left_on='LAD20NM',
-                                            right_on='LAD21NM',
-                                            suffixes=('_pop', '_LSOA'))
+                                          how='right',
+                                          left_on=lad_col,
+                                          right_on=lad_col,
+                                          suffixes=('_pop', '_LA'))
 
     # subset by the local authority name needed
-    la_pop_df=la_pop_df.loc[la_pop_df["LAD20NM"]==local_auth]                                        
-  
+    la_pop_df = la_pop_df.loc[la_pop_df[lad_col] == local_auth]
+
     # rename the "All Ages" column to pop_count as it's the population count
     la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
-
-    # change pop_count to number (int)
-    # bham_pop_df['pop_count'] = (pd.to_numeric
-    #                             (bham_pop_df
-    #                              .pop_count.str
-    #                              .replace(",", "")))
 
     # Get a list of ages from config
     age_lst = config['age_lst']
@@ -198,7 +204,7 @@ for local_auth in list_local_auth:
     # get the ages in the age_df binned, and drop the original columns
     age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
-    # Ridding the bham pop df of the same cols
+    # Ridding the la_pop df of the same cols
     la_pop_df.drop(age_lst, axis=1, inplace=True)
 
     # merging summed+grouped ages back in
@@ -216,8 +222,8 @@ for local_auth in list_local_auth:
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
     disability_df = pd.read_csv(os.path.join(CWD,
-                                            "data",
-                                            "nomis_QS303.csv"),
+                                             "data",
+                                             "nomis_QS303.csv"),
                                 header=5)
     # drop the column "mnemonic" as it seems to be a duplicate of the OA code
     # also "All categories: Long-term health problem or disability" is not needed,
@@ -236,32 +242,35 @@ for local_auth in list_local_auth:
     # Summing the two columns to get total disabled (which is what I thought
     #   "All categories:..." was!)
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
-                                + disability_df["disab_ltd_little"])
+                                   + disability_df["disab_ltd_little"])
 
     # Importing the population data for each OA for 2011
     normal_pop_OA_2011_df = (pd.read_csv(
-                            os.path.join
-                            ("data","KS101EW-usual_resident_population.csv"),
-                            header=6,
-                            engine="python"))
+        os.path.join
+                            ("data", "KS101EW-usual_resident_population.csv"),
+        header=6,
+        engine="python"))
     # Cutting out text at the end of the csv
     normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
 
     # Renaming columns for clarity and consistency before join
-    normal_pop_OA_2011_df.rename(columns={'2011 output area':'OA11CD','2011':'population_2011'},inplace=True)
+    normal_pop_OA_2011_df.rename(
+        columns={'2011 output area': 'OA11CD', '2011': 'population_2011'}, inplace=True)
 
     # Casting population numbers in 2011 data as int
-    normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(int)
+    normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(
+        int)
 
     # Joining the 2011 total population numbers on to disability df
-    disability_df = pd.merge(disability_df, normal_pop_OA_2011_df, how='inner', left_on="OA11CD", right_on="OA11CD")
+    disability_df = pd.merge(disability_df, normal_pop_OA_2011_df,
+                             how='inner', left_on="OA11CD", right_on="OA11CD")
 
     # Ticket #97 - calculating the proportion of disabled people in each OA
     disability_df["proportion_disabled"] = (
-                                            disability_df['disb_total'] 
-                                            / 
-                                            disability_df['population_2011']
-                                            )
+        disability_df['disb_total']
+        /
+        disability_df['population_2011']
+    )
 
     # Slice disability df that only has the proportion disabled column and the OA11CD col
     disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
@@ -269,14 +278,14 @@ for local_auth in list_local_auth:
     # Merge the proportion disability df into main the pop df with a left join
     la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
-    # Make the calculation of the number of people with disabilities in the year 
+    # Make the calculation of the number of people with disabilities in the year
     # of the population estimates
     la_pop_df["number_disabled"] = (
-                                    round
-                                    (la_pop_df["pop_count"]
-                                    *
-                                    la_pop_df["proportion_disabled"])
-                                    )
+        round
+        (la_pop_df["pop_count"]
+         *
+         la_pop_df["proportion_disabled"])
+    )
     la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
 
     # import the sex data
@@ -288,7 +297,6 @@ for local_auth in list_local_auth:
 
     # sex_df = bham_pop_df['OA11CD', 'males_pop', 'fem_pop']
 
-
     # # # renaming the dodgy col names with their replacements
     replacements = {"males_pop": "male",
                     "fem_pop": "female"}
@@ -297,10 +305,10 @@ for local_auth in list_local_auth:
     # # merge the sex data with the rest of the population data
     # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
 
-    # Make a polygon object from the geometry column of the stops df 
+    # Make a polygon object from the geometry column of the stops df
     # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
-    # # find all the pop centroids which are in the bham_stops_poly
+    # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
     # Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
@@ -309,43 +317,56 @@ for local_auth in list_local_auth:
     served = pop_in_poly_df.pop_count.sum()
     full_pop = la_pop_df.pop_count.sum()
     not_served = full_pop - served
-    pct_not_served = "{:.2%}".format(not_served/full_pop)
-    pct_served = "{:.2%}".format(served/full_pop)
+    pct_not_served = "{:.2f}".format(not_served/full_pop*100)
+    pct_served = "{:.2f}".format(served/full_pop*100)
 
     print(f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
             While the number of people who are not served is {not_served}""")
 
-    la_results_df=pd.DataFrame({"LA":[local_auth],
-                            "pop":[full_pop],
-                            "pop_served":[served],
-                            "pop_not_served":[not_served],
-                            "pct_served":[pct_served],
-                            "pct_not_served":[pct_not_served]})
+    la_results_df = pd.DataFrame({"All_pop":[full_pop],
+                                  "Served":[served],
+                                  "Unserved":[not_served],
+                                  "Percentage served":[pct_served],
+                                  "Percentage unserved":[pct_not_served]})
+    
+    # Re-orienting the df to what's accepted by the reshaper and renaming col
+    la_results_df = la_results_df.T.rename(columns={0:"Total"})
+
+    # Feeding the la_results_df to the reshaper
+    la_results_df_out = do.reshape_for_output(la_results_df,
+                                              id_col="Total",
+                                              local_auth=local_auth)
+
+    # Finally for the local authority totals the id_col can be dropped
+    # That's because the disaggregations each have their own column, 
+    # but "Total" is not a disaggregation so doesn't have a column.
+    # It will simply show up as blanks (i.e. Total) in all disagg columns
+    la_results_df_out.drop("Total", axis=1, inplace=True)
 
     # Output this iteration's df to the dict
-    total_df_dict[local_auth]=la_results_df
-
+    total_df_dict[local_auth] = la_results_df_out
 
     # # Disaggregations!
     pd.set_option("precision", 1)
 
     # Calculating those served and not served by age
     age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
-                '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
-                '55-59', '60-64', '65-69', '70-74', '75-79',
-                '80-84', '85-89', '90+']
+                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                 '55-59', '60-64', '65-69', '70-74', '75-79',
+                 '80-84', '85-89', '90+']
 
     age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
-    # Create an LA column 
-    age_servd_df["LA"]=local_auth
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
 
-    print("\n\n==========Age Disaggregation===========\n\n")
-
-    # Output this iteration's age df to the dict
-    age_df_dict[local_auth]=age_servd_df
+    # Output this local auth's age df to the dict
+    age_df_dict[local_auth] = age_servd_df_out
 
     # print(age_servd_df)
 
@@ -356,32 +377,36 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
 
-    # Create an LA column 
-    sex_servd_df["LA"]=local_auth
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
+                                             id_col="Sex",
+                                             local_auth=local_auth)
 
-    print("\n\n==========Sex Disaggregation===========\n\n")
 
-    # print(sex_servd_df)
-
-    # Output this iteration's age df to the dict
-    sex_df_dict[local_auth]=sex_servd_df
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth]=sex_servd_df_out
 
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
 
     disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
-                                                pop_in_poly_df=pop_in_poly_df,
-                                                cols_lst=disab_cols)
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=disab_cols)
 
-    # Create an LA column 
-    disab_servd_df["LA"]=local_auth
-
-    print("\n\n==========Disability Disaggregation===========\n\n")
-
-    # Output this iteration's age df to the dict
-    disab_df_dict[local_auth]=disab_servd_df
-
-    print(disab_servd_df)
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+    
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    
+    # Output this local auth's disab df to the dict
+    disab_df_dict[local_auth] = disab_servd_df_out
 
     # Calculating those served and not served by urban/rural
     urb_col = ["urb_rur_class"]
@@ -393,13 +418,15 @@ for local_auth in list_local_auth:
     # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
     # filtered in the same way
     urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
-                        on="OA11CD", how="left")
-                        .loc[:, ['OA11CD', 'pop_count_y']])
-    urb_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
+                                       on="OA11CD", how="left")
+                          .loc[:, ['OA11CD', 'pop_count_y']])
+    urb_pop_in_poly_df.rename(
+        columns={'pop_count_y': 'pop_count'}, inplace=True)
     rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df,
-                        on="OA11CD", how="left")
-                        .loc[:, ['OA11CD', 'pop_count_y']])
-    rur_pop_in_poly_df.rename(columns={'pop_count_y': 'pop_count'}, inplace=True)
+                                       on="OA11CD", how="left")
+                          .loc[:, ['OA11CD', 'pop_count_y']])
+    rur_pop_in_poly_df.rename(
+        columns={'pop_count_y': 'pop_count'}, inplace=True)
 
     urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
                                                 pop_in_poly_df=urb_pop_in_poly_df,
@@ -409,48 +436,49 @@ for local_auth in list_local_auth:
                                                 pop_in_poly_df=rur_pop_in_poly_df,
                                                 cols_lst=['pop_count'])
 
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count":"Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count":"Rural"}, inplace=True)
 
-    print("\n\n==========Urban/Rural Disaggregation===========\n\n")
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
 
-    print("Urban")
-    print(urb_servd_df)
-    print("Rural")
-    print(rur_servd_df)
-
-        # Create an LA column 
-    urb_servd_df["LA"]=local_auth
-    rur_servd_df["LA"]=local_auth
-
-    print("\n\n==========Disability Disaggregation===========\n\n")
+    #Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
 
     # Output this iteration's urb and rur df to the dict
-    urb_df_dict[local_auth]=urb_servd_df
-    rur_df_dict[local_auth]=rur_servd_df
+    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
 
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
-urb_all_la = pd.concat(urb_df_dict.values())
-rur_all_la = pd.concat(rur_df_dict.values())
+urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 age_all_la = pd.concat(age_df_dict.values())
-print(disab_all_la)
-print(age_all_la)
-print(rur_all_la)
-print(urb_all_la)
 
-all_la=all_la.reset_index()
+
 
 output_tabs={}
-"""
-output_tabs["local_auth"] = gpt.GPTable(
-                                table=all_la,
-                                title="local_auth",
-                                scope=None,
-                                units=None,
-                                source="Office for National Statistics"
-                                )
 
-gpt.write_workbook(filename="SDG.xlsx",
-                    sheets=output_tabs,
-                    auto_width=True)
-"""
+# Stacking the dataframes
+all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_all_la]
+final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
+
+# Resetting index for gptables
+final_result.reset_index(inplace=True)
+
+
+# Outputting to CSV
+final_result = do.reorder_final_df(final_result)
+final_result.to_csv("All_results.csv", index=False)
+
+print(f"Time taken is {time.time()-start_time:.2f} seconds")
+

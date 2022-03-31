@@ -6,6 +6,7 @@ from functools import lru_cache, reduce
 from time import perf_counter
 from attr import resolve_types
 import yaml
+from datetime import datetime
 
 # Third party imports for this module
 import geopandas as gpd
@@ -19,7 +20,7 @@ from typing import List, Dict, Optional, Union
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
 
-#Config
+# Config
 CWD = os.getcwd()
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
@@ -37,7 +38,7 @@ def any_to_pd(file_nm: str,
 
         Currently this function can handle the remote or local import of data 
         from zip (containing csv files), and csv files.
-        
+
         The main purpose is to check for locally stored persistent data
         files and get that data into a dataframe for further processing.
 
@@ -52,7 +53,7 @@ def any_to_pd(file_nm: str,
 
         If no csv file is available it checks for a zip file, from which to
         extract the csv from.
-        
+
         If a zip file is not available locally it falls back to downloading
         the zip file (which could contains other un-needed datasets)
         then extracts the specified/needed data set (csv) and deletes the
@@ -61,7 +62,7 @@ def any_to_pd(file_nm: str,
         This function should be used in place of pd.read_csv for example.
 
     TODO: extend this function to handle API import of json data - may already be done in get_and_save_geo_dataset function
-    
+
     Returns:
         pd.DataFrame: A dataframe of the data that has been imported
     """
@@ -114,7 +115,7 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
     Returns:
         pd.DataFrame: Pandas dataframe read from the persistent feather file
-    """        
+    """
     print(f"Reading {file_nm}.feather from {feather_path}.")
     tic = perf_counter()
     pd_df = pd.read_feather(feather_path)
@@ -125,12 +126,13 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
 
 def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
-    
+
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
-        pd_df = pd.read_csv(csv_path, usecols=cols, dtype=dtypes, encoding_errors="ignore")
+        pd_df = pd.read_csv(csv_path, usecols=cols,
+                            dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
         print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
@@ -142,10 +144,10 @@ def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persist
 
 
 def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
-                              persistent_exists=True,
-                              zip_url=None,
-                              *cols,
-                              **dtypes) -> pd.DataFrame:
+                               persistent_exists=True,
+                               zip_url=None,
+                               *cols,
+                               **dtypes) -> pd.DataFrame:
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
         _grab_zip(file_nm, zip_url, zip_path)
@@ -162,14 +164,14 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
         a zip file from the URI specified in the the zip_link 
         parameter.
-        
+
        This function does not return anything but 
 
     Args:
         file_nm (str): the name of the file without extension
         zip_link (str): URI to the zip to be downloaded
         zip_path (PathLike): path/to/the/write/directory, e.g. '/data/'
-    """    
+    """
     # Grab the zipfile from URI
     print(f"Dowloading {file_nm} from {zip_link}")
     r = requests.get(zip_link)
@@ -188,7 +190,7 @@ def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLi
                       expected inside the zip file
         zip_path (PathLike): path/to/local/zip/file.zip
         csv_path (PathLike): The path where the csv should be written to, e.g. /data/
-    """    
+    """
     # Open the zip file and extract
     # TODO: Correction: zip.extract should be writing to the csv_path, not to "data".
     with ZipFile(zip_path, 'r') as zip:
@@ -204,7 +206,7 @@ def _delete_junk(file_nm: str, zip_path: PathLike):
     Args:
         file_nm (str): the name of the file without extension
         zip_path (PathLike): path/to/local/zip/file.zip that is to deleted
-    """   
+    """
     # Delete the zipfile as it's uneeded now
     print(f"Deleting {file_nm} from {zip_path}")
     os.remove(zip_path)
@@ -213,7 +215,7 @@ def _delete_junk(file_nm: str, zip_path: PathLike):
 @lru_cache
 def _make_data_path(*data_dir_files: str) -> PathLike:
     """Makes a relative path pointing to the data directory.
-    
+
     This was created to avoid repeated using
         os.path.join(somepath, somefile) all over the script.
 
@@ -252,10 +254,10 @@ def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
         to feather for quick reading and retrieval later.
 
         This function returns nothing because it simply writes to disk.
-    """    
+    """
     feather_path = os.path.splitext(current_file_path)[0]+'.feather'
-    
-    # TODO: this function should make use of _persistent_existsD    
+
+    # TODO: this function should make use of _persistent_existsD
     if not os.path.isfile(feather_path):
         print(f"Writing Pandas dataframe to feather at {feather_path}")
         feather.write_feather(pd_df, feather_path)
@@ -318,10 +320,11 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
 
 def capture_region(file_nm: str):
     "Extracts the region name from the ONS population estimate excel files."
-    patt = re.compile("^(.*estimates-)(?P<region>.*)(\.xls)")
+    patt = re.compile("^(.*estimates[-]?)(?P<region>.*)(\.xls)")
     region = re.search(patt, file_nm).group("region")
     region = region.replace("-", " ").capitalize()
     return region
+
 
 def get_whole_nation_pop_df(pop_files, pop_year):
     """Gets the population data for all regions in the country and puts them into one dataframe
@@ -330,32 +333,37 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         pd.DataFrame: Dataframe of population data for all regions in the country
     """
     # Dict of region:file_name. Capture the region name from the filename
-    region_dict = {capture_region(file):file for file in pop_files}
+    region_dict = {capture_region(file): file for file in pop_files}
     # make a df of each region then concat
-    national_pop_feather_path = os.path.join(DATA_DIR, "whole_nation.feather")
+    national_pop_feather_path = os.path.join(
+        DATA_DIR, f"whole_nation_{pop_year}.feather")
     if not os.path.exists(national_pop_feather_path):
         print("No national_pop_feather found")
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
             xls_path = os.path.join(
-                                DATA_DIR,
-                                "population_estimates",
-                                str(pop_year),
-                                region_dict[region])
+                DATA_DIR,
+                "population_estimates",
+                str(pop_year),
+                region_dict[region])
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
-            total_pop = pd.read_excel(xlFile, "Mid-2019 Persons", header=4)
-            males_pop = pd.read_excel(xlFile, "Mid-2019 Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
-            fem_pop = pd.read_excel(xlFile, "Mid-2019 Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+            total_pop = pd.read_excel(
+                xlFile, f"Mid-{pop_year} Persons", header=4)
+            males_pop = pd.read_excel(
+                xlFile, f"Mid-{pop_year} Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+            fem_pop = pd.read_excel(
+                xlFile,  f"Mid-{pop_year} Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
             total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
             males_pop.rename(columns={"All Ages": "males_pop"}, inplace=True)
             fem_pop.rename(columns={"All Ages": "fem_pop"}, inplace=True)
         # Merge the data from different sheets
             dfs_to_merge = [total_pop, males_pop, fem_pop]
-            df_final = reduce(lambda left, right: pd.merge(left, right, on='OA11CD'), dfs_to_merge)
+            df_final = reduce(lambda left, right: pd.merge(
+                left, right, on='OA11CD'), dfs_to_merge)
         # Store merged df in dict under region name
             region_dfs_dict[region] = df_final
     # Concat all regions into national pop df
@@ -368,9 +376,130 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         print("Writing whole_nation_pop_df.feather")
         whole_nation_pop_df.reset_index().to_feather(national_pop_feather_path)
     else:
-    # if it exists, read from a feather for quicker data retreval
+        # if it exists, read from a feather for quicker data retreval
         print(f"Reading whole_nation_pop_df from {national_pop_feather_path}")
         whole_nation_pop_df = pd.read_feather(national_pop_feather_path)
     # Temporary TODO: remove this line
-        whole_nation_pop_df.rename(columns={"total_pop": "pop_count"}, inplace=True)
+        whole_nation_pop_df.rename(
+            columns={"total_pop": "pop_count"}, inplace=True)
     return whole_nation_pop_df
+
+
+def get_shp_file_name(dir):
+    """
+    Passed a directory into the function and returns the absolute path
+    of where the shp file is within that directory
+    """
+    files = os.listdir(dir)
+    shp_files = [file for file in files if file.endswith(".shp")]
+    shp_file = shp_files[0]
+
+    absolute_path = os.path.join(dir, shp_file)
+
+    return absolute_path
+
+
+def get_oa_la_file_name(dir):
+    """
+    Passed a directory into the function and returns the absolute path
+    of where the shp file is within that directory
+
+    """
+    files = os.listdir(dir)
+    csv_files = [file for file in files if file.endswith(".csv")]
+    csv_file = csv_files[0]
+
+    absolute_path = os.path.join(dir, csv_file)
+
+    return absolute_path
+
+
+def _get_stops_from_api(url, file_name):
+    """Gets stops data from the NaPTAN API
+
+    Returns:
+        None - just saves into the data/stops folder.
+    """
+    # requests page
+    r = requests.get(url)
+
+    # gets content and then writes to csv
+    url_content = r.content
+    csv_file = open(file_name, 'wb')
+    csv_file.write(url_content)
+    csv_file.close()
+
+
+def _get_latest_stop_file_date(dir):
+    """Gets the latest stop dataset 
+    Returns:
+        None - just saves into the data folder.
+    """
+    # get's a list of files from the directory
+    file_list = os.listdir(dir)
+
+    # files are in the format stops_YYYYMMDD
+    p = re.compile(r'\d+')
+
+    # attempts to extracts all the dates
+    dates = [p.findall(i)[0] for i in file_list]
+
+    # convert to integers and get latest date
+    dates_int = [int(date) for date in dates]
+    dates_int.sort(reverse=True)
+    latest = dates_int[0]
+
+    return latest
+
+
+def save_latest_stops_as_feather(file_name):
+    """Saves the latest stop file as a feather file into 
+            the data folder
+    Returns:
+        None - just saves feather into the data folder.
+    """
+    # read in csv
+    file = pd.read_csv(file_name,
+                       usecols=config["NAPTAN_TYPES"].keys(),
+                       dtype=config["NAPTAN_TYPES"])
+
+    # get output path
+    output_path = os.path.join(os.getcwd(),
+                               "data",
+                               "Stops.feather")
+    # output to feather
+    file.to_feather(output_path)
+
+
+def get_stops_file(url, dir):
+    """Gets the latest stop dataset 
+    if the latest stop df from the api is older then 28 days
+    then function grabs a new version of file from API and 
+    saves this as a feather file
+
+    If the latest stop df from the api is less then 28 days old
+    then just grabs the feather file
+    Returns:
+        None - just saves into the data folder.
+    """
+    # gets todays date and latest date of stops df
+    today = int(datetime.now().strftime('%Y%m%d'))
+    latest_date = _get_latest_stop_file_date(dir)
+
+    # gets feather stop path
+    feather_path = os.path.join(os.getcwd(),
+                                "data",
+                                "Stops.feather")
+
+    if today-latest_date < 28:
+        stops_df = pd.read_feather(feather_path)
+    else:
+        file_name = os.path.join(os.getcwd(),
+                                 "data",
+                                 "stops",
+                                 f"stops_{today}.csv")
+        _get_stops_from_api(url, file_name)
+        save_latest_stops_as_feather(file_name)
+        stops_df = pd.read_feather(feather_path)
+
+    return stops_df
