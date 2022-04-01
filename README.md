@@ -65,7 +65,7 @@ If you are using Windows, you will have to add the conda and python into your Wi
 ### Cloning the repository
 The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
 
-You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your desktop).
+You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your local drive).
 
     $ cd project-directory
 Then activate use the SSH address to clone the repository 
