@@ -84,7 +84,7 @@ Create an environment called "SDG_11.2.1" with the version of Python that this w
 
 ### Activate the environment
 
-First go to the project directory 
+First go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:
 
     $ cd C:\Users\name\project-directory
     
