@@ -60,7 +60,7 @@ A number of problems with dependencies have been experienced while developing th
 
 Before starting this process, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable [here](https://code.visualstudio.com/download).
 
-If you are using Windows, you will have to add the conda and python into your Windows Path environment. For guidance, follow the tutorial [here](https://www.datacamp.com/community/tutorials/installing-anaconda-windows).
+If you are using Windows, you will have to add the conda and python path into your Windows Path environment. For guidance, follow the tutorial [here](https://www.datacamp.com/community/tutorials/installing-anaconda-windows).
 
 ### Cloning the repository
 The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
@@ -91,6 +91,13 @@ First go to the project directory/wherever you have saved to on your local drive
 Then activate the environment
 
     $ conda activate SDG_11.2.1
+
+The above command will **not work for Windows** unless you have the Conda path linked to your Windows path environment (see [this tutorial](https://www.datacamp.com/community/tutorials/installing-anaconda-windows)).
+
+If you do not have the Conda path linked, you can use the following for Windows:
+
+    $ activate SDG_11.2.1
+
 
 Then you should see the environment name in brackets before the prompt, similar to:
 
