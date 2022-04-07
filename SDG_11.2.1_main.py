@@ -7,15 +7,17 @@ from datetime import datetime
 import geopandas as gpd
 import pandas as pd
 import yaml
-import gptables as gpt
+#import gptables as gpt
 
 # Module imports
 import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
+import ftp_get_files_logic as fpts
 import data_output as do
 
 start_time = time.time()
+
 
 # get current working directory
 CWD = os.getcwd()
@@ -25,6 +27,9 @@ CWD = os.getcwd()
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     print("Config loaded")
+
+# Retrieve Missing Data Files via FTP
+fpts.execute_file_grab(CWD)
 
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
@@ -459,6 +464,9 @@ disab_all_la = pd.concat(disab_df_dict.values())
 age_all_la = pd.concat(age_df_dict.values())
 
 
+
+output_tabs={}
+
 # Stacking the dataframes
 all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_all_la]
 final_result = pd.concat(all_results_dfs)
@@ -467,25 +475,10 @@ final_result["Year"] = pop_year
 # Resetting index for gptables
 final_result.reset_index(inplace=True)
 
-output_tabs = {}
-
-# Write all results out to csv
-all_la.to_csv("All_results.csv")
-
-output_tabs["local_auth"] = gpt.GPTable(
-                                table=final_result,
-                                title="local_auth",
-                                scope=None,
-                                units=None,
-                                source="Office for National Statistics"
-                                )
-
-gpt.write_workbook(filename="SDG.xlsx",
-                    sheets=output_tabs,
-                    auto_width=True)
 
 # Outputting to CSV
 final_result = do.reorder_final_df(final_result)
 final_result.to_csv("All_results.csv", index=False)
 
 print(f"Time taken is {time.time()-start_time:.2f} seconds")
+
