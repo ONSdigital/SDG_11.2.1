@@ -172,18 +172,53 @@ def highly_serv_stops(region):
 
 def filter_stops(stops):
     """
-    filters the stops dataframe based on the status column. 
-    Wewant to keep stops which are active, pending or new.
+    filters the stops dataframe based on two things:
+    1) status column - We want to keep stops which are 
+    active, pending or new.
+    2) StopType want only to include bus and rail stops.
     Parameters:
         stops_df the dataframe wanting to filter on
     Returns:
         filtered_stops which meet the criteria
-        of keeping based on status column
+        of keeping based on status/stoptype columns
     """
+    stop_types = ["RSE","RLY","RPL","TMU","MET","PLT",
+                "BCE", "BST","BCQ", "BCS","BCT"]
 
     filtered_stops = stops[(stops["Status"] == "active") |
                            (stops["Status"] == "pending") |
                            (stops["Status"] == None) |
                            (stops["Status"] == "new")]
 
-    return filtered_stops
+    boolean_stops_type = filtered_stops["StopType"].isin(stop_types) 
+    filter_stops=filtered_stops[boolean_stops_type]
+
+    return filter_stops
+
+def add_stop_capacity_type(stops):
+    """
+    adds capacity_type column which is defined
+    with the following dictionary using the StopType
+    Bus stops are low capacity, train stations are high
+    capacity. 
+        Parameters:
+        stops the dataframe want to add the column to
+    Returns:
+        dataframe with new capacity_type column
+    """
+
+    dictionary_map={"RSE":"high",
+                    "RLY":"high",
+                    "RPL":"high",
+                    "TMU":"low",
+                    "MET":"low",
+                    "PLT":"low",
+                    "BCE":"low", 
+                    "BST":"low",
+                    "BCQ":"low", 
+                    "BCS":"low",
+                    "BCT":"low"}
+
+    stops["capacity_type"]=stops["StopType"].map(dictionary_map)
+
+    return stops
