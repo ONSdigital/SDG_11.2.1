@@ -40,14 +40,6 @@ The aims are:
 2. A new dataset with analysis of public transport availability for the UK population
 3. Three additional datasets with analysis of public transport availability disagregated by sex, age and disabilities
 
-## Next steps in development
-
-- isolate the smallest areas available on the census dataset
-- use the same method of creating a centroid and then a 5km buffer around those areas
-- for every area, run a points in polygons enquiry to answer 'how many stops in the buffer?'
-- generate a small dataset with columns `['area_name','population','stops_within_5km']
-- create statistical pipeline for analysis
-
 ## Resources
 
 - https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf
