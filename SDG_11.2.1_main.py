@@ -29,7 +29,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print("Config loaded")
 
 # Retrieve Missing Data Files via FTP
-fpts.execute_file_grab(CWD)
+#fpts.execute_file_grab(CWD)
 
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
@@ -48,7 +48,7 @@ stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                                               "data",
                                               "stops"))
 # filter out on inactive stops
-filtered_stops = dt.filter_stops(stops=stops_df)
+filtered_stops = dt.filter_stops(stops_df=stops_df)
 
 # coverts from pandas df to geo df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
@@ -56,6 +56,8 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
+# adds in high/low capacity column
+stops_geo_df=dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # define la col which is LADXXNM where XX is last 2 digits of year e.g 21 from 2021
 lad_col = f'LAD{pop_year[-2:]}NM'
