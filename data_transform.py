@@ -86,7 +86,7 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
 
         cols_lst (List[str]): a list of the column names in the population
             dataframe supplied which contain population figures, and are to
-            be summed and assessed for as served/unserved by public transport
+            be summed and assessed as served/unserved by public transport
 
     Returns:
         pd.DataFrame: a dataframe summarising

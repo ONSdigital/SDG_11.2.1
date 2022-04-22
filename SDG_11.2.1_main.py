@@ -231,51 +231,42 @@ for local_auth in list_local_auth:
     # also "All categories: Long-term health problem or disability" is not needed,
     # nor is "Day-to-day activities not limited"
     drop_lst = ["mnemonic",
-                "All categories: Long-term health problem or disability",
-                "Day-to-day activities not limited"]
+                "All categories: Long-term health problem or disability"]
     disability_df.drop(drop_lst, axis=1, inplace=True)
     # the col headers are database unfriendly. Defining their replacement names
     replacements = {"2011 output area": 'OA11CD',
                     "Day-to-day activities limited a lot": "disab_ltd_lot",
-                    "Day-to-day activities limited a little": "disab_ltd_little"}
+                    "Day-to-day activities limited a little": "disab_ltd_little",
+                    'Day-to-day activities not limited': "disab_not_ltd"}
     # renaming the dodgy col names with their replacements
     disability_df.rename(columns=replacements, inplace=True)
 
-    # Summing the two columns to get total disabled (which is what I thought
-    #   "All categories:..." was!)
+    # Getting the disab total
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
                                    + disability_df["disab_ltd_little"])
 
-    # Importing the population data for each OA for 2011
-    normal_pop_OA_2011_df = (pd.read_csv(
-        os.path.join
-                            ("data", "KS101EW-usual_resident_population.csv"),
-        header=6,
-        engine="python"))
-    # Cutting out text at the end of the csv
-    normal_pop_OA_2011_df = normal_pop_OA_2011_df.iloc[:-4]
+    # Calcualting the total "non-disabled"
+    la_pop_only = la_pop_df[['OA11CD','pop_count']]
+    disability_df = la_pop_only.merge(disability_df, on="OA11CD")
+    # Putting the result back into the disability df
+    disability_df["non-disabled"] = disability_df["pop_count"] - disability_df['disb_total']
 
-    # Renaming columns for clarity and consistency before join
-    normal_pop_OA_2011_df.rename(
-        columns={'2011 output area': 'OA11CD', '2011': 'population_2011'}, inplace=True)
-
-    # Casting population numbers in 2011 data as int
-    normal_pop_OA_2011_df["population_2011"] = normal_pop_OA_2011_df["population_2011"].astype(
-        int)
-
-    # Joining the 2011 total population numbers on to disability df
-    disability_df = pd.merge(disability_df, normal_pop_OA_2011_df,
-                             how='inner', left_on="OA11CD", right_on="OA11CD")
-
-    # Ticket #97 - calculating the proportion of disabled people in each OA
+    # Calculating the proportion of disabled people in each OA
     disability_df["proportion_disabled"] = (
         disability_df['disb_total']
         /
-        disability_df['population_2011']
+        disability_df['pop_count']
     )
-
+    
+    # Calcualting the proportion of non-disabled people in each OA
+    disability_df["proportion_non-disabled"] = (
+        disability_df['non-disabled']
+        /
+        disability_df['pop_count']
+    )
+    
     # Slice disability df that only has the proportion disabled column and the OA11CD col
-    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled']]
+    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled', 'proportion_non-disabled']]
 
     # Merge the proportion disability df into main the pop df with a left join
     la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
@@ -289,6 +280,17 @@ for local_auth in list_local_auth:
          la_pop_df["proportion_disabled"])
     )
     la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
+
+    # Make the calculation of the number of non-disabled people in the year
+    # of the population estimates
+    la_pop_df["number_non-disabled"] = (
+        round
+        (la_pop_df["pop_count"]
+         *
+         la_pop_df["proportion_non-disabled"])
+    )
+    la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(int)
+
 
     # import the sex data
     # # TODO: use new csv_to_df func to make the sex_df
@@ -406,10 +408,36 @@ for local_auth in list_local_auth:
     disab_servd_df_out.replace(to_replace="number_disabled",
                                value="Disabled",
                                inplace=True)
+
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth]=sex_servd_df_out
+
+    # Calculating non-disabled people served and not served
+    non_disab_cols = ["number_non-disabled"]
+
+    non_disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=non_disab_cols)
+
+    # Feeding the results to the reshaper
+    non_disab_servd_df_out = do.reshape_for_output(non_disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+    
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
+                               value="Non-disabled",
+                               inplace=True)
+    
+    # Concatting non-disabled and disabled dataframes
+    non_disab_disab_servd_df_out = pd.concat([non_disab_servd_df_out, disab_servd_df_out])
     
     # Output this local auth's disab df to the dict
-    disab_df_dict[local_auth] = disab_servd_df_out
+    disab_df_dict[local_auth] = non_disab_disab_servd_df_out
 
+    
     # Calculating those served and not served by urban/rural
     urb_col = ["urb_rur_class"]
 
