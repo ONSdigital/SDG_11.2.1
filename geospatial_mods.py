@@ -3,7 +3,20 @@ import geopandas as gpd
 import pandas as pd
 from shapely.ops import unary_union
 import numpy as np
+import os
+import yaml
 
+# get current working directory
+CWD = os.getcwd()
+
+# Load config for buffers
+with open(os.path.join(CWD, "config.yaml")) as yamlfile:
+    config = yaml.load(yamlfile, Loader=yaml.FullLoader)
+    print("Config loaded")
+
+# Add in capacity buffers from config
+lower_buffer = config["low_cap_buffer"]
+upper_buffer = config["high_cap_buffer"]
 
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
                             dissolveby='OA11CD',
@@ -39,8 +52,8 @@ def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     As 'epsg:27700' projections units of km, 500m is 0.5km.
     """
     geo_df['geometry']=np.where(geo_df['capacity_type']=="low",
-                                geo_df.geometry.buffer(500),
-                                geo_df.geometry.buffer(1000))  
+                                geo_df.geometry.buffer(lower_buffer),
+                                geo_df.geometry.buffer(upper_buffer))  
         
     return geo_df
 
