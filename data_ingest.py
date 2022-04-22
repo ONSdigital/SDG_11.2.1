@@ -24,7 +24,8 @@ PathLike = Union[str, bytes, os.PathLike]
 CWD = os.getcwd()
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
-    print("Config loaded")
+    module = os.path.basename(__file__)
+    print(f"Config loaded in {module}")
 DATA_DIR = config["DATA_DIR"]
 
 
