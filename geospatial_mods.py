@@ -2,6 +2,7 @@
 import geopandas as gpd
 import pandas as pd
 from shapely.ops import unary_union
+import numpy as np
 
 
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
@@ -28,14 +29,19 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
     return polygon_df
 
 
-def buffer_points(geo_df: gpd.GeoDataFrame, metres=int(500)) -> gpd.GeoDataFrame:
+def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """
     Provide a Geo Dataframe with points you want buffering.
-    Draws a 5km (radius) buffer around the points.
-    Puts the results into a new column called "buffered"
+    Draws a 500/1000m (radius) buffer around the points.
+    Draws 500m if the capacity_type is low
+    Draws 1000m if the capacity_type is high 
+    Puts the results into a new column called "geometry"
     As 'epsg:27700' projections units of km, 500m is 0.5km.
     """
-    geo_df['geometry'] = geo_df.geometry.buffer(metres)
+    geo_df['geometry']=np.where(geo_df['capacity_type']=="low",
+                                geo_df.geometry.buffer(500),
+                                geo_df.geometry.buffer(1000))  
+        
     return geo_df
 
 def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
