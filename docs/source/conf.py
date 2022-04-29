@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'SDG_11.2.1'
-copyright = '2022, Paige Hunter, James Westwood, Antonio Felton'
-author = 'Paige Hunter, James Westwood, Antonio Felton'
+copyright = '2022, Paige Hunter, Antonio Felton, James Westwood'
+author = 'Paige Hunter, Antonio Felton, James Westwood'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = 'V1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = '1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc'
+extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
