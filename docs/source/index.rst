@@ -9,8 +9,8 @@ Welcome to SDG_11.2.1's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
+   
+   modules
 
 Indices and tables
 ==================
