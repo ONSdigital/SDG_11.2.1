@@ -28,9 +28,6 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     print("Config loaded")
 
-# Retrieve Missing Data Files via FTP
-fpts.execute_file_grab(CWD)
-
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
