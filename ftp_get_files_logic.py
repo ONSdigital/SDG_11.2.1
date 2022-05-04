@@ -89,7 +89,7 @@ def create_local_file_list():
         filelist: list containing strings of the local data files
     """
 
-    path = f"{os.getcwd()}/data"
+    path = os.path.join(os.getcwd(),"data")
     sys_dir = f"{os.getcwd()}"
     #we shall store all the file names in this list
     filelist = []
@@ -98,7 +98,7 @@ def create_local_file_list():
     
         for file in files:
             #append the file name to the list
-            root = root.replace((sys_dir+'/'),"")
+            root = root.replace((sys_dir+"\\"),"")
             filelist.append(os.path.join(root,file))
     
     return filelist
@@ -124,7 +124,9 @@ def check_missing_files(search_dirs):
     set_remot = set(data_files)
     set_local = set(locl_files)
 
-    missing_files = set_remot.difference(set_local)
+    # to account for different slash str 
+    set_local_slash=[s.replace("\\","/") for s in set_local]
+    missing_files = set_remot.difference(set_local_slash)
 
     if len(missing_files) == 0:
         print("You are not missing any files")

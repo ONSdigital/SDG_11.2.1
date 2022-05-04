@@ -29,6 +29,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
 
+
 # Retrieve Missing Data Files via FTP
 #fpts.execute_file_grab(CWD)
 
