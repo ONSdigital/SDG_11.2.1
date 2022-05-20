@@ -2,6 +2,7 @@
 import os
 import time
 from datetime import datetime 
+import random
 
 # Third party imports
 import geopandas as gpd
@@ -156,8 +157,11 @@ whole_nation_pop_df = pd.merge(
 # Unique list of LA's to iterate through
 list_local_auth = uk_la_file[lad_col].unique()
 
+# selecting random LA for dev purposes
+# eventually will iterate through all LA's
+random_la=random.choice(list_local_auth)
 
-list_local_auth=["Kingston upon Hull, City of"]
+list_local_auth=[random_la]
 
 
 # define output dicts to capture dfs
