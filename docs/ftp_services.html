@@ -1,0 +1,281 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ftp_services module &mdash; SDG_11.2.1 V1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="geospatial_mods module" href="geospatial_mods.html" />
+    <link rel="prev" title="ftp_get_files_logic module" href="ftp_get_files_logic.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html">Methodology Write Up</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SDG_11.2.1</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_ingest.html">data_ingest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_output.html">data_output module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_transform.html">data_transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_mods.html">database_mods module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ftp_get_files_logic.html">ftp_get_files_logic module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">ftp_services module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geospatial_mods.html">geospatial_mods module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDG_11.2.1</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">SDG_11.2.1</a> &raquo;</li>
+        
+      <li>ftp_services module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/ftp_services.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-ftp_services">
+<span id="ftp-services-module"></span><h1>ftp_services module<a class="headerlink" href="#module-ftp_services" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="ftp_services.ftp_connect">
+<span class="sig-prename descclassname"><span class="pre">ftp_services.</span></span><span class="sig-name descname"><span class="pre">ftp_connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ftp_services.ftp_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that connects to the ftp server.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ftp_services.ftp_get_file">
+<span class="sig-prename descclassname"><span class="pre">ftp_services.</span></span><span class="sig-name descname"><span class="pre">ftp_get_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_to_get</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ftp_services.ftp_get_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function which downloads the file that is passed into it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_to_get</strong> – string containing the path and extension of the file</p></li>
+<li><p><strong>downloaded.</strong> (<em>that is to be</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ftp_services.get_missing_files">
+<span class="sig-prename descclassname"><span class="pre">ftp_services.</span></span><span class="sig-name descname"><span class="pre">get_missing_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">remote_data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ftp_services.get_missing_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains logic for downloading all of the files deemed to be missing from
+local directories.</p>
+<p>Takes the passed file list and remote data directory and downloads all files
+contained in the list to the relevant local directory. This maintains subdirectory
+structure on local drive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>remote_data_dir</strong> – string containing root remote data directory</p></li>
+<li><p><strong>file_list</strong> – list containing strings which detail the subdirectory, filename</p></li>
+<li><p><strong>downloaded.</strong> (<em>and extension of the missing file to be</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ftp_services.quit_ftp">
+<span class="sig-prename descclassname"><span class="pre">ftp_services.</span></span><span class="sig-name descname"><span class="pre">quit_ftp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ftp_services.quit_ftp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quits and closes ftp connection</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ftp_services.retrieve_pass">
+<span class="sig-prename descclassname"><span class="pre">ftp_services.</span></span><span class="sig-name descname"><span class="pre">retrieve_pass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pass_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ftp_services.retrieve_pass" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the text of passed path from the text file that contains it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pass_path</strong> – the full name of text file containing password.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>string containing the ftp login password.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pass_text</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="geospatial_mods.html" class="btn btn-neutral float-right" title="geospatial_mods module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ftp_get_files_logic.html" class="btn btn-neutral float-left" title="ftp_get_files_logic module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Paige Hunter, Antonio Felton, James Westwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
