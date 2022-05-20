@@ -11,6 +11,8 @@ Welcome to SDG_11.2.1's documentation!
    :caption: Contents:
    
    README.md
+   for_developers.md
+   write_up.md
    modules
 
 Indices and tables
