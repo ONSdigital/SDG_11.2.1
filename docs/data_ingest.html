@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data_ingest module &mdash; SDG_11.2.1 V1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="data_output module" href="data_output.html" />
+    <link rel="prev" title="SDG_11.2.1" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html">Methodology Write Up</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SDG_11.2.1</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">data_ingest module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_output.html">data_output module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_transform.html">data_transform module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_mods.html">database_mods module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ftp_get_files_logic.html">ftp_get_files_logic module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ftp_services.html">ftp_services module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geospatial_mods.html">geospatial_mods module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDG_11.2.1</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">SDG_11.2.1</a> &raquo;</li>
+        
+      <li>data_ingest module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/data_ingest.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-data_ingest">
+<span id="data-ingest-module"></span><h1>data_ingest module<a class="headerlink" href="#module-data_ingest" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.any_to_pd">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">any_to_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_nm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zip_link</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#data_ingest.any_to_pd" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>A function which ties together many other data ingest related functions to</dt><dd><p>to import data.</p>
+<p>Currently this function can handle the remote or local import of data
+from zip (containing csv files), and csv files.</p>
+<p>The main purpose is to check for locally stored persistent data
+files and get that data into a dataframe for further processing.</p>
+<p>Each time the function checks for download/extracted data so it
+doesn’t have to go through the process again.</p>
+<p>Firstly the function checks for a feather file and loads that if
+available.</p>
+<p>If the feather is not available the function checks for a csv file,
+then loads that if available.</p>
+<p>If no csv file is available it checks for a zip file, from which to
+extract the csv from.</p>
+<p>If a zip file is not available locally it falls back to downloading
+the zip file (which could contains other un-needed datasets)
+then extracts the specified/needed data set (csv) and deletes the
+now un-needed zip file.</p>
+<p>This function should be used in place of pd.read_csv for example.</p>
+</dd>
+</dl>
+<p>TODO: extend this function to handle API import of json data - may already be done in get_and_save_geo_dataset function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dataframe of the data that has been imported</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.capture_region">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">capture_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_nm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.capture_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts the region name from the ONS population estimate excel files.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.geo_df_from_geospatialfile">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">geo_df_from_geospatialfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'epsg:27700'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.geo_df_from_geospatialfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to create a Geo-dataframe from a geospatial
+(geojson, shp) file. The process goes via Pandas.s</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>path_to_file</strong> (<em>string</em>) – path to the geojson, shp and other
+geospatial data files</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Geopandas Dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.geo_df_from_pd_df">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">geo_df_from_pd_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pd_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geom_y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.geo_df_from_pd_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to create a Geo-dataframe from a Pandas DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pd_df</strong> (<em>pd.DataFrame</em>) – a pandas dataframe object to be converted</p></li>
+<li><p><strong>geom_x</strong> (<em>string</em>) – name of the column that contains the longitude data</p></li>
+<li><p><strong>geom_y</strong> (<em>string</em>) – name of the column that contains the latitude data</p></li>
+<li><p><strong>crs</strong> (<em>string</em>) – the coordinate reference system required</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Geopandas Dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.get_and_save_geo_dataset">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_and_save_geo_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">localpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_and_save_geo_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Fetches a geodataset in json format from a web resource and</dt><dd><p>saves it to the local data/ directory and returns the json
+as a dict into memory</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>string</em>) – the name of file as it should be saved locally</p></li>
+<li><p><strong>url</strong> (<em>string</em>) – URL of the web resource where json file is hosted</p></li>
+<li><p><strong>localpath</strong> (<em>string</em>) – path to folder where json is to be saved locally</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json data as dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.get_oa_la_file_name">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_oa_la_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_oa_la_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passed a directory into the function and returns the absolute path
+of where the shp file is within that directory</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.get_shp_file_name">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_shp_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_shp_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Passed a directory into the function and returns the absolute path
+of where the shp file is within that directory</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.get_stops_file">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_stops_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_stops_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the latest stop dataset
+if the latest stop df from the api is older then 28 days
+then function grabs a new version of file from API and
+saves this as a feather file</p>
+<p>If the latest stop df from the api is less then 28 days old
+then just grabs the feather file
+:returns: None - just saves into the data folder.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.get_whole_nation_pop_df">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_whole_nation_pop_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_whole_nation_pop_df" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the population data for all regions in the country and puts them into one dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dataframe of population data for all regions in the country</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="data_ingest.save_latest_stops_as_feather">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">save_latest_stops_as_feather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.save_latest_stops_as_feather" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Saves the latest stop file as a feather file into</dt><dd><p>the data folder</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None - just saves feather into the data folder.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data_output.html" class="btn btn-neutral float-right" title="data_output module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="modules.html" class="btn btn-neutral float-left" title="SDG_11.2.1" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Paige Hunter, Antonio Felton, James Westwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
