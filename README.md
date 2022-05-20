@@ -44,11 +44,13 @@ The aims are:
 
 - https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf
 
-# Running the script
+# For Developers
 
 ## Requirements: 
 
-A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
+A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages. 
+
+**Note for ONS staff:** It is unlikely that you will be able to install all the needed dependencies to run this script, therefore it is recommended that your devlopment work is carried out on an off-network computer.
 
 Before starting this process, please ensure that [Anaconda3](https://docs.anaconda.com/anaconda/install/index.html) and [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable [here](https://code.visualstudio.com/download).
 
