@@ -10,6 +10,7 @@ Welcome to SDG_11.2.1's documentation!
    :maxdepth: 2
    :caption: Contents:
    
+   README.md
    modules
 
 Indices and tables
