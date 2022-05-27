@@ -167,6 +167,19 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                zip_url=None,
                                *cols,
                                **dtypes) -> pd.DataFrame:
+    """Subfunc of any_to_pd. Downloads and opens zip file, extracts contents, deletes zip.
+
+    Args:
+        file_nm (str): The name of the target csv within the zip.
+        zip_path (PathLike): the path/to/zip_file on local machine
+        persistent_exists (bool, optional): Boolean supplied by the 
+            _persistent_exists function. Defaults to True.
+        zip_url (str, optional): URL for the zip resource if it is to be 
+            downloaded. Defaults to None.
+
+    Returns:
+        pd.DataFrame: dataframe of the of the data from the CSV
+    """    
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
         _grab_zip(file_nm, zip_url, zip_path)
