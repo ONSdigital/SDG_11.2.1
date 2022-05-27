@@ -76,6 +76,8 @@ Create an environment called "SDG_11.2.1" with the version of Python that this w
 
     conda create --name SDG_11.2.1 python=3.8
 
+**Troubleshooting:** When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following [these steps](https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686) should resolve the issue.
+
 ### Activate the environment
 
 First go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:
@@ -92,10 +94,11 @@ If you do not have the Conda path linked, you can use the following for Windows:
 
     $ activate SDG_11.2.1
 
-
 Then you should see the environment name in brackets before the prompt, similar to:
 
     (SDG_11.2.1) $
+
+**Troubleshooting:** Activating the environment in the Powershell terminal does not work for Windows. Set the default terminal to Command Prompt and activate from here.
 
 Make sure you are using the correct Python interpreter by checking your Python path:
 
