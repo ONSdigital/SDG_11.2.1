@@ -127,7 +127,21 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
 
 def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
+    """Sub func of both any_to_pd and _import_extract_delete_zip.
+        Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
 
+        Args:
+            file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv" 
+            csv_path (PathLike): The path/to/csv_file on local machine
+            dtypes (Optional[Dict]): Datatypes of columns in the csv. Helps optimise import.
+            persistent_exists (_type_, optional): Boolean supplied by the 
+                _persistent_exists function. Defaults to True.
+            zip_url (_type_, optional): URL for the zip resource if it is to be 
+                downloaded. Defaults to None.
+
+        Returns:
+            pd.DataFrame: _description_
+        """    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
