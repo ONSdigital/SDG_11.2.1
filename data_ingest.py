@@ -463,9 +463,13 @@ def get_oa_la_csv_abspath(dir):
 def _get_stops_from_api(url, file_name):
     """Gets stops data from the NaPTAN API
 
+    Args:
+        url (str): the URL of the API endpoint
+        file_name (str): _description_
+    
     Returns:
         None - just saves into the data/stops folder.
-    """
+    """    
     # requests page
     r = requests.get(url)
 
