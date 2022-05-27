@@ -145,7 +145,7 @@ whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Map OA codes to Local Authority Names
-oa_la_lookup_path = di.get_oa_la_file_name(os.path.join(os.getcwd(),
+oa_la_lookup_path = di.get_oa_la_csv_abspath( (os.getcwd(),
                                                         "data/oa_la_mapping",
                                                         pop_year))
 
