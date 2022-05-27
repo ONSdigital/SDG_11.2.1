@@ -127,8 +127,9 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
 
 def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
-    """Sub func of both any_to_pd and _import_extract_delete_zip.
-        Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
+    """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
+        
+        Sub func of both any_to_pd and _import_extract_delete_zip.
 
         Args:
             file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv" 
@@ -163,7 +164,9 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                zip_url=None,
                                *cols,
                                **dtypes) -> pd.DataFrame:
-    """Subfunc of any_to_pd. Downloads and opens zip file, extracts contents, deletes zip.
+    """Downloads and opens zip file, extracts contents, deletes zip.
+        
+        Subfunc of any_to_pd.
 
     Args:
         file_nm (str): The name of the target csv within the zip.
