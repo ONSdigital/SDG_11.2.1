@@ -135,3 +135,10 @@ If this does, write the following with the package names that the error has show
 
 The script should now be set up to use.
 
+### Setting Git configuration
+
+To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file
+
+    git config --global user.email "email"
+    
+    git config --global user.name "username"
