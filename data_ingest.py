@@ -451,7 +451,7 @@ def get_shp_abs_path(dir):
     return absolute_path
 
 
-def get_oa_la_file_name(dir):
+def get_oa_la_csv_abspath(dir):
     """Takes a directory as str and returns the absolute path of output area csv file.
 
     Args:
