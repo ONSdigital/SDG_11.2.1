@@ -423,11 +423,16 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     return whole_nation_pop_df
 
 
-def get_shp_file_name(dir):
-    """
-    Passed a directory into the function and returns the absolute path
+def get_shp_abs_path(dir):
+    """Passed a directory into the function and returns the absolute path
     of where the shp file is within that directory
-    """
+
+    Args:
+        dir (PathLike): /path/to/directory/of/shape_files
+
+    Returns:
+        str: the absolute path of the .shp file within a directory
+    """    
     files = os.listdir(dir)
     shp_files = [file for file in files if file.endswith(".shp")]
     shp_file = shp_files[0]
