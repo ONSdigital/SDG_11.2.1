@@ -66,7 +66,7 @@ stops_geo_df=dt.add_stop_capacity_type(stops_df=stops_geo_df)
 lad_col = f'LAD{pop_year[-2:]}NM'
 
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_file_name(dir=os.path.join(os.getcwd(),
+uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
                                                    "data",
                                                    "LA_shp",
                                                    pop_year))
