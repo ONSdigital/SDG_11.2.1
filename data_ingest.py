@@ -508,25 +508,24 @@ def get_stops_file(url, dir):
     Returns:
         None - just saves into the data folder.
     """
+    
     # gets todays date and latest date of stops df
     today = int(datetime.now().strftime('%Y%m%d'))
-    latest_date = _get_latest_stop_file_date(dir)
 
     # gets feather stop path
     feather_path = os.path.join(os.getcwd(),
                                 "data",
+                                "stops",
                                 "Stops.feather")
     # Check that the feather exists
     if not _persistent_exists(feather_path):
-        _get_stops_from_api(url, file_name)
-        save_latest_stops_as_feather(file_name)
-        stops_df = pd.read_feather(feather_path)
-        
-
-    if today-latest_date < 28:
-        stops_df = pd.read_feather(feather_path)
-    else:
-        stops_df = _dl_stops_make_df(today, url, feather_path)
+        stops_df = _dl_stops_make_df(today, url)
+    else: # does exist
+        latest_date = _get_latest_stop_file_date(dir) 
+        if today-latest_date < 28:
+            stops_df = pd.read_feather(feather_path)
+        else:
+            stops_df = _dl_stops_make_df(today, url)
 
     return stops_df
 
