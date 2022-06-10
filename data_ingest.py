@@ -360,7 +360,7 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
 
 
 def capture_region(file_nm: str):
-    """"Extracts the region name from the ONS population estimate excel files.
+    """Extracts the region name from the ONS population estimate excel files.
 
     Args:
         file_nm (str): Full name of the regional population Excel file.
