@@ -134,9 +134,9 @@ def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persist
         file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv".
         csv_path (PathLike): The path/to/csv_file on local machine.
         dtypes (Optional[Dict]): Datatypes of columns in the csv. Helps optimise import.
-        persistent_exists (_type_, optional): Boolean supplied by the 
+        persistent_exists (bool, optional): Boolean supplied by the 
             _persistent_exists function. Defaults to True.
-        zip_url (_type_, optional): URL for the zip resource if it is to be 
+        zip_url (str, optional): URL for the zip resource if it is to be 
             downloaded. Defaults to None.
 
     Returns:
@@ -170,9 +170,9 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
     Args:
         file_nm (str): The name of the target csv within the zip.
         zip_path (PathLike): the path/to/zip_file on local machine
-        persistent_exists (_type_, optional): Boolean supplied by the 
+        persistent_exists (bool, optional): Boolean supplied by the 
             _persistent_exists function. Defaults to True.
-        zip_url (_type_, optional): URL for the zip resource if it is to be 
+        zip_url (str, optional): URL for the zip resource if it is to be 
             downloaded. Defaults to None.
 
     Returns:
