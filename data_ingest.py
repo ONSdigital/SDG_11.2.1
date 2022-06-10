@@ -377,7 +377,11 @@ def capture_region(file_nm: str):
 
 
 def get_whole_nation_pop_df(pop_files, pop_year):
-    """Gets the population data for all regions in the country and puts them into one dataframe
+    """Gets the population data for all regions in the country and puts them into one dataframe.
+
+    Args:
+        pop_files (list): Population data to be unioned.
+        pop_year (string): The year of population estimation data to process.
 
     Returns:
         pd.DataFrame: Dataframe of population data for all regions in the country
