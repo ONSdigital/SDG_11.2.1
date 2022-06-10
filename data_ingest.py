@@ -140,7 +140,7 @@ def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persist
             downloaded. Defaults to None.
 
     Returns:
-        pd.DataFrame: _description_
+        pd.DataFrame
     """    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
