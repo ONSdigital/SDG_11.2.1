@@ -457,7 +457,7 @@ def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
             the data folder
     Returns:
-        None - just saves feather into the data folder.
+        str: the output of where the feather is written
     """
     # read in csv
     file = pd.read_csv(file_name,
