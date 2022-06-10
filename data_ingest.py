@@ -24,7 +24,8 @@ PathLike = Union[str, bytes, os.PathLike]
 CWD = os.getcwd()
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
-    print("Config loaded")
+    module = os.path.basename(__file__)
+    print(f"Config loaded in {module}")
 DATA_DIR = config["DATA_DIR"]
 
 
@@ -66,6 +67,8 @@ def any_to_pd(file_nm: str,
     Returns:
         pd.DataFrame: A dataframe of the data that has been imported
     """
+    # Change directory into project root
+    os.chdir(CWD)
 
     # Make the load order (lists are ordered) to prioritise
     load_order = [f"{file_nm}.{ext}" for ext in ext_order]
@@ -250,6 +253,10 @@ def _persistent_exists(persistent_file_path):
     """Checks if a persistent file already exists or not.
         Since persistent files will be Apache feather format
         currently the function just checks for those"""
+    
+    # Change directory into project root
+    os.chdir(CWD)
+
     if os.path.isfile(persistent_file_path):
         print(f"{persistent_file_path} already exists")
         return True
