@@ -468,17 +468,14 @@ def get_oa_la_csv_abspath(dir):
 
 
 def _get_stops_from_api(url, file_name):
-    """Gets stops data from the NaPTAN API
+    """Gets stops data from the NaPTAN API.
 
-    Sub function of `get_stops_file`
+    Sub function of `get_stops_file`.
     
     Args:
-        url (str): the URL of the API endpoint
+        url (str): the URL of the API endpoint.
         file_name (str): Name of the file, including extension
-            to be written out containing the stops data
-    
-    Returns:
-        None - just saves into the data/stops folder.
+            to be written out containing the stops data.
     """    
     # requests page
     r = requests.get(url)
@@ -495,7 +492,7 @@ def _get_latest_stop_file_date(dir):
 
     Args:
         dir (string): directory containing stop files.
-        
+
     Returns:
         string: the date (YYYYMMDD) of the latest stop dataset.
     """
