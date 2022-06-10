@@ -491,9 +491,13 @@ def _get_stops_from_api(url, file_name):
 
 
 def _get_latest_stop_file_date(dir):
-    """Gets the latest stop dataset 
+    """Gets the date of the latest stop dataset.
+
+    Args:
+        dir (string): directory containing stop files.
+        
     Returns:
-        None - just saves into the data folder.
+        string: the date (YYYYMMDD) of the latest stop dataset.
     """
     # get's a list of files from the directory
     file_list = os.listdir(dir)
@@ -514,9 +518,10 @@ def _get_latest_stop_file_date(dir):
 
 def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
-            the data folder
-    Returns:
-        None - just saves feather into the data folder.
+            the data folder.
+
+    Args:
+        file_name (string): file path for latest stop file.
     """
     # read in csv
     file = pd.read_csv(file_name,
