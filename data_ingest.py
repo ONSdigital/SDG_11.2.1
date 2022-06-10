@@ -532,15 +532,18 @@ def save_latest_stops_as_feather(file_name):
 
 
 def get_stops_file(url, dir):
-    """Gets the latest stop dataset 
-    if the latest stop df from the api is older then 28 days
+    """Gets the latest stop dataset.
+
+    If the latest stop df from the api is older then 28 days
     then function grabs a new version of file from API and 
-    saves this as a feather file
+    saves this as a feather file.
 
     If the latest stop df from the api is less then 28 days old
-    then just grabs the feather file
-    Returns:
-        None - just saves into the data folder.
+    then just grabs the feather file.
+
+    Args:
+        url (string): NAPTAN API url.
+        dir (string): directory where the stop data is stored.
     """
     # gets todays date and latest date of stops df
     today = int(datetime.now().strftime('%Y%m%d'))
