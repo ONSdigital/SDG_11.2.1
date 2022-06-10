@@ -292,6 +292,11 @@ def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
         to feather for quick reading and retrieval later.
 
         This function returns nothing because it simply writes to disk.
+
+        Args:
+            pd_df (pd.DataFrame): a pandas dataframe to be converted
+            current_file_path (PathLike): The path/to/current_file
+                on local machine.
     """
     feather_path = os.path.splitext(current_file_path)[0]+'.feather'
 
