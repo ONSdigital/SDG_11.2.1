@@ -205,8 +205,6 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         a zip file from the URI specified in the the zip_link 
         parameter.
 
-       This function does not return anything but 
-
     Args:
         file_nm (str): the name of the file without extension
         zip_link (str): URI to the zip to be downloaded
