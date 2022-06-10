@@ -125,7 +125,7 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
+def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=True, zip_url=None) -> pd.DataFrame:
     """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
         
     Sub func of both any_to_pd and _import_extract_delete_zip.
