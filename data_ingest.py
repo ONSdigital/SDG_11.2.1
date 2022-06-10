@@ -127,17 +127,9 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
 
 def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
-<<<<<<< HEAD
-<<<<<<< HEAD
-    
-=======
-    """Sub func of both any_to_pd and _import_extract_delete_zip.
-        Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
-=======
     """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
         
         Sub func of both any_to_pd and _import_extract_delete_zip.
->>>>>>> 89742cc (Putting summary line at top)
 
         Args:
             file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv" 
@@ -150,8 +142,7 @@ def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persist
 
         Returns:
             pd.DataFrame: _description_
-        """    
->>>>>>> 3032b79 (Create _csv_to_df docstring)
+        """
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
@@ -500,9 +491,13 @@ def _get_stops_from_api(url, file_name):
 
 
 def _get_latest_stop_file_date(dir):
-    """Gets the latest stop dataset 
+    """Gets the date of the latest stop dataset.
+
+    Args:
+        dir (string): directory containing stop files.
+        
     Returns:
-        None - just saves into the data folder.
+        string: the date (YYYYMMDD) of the latest stop dataset.
     """
     # get's a list of files from the directory
     file_list = os.listdir(dir)
@@ -523,9 +518,10 @@ def _get_latest_stop_file_date(dir):
 
 def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
-            the data folder
-    Returns:
-        str: the output of where the feather is written
+            the data folder.
+
+    Args:
+        file_name (string): file path for latest stop file.
     """
     # read in csv
     file = pd.read_csv(file_name,
