@@ -467,6 +467,7 @@ def save_latest_stops_as_feather(file_name):
     # get output path
     output_path = os.path.join(os.getcwd(),
                                "data",
+                               "stops",
                                "Stops.feather")
     # output to feather
     file.to_feather(output_path)
