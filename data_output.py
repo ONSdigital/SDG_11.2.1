@@ -17,13 +17,13 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     9) re-order columns to match required output
 
     Args:
-        df (_type_): _description_
-        id_col (_type_): _description_
-        local_auth (_type_): _description_
-        id_rename (_type_, optional): _description_. Defaults to None.
+        df (pd.DataFrame): Dataframe to reshape.
+        id_col (str): Name of the column that index will get renamed to.
+        local_auth (str): The local authority of interest.
+        id_rename (str, optional): Name if renaming ID column. Defaults to None.
 
     Returns:
-        _type_: _description_
+        pd.DataFrame: Reshaped dataframe.
     """
     # Transpose the df
     df = df.T
@@ -56,5 +56,13 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     return df
 
 def reorder_final_df(df):
+    """Reorders the processed dataframe before writing to csv.
+
+    Args:
+        df (pd.DataFrame): Dataframe to reorder.
+    
+    Returns:
+        pd.DataFrame: Reordered dataframe.
+    """
     df = df[["Year","Sex", "Age", "Disability Status", "Local Authority", "Urban/Rural", "Series", "Observation Status", "Unit Multiplier", "Unit Measure", "Value"]]
     return df

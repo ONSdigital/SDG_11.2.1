@@ -61,7 +61,7 @@ stops_geo_df=dt.add_stop_capacity_type(stops_df=stops_geo_df)
 lad_col = f'LAD{pop_year[-2:]}NM'
 
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_file_name(dir=os.path.join(os.getcwd(),
+uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
                                                    "data",
                                                    "LA_shp",
                                                    pop_year))
@@ -140,7 +140,7 @@ whole_nation_pop_df = whole_nation_pop_df.join(
     other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # Map OA codes to Local Authority Names
-oa_la_lookup_path = di.get_oa_la_file_name(os.path.join(os.getcwd(),
+oa_la_lookup_path = di.get_oa_la_csv_abspath( (os.getcwd(),
                                                         "data/oa_la_mapping",
                                                         pop_year))
 

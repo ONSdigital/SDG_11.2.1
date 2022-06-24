@@ -68,7 +68,7 @@ C:\Python36\envs\SDG_11.2.1\python.exe
 Showing your are using the Python from the virtual environment, not the base installation of Python.
 
 ### Installing dependencies
-First, ensure you are in the project directory
+First, ensure you are in the project directory.
 
     $ cd C:\Users\name\project-directory
 

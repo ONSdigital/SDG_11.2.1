@@ -22,16 +22,17 @@ UPPERBUFFER = config["high_cap_buffer"]
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
                             dissolveby='OA11CD',
                             search=None) -> gpd.GeoDataFrame:
-    """
-    Gets the polygon for a place based on it name, LSOA code or OA code
+    """Gets the polygon for a place based on it name, LSOA code or OA code.
 
-    Parameters:
-    geo_df: (gpd.Datafame):
-    loc_code = LSOA11CD, OA11CD or LSOA11NM
-    search = search terms to find in the LSOA11NM column. Only needed if
-        intending to dissolve on a name in the LSOA11NM column
-    Returns: (gpd.DataFrame) agregated multipolygons, agregated on LSOA,
-        OA code, or a search in the LSOA11NM column
+    Args:
+        geo_df (gpd.GeoDataFrame): Lookup geospatial data frame.
+        loc_code (str): Can be one of LSOA11CD, OA11CD or LSOA11NM. OA11CD by default.
+        search (str): Search terms to find in the LSOA11NM column. Only needed if
+            intending to dissolve on a name in the LSOA11NM column. Defualt is None.
+
+    Returns: 
+        gpd.DataFrame: GeoDataFrame with multipolygons agregated on LSOA,
+            OA code, or a search in the LSOA11NM column.
     """
     if dissolveby in ['LSOA11CD', 'OA11CD']:
         polygon_df = geo_df.dissolve(by=dissolveby)
@@ -44,13 +45,19 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
 
 
 def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-    """
-    Provide a Geo Dataframe with points you want buffering.
-    Draws a 500/1000m (radius) buffer around the points.
+    """Creates a 500m or 1000m buffer around points.
+
     Draws 500m if the capacity_type is low
     Draws 1000m if the capacity_type is high 
     Puts the results into a new column called "geometry"
     As 'epsg:27700' projections units of km, 500m is 0.5km.
+
+    Args:
+        geo_df (gpd.DataFrame): Data frame of points to be buffered
+            including a column with the capacity_type for each point.
+
+    Returns:
+        gpd.DataFrame: A dataframe of polygons create from the buffer.
     """
     geo_df['geometry']=np.where(geo_df['capacity_type']=="low",
                                 geo_df.geometry.buffer(LOWERBUFFER),
@@ -60,20 +67,21 @@ def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
 
 def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
     """Find points in polygon using geopandas' spatial join
-        which joins the supplied geo_df (as left_df) and the
-        polygon (as right_df).
+    which joins the supplied geo_df (as left_df) and the
+    polygon (as right_df).
 
-        Then drops all rows where the point is not in the polygon
-        (based on column index_right not being NaN). Finally it
-        drop all column names from that were created in the join,
-        leaving only the columns of the original geo_df
+    Then drops all rows where the point is not in the polygon
+    (based on column index_right not being NaN). Finally it
+    drop all column names from that were created in the join,
+    leaving only the columns of the original geo_df.
 
-        Arguments:
-            geo_df (gpg.DatFrame): a geo pandas dataframe
-            polygon_obj (string): a geopandas dataframe with a polygon column
+    Args:
+        geo_df (gpg.DatFrame): a geo pandas dataframe.
+        polygon_obj (str): a geopandas dataframe with a polygon column.
 
-        Returns:
-            A geodata frame with the points inside the supplied polygon"""
+    Returns:
+        gpd.GeoDataFrame: A geodata frame with the points inside the supplied polygon.
+    """
     wanted_cols = geo_df.columns.to_list()
     joined_df = (gpd.sjoin
                  (geo_df,
@@ -108,11 +116,11 @@ def ward_nrthng_eastng(district: str, ward: str):
     
     THIS WILL GET DELETED FOR VERSION 1.0
     Args:
-        district (str): The district geo code
-        ward (str): The ward geo code
+        district (str): The district geo code.
+        ward (str): The ward geo code.
 
     Returns:
-        [type]: [description]
+        dict: returns the easting and northings of the ward bounding box.
     """
     csvurl = f"https://www.doogal.co.uk/AdministrativeAreasCSV.ashx?district={district}&ward={ward}"
     df = pd.read_csv(csvurl, usecols=['Easting', 'Northing'])

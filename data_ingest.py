@@ -33,39 +33,39 @@ def any_to_pd(file_nm: str,
               zip_link: str,
               ext_order: List,
               dtypes: Optional[Dict]) -> pd.DataFrame:
-    """
-    A function which ties together many other data ingest related functions to 
-        to import data. 
+    """A function which ties together many other data ingest related functions to 
+    to import data. 
 
-        Currently this function can handle the remote or local import of data 
-        from zip (containing csv files), and csv files.
+    Currently this function can handle the remote or local import of data 
+    from zip (containing csv files), and csv files.
 
-        The main purpose is to check for locally stored persistent data
-        files and get that data into a dataframe for further processing.
+    The main purpose is to check for locally stored persistent data
+    files and get that data into a dataframe for further processing.
 
-        Each time the function checks for download/extracted data so it 
-        doesn't have to go through the process again.
+    Each time the function checks for download/extracted data so it 
+    doesn't have to go through the process again.
 
-        Firstly the function checks for a feather file and loads that if 
-        available.
+    Firstly the function checks for a feather file and loads that if 
+    available.
 
-        If the feather is not available the function checks for a csv file,
-        then loads that if available.
+    If the feather is not available the function checks for a csv file,
+    then loads that if available.
 
-        If no csv file is available it checks for a zip file, from which to
-        extract the csv from.
+    If no csv file is available it checks for a zip file, from which to
+    extract the csv from.
 
-        If a zip file is not available locally it falls back to downloading
-        the zip file (which could contains other un-needed datasets)
-        then extracts the specified/needed data set (csv) and deletes the
-        now un-needed zip file.
+    If a zip file is not available locally it falls back to downloading
+    the zip file (which could contains other un-needed datasets)
+    then extracts the specified/needed data set (csv) and deletes the
+    now un-needed zip file.
 
-        This function should be used in place of pd.read_csv for example.
+    This function should be used in place of pd.read_csv for example.
 
-    TODO: extend this function to handle API import of json data - may already be done in get_and_save_geo_dataset function
+    TODO: extend this function to handle API import of json data - may
+    already be done in get_and_save_geo_dataset function.
 
     Returns:
-        pd.DataFrame: A dataframe of the data that has been imported
+        pd.DataFrame: A dataframe of the data that has been imported.
     """
     # Change directory into project root
     os.chdir(CWD)
@@ -107,15 +107,14 @@ def any_to_pd(file_nm: str,
 
 
 def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
-    """Feather reading function used by the any_to_pd
-        fucntion.
+    """Feather reading function used by the any_to_pd function.
 
     Args:
-        file_nm (str): the name of the file without extension
-        feather_path (PathLike): the path/to/the/featherfile
+        file_nm (str): the name of the file without extension.
+        feather_path (PathLike): the path/to/the/featherfile.
 
     Returns:
-        pd.DataFrame: Pandas dataframe read from the persistent feather file
+        pd.DataFrame: Pandas dataframe read from the persistent feather file.
     """
     print(f"Reading {file_nm}.feather from {feather_path}.")
     tic = perf_counter()
@@ -126,8 +125,23 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
+def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=True, zip_url=None) -> pd.DataFrame:
+    """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
+        
+    Sub func of both any_to_pd and _import_extract_delete_zip.
 
+    Args:
+        file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv".
+        csv_path (PathLike): The path/to/csv_file on local machine.
+        dtypes (Optional[Dict]): Datatypes of columns in the csv. Helps optimise import.
+        persistent_exists (bool, optional): Boolean supplied by the 
+            _persistent_exists function. Defaults to True.
+        zip_url (str, optional): URL for the zip resource if it is to be 
+            downloaded. Defaults to None.
+
+    Returns:
+        pd.DataFrame
+    """    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
@@ -149,6 +163,21 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                zip_url=None,
                                *cols,
                                **dtypes) -> pd.DataFrame:
+    """Downloads and opens zip file, extracts contents, deletes zip.
+        
+    Subfunc of any_to_pd.
+
+    Args:
+        file_nm (str): The name of the target csv within the zip.
+        zip_path (PathLike): the path/to/zip_file on local machine
+        persistent_exists (bool, optional): Boolean supplied by the 
+            _persistent_exists function. Defaults to True.
+        zip_url (str, optional): URL for the zip resource if it is to be 
+            downloaded. Defaults to None.
+
+    Returns:
+        pd.DataFrame: dataframe of the data from the CSV
+    """    
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
         _grab_zip(file_nm, zip_url, zip_path)
@@ -163,15 +192,13 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
 
 def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
-        a zip file from the URI specified in the the zip_link 
-        parameter.
-
-       This function does not return anything but 
+    a zip file from the URI specified in the the zip_link 
+    parameter.
 
     Args:
-        file_nm (str): the name of the file without extension
-        zip_link (str): URI to the zip to be downloaded
-        zip_path (PathLike): path/to/the/write/directory, e.g. '/data/'
+        file_nm (str): the name of the file without extension.
+        zip_link (str): URI to the zip to be downloaded.
+        zip_path (PathLike): path/to/the/write/directory, e.g. '/data/'.
     """
     # Grab the zipfile from URI
     print(f"Dowloading {file_nm} from {zip_link}")
@@ -183,14 +210,14 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
 
 def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLike):
     """Used by _import_extract_delete_zip function to extract
-        the needed csv dataset from the locally stored zip file.
+    the needed csv dataset from the locally stored zip file.
 
     Args:
-        file_nm (str): the name of the file without extension
+        file_nm (str): the name of the file without extension.
         csv_nm (str): the name of the csv file that is 
-                      expected inside the zip file
-        zip_path (PathLike): path/to/local/zip/file.zip
-        csv_path (PathLike): The path where the csv should be written to, e.g. /data/
+            expected inside the zip file.
+        zip_path (PathLike): path/to/local/zip/file.zip.
+        csv_path (PathLike): The path where the csv should be written to, e.g. /data/.
     """
     # Open the zip file and extract
     # TODO: Correction: zip.extract should be writing to the csv_path, not to "data".
@@ -201,12 +228,12 @@ def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLi
 
 def _delete_junk(file_nm: str, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to delete the
-        zip file after it was downloaded and the needed data extracted
-        it.
+    zip file after it was downloaded and the needed data extracted
+    it.
 
     Args:
-        file_nm (str): the name of the file without extension
-        zip_path (PathLike): path/to/local/zip/file.zip that is to deleted
+        file_nm (str): the name of the file without extension.
+        zip_path (PathLike): path/to/local/zip/file.zip that is to deleted.
     """
     # Delete the zipfile as it's uneeded now
     print(f"Deleting {file_nm} from {zip_path}")
@@ -218,7 +245,7 @@ def _make_data_path(*data_dir_files: str) -> PathLike:
     """Makes a relative path pointing to the data directory.
 
     This was created to avoid repeated using
-        os.path.join(somepath, somefile) all over the script.
+    os.path.join(somepath, somefile) all over the script.
 
     Args:
         data_dir_files (str): folder name(s) (e.g. name(s) of the
@@ -236,9 +263,15 @@ def _make_data_path(*data_dir_files: str) -> PathLike:
 @lru_cache
 def _persistent_exists(persistent_file_path):
     """Checks if a persistent file already exists or not.
-        Since persistent files will be Apache feather format
-        currently the function just checks for those"""
-    
+    Since persistent files will be Apache feather format
+    currently the function just checks for those
+
+    Args:
+        persistent_file_path (PathLike): path for file to check.
+
+    Returns:
+        bool: True if a persistent file already exists.
+    """
     # Change directory into project root
     os.chdir(CWD)
 
@@ -252,9 +285,14 @@ def _persistent_exists(persistent_file_path):
 
 def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
     """Used by the any_to_pd function to writes a Pandas dataframe
-        to feather for quick reading and retrieval later.
+    to feather for quick reading and retrieval later.
 
-        This function returns nothing because it simply writes to disk.
+    This function returns nothing because it simply writes to disk.
+
+    Args:
+        pd_df (pd.DataFrame): a pandas dataframe to be converted
+        current_file_path (PathLike): The path/to/current_file
+            on local machine.
     """
     feather_path = os.path.splitext(current_file_path)[0]+'.feather'
 
@@ -268,15 +306,15 @@ def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
 def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
     """Function to create a Geo-dataframe from a Pandas DataFrame.
 
-        Arguments:
-            pd_df (pd.DataFrame): a pandas dataframe object to be converted
-            geom_x (string):name of the column that contains the longitude data
-            geom_y (string):name of the column that contains the latitude data
-            crs (string): the coordinate reference system required
-        Returns:
-            Geopandas Dataframe
-            """
+    Arguments:
+        pd_df (pd.DataFrame): a pandas dataframe object to be converted.
+        geom_x (str):name of the column that contains the longitude data.
+        geom_y (str):name of the column that contains the latitude data.
+        crs (str): the coordinate reference system required.
 
+    Returns:
+        Geopandas Dataframe
+    """
     geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
     geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
     geo_df.crs = crs
@@ -286,15 +324,17 @@ def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
 
 def get_and_save_geo_dataset(url, localpath, filename):
     """Fetches a geodataset in json format from a web resource and
-        saves it to the local data/ directory and returns the json
-        as a dict into memory
+    saves it to the local data/ directory and returns the json
+    as a dict into memory.
 
     Args:
-        filename (string): the name of file as it should be saved locally
-        url (string): URL of the web resource where json file is hosted
-        localpath (string): path to folder where json is to be saved locally
+        filename (str): the name of file as it should be saved locally.
+        url (str): URL of the web resource where json file is hosted.
+        localpath (str): path to folder where json is to be saved locally.
+
     Returns:
-        json data as dict"""
+        dict
+    """
     file = requests.get(url).json()
     full_path = os.path.join(localpath, filename)
     with open(full_path, 'w') as dset:
@@ -304,15 +344,15 @@ def get_and_save_geo_dataset(url, localpath, filename):
 
 def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
     """Function to create a Geo-dataframe from a geospatial
-        (geojson, shp) file. The process goes via Pandas.s
+    (geojson, shp) file. The process goes via Pandas.s
 
-        Arguments:
-            path_to_file (string): path to the geojson, shp and other
-                geospatial data files
+    Args:
+        path_to_file (str): path to the geojson, shp and other
+            geospatial data files.
 
-        Returns:
-            Geopandas Dataframe
-            """
+    Returns:
+        Geopandas Dataframe
+    """
     geo_df = gpd.read_file(path_to_file)
     if geo_df.crs != crs:
         geo_df = geo_df.to_crs('epsg:27700')
@@ -320,7 +360,14 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
 
 
 def capture_region(file_nm: str):
-    "Extracts the region name from the ONS population estimate excel files."
+    """Extracts the region name from the ONS population estimate excel files.
+
+    Args:
+        file_nm (str): Full name of the regional population Excel file.
+
+    Returns:
+        str: The name of the region that the file covers
+    """    
     patt = re.compile("^(.*estimates[-]?)(?P<region>.*)(\.xls)")
     region = re.search(patt, file_nm).group("region")
     region = region.replace("-", " ").capitalize()
@@ -328,7 +375,11 @@ def capture_region(file_nm: str):
 
 
 def get_whole_nation_pop_df(pop_files, pop_year):
-    """Gets the population data for all regions in the country and puts them into one dataframe
+    """Gets the population data for all regions in the country and puts them into one dataframe.
+
+    Args:
+        pop_files (list): Population data to be unioned.
+        pop_year (str): The year of population estimation data to process.
 
     Returns:
         pd.DataFrame: Dataframe of population data for all regions in the country
@@ -386,11 +437,16 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     return whole_nation_pop_df
 
 
-def get_shp_file_name(dir):
-    """
-    Passed a directory into the function and returns the absolute path
-    of where the shp file is within that directory
-    """
+def get_shp_abs_path(dir):
+    """Passed a directory into the function and returns the absolute path
+    of where the shp file is within that directory.
+
+    Args:
+        dir (PathLike): /path/to/directory/of/shape_files.
+
+    Returns:
+        str: the absolute path of the .shp file within a directory.
+    """    
     files = os.listdir(dir)
     shp_files = [file for file in files if file.endswith(".shp")]
     shp_file = shp_files[0]
@@ -400,12 +456,15 @@ def get_shp_file_name(dir):
     return absolute_path
 
 
-def get_oa_la_file_name(dir):
-    """
-    Passed a directory into the function and returns the absolute path
-    of where the shp file is within that directory
+def get_oa_la_csv_abspath(dir):
+    """Takes a directory as str and returns the absolute path of output area csv file.
 
-    """
+    Args:
+        dir (str): Path created with os.path.join.
+
+    Returns:
+        str: Absolute path of the csv file of the Output area.
+    """    
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(".csv")]
     csv_file = csv_files[0]
@@ -416,11 +475,15 @@ def get_oa_la_file_name(dir):
 
 
 def _get_stops_from_api(url, file_name):
-    """Gets stops data from the NaPTAN API
+    """Gets stops data from the NaPTAN API.
 
-    Returns:
-        None - just saves into the data/stops folder.
-    """
+    Sub function of `get_stops_file`.
+    
+    Args:
+        url (str): the URL of the API endpoint.
+        file_name (str): Name of the file, including extension
+            to be written out containing the stops data.
+    """    
     # requests page
     r = requests.get(url)
 
@@ -432,9 +495,13 @@ def _get_stops_from_api(url, file_name):
 
 
 def _get_latest_stop_file_date(dir):
-    """Gets the latest stop dataset 
+    """Gets the date of the latest stop dataset.
+
+    Args:
+        dir (str): directory containing stop files.
+
     Returns:
-        None - just saves into the data folder.
+        str: the date (YYYYMMDD) of the latest stop dataset.
     """
     # get's a list of files from the directory
     file_list = os.listdir(dir)
@@ -455,9 +522,10 @@ def _get_latest_stop_file_date(dir):
 
 def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
-            the data folder
-    Returns:
-        None - just saves feather into the data folder.
+    the data folder.
+
+    Args:
+        file_name (str): file path for latest stop file.
     """
     # read in csv
     file = pd.read_csv(file_name,
@@ -473,15 +541,21 @@ def save_latest_stops_as_feather(file_name):
 
 
 def get_stops_file(url, dir):
-    """Gets the latest stop dataset 
-    if the latest stop df from the api is older then 28 days
+    """Gets the latest stop dataset.
+
+    If the latest stop df from the api is older then 28 days
     then function grabs a new version of file from API and 
-    saves this as a feather file
+    saves this as a feather file.
 
     If the latest stop df from the api is less then 28 days old
-    then just grabs the feather file
+    then just grabs the feather file.
+
+    Args:
+        url (str): NAPTAN API url.
+        dir (str): directory where the stop data is stored.
+    
     Returns:
-        None - just saves into the data folder.
+        pd.DataFrame
     """
     # gets todays date and latest date of stops df
     today = int(datetime.now().strftime('%Y%m%d'))
