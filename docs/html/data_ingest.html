@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="data_output module" href="data_output.html" />
-    <link rel="prev" title="SDG_11.2.1" href="modules.html" /> 
+    <link rel="prev" title="Technical Documentation" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="write_up.html">Methodology Write Up</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SDG_11.2.1</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Technical Documentation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">data_ingest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_output.html">data_output module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_transform.html">data_transform module</a></li>
@@ -65,7 +65,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">SDG_11.2.1</a> &raquo;</li>
+          <li><a href="modules.html">Technical Documentation</a> &raquo;</li>
       <li>data_ingest module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/data_ingest.rst.txt" rel="nofollow"> View page source</a>
@@ -81,8 +81,8 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="data_ingest.any_to_pd">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">any_to_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_nm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zip_link</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtypes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#data_ingest.any_to_pd" title="Permalink to this definition"></a></dt>
-<dd><dl>
-<dt>A function which ties together many other data ingest related functions to</dt><dd><p>to import data.</p>
+<dd><p>A function which ties together many other data ingest related functions to
+to import data.</p>
 <p>Currently this function can handle the remote or local import of data
 from zip (containing csv files), and csv files.</p>
 <p>The main purpose is to check for locally stored persistent data
@@ -100,12 +100,11 @@ the zip file (which could contains other un-needed datasets)
 then extracts the specified/needed data set (csv) and deletes the
 now un-needed zip file.</p>
 <p>This function should be used in place of pd.read_csv for example.</p>
-</dd>
-</dl>
-<p>TODO: extend this function to handle API import of json data - may already be done in get_and_save_geo_dataset function</p>
+<p>TODO: extend this function to handle API import of json data - may
+already be done in get_and_save_geo_dataset function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A dataframe of the data that has been imported</p>
+<dd class="field-odd"><p>A dataframe of the data that has been imported.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>pd.DataFrame</p>
@@ -117,6 +116,17 @@ now un-needed zip file.</p>
 <dt class="sig sig-object py" id="data_ingest.capture_region">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">capture_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_nm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.capture_region" title="Permalink to this definition"></a></dt>
 <dd><p>Extracts the region name from the ONS population estimate excel files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_nm</strong> (<em>str</em>) – Full name of the regional population Excel file.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The name of the region that the file covers</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -126,8 +136,8 @@ now un-needed zip file.</p>
 (geojson, shp) file. The process goes via Pandas.s</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path_to_file</strong> (<em>string</em>) – path to the geojson, shp and other
-geospatial data files</p>
+<dd class="field-odd"><p><strong>path_to_file</strong> (<em>str</em>) – path to the geojson, shp and other
+geospatial data files.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Geopandas Dataframe</p>
@@ -142,10 +152,10 @@ geospatial data files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pd_df</strong> (<em>pd.DataFrame</em>) – a pandas dataframe object to be converted</p></li>
-<li><p><strong>geom_x</strong> (<em>string</em>) – name of the column that contains the longitude data</p></li>
-<li><p><strong>geom_y</strong> (<em>string</em>) – name of the column that contains the latitude data</p></li>
-<li><p><strong>crs</strong> (<em>string</em>) – the coordinate reference system required</p></li>
+<li><p><strong>pd_df</strong> (<em>pd.DataFrame</em>) – a pandas dataframe object to be converted.</p></li>
+<li><p><strong>geom_x</strong> (<em>str</em>) – name of the column that contains the longitude data.</p></li>
+<li><p><strong>geom_y</strong> (<em>str</em>) – name of the column that contains the latitude data.</p></li>
+<li><p><strong>crs</strong> (<em>str</em>) – the coordinate reference system required.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -157,61 +167,96 @@ geospatial data files</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="data_ingest.get_and_save_geo_dataset">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_and_save_geo_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">localpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_and_save_geo_dataset" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Fetches a geodataset in json format from a web resource and</dt><dd><p>saves it to the local data/ directory and returns the json
-as a dict into memory</p>
-</dd>
-</dl>
+<dd><p>Fetches a geodataset in json format from a web resource and
+saves it to the local data/ directory and returns the json
+as a dict into memory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<em>string</em>) – the name of file as it should be saved locally</p></li>
-<li><p><strong>url</strong> (<em>string</em>) – URL of the web resource where json file is hosted</p></li>
-<li><p><strong>localpath</strong> (<em>string</em>) – path to folder where json is to be saved locally</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – the name of file as it should be saved locally.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – URL of the web resource where json file is hosted.</p></li>
+<li><p><strong>localpath</strong> (<em>str</em>) – path to folder where json is to be saved locally.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>json data as dict</p>
+<dd class="field-even"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="data_ingest.get_oa_la_file_name">
-<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_oa_la_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_oa_la_file_name" title="Permalink to this definition"></a></dt>
-<dd><p>Passed a directory into the function and returns the absolute path
-of where the shp file is within that directory</p>
+<dt class="sig sig-object py" id="data_ingest.get_oa_la_csv_abspath">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_oa_la_csv_abspath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_oa_la_csv_abspath" title="Permalink to this definition"></a></dt>
+<dd><p>Takes a directory as str and returns the absolute path of output area csv file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dir</strong> (<em>str</em>) – Path created with os.path.join.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Absolute path of the csv file of the Output area.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="data_ingest.get_shp_file_name">
-<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_shp_file_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_shp_file_name" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="data_ingest.get_shp_abs_path">
+<span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_shp_abs_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_shp_abs_path" title="Permalink to this definition"></a></dt>
 <dd><p>Passed a directory into the function and returns the absolute path
-of where the shp file is within that directory</p>
+of where the shp file is within that directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dir</strong> (<em>PathLike</em>) – /path/to/directory/of/shape_files.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the absolute path of the .shp file within a directory.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_ingest.get_stops_file">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_stops_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_stops_file" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the latest stop dataset
-if the latest stop df from the api is older then 28 days
+<dd><p>Gets the latest stop dataset.</p>
+<p>If the latest stop df from the api is older then 28 days
 then function grabs a new version of file from API and
-saves this as a feather file</p>
+saves this as a feather file.</p>
 <p>If the latest stop df from the api is less then 28 days old
-then just grabs the feather file
-:returns: None - just saves into the data folder.</p>
+then just grabs the feather file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – NAPTAN API url.</p></li>
+<li><p><strong>dir</strong> (<em>str</em>) – directory where the stop data is stored.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_ingest.get_whole_nation_pop_df">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">get_whole_nation_pop_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_year</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.get_whole_nation_pop_df" title="Permalink to this definition"></a></dt>
-<dd><p>Gets the population data for all regions in the country and puts them into one dataframe</p>
+<dd><p>Gets the population data for all regions in the country and puts them into one dataframe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Dataframe of population data for all regions in the country</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pop_files</strong> (<em>list</em>) – Population data to be unioned.</p></li>
+<li><p><strong>pop_year</strong> (<em>str</em>) – The year of population estimation data to process.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dataframe of population data for all regions in the country</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -219,13 +264,11 @@ then just grabs the feather file
 <dl class="py function">
 <dt class="sig sig-object py" id="data_ingest.save_latest_stops_as_feather">
 <span class="sig-prename descclassname"><span class="pre">data_ingest.</span></span><span class="sig-name descname"><span class="pre">save_latest_stops_as_feather</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_ingest.save_latest_stops_as_feather" title="Permalink to this definition"></a></dt>
-<dd><dl class="simple">
-<dt>Saves the latest stop file as a feather file into</dt><dd><p>the data folder</p>
-</dd>
-</dl>
+<dd><p>Saves the latest stop file as a feather file into
+the data folder.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None - just saves feather into the data folder.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>file_name</strong> (<em>str</em>) – file path for latest stop file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -236,7 +279,7 @@ then just grabs the feather file
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="SDG_11.2.1" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Technical Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="data_output.html" class="btn btn-neutral float-right" title="data_output module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
