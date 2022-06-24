@@ -61,8 +61,11 @@ def any_to_pd(file_nm: str,
 
     This function should be used in place of pd.read_csv for example.
 
-    TODO: extend this function to handle API import of json data - may
-    already be done in get_and_save_geo_dataset function.
+    Parameters:
+        file_nm (str): The name of the file without extension.
+        zip_link (str): URL containing zipped data.
+        ext_order (list): The order in which to try extraction methods.
+        dtypes (Optional[Dict]): Datatypes of columns in the csv. 
 
     Returns:
         pd.DataFrame: A dataframe of the data that has been imported.

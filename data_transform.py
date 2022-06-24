@@ -169,9 +169,8 @@ def highly_serv_stops(region):
 def filter_stops(stops_df):
     """Filters the stops dataframe based on two things:
     
-    1) Status column - We want to keep stops which are 
-    active, pending or new.
-    2) StopType want only to include bus and rail stops.
+    | 1) Status column - We want to keep stops which are active, pending or new.
+    | 2) StopType want only to include bus and rail stops.
 
     Args:
         stops_df (pd.DataFrame): the dataframe to filter.

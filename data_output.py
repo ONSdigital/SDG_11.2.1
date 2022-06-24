@@ -5,16 +5,17 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     """ Reshapes the output of served_proportions_disagg to data team requirements.
     
     The steps the function goes through are as follows.
-    1) Transpose the df
-    2) Reset the index 
-    3) Rename column from index to Age or other id column
-    4) melt df with Age as ID vars, all the rest value vars
-    5) Replace word "Total" with blanks, "variable" with "Series"
-    6) Create "Unit Multiplier" map across from variable (percent or individual)
-    7) Create "Unit Measure" and "Observation Status" columns
-    7) Create the local auth col with this iteration's LA
-    8) Rename column header of ID var
-    9) re-order columns to match required output
+
+    | 1) Transpose the df
+    | 2) Reset the index 
+    | 3) Rename column from index to Age or other id column
+    | 4) melt df with Age as ID vars, all the rest value vars
+    | 5) Replace word "Total" with blanks, "variable" with "Series"
+    | 6) Create "Unit Multiplier" map across from variable (percent or individual)
+    | 7) Create "Unit Measure" and "Observation Status" columns
+    | 7) Create the local auth col with this iteration's LA
+    | 8) Rename column header of ID var
+    | 9) re-order columns to match required output
 
     Args:
         df (pd.DataFrame): Dataframe to reshape.

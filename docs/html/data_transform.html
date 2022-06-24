@@ -42,7 +42,7 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="write_up.html">Methodology Write Up</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SDG_11.2.1</a><ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Technical Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="data_ingest.html">data_ingest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_output.html">data_output module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">data_transform module</a></li>
@@ -65,7 +65,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">SDG_11.2.1</a> &raquo;</li>
+          <li><a href="modules.html">Technical Documentation</a> &raquo;</li>
       <li>data_transform module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/data_transform.rst.txt" rel="nofollow"> View page source</a>
@@ -121,9 +121,10 @@ containing only the age columns.</p>
 <dt class="sig sig-object py" id="data_transform.filter_stops">
 <span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">filter_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.filter_stops" title="Permalink to this definition"></a></dt>
 <dd><p>Filters the stops dataframe based on two things:</p>
-<p>1) Status column - We want to keep stops which are
-active, pending or new.
-2) StopType want only to include bus and rail stops.</p>
+<div class="line-block">
+<div class="line">1) Status column - We want to keep stops which are active, pending or new.</div>
+<div class="line">2) StopType want only to include bus and rail stops.</div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>stops_df</strong> (<em>pd.DataFrame</em>) – the dataframe to filter.</p>
