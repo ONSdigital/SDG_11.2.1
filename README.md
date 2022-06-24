@@ -100,6 +100,11 @@ Then you should see the environment name in brackets before the prompt, similar 
 
 **Troubleshooting:** Activating the environment in the Powershell terminal does not work for Windows. Set the default terminal to Command Prompt and activate from here.
 
+1. Press CTRL+Shift+P and search for 'Terminal: Configure Terminal Settings'.
+2. Under the 'Terminal > External: Windows Exec' section enter the path to your cmd. E.g.
+
+        C:\WINDOWS\System32\cmd.exe
+
 Make sure you are using the correct Python interpreter by checking your Python path:
 
 In Linux:
