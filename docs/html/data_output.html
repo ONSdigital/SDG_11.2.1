@@ -81,7 +81,19 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="data_output.reorder_final_df">
 <span class="sig-prename descclassname"><span class="pre">data_output.</span></span><span class="sig-name descname"><span class="pre">reorder_final_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_output.reorder_final_df" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reorders the processed dataframe before writing to csv.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe to reorder.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reordered dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_output.reshape_for_output">
@@ -101,17 +113,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>id_col</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>local_auth</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>id_rename</strong> (<em>_type_</em><em>, </em><em>optional</em>) – _description_. Defaults to None.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe to reshape.</p></li>
+<li><p><strong>id_col</strong> (<em>str</em>) – Name of the column that index will get renamed to.</p></li>
+<li><p><strong>local_auth</strong> (<em>str</em>) – The local authority of interest.</p></li>
+<li><p><strong>id_rename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name if renaming ID column. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>_description_</p>
+<dd class="field-even"><p>Reshaped dataframe.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>_type_</p>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

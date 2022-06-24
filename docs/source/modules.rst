@@ -1,5 +1,5 @@
-SDG_11.2.1
-==========
+Technical Documentation
+=======================
 
 .. toctree::
    :maxdepth: 4
@@ -7,7 +7,4 @@ SDG_11.2.1
    data_ingest
    data_output
    data_transform
-   database_mods
-   ftp_get_files_logic
-   ftp_services
    geospatial_mods
