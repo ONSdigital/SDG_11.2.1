@@ -127,7 +127,7 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
 
 
 def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=None, zip_url=None) -> pd.DataFrame:
-
+    
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
@@ -457,7 +457,7 @@ def save_latest_stops_as_feather(file_name):
     """Saves the latest stop file as a feather file into 
             the data folder
     Returns:
-        None - just saves feather into the data folder.
+        str: the output of where the feather is written
     """
     # read in csv
     file = pd.read_csv(file_name,
@@ -467,9 +467,35 @@ def save_latest_stops_as_feather(file_name):
     # get output path
     output_path = os.path.join(os.getcwd(),
                                "data",
+                               "stops",
                                "Stops.feather")
     # output to feather
     file.to_feather(output_path)
+    
+    return output_path
+
+
+def _dl_stops_make_df(today, url):
+    """Downloads the latest data from api, saves as csv & feather, returns df
+
+    Args:
+        today (str): todays date
+        url (str): API URL
+
+    Returns:
+        pd.DataFrame: df of latest stops data
+    """    
+    csv_path = os.path.join(os.getcwd(),
+                             "data",
+                             "stops",
+                             f"stops_{today}.csv")
+    # Save latest data as csv
+    _get_stops_from_api(url, csv_path)
+    # Save as feather
+    feather_path = save_latest_stops_as_feather(csv_path)
+    # Load feather as pd df
+    stops_df = pd.read_feather(feather_path)
+    return stops_df
 
 
 def get_stops_file(url, dir):
@@ -483,24 +509,24 @@ def get_stops_file(url, dir):
     Returns:
         None - just saves into the data folder.
     """
+    
     # gets todays date and latest date of stops df
     today = int(datetime.now().strftime('%Y%m%d'))
-    latest_date = _get_latest_stop_file_date(dir)
 
     # gets feather stop path
     feather_path = os.path.join(os.getcwd(),
                                 "data",
+                                "stops",
                                 "Stops.feather")
-
-    if today-latest_date < 28:
-        stops_df = pd.read_feather(feather_path)
-    else:
-        file_name = os.path.join(os.getcwd(),
-                                 "data",
-                                 "stops",
-                                 f"stops_{today}.csv")
-        _get_stops_from_api(url, file_name)
-        save_latest_stops_as_feather(file_name)
-        stops_df = pd.read_feather(feather_path)
+    # Check that the feather exists
+    if not _persistent_exists(feather_path):
+        stops_df = _dl_stops_make_df(today, url)
+    else: # does exist
+        latest_date = _get_latest_stop_file_date(dir) 
+        if today-latest_date < 28:
+            stops_df = pd.read_feather(feather_path)
+        else:
+            stops_df = _dl_stops_make_df(today, url)
 
     return stops_df
+
