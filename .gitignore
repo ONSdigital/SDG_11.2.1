@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/html
 
 # PyBuilder
 target/
@@ -149,4 +149,4 @@ data/
 # VS Code stuff
 workspace.code-workspace
 sdg-11-2-1.code-workspace
-.vscode/launch.json
+.vscode
