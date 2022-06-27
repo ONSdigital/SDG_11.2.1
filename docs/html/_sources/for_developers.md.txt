@@ -30,6 +30,8 @@ Create an environment called "SDG_11.2.1" with the version of Python that this w
 
     conda create --name SDG_11.2.1 python=3.8
 
+**Troubleshooting:** When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following [these steps](https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686) should resolve the issue.
+
 ### Activate the environment
 
 First go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:
@@ -46,10 +48,16 @@ If you do not have the Conda path linked, you can use the following for Windows:
 
     $ activate SDG_11.2.1
 
-
 Then you should see the environment name in brackets before the prompt, similar to:
 
     (SDG_11.2.1) $
+
+**Troubleshooting:** Activating the environment in the Powershell terminal does not work for Windows. Set the default terminal to Command Prompt and activate from here.
+
+1. Press CTRL+Shift+P and search for 'Terminal: Configure Terminal Settings'.
+2. Under the 'Terminal > External: Windows Exec' section enter the path to your cmd. E.g.
+
+        C:\WINDOWS\System32\cmd.exe
 
 Make sure you are using the correct Python interpreter by checking your Python path:
 
@@ -85,3 +93,11 @@ If this does, write the following with the package names that the error has show
     pip install packagename
 
 The script should now be set up to use.
+
+### Setting Git configuration
+
+To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file
+
+    git config --global user.email "email"
+    
+    git config --global user.name "username"
