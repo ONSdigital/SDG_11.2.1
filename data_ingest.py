@@ -439,11 +439,14 @@ def _get_latest_stop_file_date(dir):
     # get's a list of files from the directory
     file_list = os.listdir(dir)
 
+    # make sure only gets csv's
+    file_list_csv=[file for file in file_list if file.endswith(".csv")]
+
     # files are in the format stops_YYYYMMDD
     p = re.compile(r'\d+')
 
     # attempts to extracts all the dates
-    dates = [p.findall(i)[0] for i in file_list]
+    dates = [p.findall(i)[0] for i in file_list_csv]
 
     # convert to integers and get latest date
     dates_int = [int(date) for date in dates]
