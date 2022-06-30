@@ -440,7 +440,7 @@ def _get_latest_stop_file_date(dir):
     file_list = os.listdir(dir)
 
     # make sure only gets csv's
-    file_list_csv=[file for file in file_list if file.endswith(".csv")]
+    file_list_csv = [file for file in file_list if file.endswith(".csv")]
 
     # files are in the format stops_YYYYMMDD
     p = re.compile(r'\d+')
