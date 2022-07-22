@@ -15,8 +15,8 @@ Welcome to SDG_11.2.1's documentation!
    write_up.md
    modules
 
-Indices and tables
-==================
+Functions Index
+===============
 
 * :ref:`genindex`
 * :ref:`modindex`
