@@ -1,6 +1,6 @@
 # For Developers
 
-## Requirements: 
+## Requirements 
 
 A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages. 
 
@@ -10,7 +10,7 @@ Before starting this process, please ensure that [Anaconda3](https://docs.anacon
 
 If you are using Windows, you will have to add the conda and python path into your Windows Path environment. For guidance, follow the tutorial [here](https://www.datacamp.com/community/tutorials/installing-anaconda-windows).
 
-### Cloning the repository
+## Cloning the repository
 The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for [Windows 10](https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0) or [Mac and Linux](https://www.atlassian.com/git/tutorials/git-ssh).
 
 You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your local drive).
@@ -22,7 +22,7 @@ Then activate use the SSH address to clone the repository
 
 You can then open the folder SDG_11.2.1 within VSCode using "Open Folder" in Source Control.
 
-### Create an environment 
+## Create an environment 
 
 Virtual environments are extremely useful when working on different projects as they can be set up in a way to only have packages installed in that environment and not globally - it does not affect base Python installation in any way.
 
@@ -32,7 +32,7 @@ Create an environment called "SDG_11.2.1" with the version of Python that this w
 
 **Troubleshooting:** When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following [these steps](https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686) should resolve the issue.
 
-### Activate the environment
+## Activate the environment
 
 First go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:
 
@@ -76,7 +76,7 @@ C:\Python36\envs\SDG_11.2.1\python.exe
 
 Showing your are using the Python from the virtual environment, not the base installation of Python.
 
-### Installing dependencies
+## Installing dependencies
 First, ensure you are in the project directory
 
     $ cd C:\Users\name\project-directory
@@ -95,7 +95,7 @@ If this does, write the following with the package names that the error has show
 
 The script should now be set up to use.
 
-### Setting Git configuration
+## Setting Git configuration
 
 To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file
 

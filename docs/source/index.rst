@@ -8,7 +8,7 @@ Welcome to SDG_11.2.1's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
    
    README.md
    for_developers.md
@@ -19,4 +19,3 @@ Functions Index
 ===============
 
 * :ref:`genindex`
-* :ref:`modindex`
