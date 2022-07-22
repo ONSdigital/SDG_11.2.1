@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'SDG_11.2.1'
-copyright = '2022, Paige Hunter, Antonio Felton, James Westwood'
+copyright = '2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood'
 author = 'Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood'
 
 # The full version, including alpha/beta/rc tags
