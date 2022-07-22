@@ -145,7 +145,6 @@ envs
 #data files
 data/
 .SDG_11.2.1
-backup_data
 
 # VS Code stuff
 workspace.code-workspace
