@@ -6,8 +6,8 @@ def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
     """Slices a dataframe according to the list of column names provided.
 
     Args:
-        df (pd.DataFrame): DataFrame to be sliced
-        col_nms (List[str]): column names as string in a list
+        df (pd.DataFrame): DataFrame to be sliced.
+        col_nms (List[str]): column names as string in a list.
 
     Returns:
         pd.DataFrame: A dataframe sliced down to only the columns required.
@@ -17,8 +17,7 @@ def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
 
 
 def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this doctring not to work 
-    """Function to group/bin the ages together in 5
-        year steps. 
+    """Function to group/bin the ages together in 5 year steps. 
         
     Starts the sequence at age 0. 
         Will return the ages in a list of tuples.
@@ -27,10 +26,10 @@ def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this 
         the upper limit.
 
     Args:
-        col_nms (list of str): a list of the age columns as strings
+        col_nms (list of str): a list of the age columns as strings.
 
     Returns:
-        list of tuples: a list of the ages with 5 year gaps
+        list of tuples: a list of the ages with 5 year gaps.
     """
     
     ## Make a lists of starting and finishing indexes
@@ -47,12 +46,15 @@ def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this 
 
 def bin_pop_ages(age_df, age_bins, col_nms):
     """ Bins the ages in the age_df in 5 year spans,
-            sums the counts in those bins
-            and drops the original age columns
+    sums the counts in those bins
+    and drops the original age columns
 
     Args:
         df (pd.DataFrame): A dataframe of population data
-            containing only the age columns
+            containing only the age columns.
+
+    Returns:
+        pd.DataFrame: Returns the age_df with bins.
     """
     # Grouping ages in 5 year brackets
     for bin in age_bins:
@@ -69,24 +71,21 @@ def bin_pop_ages(age_df, age_bins, col_nms):
 def served_proportions_disagg(pop_df: pd.DataFrame,
                               pop_in_poly_df: pd.DataFrame,
                               cols_lst: List[str]):
-    """
-    Calculates the number of people in each category, as specified by the column
-        (e.g age range, or disability status) who are served and not served by
-        public transport, and gives those as a proportion of the total.
+    """Calculates the number of people in each category, as specified by the column
+    (e.g age range, or disability status) who are served and not served by
+    public transport, and gives those as a proportion of the total.
 
-        Note: the numeric values in the dataframe are return as strings for
-        formatting reasons
+    Note: the numeric values in the dataframe are return as strings for
+    formatting reasons
 
-    Parameters:
-        pop_df (pd.DataFrame) : population dataframe
-
-        pop_in_poly_df (pd.DataFrame) : dataframe resulting in the points
+    Args:
+        pop_df (pd.DataFrame): population dataframe.
+        pop_in_poly_df (pd.DataFrame): dataframe resulting in the points
             in polygons enquiry to count (sum) the population within the
             service area polygon.
-
         cols_lst (List[str]): a list of the column names in the population
             dataframe supplied which contain population figures, and are to
-            be summed and assessed as served/unserved by public transport
+            be summed and assessed as served/unserved by public transport.
 
     Returns:
         pd.DataFrame: a dataframe summarising
@@ -94,7 +93,6 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         ii) the number served by public transport
         iii) the proportion who are served by public transport
         iv) the proportion who are not served by public transport
-
     """
     # First list the age bin columns
    
@@ -127,14 +125,14 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
 def _calc_proprtn_srvd_unsrvd(total_pop,
                                    servd_pop,
                                    unsrvd_pop):
-    """[summary]
+    """Calculates proportions of people served and unserved by public transport.
 
     Args:
-        total_pop (int):  The total population for that category
+        total_pop (int):  The total population for that category.
         servd_pop (int):  Of the population, those who are served
-                           by public transport
+            by public transport.
         unsrvd_pop (int): Of the population, those who are NOT served
-                           by public transport
+            by public transport.
 
     Returns:
         dict: A dictionary with the following:
@@ -156,31 +154,30 @@ def _calc_proprtn_srvd_unsrvd(total_pop,
 
 
 def highly_serv_stops(region):
-    """
-    Retrieves timetable data from the Traveline National Dataset for
-        any region. Filters stops with that have >1 departure per hour
-        on a weekday (Wed is default) between 6am and 8pm.
-    Parameters:
+    """Retrieves timetable data from the Traveline National Dataset for
+    any region. Filters stops with that have >1 departure per hour
+    on a weekday (Wed is default) between 6am and 8pm.
+
+    Args:
         region (str): the name of the region of the UK that the data
-            is needed for
-    Returns:
-        highly serviced stops for region
+            is needed for.
     """
     #  day="Wed"
     return None
 
 
 def filter_stops(stops_df):
-    """
-    filters the stops dataframe based on two things:
-    1) status column - We want to keep stops which are 
-    active, pending or new.
-    2) StopType want only to include bus and rail stops.
-    Parameters:
-        stops_df the dataframe wanting to filter on
+    """Filters the stops dataframe based on two things:
+    
+    | 1) Status column - We want to keep stops which are active, pending or new.
+    | 2) StopType want only to include bus and rail stops.
+
+    Args:
+        stops_df (pd.DataFrame): the dataframe to filter.
+
     Returns:
-        filtered_stops which meet the criteria
-        of keeping based on status/stoptype columns
+        pd.DataFrame: Filtered_stops which meet the criteria
+            of keeping based on status/stoptype columns.
     """
     # stop_types we would like to keep within the dataframe
     stop_types = ["RSE","RLY","RPL","TMU","MET","PLT",
@@ -197,17 +194,17 @@ def filter_stops(stops_df):
     return filter_stops
 
 def add_stop_capacity_type(stops_df):
-    """
-    adds capacity_type column which is defined
-    with the following dictionary using the StopType
-    Bus stops are low capacity, train stations are high
-    capacity. 
-        Parameters:
-        stops_df the dataframe want to add the column to
-    Returns:
-        dataframe with new capacity_type column
-    """
+    """Adds capacity_type column.
+    
+    Column is defined with the following dictionary using the StopType
+    Bus stops are low capacity, train stations are high capacity. 
+        
+    Args:
+        stops_df (pd.DataFrame): The dataframe to add the column to.
 
+    Returns:
+        pd.DataFrame: dataframe with new capacity_type column.
+    """
     dictionary_map={"RSE":"high",
                     "RLY":"high",
                     "RPL":"high",

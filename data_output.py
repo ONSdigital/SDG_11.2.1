@@ -5,25 +5,26 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     """ Reshapes the output of served_proportions_disagg to data team requirements.
     
     The steps the function goes through are as follows.
-    1) Transpose the df
-    2) Reset the index 
-    3) Rename column from index to Age or other id column
-    4) melt df with Age as ID vars, all the rest value vars
-    5) Replace word "Total" with blanks, "variable" with "Series"
-    6) Create "Unit Multiplier" map across from variable (percent or individual)
-    7) Create "Unit Measure" and "Observation Status" columns
-    7) Create the local auth col with this iteration's LA
-    8) Rename column header of ID var
-    9) re-order columns to match required output
+
+    | 1) Transpose the df
+    | 2) Reset the index 
+    | 3) Rename column from index to Age or other id column
+    | 4) melt df with Age as ID vars, all the rest value vars
+    | 5) Replace word "Total" with blanks, "variable" with "Series"
+    | 6) Create "Unit Multiplier" map across from variable (percent or individual)
+    | 7) Create "Unit Measure" and "Observation Status" columns
+    | 7) Create the local auth col with this iteration's LA
+    | 8) Rename column header of ID var
+    | 9) re-order columns to match required output
 
     Args:
-        df (_type_): _description_
-        id_col (_type_): _description_
-        local_auth (_type_): _description_
-        id_rename (_type_, optional): _description_. Defaults to None.
+        df (pd.DataFrame): Dataframe to reshape.
+        id_col (str): Name of the column that index will get renamed to.
+        local_auth (str): The local authority of interest.
+        id_rename (str, optional): Name if renaming ID column. Defaults to None.
 
     Returns:
-        _type_: _description_
+        pd.DataFrame: Reshaped dataframe.
     """
     # Transpose the df
     df = df.T
@@ -56,5 +57,13 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     return df
 
 def reorder_final_df(df):
+    """Reorders the processed dataframe before writing to csv.
+
+    Args:
+        df (pd.DataFrame): Dataframe to reorder.
+    
+    Returns:
+        pd.DataFrame: Reordered dataframe.
+    """
     df = df[["Year","Sex", "Age", "Disability Status", "Local Authority", "Urban/Rural", "Series", "Observation Status", "Unit Multiplier", "Unit Measure", "Value"]]
     return df
