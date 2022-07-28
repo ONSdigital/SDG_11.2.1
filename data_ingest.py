@@ -1,4 +1,5 @@
 # Core imports for this module
+from http.client import REQUESTED_RANGE_NOT_SATISFIABLE
 import os
 import re
 import json
@@ -609,4 +610,31 @@ def get_stops_file(url, dir):
             stops_df = _dl_stops_make_df(today, url)
 
     return stops_df
+
+def read_usual_pop_scotland(path:str):
+    """Reads the usual population Scotland.
+
+    This reads in the file containing all the 
+    output areas in scotland with their corresponding 
+    population number.
+
+    Args:
+        path (str): the path where the file exists
+    
+    Returns:
+        pd.DataFrame the usual population dataframe
+    """
+    # reads in data and crops of header and footer
+    df = pd.read_csv(path, 
+                     header=4, 
+                     index_col=0,
+                     skipfooter=4)
+
+    # only want OA so drop Scotland
+    df_oa_only = df.drop(index=['Scotland'])
+
+    # only use columns that we need
+    df_essential_cols = df_oa_only[["All people","Males","Females"]]
+
+    return df_essential_cols
 
