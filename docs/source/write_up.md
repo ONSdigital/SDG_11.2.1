@@ -364,9 +364,7 @@ Therefore in our calculation, people will be considered "Non-disabled" if they:
 And the calculations are as follows:
 
 
-
-<p id="gdcalert4" ><span style="color: red; font-weight: bold">>>>>>  gd2md-html alert: equation: use MathJax/LaTeX if your publishing platform supports it. </span><br>(<a href="#">Back to top</a>)(<a href="#gdcalert5">Next alert</a>)<br><span style="color: red; font-weight: bold">>>>>> </span></p>
-
+$Dtot= Dlot + Dlit$
 
 
 I.e. "Total people with disabilities" = "Day-to-day activities limited a lot" + "Day-to-day activities limited a little"
@@ -393,7 +391,7 @@ non-disabled = pop_count - disab_total
 ```
 
 
-Considerations on disability status
+#### Considerations on disability status
 
 Our team has discussed options for counting individuals as either disabled or not. This is a complex and important area, and we recognise the importance of getting this as accurate as possible, as it may highlight areas in which those with disabilities are more affected by transport accessibility issues. 
 
@@ -408,7 +406,7 @@ Standard distances of 500m and 1km are applied as a radius around the transport 
 We have opted to use a GSS Harmonised definition of disability for our analysis and the data comes from the census as described above. On the other hand the UN Metadata defines additional criteria to categorise public transport as conveniently accessible or not: 
 
 
-    _“Public transport accessible to all special-needs customers, including those who are physically, visually, and/or hearing-impaired, as well as those with temporary disabilities, the elderly, children and other people in vulnerable situations”_
+    “Public transport accessible to all special-needs customers, including those who are physically, visually, and/or hearing-impaired, as well as those with temporary disabilities, the elderly, children and other people in vulnerable situations”_
 
 In our analysis we are including the entire population, however, in our disaggregations we do not create a “special-needs” group. If we were to create such a group we should include people with temporary disabilities (if the data on this can be sourced), and the elderly or children. This has been proposed for version 1.2 of this project.
 
