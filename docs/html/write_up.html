@@ -1,34 +1,71 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Methodology Write Up &mdash; SDG_11.2.1 V1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <title>Calculation Methodology of Indicator 11.2.1 &mdash; SDG_11.2.1 V1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Technical Documentation" href="modules.html" />
     <link rel="prev" title="For Developers" href="for_developers.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -36,72 +73,506 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Methodology Write Up</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Calculation Methodology of Indicator 11.2.1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#background">Background</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calculation-process">Calculation process</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main-method-of-calculation">Main method of calculation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geocoding-the-population-data">Geocoding the population data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#joining-the-data">Joining the data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-improvements">Limitations and improvements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Joining the data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#computation-of-service-areas">Computation of service areas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#euclidean-buffering-methodology">Euclidean buffering methodology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#notes-on-the-network-query-method">Notes on the network query method</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#calculation-of-population-within-service-areas">Calculation of population within service areas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#disaggregations">Disaggregations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#shortcomings-of-the-disaggregation-method">Shortcomings of the disaggregation method</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#disability-status">Disability status</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classification-and-calculation-of-people-with-disabilities">Classification and calculation of people with disabilities</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#considerations-on-disability-status">Considerations on disability status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#selection-of-age-bins">Selection of age bins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#aggregation-and-reporting">Aggregation and reporting</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Technical Documentation</a></li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">SDG_11.2.1</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Methodology Write Up</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Calculation Methodology of Indicator 11.2.1</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+            
             <a href="_sources/write_up.md.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
-  <section id="methodology-write-up">
-<h1>Methodology Write Up<a class="headerlink" href="#methodology-write-up" title="Permalink to this headline"></a></h1>
+            
+  <section id="calculation-methodology-of-indicator-11-2-1">
+<h1>Calculation Methodology of Indicator 11.2.1<a class="headerlink" href="#calculation-methodology-of-indicator-11-2-1" title="Permalink to this heading">¶</a></h1>
+<p>Version 1.0</p>
+<p><strong>James Westwood, Antonio Felton, Paige Hunter and Nathan Shaw.</strong></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>Our team has calculated data for transport accessibility across the UK following, as closely as we could, the method in the <a class="reference external" href="https://unstats.un.org/sdgs/metadata/?Text=&amp;Goal=11&amp;Target=11.2">UN Metadata for the SDG indicator 11.2.1</a>.</p>
+<p>The following is a write up of the methodology we employed to make these calculations. In this methodology writeup we aim to accurately reflect the method used in version 1.0 of our project; read more about versions below in the section “Project Versions”.</p>
+</section>
+<section id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this heading">¶</a></h2>
+<p>The main support for this project on both methodology and finding appropriate data sources has come from the geospatial department, in particular Musa Chirikeni, to whom we are very grateful. Other help has come from Michael Hodge who laid out the initial method we might approach in Python, and from the SDG data team who have been supportive data end users.</p>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading">¶</a></h2>
+<p>The statistics calculated for this project are to be used as an indicator of the UK’s progress on target 11.2 of the Sustainable Development Goals (SDGs). The SDGs are a set of 17 Goals which 193 Member states signed up to in order to coordinate efforts on more sustainable and inclusive national development. The goals cover areas such as poverty, hunger, equality and the environment. Goal 11, which the indicator we are calculating for falls under, is concerned with Sustainable Cities. The data our team produces will be available on the <a class="reference external" href="https://sdgdata.gov.uk/">UK data platform for the SDG indicators</a>, specifically on<a class="reference external" href="https://sdgdata.gov.uk/11-2-1/"> this page</a>.</p>
+<p>Project history</p>
+<p>The project was initiated in late 2019 by James Westwood with some initial help from the UK SDG data team and Michael Hodge from the Data Science Campus, who provided guidance on the tech that would need to be used and a rough step-by-step calculation process.</p>
+<p>Project Versions</p>
+<p>The project is managed using version control on the Github platform. One feature of the version controlling using Github is that we can make releases. At the time of writing we have not made any releases of the code, but when we feel that all features to calculate the statistics required by the end user have been written into our code, we will release version 1.0.</p>
+<p>Each version has a project board, wherein we group the issues describing the work that needs to be done to develop each feature required. <a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/projects?type=classic">Project boards </a>are hosted on Github.</p>
+<table>
+  <tr>
+   <td>Version
+   </td>
+   <td>Focus
+   </td>
+   <td>Example features
+   </td>
+  </tr>
+  <tr>
+   <td>1.0
+   </td>
+   <td><a href="https://github.com/ONSdigital/SDG_11.2.1/projects/1">Fully working reproducible calculation of transport availability across the UK</a>
+   </td>
+   <td>
+<ul>
+<li>Calculate the proportion of the population within 500m of a public transport access point for the whole of the UK.
+<li>Disaggregate the above number by sex, age, disability status
+<li>Be auditable and reproducable
+</li>
+</ul>
+   </td>
+  </tr>
+  <tr>
+   <td>1.1
+   </td>
+   <td><a href="https://github.com/ONSdigital/SDG_11.2.1/projects/3">Quality Assurance Phase</a>
+   </td>
+   <td>
+<ul>
+<li>Updates to code from feedback (e.g. from data team and topic expert)
+<li>Data cleaning on import
+<li>Validation on import
+<li>Unit tests for functions
+</li>
+</ul>
+   </td>
+  </tr>
+  <tr>
+   <td>1.2
+   </td>
+   <td><a href="https://github.com/ONSdigital/SDG_11.2.1/projects/5">Enhanced functions and calculation</a>
+   </td>
+   <td>Focus on enhancements to the calculation
+<p>
+- Improve existing functions, making them more generic and robust
+<p>
+- Look into improving geographical accuracy with more granular calculations
+<p>
+- Improve the analysis with more disaggregations.
+   </td>
+  </tr>
+  <tr>
+   <td>1.3
+   </td>
+   <td><a href="https://github.com/ONSdigital/SDG_11.2.1/projects/4">Optimise Computation</a>
+   </td>
+   <td>Focus on enhancements to the functioning of the code:
+<ul>
+<li>Better data management (e.g. SQL tables)
+<li>Refactoring code
+<li>Code optimization (speed, memory) vectorised calculation, 
+</li>
+</ul>
+   </td>
+  </tr>
+</table>
+</section>
+<section id="calculation-process">
+<h2>Calculation process<a class="headerlink" href="#calculation-process" title="Permalink to this heading">¶</a></h2>
+<section id="main-method-of-calculation">
+<h3>Main method of calculation<a class="headerlink" href="#main-method-of-calculation" title="Permalink to this heading">¶</a></h3>
+<p>The key step of calculation is a spatial join between geolocated urban population data and public transport service areas. A discussion of how each component of that join was calculated from their component parts follows.</p>
+</section>
+<section id="geocoding-the-population-data">
+<h3>Geocoding the population data<a class="headerlink" href="#geocoding-the-population-data" title="Permalink to this heading">¶</a></h3>
+<p>The questions we are trying to answer in this analysis is “What proportion of people in the UK have access to public transport access points from their home?”. And then the same question for people in each age, sex and disability category.</p>
+<p>To make the calculation as accurate as possible, we sourced the most granularly geolocated population data possible. Ideally, this would have been right down to the individual place of living (house/flat etc.) but such granularity is not available publicly, as it would be disclosive of individuals’ living situations. The most granular level published that we are currently aware of is the “output area” (OA) data, which derives from the census.</p>
+<p>Output areas (more fully defined and discussed in the data section of this methodology write up) are a conglomerate of the postcodes. Those postcodes are joined together on the basis that they are:</p>
+<ol class="arabic simple">
+<li><p>Adjacent</p></li>
+<li><p>Of the same urban/rural classification</p></li>
+</ol>
+<p>In order to calculate the distance from the place any person lives, to a public transport access node (station or stop) we need a point-geometry for their residence. As we cannot geolocate individual residencies, we used an approximation in the form of population weighted centroids (PWCs).</p>
+<p>PWCs are a population-weighted location (x,y point) at which is a geospatial mean of the locations of all residences in that output area. The PWC, while extremely helpful in giving us a geospatial point to define where the population of any output area lives, is an approximation and is only used due to limitations in our data.</p>
+<section id="joining-the-data">
+<h4>Joining the data<a class="headerlink" href="#joining-the-data" title="Permalink to this heading">¶</a></h4>
+<p>Population weighted centroid (PWC) data is geolocated with x,y coordinates and has a common data column with the output area data (output area code, “OA11CD”) so a table join can be performed on those datasets. Then the entire population of any output area is approximated to live at the centroid.</p>
+</section>
+<section id="limitations-and-improvements">
+<h4>Limitations and improvements<a class="headerlink" href="#limitations-and-improvements" title="Permalink to this heading">¶</a></h4>
+<p>Our team recognises that PWCs do not accurately represent the location of any individual’s place of residence and we intend to  research methods of making calculations at even more granular levels, such as postcodes or smaller. Currently however we agreed with the our data end user and the geospatial department that the method to be used for version 1.0 will use the described approximation to geolocate the population.</p>
+<p>Delimitation of urban areas</p>
+<p>As Target 11 is concerned with sustainable urban environments, we ultimately had to select only urban areas and exclude rural areas from our analysis. Urban areas are defined as Ordnance Survey mapping that have resident populations above 10,000 people (2011 Census) and the methodology is available <a class="reference external" href="https://www.ons.gov.uk/file?uri=/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification/ruralurbanclassification2011userguide.zip">here</a>. The urban/rural lookup data was sourced from <a class="reference external" href="https://geoportal.statistics.gov.uk/">ONS’s Geography Portal </a>and it provides a classification of each output area as either urban or rural categories which are further subdivided as follows.</p>
+<table>
+  <tr>
+   <td>Classification
+   </td>
+   <td>Description
+   </td>
+   <td>Code
+   </td>
+  </tr>
+  <tr>
+   <td>Urban
+   </td>
+   <td>Major Conurbation
+   </td>
+   <td>A1
+   </td>
+  </tr>
+  <tr>
+   <td>Urban
+   </td>
+   <td>Minor Conurbation
+   </td>
+   <td>B1
+   </td>
+  </tr>
+  <tr>
+   <td>Urban
+   </td>
+   <td>City and Town
+   </td>
+   <td>C1
+   </td>
+  </tr>
+  <tr>
+   <td>Urban
+   </td>
+   <td>City and Town in a Sparse Setting
+   </td>
+   <td>C2
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Town and Fringe
+   </td>
+   <td>D1
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Town and Fringe in a Sparse Setting
+   </td>
+   <td>D2
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Village
+   </td>
+   <td>E1
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Village in a Sparse Setting
+   </td>
+   <td>E2
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Hamlets and Isolated Dwellings
+   </td>
+   <td>F1
+   </td>
+  </tr>
+  <tr>
+   <td>Rural
+   </td>
+   <td>Hamlets and Isolated Dwellings in a Sparse Setting 
+   </td>
+   <td>F2
+   </td>
+  </tr>
+</table>
+<p>In our calculation we group A1, B1, C1 and C2 as urban and any other code as rural.</p>
+</section>
+<section id="id1">
+<h4>Joining the data<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h4>
+<p>The population table for the whole nation was joined onto the table with the urban/rural classification for each output area on the output area code “OA11CD”, hence bringing in the classification into the population data. Every OA and associated PWC is therefore categorised as either urban or rural. Later we use this classification to filter the data, and disaggregate our analysis. For the SDG analysis we remove the OAs classified as rural from our analysis, but we can choose to include them to expose transport availability in rural areas too.</p>
+</section>
+</section>
+<section id="computation-of-service-areas">
+<h3>Computation of service areas<a class="headerlink" href="#computation-of-service-areas" title="Permalink to this heading">¶</a></h3>
+<p>As described in the methodology of the UN Metadata for this indicator, public transport service areas had to be calculated.  Two methods to calculate service areas are described in the methodology:</p>
+<ol class="arabic simple">
+<li><p>using a Euclidean buffer to create polygon, and</p></li>
+<li><p>to create a network/path calculation.</p></li>
+</ol>
+<p>Our team opted for the Euclidean buffer method for a number of reasons:</p>
+<ul class="simple">
+<li><p>We followed advice from the ONS Geospatial department that the simpler buffering method would be adequate for our needs</p></li>
+<li><p>Computationally Euclidean is would be much less resource intensive and does not require distributed compute power, whereas a network calculation would require scaled compute power.</p></li>
+<li><p>Other countries (such as <a class="reference external" href="https://www.efgs.info/11-2-1-estonia/">Estonia</a>, <a class="reference external" href="https://www.efgs.info/11-2-1-norway-test-page/">Norway</a> and others) used the Euclidean buffer method and published their results. Our results will be more comparable with theirs</p></li>
+<li><p>Research shows that the network enquiry requires a complete path network, (as pointed out by <a class="reference external" href="https://www.efgs.info/11-2-1-sweden/">Sweden</a> in their write up, see section “<strong>Result from the network distance calculations”</strong>)</p></li>
+</ul>
+<section id="euclidean-buffering-methodology">
+<h4>Euclidean buffering methodology<a class="headerlink" href="#euclidean-buffering-methodology" title="Permalink to this heading">¶</a></h4>
+<p>We use Geopandas and for all geospatial operations in our analysis and the buffering operation is actually carried out by the Shapely <code class="docutils literal notranslate"><span class="pre">object.buffer()</span></code> function. This operation takes a geospatial point, and uses a radius of a given length to creates a polygon around the point which approximates a circle. The standard buffering of a point yields a polygon with 99.8% of the area of the circular disk it approximates.</p>
+<p><img alt="Buffering geospatial points" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png" /></p>
+<p><strong>Figure 1: Illustration of the process of buffering a geospatial Point</strong></p>
+<p>The resulting geospatial polygons are then joined and can be used for further calculations.</p>
+<p><img alt="Combining polygons to make a multi-polygon" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png" /></p>
+<p><strong>Figure 2: Process of combining polygons to create the service area</strong></p>
+</section>
+<section id="notes-on-the-network-query-method">
+<h4>Notes on the network query method<a class="headerlink" href="#notes-on-the-network-query-method" title="Permalink to this heading">¶</a></h4>
+<p>A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.</p>
+<p><img alt="An example of a network distance calcualtion sourced from the Swedish methodology write up" src="https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png" /></p>
+<p><strong>Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at <a class="reference external" href="https://www.efgs.info/11-2-1-sweden/">https://www.efgs.info/11-2-1-sweden/</a>.</strong> The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown.</p>
+</section>
+</section>
+<section id="calculation-of-population-within-service-areas">
+<h3>Calculation of population within service areas<a class="headerlink" href="#calculation-of-population-within-service-areas" title="Permalink to this heading">¶</a></h3>
+<p>With the service areas calculated, the population that resides within a service area is calculated by a two stage process:</p>
+<ol class="arabic simple">
+<li><p>A points in polygons enquiry which then filters the PWCs, so that the data set contains only those which are within the service areas,</p></li>
+<li><p>The population figure (number of individuals) associated with each PWC is summed, meaning that only the population within the service areas is counted as the population outside of the service areas was filtered out at stage 1.</p></li>
+<li><p>The proportion of the population inside a service area is calculated as a proportion of the total population. Currently for version 1.0, this is carried out at Local Authority (LA) level.</p></li>
+</ol>
+</section>
+<section id="disaggregations">
+<h3>Disaggregations<a class="headerlink" href="#disaggregations" title="Permalink to this heading">¶</a></h3>
+<p>As required for the SDG indicator we are producing this data for, the output data from this project has been disaggregated by sex, age and disability status.</p>
+<section id="shortcomings-of-the-disaggregation-method">
+<h4>Shortcomings of the disaggregation method<a class="headerlink" href="#shortcomings-of-the-disaggregation-method" title="Permalink to this heading">¶</a></h4>
+<p>Our team recognises that in our current method, ethnicity is not a disaggregation that we use. At this stage for version 1.0 we are attempting to output data called for by the methodology in the <a class="reference external" href="https://unstats.un.org/sdgs/metadata/?Text=&amp;Goal=11&amp;Target=11.2">UN Metadata</a>. We regret that this important disaggregation is not included however, so our team intend to include this additional disaggregation in version 1.1 as an enhancement above what the original methodology requires. Disaggregating on other protected characteristics, as well as deprivation levels may be considered too.</p>
+</section>
+</section>
+<section id="disability-status">
+<h3>Disability status<a class="headerlink" href="#disability-status" title="Permalink to this heading">¶</a></h3>
+<section id="classification-and-calculation-of-people-with-disabilities">
+<h4>Classification and calculation of people with disabilities<a class="headerlink" href="#classification-and-calculation-of-people-with-disabilities" title="Permalink to this heading">¶</a></h4>
+<p>We classify disability using data from the ONS UK census, which is consistent with GSS harmonized disability data. To understand the data, we looked at the questions and their possible responses in the<a class="reference external" href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/"> Measuring disability for the Equality Act 2010 harmonisation guidance</a>.</p>
+<p>The questions are as follows:</p>
+<table>
+  <tr>
+   <td><strong>Question</strong>
+   </td>
+   <td><strong>Response options</strong>
+   </td>
+  </tr>
+  <tr>
+   <td>Do you have any physical or mental health conditions or illnesses lasting or expected to last 12 months or more?
+   </td>
+   <td>Yes / No
+   </td>
+  </tr>
+  <tr>
+   <td>Does your condition or illness\do any of your conditions or illnesses reduce your ability to carry-out day-to-day activities?
+   </td>
+   <td>Yes, a lot / Yes, a little / No
+   </td>
+  </tr>
+</table>
+<p>The guidance states that the persons meeting the following criteria include:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&quot;_A person who says yes, they have physical or mental health condition(s) or illness(es) lasting or expected to last for 12 months or more, but it doesn’t restrict their activity are non-disabled._&quot;
+</pre></div>
+</div>
+<p>Therefore in our calculation, people will be considered “Non-disabled” if they:</p>
+<ul class="simple">
+<li><p>answer no to the first question</p></li>
+<li><p>answer yes to the first question, but no to the second question.</p></li>
+</ul>
+<p>And the calculations are as follows:</p>
+<p><em>Dtot = Dlot + Dlit</em></p>
+<p>I.e. “Total people with disabilities” = “Day-to-day activities limited a lot” + “Day-to-day activities limited a little”</p>
+<p>Or, in our Python code</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">disab_total</span> <span class="o">=</span> <span class="n">disab_ltd_little</span> <span class="o">+</span> <span class="n">disab_ltd_lot</span>
+</pre></div>
+</div>
+<p>Where <code class="docutils literal notranslate"><span class="pre">disab_ltd_little</span></code> and <code class="docutils literal notranslate"><span class="pre">disab_ltd_lot</span></code> are each column or Pandas Series.</p>
+<p>Then the total of non disabled people given by</p>
+<p>“Non-disabled” = “Total Population” - “Total people with disabilities”</p>
+<p>Or in our Python code</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">non</span><span class="o">-</span><span class="n">disabled</span> <span class="o">=</span> <span class="n">pop_count</span> <span class="o">-</span> <span class="n">disab_total</span>
+</pre></div>
+</div>
+</section>
+<section id="considerations-on-disability-status">
+<h4>Considerations on disability status<a class="headerlink" href="#considerations-on-disability-status" title="Permalink to this heading">¶</a></h4>
+<p>Our team has discussed options for counting individuals as either disabled or not. This is a complex and important area, and we recognise the importance of getting this as accurate as possible, as it may highlight areas in which those with disabilities are more affected by transport accessibility issues.</p>
+<section id="distance">
+<h5>Distance<a class="headerlink" href="#distance" title="Permalink to this heading">¶</a></h5>
+<p>Standard distances of 500m and 1km are applied as a radius around the transport access nodes in order to create the public transport service areas. We speculate that these distances likely do not represent an accessible distance for many people however- this might include wheelchair users, elderly people and families with young children.</p>
+</section>
+<section id="definitions">
+<h5>Definitions<a class="headerlink" href="#definitions" title="Permalink to this heading">¶</a></h5>
+<p>We have opted to use a GSS Harmonised definition of disability for our analysis and the data comes from the census as described above. On the other hand the UN Metadata defines additional criteria to categorise public transport as conveniently accessible or not:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>“Public transport accessible to all special-needs customers, including those who are physically, visually, and/or hearing-impaired, as well as those with temporary disabilities, the elderly, children and other people in vulnerable situations”_
+</pre></div>
+</div>
+<p>In our analysis we are including the entire population, however, in our disaggregations we do not create a “special-needs” group. If we were to create such a group we should include people with temporary disabilities (if the data on this can be sourced), and the elderly or children. This has been proposed for version 1.2 of this project.</p>
+</section>
+</section>
+</section>
+<section id="selection-of-age-bins">
+<h3>Selection of age bins<a class="headerlink" href="#selection-of-age-bins" title="Permalink to this heading">¶</a></h3>
+<p>Population data was broken down by age on a year-by-year basis, from ages 0 through to 99. Rather than reporting the data or even calculating transport availability for every year in an age range, we opted to run the calculation for ages binned in 5-year brackets.</p>
+<p>We found no standard way to group ages. In other indicators across the SDG platform we found data grouped by age in various age increments and ranges, as seen in the <a class="reference external" href="https://sdgdata.gov.uk/sdg-data/disaggregation--age.html">disaggregation report for age</a>. We selected the 5-year brackets (0-4, 5-9, 10-14 etc) to be similar to other UK indicators such as <a class="reference external" href="https://sdgdata.gov.uk/3-3-3/">3.3.3</a> and <a class="reference external" href="https://sdgdata.gov.uk/3-4-1/">3.4.1</a> among others. However we realise there are many other indicators which are  not grouped in this way.</p>
+<p>If another age binning method is required, we plan to make our <code class="docutils literal notranslate"><span class="pre">age_binning</span></code> function more configurable (in version 1.2 of the project) so it will take population data by age and aggregate it into bins group by ages provided a <code class="docutils literal notranslate"><span class="pre">bin_size</span></code> parameter. This means that if the age binning needs to be changed so that, for instance, it can be compared to another dataset, the list of age groups can be changed easily and the analysis rerun.</p>
+</section>
+<section id="aggregation-and-reporting">
+<h3>Aggregation and reporting<a class="headerlink" href="#aggregation-and-reporting" title="Permalink to this heading">¶</a></h3>
+<p>To establish whether public stops and stations were within reach of people’s places of residence the data analysis needed to be carried out at the most granular level possible, the output area level. However there are 175,434 output areas in England and Wales, so this would be too many data points to report on the data platform. Instead we aggregate up to large areas by request of our data end-user, the SDG data team. We aggregate our analysis up to the local authority (LA) level, and output areas fit perfectly within their parent local authority.</p>
+<p>The results aggregated in this way will display well on the <a class="reference external" href="https://sdgdata.gov.uk/">UK SDG data platform</a>, as it is well for developed to take this kind of geographical data!</p>
+</section>
+</section>
 </section>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="for_developers.html" class="btn btn-neutral float-left" title="For Developers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="modules.html" class="btn btn-neutral float-right" title="Technical Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="modules.html" class="btn btn-neutral float-right" title="Technical Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="for_developers.html" class="btn btn-neutral float-left" title="For Developers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood.</p>
-  </div>
+    <p>
+        &copy; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

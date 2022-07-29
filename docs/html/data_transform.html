@@ -1,34 +1,71 @@
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>data_transform module &mdash; SDG_11.2.1 V1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <title>data_transform module &mdash; SDG_11.2.1 V1.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-    <script src="_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="geospatial_mods module" href="geospatial_mods.html" />
     <link rel="prev" title="data_output module" href="data_output.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          
+
+          
           </a>
+
+          
+            
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -36,12 +73,26 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html">Methodology Write Up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html">Calculation Methodology of Indicator 11.2.1</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html#introduction">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html#acknowledgement">Acknowledgement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html#background">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html#calculation-process">Calculation process</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Technical Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="data_ingest.html">data_ingest module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data_output.html">data_output module</a></li>
@@ -51,47 +102,86 @@
 </li>
 </ul>
 
+            
+          
         </div>
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">SDG_11.2.1</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
           <li><a href="modules.html">Technical Documentation</a> &raquo;</li>
+        
       <li>data_transform module</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+            
             <a href="_sources/data_transform.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="module-data_transform">
-<span id="data-transform-module"></span><h1>data_transform module<a class="headerlink" href="#module-data_transform" title="Permalink to this headline"></a></h1>
+<span id="data-transform-module"></span><h1>data_transform module<a class="headerlink" href="#module-data_transform" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.add_stop_capacity_type">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">add_stop_capacity_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.add_stop_capacity_type" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">add_stop_capacity_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.add_stop_capacity_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds capacity_type column.</p>
 <p>Column is defined with the following dictionary using the StopType
 Bus stops are low capacity, train stations are high capacity.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>stops_df</strong> (<em>pd.DataFrame</em>) – The dataframe to add the column to.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dataframe with new capacity_type column.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -99,19 +189,19 @@ Bus stops are low capacity, train stations are high capacity.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.bin_pop_ages">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">bin_pop_ages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">age_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_nms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.bin_pop_ages" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">bin_pop_ages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">age_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">age_bins</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_nms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.bin_pop_ages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bins the ages in the age_df in 5 year spans,
 sums the counts in those bins
 and drops the original age columns</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – A dataframe of population data
 containing only the age columns.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Returns the age_df with bins.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -119,24 +209,24 @@ containing only the age columns.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.filter_stops">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">filter_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.filter_stops" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">filter_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stops_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.filter_stops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filters the stops dataframe based on two things:</p>
 <div class="line-block">
 <div class="line">1) Status column - We want to keep stops which are active, pending or new.</div>
 <div class="line">2) StopType want only to include bus and rail stops.</div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>stops_df</strong> (<em>pd.DataFrame</em>) – the dataframe to filter.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>Filtered_stops which meet the criteria</dt><dd><p>of keeping based on status/stoptype columns.</p>
 </dd>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -144,7 +234,7 @@ containing only the age columns.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.get_col_bins">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">get_col_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col_nms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.get_col_bins" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">get_col_bins</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col_nms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.get_col_bins" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to group/bin the ages together in 5 year steps.</p>
 <dl class="simple">
 <dt>Starts the sequence at age 0.</dt><dd><p>Will return the ages in a list of tuples.
@@ -154,13 +244,13 @@ the upper limit.</p>
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>col_nms</strong> (<em>list of str</em>) – a list of the age columns as strings.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a list of the ages with 5 year gaps.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of tuples</p>
 </dd>
 </dl>
@@ -168,12 +258,12 @@ the upper limit.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.highly_serv_stops">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">highly_serv_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.highly_serv_stops" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">highly_serv_stops</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.highly_serv_stops" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieves timetable data from the Traveline National Dataset for
 any region. Filters stops with that have &gt;1 departure per hour
 on a weekday (Wed is default) between 6am and 8pm.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>region</strong> (<em>str</em>) – the name of the region of the UK that the data
 is needed for.</p>
 </dd>
@@ -182,14 +272,14 @@ is needed for.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.served_proportions_disagg">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">served_proportions_disagg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_in_poly_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols_lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.served_proportions_disagg" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">served_proportions_disagg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pop_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pop_in_poly_df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols_lst</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.served_proportions_disagg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the number of people in each category, as specified by the column
 (e.g age range, or disability status) who are served and not served by
 public transport, and gives those as a proportion of the total.</p>
 <p>Note: the numeric values in the dataframe are return as strings for
 formatting reasons</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pop_df</strong> (<em>pd.DataFrame</em>) – population dataframe.</p></li>
 <li><p><strong>pop_in_poly_df</strong> (<em>pd.DataFrame</em>) – dataframe resulting in the points
@@ -200,14 +290,14 @@ dataframe supplied which contain population figures, and are to
 be summed and assessed as served/unserved by public transport.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>a dataframe summarising
 i) the total number of people that column (e.g. age range, sex)
 ii) the number served by public transport
 iii) the proportion who are served by public transport
 iv) the proportion who are not served by public transport</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -215,19 +305,19 @@ iv) the proportion who are not served by public transport</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="data_transform.slice_age_df">
-<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">slice_age_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_nms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.slice_age_df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">data_transform.</span></span><span class="sig-name descname"><span class="pre">slice_age_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_nms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_transform.slice_age_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Slices a dataframe according to the list of column names provided.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame to be sliced.</p></li>
 <li><p><strong>col_nms</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – column names as string in a list.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A dataframe sliced down to only the columns required.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -237,33 +327,51 @@ iv) the proportion who are not served by public transport</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="data_output.html" class="btn btn-neutral float-left" title="data_output module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="geospatial_mods.html" class="btn btn-neutral float-right" title="geospatial_mods module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="geospatial_mods.html" class="btn btn-neutral float-right" title="geospatial_mods module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data_output.html" class="btn btn-neutral float-left" title="data_output module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood.</p>
-  </div>
+    <p>
+        &copy; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
+
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
