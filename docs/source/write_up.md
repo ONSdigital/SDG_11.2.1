@@ -292,7 +292,7 @@ The resulting geospatial polygons are then joined and can be used for further ca
 A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.
 
 
-![An example of a network distance calcualtion sourced from the Swedish methodology write up](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png "Swedish network calculation")
+![An example of a network distance calcualtion sourced from the Swedish methodology write up](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png "Swedish network calculation")
 
 
 **Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at [https://www.efgs.info/11-2-1-sweden/](https://www.efgs.info/11-2-1-sweden/). **The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown. 
