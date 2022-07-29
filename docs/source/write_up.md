@@ -4,19 +4,19 @@ Version 1.0
 **James Westwood, Antonio Felton, Paige Hunter and Nathan Shaw.**
 
 
-# Introduction
+## Introduction
 
 Our team has calculated data for transport accessibility across the UK following, as closely as we could, the method in the [UN Metadata for the SDG indicator 11.2.1](https://unstats.un.org/sdgs/metadata/?Text=&Goal=11&Target=11.2). 
 
 The following is a write up of the methodology we employed to make these calculations. In this methodology writeup we aim to accurately reflect the method used in version 1.0 of our project; read more about versions below in the section “Project Versions”. 
 
 
-# Acknowledgement
+## Acknowledgement
 
 The main support for this project on both methodology and finding appropriate data sources has come from the geospatial department, in particular Musa Chirikeni, to whom we are very grateful. Other help has come from Michael Hodge who laid out the initial method we might approach in Python, and from the SDG data team who have been supportive data end users. 
 
 
-# Background  
+## Background  
 
 The statistics calculated for this project are to be used as an indicator of the UK’s progress on target 11.2 of the Sustainable Development Goals (SDGs). The SDGs are a set of 17 Goals which 193 Member states signed up to in order to coordinate efforts on more sustainable and inclusive national development. The goals cover areas such as poverty, hunger, equality and the environment. Goal 11, which the indicator we are calculating for falls under, is concerned with Sustainable Cities. The data our team produces will be available on the [UK data platform for the SDG indicators](https://sdgdata.gov.uk/), specifically on[ this page](https://sdgdata.gov.uk/11-2-1/).
 
@@ -113,15 +113,15 @@ Each version has a project board, wherein we group the issues describing the wor
 
 
 
-# Calculation process
+## Calculation process
 
 
-## Main method of calculation
+### Main method of calculation
 
 The key step of calculation is a spatial join between geolocated urban population data and public transport service areas. A discussion of how each component of that join was calculated from their component parts follows. 
 
 
-## Geocoding the population data
+### Geocoding the population data
 
 The questions we are trying to answer in this analysis is “What proportion of people in the UK have access to public transport access points from their home?”. And then the same question for people in each age, sex and disability category. 
 
@@ -139,12 +139,12 @@ In order to calculate the distance from the place any person lives, to a public 
 PWCs are a population-weighted location (x,y point) at which is a geospatial mean of the locations of all residences in that output area. The PWC, while extremely helpful in giving us a geospatial point to define where the population of any output area lives, is an approximation and is only used due to limitations in our data. 
 
 
-### Joining the data
+#### Joining the data
 
 Population weighted centroid (PWC) data is geolocated with x,y coordinates and has a common data column with the output area data (output area code, “OA11CD”) so a table join can be performed on those datasets. Then the entire population of any output area is approximated to live at the centroid.
 
 
-### Limitations and improvements
+#### Limitations and improvements
 
 Our team recognises that PWCs do not accurately represent the location of any individual’s place of residence and we intend to  research methods of making calculations at even more granular levels, such as postcodes or smaller. Currently however we agreed with the our data end user and the geospatial department that the method to be used for version 1.0 will use the described approximation to geolocate the population.
 
@@ -248,11 +248,11 @@ As Target 11 is concerned with sustainable urban environments, we ultimately had
 In our calculation we group A1, B1, C1 and C2 as urban and any other code as rural. 
 
 
-### Joining the data
+#### Joining the data
 
 The population table for the whole nation was joined onto the table with the urban/rural classification for each output area on the output area code “OA11CD”, hence bringing in the classification into the population data. Every OA and associated PWC is therefore categorised as either urban or rural. Later we use this classification to filter the data, and disaggregate our analysis. For the SDG analysis we remove the OAs classified as rural from our analysis, but we can choose to include them to expose transport availability in rural areas too. 
 
-## Computation of service areas
+### Computation of service areas
 
 As described in the methodology of the UN Metadata for this indicator, public transport service areas had to be calculated.  Two methods to calculate service areas are described in the methodology:
 
@@ -270,7 +270,7 @@ Our team opted for the Euclidean buffer method for a number of reasons:
 * Research shows that the network enquiry requires a complete path network, (as pointed out by [Sweden](https://www.efgs.info/11-2-1-sweden/) in their write up, see section “**Result from the network distance calculations”**)
 
 
-### Euclidean buffering methodology
+#### Euclidean buffering methodology
 
 We use Geopandas and for all geospatial operations in our analysis and the buffering operation is actually carried out by the Shapely `object.buffer()` function. This operation takes a geospatial point, and uses a radius of a given length to creates a polygon around the point which approximates a circle. The standard buffering of a point yields a polygon with 99.8% of the area of the circular disk it approximates.
 
@@ -282,12 +282,12 @@ The resulting geospatial polygons are then joined and can be used for further ca
 
 
 
-![Combining polygons to make a multi-polygon](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
+![Combining polygons to make a multi-polygon](https://giAgethub.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
 
 **Figure 2: Process of combining polygons to create the service area**
 
 
-### Notes on the network query method
+#### Notes on the network query method
 
 A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.
 
@@ -295,9 +295,9 @@ A network query would be calculated by taking paths of a specified length (500m 
 ![An example of a network distance calcualtion sourced from the Swedish methodology write up](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png "Swedish network calculation")
 
 
-**Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at [https://www.efgs.info/11-2-1-sweden/](https://www.efgs.info/11-2-1-sweden/). **The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown. 
+**Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at [https://www.efgs.info/11-2-1-sweden/](https://www.efgs.info/11-2-1-sweden/).** The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown. 
 
-## Calculation of population within service areas
+### Calculation of population within service areas
 
 With the service areas calculated, the population that resides within a service area is calculated by a two stage process:
 
@@ -307,20 +307,20 @@ With the service areas calculated, the population that resides within a service 
 2. The population figure (number of individuals) associated with each PWC is summed, meaning that only the population within the service areas is counted as the population outside of the service areas was filtered out at stage 1.
 3. The proportion of the population inside a service area is calculated as a proportion of the total population. Currently for version 1.0, this is carried out at Local Authority (LA) level.
 
-## Disaggregations
+### Disaggregations
 
 As required for the SDG indicator we are producing this data for, the output data from this project has been disaggregated by sex, age and disability status. 
 
 
-### Shortcomings of the disaggregation method
+#### Shortcomings of the disaggregation method
 
 Our team recognises that in our current method, ethnicity is not a disaggregation that we use. At this stage for version 1.0 we are attempting to output data called for by the methodology in the [UN Metadata](https://unstats.un.org/sdgs/metadata/?Text=&Goal=11&Target=11.2). We regret that this important disaggregation is not included however, so our team intend to include this additional disaggregation in version 1.1 as an enhancement above what the original methodology requires. Disaggregating on other protected characteristics, as well as deprivation levels may be considered too.
 
 
-## Disability Status
+### Disability status
 
 
-### Classification and calculation of people with disabilities
+#### Classification and calculation of people with disabilities
 
 We classify disability using data from the ONS UK census, which is consistent with GSS harmonized disability data. To understand the data, we looked at the questions and their possible responses in the[ Measuring disability for the Equality Act 2010 harmonisation guidance](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/).
 
@@ -398,12 +398,12 @@ Considerations on disability status
 Our team has discussed options for counting individuals as either disabled or not. This is a complex and important area, and we recognise the importance of getting this as accurate as possible, as it may highlight areas in which those with disabilities are more affected by transport accessibility issues. 
 
 
-#### Distance
+##### Distance
 
 Standard distances of 500m and 1km are applied as a radius around the transport access nodes in order to create the public transport service areas. We speculate that these distances likely do not represent an accessible distance for many people however- this might include wheelchair users, elderly people and families with young children. 
 
 
-#### Definitions
+##### Definitions
 
 We have opted to use a GSS Harmonised definition of disability for our analysis and the data comes from the census as described above. On the other hand the UN Metadata defines additional criteria to categorise public transport as conveniently accessible or not: 
 
@@ -412,10 +412,7 @@ We have opted to use a GSS Harmonised definition of disability for our analysis 
 
 In our analysis we are including the entire population, however, in our disaggregations we do not create a “special-needs” group. If we were to create such a group we should include people with temporary disabilities (if the data on this can be sourced), and the elderly or children. This has been proposed for version 1.2 of this project.
 
-Age
-
-
-### How we chose the age bins 
+### Selection of age bins 
 
 Population data was broken down by age on a year-by-year basis, from ages 0 through to 99. Rather than reporting the data or even calculating transport availability for every year in an age range, we opted to run the calculation for ages binned in 5-year brackets. 
 
@@ -423,7 +420,7 @@ We found no standard way to group ages. In other indicators across the SDG platf
 
 If another age binning method is required, we plan to make our `age_binning` function more configurable (in version 1.2 of the project) so it will take population data by age and aggregate it into bins group by ages provided a `bin_size` parameter. This means that if the age binning needs to be changed so that, for instance, it can be compared to another dataset, the list of age groups can be changed easily and the analysis rerun. 
 
-Aggregation and reporting
+### Aggregation and reporting
 
 To establish whether public stops and stations were within reach of people's places of residence the data analysis needed to be carried out at the most granular level possible, the output area level. However there are 175,434 output areas in England and Wales, so this would be too many data points to report on the data platform. Instead we aggregate up to large areas by request of our data end-user, the SDG data team. We aggregate our analysis up to the local authority (LA) level, and output areas fit perfectly within their parent local authority. 
 
