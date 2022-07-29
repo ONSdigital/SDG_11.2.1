@@ -281,7 +281,6 @@ We use Geopandas and for all geospatial operations in our analysis and the buffe
 The resulting geospatial polygons are then joined and can be used for further calculations. 
 
 
-
 ![Combining polygons to make a multi-polygon](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
 
 **Figure 2: Process of combining polygons to create the service area**
@@ -363,8 +362,7 @@ Therefore in our calculation, people will be considered "Non-disabled" if they:
 
 And the calculations are as follows:
 
-
-$Dtot= Dlot + Dlit$
+_Dtot = Dlot + Dlit_
 
 
 I.e. "Total people with disabilities" = "Day-to-day activities limited a lot" + "Day-to-day activities limited a little"
