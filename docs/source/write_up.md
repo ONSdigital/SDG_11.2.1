@@ -427,4 +427,4 @@ Aggregation and reporting
 
 To establish whether public stops and stations were within reach of people's places of residence the data analysis needed to be carried out at the most granular level possible, the output area level. However there are 175,434 output areas in England and Wales, so this would be too many data points to report on the data platform. Instead we aggregate up to large areas by request of our data end-user, the SDG data team. We aggregate our analysis up to the local authority (LA) level, and output areas fit perfectly within their parent local authority. 
 
-The results aggregated in this way will display well on the [UK SDG data platform](https://sdgdata.gov.uk/), as it is well for developed to take this kind of geographical data. 
+The results aggregated in this way will display well on the [UK SDG data platform](https://sdgdata.gov.uk/), as it is well for developed to take this kind of geographical data! 
