@@ -282,7 +282,7 @@ The resulting geospatial polygons are then joined and can be used for further ca
 
 
 
-![Combining polygons to make a multi-polygon](https://giAgethub.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
+![Combining polygons to make a multi-polygon](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
 
 **Figure 2: Process of combining polygons to create the service area**
 
