@@ -413,16 +413,16 @@
 <div class="section" id="euclidean-buffering-methodology">
 <h4>Euclidean buffering methodology<a class="headerlink" href="#euclidean-buffering-methodology" title="Permalink to this headline">¶</a></h4>
 <p>We use Geopandas and for all geospatial operations in our analysis and the buffering operation is actually carried out by the Shapely <code class="docutils literal notranslate"><span class="pre">object.buffer()</span></code> function. This operation takes a geospatial point, and uses a radius of a given length to creates a polygon around the point which approximates a circle. The standard buffering of a point yields a polygon with 99.8% of the area of the circular disk it approximates.</p>
-<p><img alt="Buffering geospatial points" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png" /></p>
+<p><a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png"><img alt="Buffering geospatial points" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png" /></a></p>
 <p><strong>Figure 1: Illustration of the process of buffering a geospatial Point</strong></p>
 <p>The resulting geospatial polygons are then joined and can be used for further calculations.</p>
-<p><img alt="Combining polygons to make a multi-polygon" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png" /></p>
+<p><a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png"><img alt="Combining polygons to make a multi-polygon" src="https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png" /></a></p>
 <p><strong>Figure 2: Process of combining polygons to create the service area</strong></p>
 </div>
 <div class="section" id="notes-on-the-network-query-method">
 <h4>Notes on the network query method<a class="headerlink" href="#notes-on-the-network-query-method" title="Permalink to this headline">¶</a></h4>
 <p>A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.</p>
-<p><img alt="An example of a network distance calcualtion sourced from the Swedish methodology write up" src="https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png" /></p>
+<p><a class="reference external" href="https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png"><img alt="An example of a network distance calcualtion sourced from the Swedish methodology write up" src="https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png" /></a></p>
 <p><strong>Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at <a class="reference external" href="https://www.efgs.info/11-2-1-sweden/">https://www.efgs.info/11-2-1-sweden/</a>.</strong> The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown.</p>
 </div>
 </div>
