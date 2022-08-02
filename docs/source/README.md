@@ -39,6 +39,6 @@ The aims are:
 
 ## Resources
 
-- https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf
+- [Assessing SDG indicator 11.2.1 in European cities](https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf)
 
 
