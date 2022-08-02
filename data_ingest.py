@@ -1,5 +1,4 @@
 # Core imports for this module
-from http.client import REQUESTED_RANGE_NOT_SATISFIABLE
 import os
 import re
 import json
