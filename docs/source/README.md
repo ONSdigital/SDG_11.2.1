@@ -27,7 +27,7 @@ The aims are:
 
 ## Process
 
-![process_diag](https://github.com/ONSdigital/SDG_11.2.1/blob/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png?raw=true)
+[![process_diag](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png)](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png)
 
 
 
