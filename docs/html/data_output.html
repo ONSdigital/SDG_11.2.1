@@ -5,8 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>data_output module &mdash; SDG_11.2.1 V1.0 documentation</title>
@@ -25,7 +24,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -89,10 +87,6 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
 <li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="write_up.html">Calculation Methodology of Indicator 11.2.1</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#introduction">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#acknowledgement">Acknowledgement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#background">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#calculation-process">Calculation process</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Technical Documentation</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="data_ingest.html">data_ingest module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">data_output module</a></li>
@@ -166,20 +160,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="module-data_output">
-<span id="data-output-module"></span><h1>data_output module<a class="headerlink" href="#module-data_output" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="module-data_output">
+<span id="data-output-module"></span><h1>data_output module<a class="headerlink" href="#module-data_output" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="data_output.reorder_final_df">
 <span class="sig-prename descclassname"><span class="pre">data_output.</span></span><span class="sig-name descname"><span class="pre">reorder_final_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#data_output.reorder_final_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reorders the processed dataframe before writing to csv.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe to reorder.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Reordered dataframe.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -203,7 +197,7 @@
 <div class="line">9) re-order columns to match required output</div>
 </div>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe to reshape.</p></li>
 <li><p><strong>id_col</strong> (<em>str</em>) – Name of the column that index will get renamed to.</p></li>
@@ -211,16 +205,16 @@
 <li><p><strong>id_rename</strong> (<em>str</em><em>, </em><em>optional</em>) – Name if renaming ID column. Defaults to None.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Reshaped dataframe.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
 
-</section>
+</div>
 
 
            </div>

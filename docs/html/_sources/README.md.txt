@@ -27,11 +27,8 @@ The aims are:
 
 ## Process
 
-![step1](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step1.jpg)
+![process_diag](https://github.com/ONSdigital/SDG_11.2.1/blob/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png?raw=true)
 
-![step2](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step2.jpg)
-
-![step3](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step3.jpg)
 
 
 ## Deliverables of the project
