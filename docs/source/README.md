@@ -27,11 +27,8 @@ The aims are:
 
 ## Process
 
-![step1](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step1.jpg)
+[![process_diag](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png)](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/add_latest_process_diag_%23254/docs/source/img_readme/New_workflow_diagram.png)
 
-![step2](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step2.jpg)
-
-![step3](https://github.com/james-westwood/SDG_11.2.1/raw/master/img_readme/11-2-1-process-step3.jpg)
 
 
 ## Deliverables of the project
@@ -42,6 +39,6 @@ The aims are:
 
 ## Resources
 
-- https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf
+- [Assessing SDG indicator 11.2.1 in European cities](https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf)
 
 

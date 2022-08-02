@@ -5,8 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>For Developers &mdash; SDG_11.2.1 V1.0 documentation</title>
@@ -25,7 +24,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -97,10 +95,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="write_up.html">Calculation Methodology of Indicator 11.2.1</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#introduction">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#acknowledgement">Acknowledgement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#background">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="write_up.html#calculation-process">Calculation process</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Technical Documentation</a></li>
 </ul>
 
@@ -166,17 +160,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="for-developers">
-<h1>For Developers<a class="headerlink" href="#for-developers" title="Permalink to this heading">¶</a></h1>
-<section id="requirements">
-<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
+  <div class="section" id="for-developers">
+<h1>For Developers<a class="headerlink" href="#for-developers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <p>A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.</p>
 <p><strong>Note for ONS staff:</strong> It is unlikely that you will be able to install all the needed dependencies to run this script, therefore it is recommended that your devlopment work is carried out on an off-network computer.</p>
 <p>Before starting this process, please ensure that <a class="reference external" href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda3</a> and <a class="reference external" href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a> are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable <a class="reference external" href="https://code.visualstudio.com/download">here</a>.</p>
 <p>If you are using Windows, you will have to add the conda and python path into your Windows Path environment. For guidance, follow the tutorial <a class="reference external" href="https://www.datacamp.com/community/tutorials/installing-anaconda-windows">here</a>.</p>
-</section>
-<section id="cloning-the-repository">
-<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="cloning-the-repository">
+<h2>Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
 <p>The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for <a class="reference external" href="https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0">Windows 10</a> or <a class="reference external" href="https://www.atlassian.com/git/tutorials/git-ssh">Mac and Linux</a>.</p>
 <p>You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your local drive).</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd project-directory
@@ -187,18 +181,18 @@
 </pre></div>
 </div>
 <p>You can then open the folder SDG_11.2.1 within VSCode using “Open Folder” in Source Control.</p>
-</section>
-<section id="create-an-environment">
-<h2>Create an environment<a class="headerlink" href="#create-an-environment" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="create-an-environment">
+<h2>Create an environment<a class="headerlink" href="#create-an-environment" title="Permalink to this headline">¶</a></h2>
 <p>Virtual environments are extremely useful when working on different projects as they can be set up in a way to only have packages installed in that environment and not globally - it does not affect base Python installation in any way.</p>
 <p>Create an environment called “SDG_11.2.1” with the version of Python that this was developed in</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>conda create --name SDG_11.2.1 python=3.8
 </pre></div>
 </div>
 <p><strong>Troubleshooting:</strong> When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following <a class="reference external" href="https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686">these steps</a> should resolve the issue.</p>
-</section>
-<section id="activate-the-environment">
-<h2>Activate the environment<a class="headerlink" href="#activate-the-environment" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="activate-the-environment">
+<h2>Activate the environment<a class="headerlink" href="#activate-the-environment" title="Permalink to this headline">¶</a></h2>
 <p>First go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd C:\Users\name\project-directory
 </pre></div>
@@ -237,9 +231,9 @@
 <p>Which should return something like:</p>
 <p>C:\Python36\envs\SDG_11.2.1\python.exe</p>
 <p>Showing your are using the Python from the virtual environment, not the base installation of Python.</p>
-</section>
-<section id="installing-dependencies">
-<h2>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="installing-dependencies">
+<h2>Installing dependencies<a class="headerlink" href="#installing-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>First, ensure you are in the project directory</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ cd C:\Users\name\project-directory
 </pre></div>
@@ -257,17 +251,17 @@
 </pre></div>
 </div>
 <p>The script should now be set up to use.</p>
-</section>
-<section id="setting-git-configuration">
-<h2>Setting Git configuration<a class="headerlink" href="#setting-git-configuration" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="setting-git-configuration">
+<h2>Setting Git configuration<a class="headerlink" href="#setting-git-configuration" title="Permalink to this headline">¶</a></h2>
 <p>To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git config --global user.email &quot;email&quot;
 
 git config --global user.name &quot;username&quot;
 </pre></div>
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
