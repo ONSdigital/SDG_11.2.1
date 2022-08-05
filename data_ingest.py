@@ -633,7 +633,13 @@ def read_usual_pop_scotland(path:str):
     df_oa_only = df.drop(index=['Scotland'])
 
     # only use columns that we need
-    df_essential_cols = df_oa_only[["All people","Males","Females"]]
+    essential_cols = ["All people","Males","Females"]
+    df_essential_cols = df_oa_only[essential_cols]
 
+    # ensure no commas in the dataset so no errors with dtypes
+    for col in essential_cols:
+        df_essential_cols[col] = df_essential_cols[col].str.replace(',', '')
+        df_essential_cols[col] = df_essential_cols[col].astype(int)
+        
     return df_essential_cols
 
