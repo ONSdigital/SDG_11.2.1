@@ -21,6 +21,7 @@ URB_RUR_TYPES:
   RUC11CD: category
 uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
 OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D'
+NI_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-9942-8d950b3a0ceb/resource/29f3f2fd-d131-4b86-8933-42b5b3763763/download/09-05-2022busstop-list.csv'
 high_cap_buffer: 1000
 low_cap_buffer: 500
 age_lst:

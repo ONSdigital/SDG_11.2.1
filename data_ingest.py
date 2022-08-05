@@ -610,3 +610,17 @@ def get_stops_file(url, dir):
 
     return stops_df
 
+def get_ni_bus_stops_from_api(url, output_path):
+    """Gets the northern ireland bus stops data from api
+    from api
+    Args:
+        url (str): NI bus stops data
+        output_path (str): path where the stop data is stored.
+    Returns:
+
+    """
+    r = requests.get(url)
+    url_content = r.content
+    csv_file = open(output_path, 'wb')
+    csv_file.write(url_content)
+    csv_file.close()
