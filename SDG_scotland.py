@@ -53,7 +53,6 @@ stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 # get usual population for scotland
 usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
 sc_usual_pop = di.read_usual_pop_scotland(usual_pop_path)
-sc_usual_pop["All people"] = sc_usual_pop["All people"].str.replace(',', '')
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
