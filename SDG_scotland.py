@@ -176,7 +176,7 @@ all_la.to_csv("Scotland_results.csv", index=False)
 
 end = time.time()
 
-print(f"This took {(end-start/60)} minutes to run")
+print(f"This took {(end-start)/60} minutes to run")
 
 
 
