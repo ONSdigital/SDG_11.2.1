@@ -17,9 +17,12 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
 
-# gets the northern ireland data from the api
+# gets the northern ireland bus stops data from the api
 ni_bus_stop_url = config["NI_stops_data"]
-outut_ni_csv = os.path.join(CWD,"data","Stops","NI","Stops_NI.csv")
-ni_bus_stop = di.get_ni_bus_stops_from_api(url=ni_bus_stop_url,
-                                           output_path=outut_ni_csv)
+output_ni_csv = os.path.join(CWD,"data","Stops","NI","bus_stops_ni.csv")
+di.get_ni_bus_stops_from_api(url=ni_bus_stop_url,
+                                           output_path=output_ni_csv)
 
+# reads in the NI bus stop data as geo df
+ni_bus_stops = di.read_ni_bus_stops(output_ni_csv)
+ni_bus_stops.head()

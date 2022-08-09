@@ -624,3 +624,23 @@ def get_ni_bus_stops_from_api(url, output_path):
     csv_file = open(output_path, 'wb')
     csv_file.write(url_content)
     csv_file.close()
+
+def read_ni_bus_stops(path):
+    """Gets the northern ireland bus stops data which
+    is saved locally
+    Args:
+        path (str): path where the stop data is stored.
+    Returns:
+
+    """
+    # read in bus stop
+    ni_bus_stops = pd.read_csv(path, encoding = 'utf-8')
+
+    # convert into geo dataframe
+    geo_bus_stops = gpd.GeoDataFrame(ni_bus_stops)
+
+    return geo_bus_stops
+
+
+
+
