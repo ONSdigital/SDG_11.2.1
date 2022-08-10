@@ -610,3 +610,36 @@ def get_stops_file(url, dir):
 
     return stops_df
 
+def read_usual_pop_scotland(path:str):
+    """Reads the usual population Scotland.
+
+    This reads in the file containing all the 
+    output areas in scotland with their corresponding 
+    population number.
+
+    Args:
+        path (str): the path where the file exists
+    
+    Returns:
+        pd.DataFrame the usual population dataframe
+    """
+    # reads in data and crops of header and footer
+    df = pd.read_csv(path, 
+                     header=4, 
+                     index_col=0,
+                     skipfooter=4)
+
+    # only want OA so drop Scotland
+    df_oa_only = df.drop(index=['Scotland'])
+
+    # only use columns that we need
+    essential_cols = ["All people","Males","Females"]
+    df_essential_cols = df_oa_only[essential_cols]
+
+    # ensure no commas in the dataset so no errors with dtypes
+    for col in essential_cols:
+        df_essential_cols[col] = df_essential_cols[col].str.replace(',', '')
+        df_essential_cols[col] = df_essential_cols[col].astype(int)
+        
+    return df_essential_cols
+
