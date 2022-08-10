@@ -70,7 +70,7 @@ uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(os.getcwd(),
-                                    "data/population_estimates",
+                                    "data", "population_estimates",
                                     pop_year
                                     )
                        )
