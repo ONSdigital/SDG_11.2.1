@@ -2,7 +2,6 @@
 import os
 
 # third party import 
-import requests
 import yaml
 
 # module imports
@@ -21,7 +20,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 ni_bus_stop_url = config["NI_bus_stops_data"]
 output_ni_bus_csv = os.path.join(CWD,"data","Stops","NI","bus_stops_ni.csv")
 di.get_ni_stops_from_api(url=ni_bus_stop_url,
-                                           output_path=output_ni_bus_csv)
+                         output_path=output_ni_bus_csv)
 
 # reads in the NI bus stop data as geo df
 ni_bus_stops = di.read_ni_stops(output_ni_bus_csv)
@@ -30,7 +29,7 @@ ni_bus_stops = di.read_ni_stops(output_ni_bus_csv)
 ni_train_stop_url = config["NI_train_stops_data"]
 output_ni_train_csv = os.path.join(CWD,"data","Stops","NI","train_stops_ni.csv")
 di.get_ni_stops_from_api(url=ni_train_stop_url,
-                        output_path=output_ni_train_csv)
+                         output_path=output_ni_train_csv)
 
 # reads in the NI train  stop data as geo df
 ni_train_stops = di.read_ni_stops(output_ni_train_csv)

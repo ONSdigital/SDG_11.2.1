@@ -611,7 +611,7 @@ def get_stops_file(url, dir):
     return stops_df
 
 def get_ni_stops_from_api(url, output_path):
-    """Gets the northern ireland bus stops data from api
+    """Gets the northern ireland stops data from api
     from api
     Args:
         url (str): NI bus stops data
@@ -619,6 +619,13 @@ def get_ni_stops_from_api(url, output_path):
     Returns:
 
     """
+    # creates the folders necessary 
+    CWD = os.getcwd()
+    NI_stops_folder = os.path.join(CWD,"data","stops","NI")
+    if not os.path.exists(NI_stops_folder):
+        os.mkdir(NI_stops_folder)
+
+    # requests the stop data 
     r = requests.get(url)
     url_content = r.content
     csv_file = open(output_path, 'wb')
@@ -634,12 +641,12 @@ def read_ni_stops(path):
 
     """
     # read in bus stop
-    ni_bus_stops = pd.read_csv(path, encoding = 'cp1252')
+    ni_stops = pd.read_csv(path, encoding = 'cp1252')
 
     # convert into geo dataframe
-    geo_bus_stops = gpd.GeoDataFrame(ni_bus_stops)
+    geo_stops = gpd.GeoDataFrame(ni_stops)
 
-    return geo_bus_stops
+    return geo_stops
 
 
 
