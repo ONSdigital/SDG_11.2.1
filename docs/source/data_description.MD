@@ -26,15 +26,13 @@ The dataset is filtered based on two conditions.
 
 ![](https://lh4.googleusercontent.com/aWHDDVx3u12vC8HnbD395w61y_wIi-K7sZ38TkHJV2EqifGdOD8t5cc4E7fdIN1dApuK-CSaxcFYJ28Vxg6jN1varhbk8_PDPuNj8lLD4kwfXOlg-GX8fk4EeVjV58fHmXw9hFiCC9vQjKUjmeztDA)
 
-The count of each of these are as follows.
-
 **Derived Variables**
 
 The StopType that are included are in the calculations are "RSE", "RLY", "RPL", "TMU", "MET", "PLT", "BCE", "BST","BCQ", "BCS","BCT". After filtering there are 383,662 public transport access points.
 
-A**capacity_type**variable is derived which classifies public transport as either high or low capacity. This is consistent with the UN[definition](https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf).
+A **capacity_type** variable is derived which classifies public transport as either high or low capacity. This is consistent with the UN [definition](https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf).
 
-A**geometry**variable is derived which creates a polygon around each public transport access point. The polygon for a low capacity bus stop is a circle with radius of 500 metres with the access point being the centre point. The polygon for high capacity is the same with a circle with a radius of 1000 metres. These polygons will be used to determine if a weighted centroid lives within the polygon.
+A **geometry** variable is derived which creates a polygon around each public transport access point. The polygon for a low capacity bus stop is a circle with radius of 500 metres with the access point being the centre point. The polygon for high capacity is the same with a circle with a radius of 1000 metres. These polygons will be used to determine if a weighted centroid lives within the polygon.
 
   
   
@@ -47,27 +45,25 @@ The census takes place every 10 years and aims to obtain information on all hous
 
 Census data is used to calculate percentages of certain demographics which can then be applied to the annual population estimates. For example the annual population estimates do not include information on disability status. A proportion of people who are disabed can be calculated from the 2011 Census per OA and then applied to the population estimates data.
 
-The[Population Weighted Centroids](https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids) for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
+The [Population Weighted Centroids](https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids) for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
 
-(plot would be good here)
+The [Urban/Rural Classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification) is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.
 
-The[Urban/Rural Classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification) is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.
-
-The QS303UK - Long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a OA basis. This information is transformed to be consistent with the[GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/). This allows us to produce estimates disaggregated by disability status.
+The QS303UK - Long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a OA basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/). This allows us to produce estimates disaggregated by disability status.
 
   
 
 
 **Population Estimates**
 
-The ONS produces[population estimates](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates) every year. This contains information on population estimates for OA’s. This also contains splits of age and sex. These are annual so the year used is consistent with the calculation year.
+The ONS produces [population estimates](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates) every year. This contains information on population estimates for OA’s. This also contains splits of age and sex. These are annual so the year used is consistent with the calculation year.
 
   
 
 
 **Local Authorities (LA) Boundary**
 
-The boundaries of each[local authorities](https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc) are used to ensure calculations are aggregated to an LA basis.
+The boundaries of each [local authorities](https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc) are used to ensure calculations are aggregated to an LA basis.
 
 The[ lookup file ](https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_OA_WD_LAD))between LA and OA is important when aggregating OA estimates to produce the LA figure.
 
