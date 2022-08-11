@@ -1,6 +1,6 @@
-**Data Quality**
+# Data Quality
 
-**NAPTAN**
+## NAPTAN
 
 The NaPTAN data is open source and available for anyone under a Government License.
 
@@ -15,9 +15,7 @@ Even though it is the local authorities responsibility to submit to NaPTAN. It i
 An important issue is that it is not clear whether each stop has step free access and is accessible to all. Therefore there could be stops that are in the data which can’t be used. This is particularly relevant to our analysis as we produce breakdowns by disability.
 
   
-
-
-**Population Weighted Centroids**
+## Population Weighted Centroids
 
 The OA Population Weighted Centroids are an official geographical product from the Office For National Statistics. These are used to determine where an Output Area can be allocated to, when aggregating statistics from OA to any other geographical level such as local authorities.
 
@@ -28,28 +26,24 @@ The population centroids are on an Output area basis. There are approximately 30
 The centroid might be in the middle of a lake or field and therefore not actually representative of where the population actually live.The centroids were calculated in 2011. There is a possibility that the areas in which people lived in have changed. For example if a new housing estate has been built since 2011, this may shift where the centroid lies.
 
   
-
-
-**Urban/Rural Classification**
+## Urban/Rural Classification
 
 The definition of whether an OA is urban/rural can be found [here](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification). This is one definition of how to classify this. The EU uses a different definition and therefore there would be differences in the output statistics.
 
 Urban/Rural classification uses a 2011 classification applied to the current OA boundaries. Classification of urban/rural might have changed since then. For example if a big housing estate was created in the countryside on the edge of a city, this might lead to that OA being classified as urban instead of rural.
 
   
-
-
-**Disability Data**
+## Disability Data
 
 The disability data used iis from the 2011 census, therefore a proportion is applied to population estimates for subsequent years. This method was suggested by the ONS Geo Spatial Department. These demographics might have changed since then.
 
 The definition used for disability is the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/). The UN [definition](https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf) appears to be much wider for disability. This could lead to different output statistics when aggregating up.
 
-**Annual Population Estimates**
+## Annual Population Estimates
 
 These are the annual population estimates that ONS produce every year. They are an official statistic. These, unlike the census, are estimates and have a defined methodology [here](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/methodologies/measuresofstatisticaluncertaintysummary). The methodology includes a section on statistical uncertainty about these numbers.
 
-**LAD Boundaries**
+## LAD Boundaries
 
 There are several different types of geo spatial boundaries that can be used. (BFE) Best Full Extent is the boundary type we use. To be consistent with official statistics that ONS produce this is the type of boundary we use.
 
