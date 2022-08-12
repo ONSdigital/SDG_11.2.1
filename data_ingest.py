@@ -12,7 +12,6 @@ from datetime import datetime
 import geopandas as gpd
 import pandas as pd
 import requests
-from requests.auth import HTTPBasicAuth
 from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
@@ -194,7 +193,7 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
     return pd_df
 
 
-def _grab_zip(file_nm: str, zip_link, zip_path: PathLike, login=None):
+def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
     a zip file from the URI specified in the the zip_link 
     parameter.
