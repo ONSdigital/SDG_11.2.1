@@ -12,6 +12,7 @@ from datetime import datetime
 import geopandas as gpd
 import pandas as pd
 import requests
+from requests.auth import HTTPBasicAuth
 from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
@@ -193,7 +194,7 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
     return pd_df
 
 
-def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
+def _grab_zip(file_nm: str, zip_link, zip_path: PathLike, login=None):
     """Used by _import_extract_delete_zip function to download
     a zip file from the URI specified in the the zip_link 
     parameter.
@@ -223,10 +224,9 @@ def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLi
         csv_path (PathLike): The path where the csv should be written to, e.g. /data/.
     """
     # Open the zip file and extract
-    # TODO: Correction: zip.extract should be writing to the csv_path, not to "data".
     with ZipFile(zip_path, 'r') as zip:
         print(f"Extracting {csv_nm} from {zip_path}")
-        _ = zip.extract(csv_nm, "data")
+        _ = zip.extract(csv_nm, csv_path)
 
 
 def _delete_junk(file_nm: str, zip_path: PathLike):
