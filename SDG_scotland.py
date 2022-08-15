@@ -171,7 +171,7 @@ for local_auth in sc_auth:
     # # Calculating those served and not served by sex
     sex_cols = ['Males', 'Females']
 
-    sex_servd_df = dt.served_proportions_disagg(pop_df=pwc_with_pop,
+    sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
 
