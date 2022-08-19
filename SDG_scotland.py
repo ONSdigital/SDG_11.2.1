@@ -108,6 +108,7 @@ sc_auth = [random_la]
 # define output dicts to capture dfs
 total_df_dict = {}
 sex_df_dict = {}
+disab_df_dict = {}
 
 for local_auth in sc_auth:
     print(f"Processing: {local_auth}")
@@ -241,6 +242,28 @@ for local_auth in sc_auth:
     # Slice disability df that only has the proportion disabled column and the OA11CD col
     disab_prop_df = disability_df[['oa11cd', 'proportion_disabled', 'proportion_non-disabled']]
 
+    # Merge the proportion disability df into main the pop df with a left join
+    only_la_pwc_with_pop = only_la_pwc_with_pop.merge(disab_prop_df, on='oa11cd', how="left")
+
+    # Make the calculation of the number of people with disabilities in the year
+    # of the population estimates
+    only_la_pwc_with_pop["number_disabled"] = (
+        round
+        (only_la_pwc_with_pop["All people"]
+         *
+         only_la_pwc_with_pop["proportion_disabled"])
+    )
+    only_la_pwc_with_pop["number_disabled"] = only_la_pwc_with_pop["number_disabled"].astype(int)
+
+    # Make the calculation of the number of non-disabled people in the year
+    # of the population estimates
+    only_la_pwc_with_pop["number_non-disabled"] = (
+        round
+        (only_la_pwc_with_pop["All people"]
+         *
+         only_la_pwc_with_pop["proportion_non-disabled"])
+    )
+    only_la_pwc_with_pop["number_non-disabled"] = only_la_pwc_with_pop["number_non-disabled"].astype(int)
     
 # every single LA
 all_la = pd.concat(total_df_dict.values())
