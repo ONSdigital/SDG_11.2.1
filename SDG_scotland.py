@@ -168,8 +168,15 @@ for local_auth in sc_auth:
     # It will simply show up as blanks (i.e. Total) in all disagg columns
     la_results_df_out.drop("Total", axis=1, inplace=True)
     
+    
+    # Sex disaggregation
+    # # # renaming Scotland sex col names with their replacements
+    replacements = {"Males": "male",
+                    "Females": "female"}
+    only_la_pwc_with_pop.rename(columns=replacements, inplace=True)
+    pop_in_poly_df.rename(columns=replacements, inplace=True)
     # # Calculating those served and not served by sex
-    sex_cols = ['Males', 'Females']
+    sex_cols = ['male', 'female']
 
     sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
                                                 pop_in_poly_df=pop_in_poly_df,
