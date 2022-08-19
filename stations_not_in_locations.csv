@@ -1,26 +1,19 @@
-station_name,station_code,,
-Ashford International (Eurostar),ASI,delete from codes,Eurostar
-Barbican,ZBB,delete from codes,no longer part of network
-Corfe Castle,CFC,delete from codes,heritage station
-Dublin Ferryport,DFP,Ferry,
-Dublin Port - Stena,DPS,Ferry,
-Elephant & Castle (Underground),ZEL,delete from codes,
-"Heathrow Airport Terminals 1, 2 and 3",HXX,replace in locs,
-High Street Kensington Underground,ZHS,delete from codes,
-Horden,HRE,added to locs,
-London St Pancras (Intl),SPX,replace in locs,
-Maghull North,MNS,added to locs,
-Meridian Water,MRW,added to locs,
-Oxford Parkway,OXP,changed code in locs,
-Penychain,PNC,changed code in locs,
-Robroyston,RRN,added to locs,
-Warrington West,WAW,added to locs,
-Whitechapel,ZLW,code changed in locs,
-Worcestershire Parkway,WOP,added to locs,
-Newcastle Airport Metro,APN,added from locs,
-Brockley Whins Rail Station,BNR,added from locs,
-Penychain Rail Station,BPC,added from locs,
-East Boldon Rail Station,EBL,added from locs,
-Glasgow Central Low Level Rail Station,GCL,added from locs,
-Glasgow Queen Street Low Level Rail Station,GQL,added from locs,
-St Peters Rail Station,STZ,added from locs,
+,station_name,station_code
+98,Ashford International (Eurostar),ASI
+145,Barbican,ZBB
+579,Corfe Castle,CFC
+728,Dublin Ferryport,DFP
+729,Dublin Port - Stena,DPS
+800,Elephant & Castle (Underground),ZEL
+1110,"Heathrow Airport Terminals 1, 2 and 3",HXX
+1143,High Street Kensington Underground,ZHS
+1179,Horden,HRE
+1458,London St Pancras (Intl),SPX
+1500,Maghull North,MNS
+1557,Meridian Water,MRW
+1945,Oxford Parkway,OXP
+1994,Penychain,PNC
+2133,Robroyston,RRN
+3169,Warrington West,WAW
+3248,Whitechapel,ZLW
+3320,Worcestershire Parkway,WOP
