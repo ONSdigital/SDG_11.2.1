@@ -33,6 +33,7 @@ DATA_DIR = config["DATA_DIR"]
 pop_year = "2011"
 boundary_year = "2021"
 
+
 # Get the pandas dataframe for the stops data
 stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                              dir=os.path.join(os.getcwd(),
@@ -104,7 +105,9 @@ list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
 sc_auth = [random_la]
 
+# define output dicts to capture dfs
 total_df_dict = {}
+sex_df_dict = {}
 
 for local_auth in sc_auth:
     print(f"Processing: {local_auth}")
@@ -164,14 +167,46 @@ for local_auth in sc_auth:
     # but "Total" is not a disaggregation so doesn't have a column.
     # It will simply show up as blanks (i.e. Total) in all disagg columns
     la_results_df_out.drop("Total", axis=1, inplace=True)
+    
+    
+    # Sex disaggregation
+    # # # renaming Scotland sex col names with their replacements
+    replacements = {"Males": "male",
+                    "Females": "female"}
+    only_la_pwc_with_pop.rename(columns=replacements, inplace=True)
+    pop_in_poly_df.rename(columns=replacements, inplace=True)
+    # # Calculating those served and not served by sex
+    sex_cols = ['male', 'female']
+
+    sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=sex_cols)
+
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
+                                             id_col="Sex",
+                                             local_auth=local_auth)
+
+
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth]=sex_servd_df_out
 
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
 # every single LA
 all_la = pd.concat(total_df_dict.values())
+sex_all_la = pd.concat(sex_df_dict.values())
 
-all_la.to_csv("Scotland_results.csv", index=False)
+
+# Stacking the dataframes
+all_results_dfs = [all_la, sex_all_la]
+final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
+
+# Outputting to CSV
+
+final_result.to_csv("Scotland_results.csv", index=False)
 
 end = time.time()
 
