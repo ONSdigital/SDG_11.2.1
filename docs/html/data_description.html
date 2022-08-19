@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data &mdash; SDG_11.2.1 V1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Data Quality" href="data_quality.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="comparison_to_EU_method.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html">Calculation Methodology of Indicator 11.2.1</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#naptan">NaPTAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#derived-variables">Derived Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#census-data">Census Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#population-estimates">Population Estimates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-authorities-la-boundary">Local Authorities (LA) Boundary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data_quality.html">Data Quality</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDG_11.2.1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data_description.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data">
+<h1>Data<a class="headerlink" href="#data" title="Permalink to this heading"></a></h1>
+<p>The Public Transport Availability project looks to assess the proportion of people who live near a public transport stop. Below is a description of the data sources used in order to perform this calculation.</p>
+<section id="naptan">
+<h2>NaPTAN<a class="headerlink" href="#naptan" title="Permalink to this heading"></a></h2>
+<p>The National Public Transport Access Nodes (NaPTAN) dataset contains a list of all public transport access points in Great Britain including bus, rail and tram. This is open-source data and is publicly available. As of 3rd May 2022, the dataset includes around 435,000 public transport access points. The following columns are used within our calculations. The full schema for NapTAN can be found<a class="reference external" href="http://naptan.dft.gov.uk/naptan/schema/2.5/doc/NaPTANSchemaGuide-2.5-v0.67.pdf"> here</a>.</p>
+<table class="colwidths-auto docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Column</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>NaptanCode</p></td>
+<td><p>Seven- or eight-digit identifier for access point.</p></td>
+</tr>
+<tr class="row-odd"><td><p>CommonName</p></td>
+<td><p>Name of bus stop.</p></td>
+</tr>
+<tr class="row-even"><td><p>Easting</p></td>
+<td><p>Uk Geocoding reference.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Northing</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>Status</p></td>
+<td><p>Whether an access point is active, inactive or pending.</p></td>
+</tr>
+<tr class="row-odd"><td><p>StopType</p></td>
+<td><p>The type of access point e.g bus or rail</p></td>
+</tr>
+</tbody>
+</table>
+<p>The dataset is filtered based on two conditions.</p>
+<ol class="arabic simple">
+<li><p>The Status column must not be inactive. This ensures that historic public transport access points are not included in the calculations.</p></li>
+<li><p>The StopType is either a bus or rail public transport access point.</p></li>
+</ol>
+<p><img alt="" src="https://lh4.googleusercontent.com/aWHDDVx3u12vC8HnbD395w61y_wIi-K7sZ38TkHJV2EqifGdOD8t5cc4E7fdIN1dApuK-CSaxcFYJ28Vxg6jN1varhbk8_PDPuNj8lLD4kwfXOlg-GX8fk4EeVjV58fHmXw9hFiCC9vQjKUjmeztDA" /></p>
+</section>
+<section id="derived-variables">
+<h2>Derived Variables<a class="headerlink" href="#derived-variables" title="Permalink to this heading"></a></h2>
+<p>The StopType that are included are in the calculations are “RSE”, “RLY”, “RPL”, “TMU”, “MET”, “PLT”, “BCE”, “BST”,”BCQ”, “BCS”,”BCT”. After filtering there are 383,662 public transport access points.</p>
+<p>A <strong>capacity_type</strong> variable is derived which classifies public transport as either high or low capacity. This is consistent with the UN <a class="reference external" href="https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf">definition</a>.</p>
+<p>A <strong>geometry</strong> variable is derived which creates a polygon around each public transport access point. The polygon for a low capacity bus stop is a circle with radius of 500 metres with the access point being the centre point. The polygon for high capacity is the same with a circle with a radius of 1000 metres. These polygons will be used to determine if a weighted centroid lives within the polygon.</p>
+</section>
+<section id="census-data">
+<h2>Census Data<a class="headerlink" href="#census-data" title="Permalink to this heading"></a></h2>
+<p>The census takes place every 10 years and aims to obtain information on all households in the UK and statistics are published at various geographic levels. Output area (OA) is a lower level geography which contains on average approximately 300 people. For the purposes of our calculations each OA will be grouped together into one household.</p>
+<p>Census data is used to calculate percentages of certain demographics which can then be applied to the annual population estimates. For example the annual population estimates do not include information on disability status. A proportion of people who are disabed can be calculated from the 2011 Census per OA and then applied to the population estimates data.</p>
+<p>The <a class="reference external" href="https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids">Population Weighted Centroids</a> for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.</p>
+<p>The <a class="reference external" href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification">Urban/Rural Classification</a> is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.</p>
+<p>The QS303UK - Long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a OA basis. This information is transformed to be consistent with the <a class="reference external" href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/">GSS harmonized disability data</a>. This allows us to produce estimates disaggregated by disability status.</p>
+</section>
+<section id="population-estimates">
+<h2>Population Estimates<a class="headerlink" href="#population-estimates" title="Permalink to this heading"></a></h2>
+<p>The ONS produces <a class="reference external" href="https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates">population estimates</a> every year. This contains information on population estimates for OA’s. This also contains splits of age and sex. These are annual so the year used is consistent with the calculation year.</p>
+</section>
+<section id="local-authorities-la-boundary">
+<h2>Local Authorities (LA) Boundary<a class="headerlink" href="#local-authorities-la-boundary" title="Permalink to this heading"></a></h2>
+<p>The boundaries of each <a class="reference external" href="https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc">local authorities</a> are used to ensure calculations are aggregated to an LA basis.</p>
+<p>The<a class="reference external" href="https://geoportal.statistics.gov.uk/search?collection=Dataset&amp;sort=name&amp;tags=all(LUP_OA_WD_LAD)"> lookup file </a>between LA and OA is important when aggregating OA estimates to produce the LA figure.</p>
+<p>These boundaries and lookup files are annual so the year used is consistent with the calculation year.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="comparison_to_EU_method.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_quality.html" class="btn btn-neutral float-right" title="Data Quality" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

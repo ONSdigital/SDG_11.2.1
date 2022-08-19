@@ -13,6 +13,9 @@ Welcome to SDG_11.2.1's documentation!
    README.md
    for_developers.md
    write_up.md
+   comparison_to_EU_method.md
+   data_description.md
+   data_quality.md
    modules
 
 Functions Index

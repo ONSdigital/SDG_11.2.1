@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Quality &mdash; SDG_11.2.1 V1.0 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Technical Documentation" href="modules.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="data_description.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> SDG_11.2.1
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">The Public Transport Accessibility Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="for_developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="write_up.html">Calculation Methodology of Indicator 11.2.1</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Quality</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#naptan">NAPTAN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#population-weighted-centroids">Population Weighted Centroids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#urban-rural-classification">Urban/Rural Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#disability-data">Disability Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annual-population-estimates">Annual Population Estimates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lad-boundaries">LAD Boundaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Technical Documentation</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SDG_11.2.1</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Data Quality</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/data_quality.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-quality">
+<h1>Data Quality<a class="headerlink" href="#data-quality" title="Permalink to this heading"></a></h1>
+<section id="naptan">
+<h2>NAPTAN<a class="headerlink" href="#naptan" title="Permalink to this heading"></a></h2>
+<p>The NaPTAN data is open source and available for anyone under a Government License.</p>
+<p>In our methodology we need to distinguish between high and low capacity transport. There is no specific marker for this in the dataset. Therefore we use the stop type variable to determine whether a stop is high or low capacity transport. Trams and Metro have the same stop_type. According to the UN definition, Metros are high capacity and Trams are low capacity. However we are unable to distinguish between the two in our data. Here is the <a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/issues/207">issue</a> in more detail.</p>
+<p>The data is submitted on an adhoc basis by local authorities. Details of their last submission can be seen <a class="reference external" href="https://naptan.app.dft.gov.uk/Reports/frmStopsSummaryReport">here</a>. As this is done on an adhoc basis there needs to be an element of downloading and timestamping data to ensure analysis is reproducible. Furthermore, the API which we get the data from is updated on a daily basis and it is difficult to tell whether the data has changed from the last upload.</p>
+<p>There is a column called status which determines whether a stop is inactive or active. We use this variable to ensure all stops used in our calculation are active. However, there are some other values such as pending and blank which are ambiguous. A conversation with the department of transport documented <a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/issues/178">here</a> clarified how to deal with each value.</p>
+<p>Even though it is the local authorities responsibility to submit to NaPTAN. It is unclear how they submit this information. Do they liaise with the bus companies to get this information and how timely is each submission?</p>
+<p>An important issue is that it is not clear whether each stop has step free access and is accessible to all. Therefore there could be stops that are in the data which can’t be used. This is particularly relevant to our analysis as we produce breakdowns by disability.</p>
+</section>
+<section id="population-weighted-centroids">
+<h2>Population Weighted Centroids<a class="headerlink" href="#population-weighted-centroids" title="Permalink to this heading"></a></h2>
+<p>The OA Population Weighted Centroids are an official geographical product from the Office For National Statistics. These are used to determine where an Output Area can be allocated to, when aggregating statistics from OA to any other geographical level such as local authorities.</p>
+<p>Centroids are calculated via the median centroid algorithm. The methodology is detailed <a class="reference external" href="https://geoportal.statistics.gov.uk/documents/population-weighted-centroids-guidance/explore">here</a>.</p>
+<p>The population centroids are on an Output area basis. There are approximately 300 people living in an OA, therefore it automatically assumes that all 300 people live within this one point. As we apply a Eucliden buffer around the centroid (a circle with radius 500/1000M) there may not be an accessible path/pavement or road to get from the centroid to the stop that lies within the buffer.</p>
+<p>The centroid might be in the middle of a lake or field and therefore not actually representative of where the population actually live.The centroids were calculated in 2011. There is a possibility that the areas in which people lived in have changed. For example if a new housing estate has been built since 2011, this may shift where the centroid lies.</p>
+</section>
+<section id="urban-rural-classification">
+<h2>Urban/Rural Classification<a class="headerlink" href="#urban-rural-classification" title="Permalink to this heading"></a></h2>
+<p>The definition of whether an OA is urban/rural can be found <a class="reference external" href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification">here</a>. This is one definition of how to classify this. The EU uses a different definition and therefore there would be differences in the output statistics.</p>
+<p>Urban/Rural classification uses a 2011 classification applied to the current OA boundaries. Classification of urban/rural might have changed since then. For example if a big housing estate was created in the countryside on the edge of a city, this might lead to that OA being classified as urban instead of rural.</p>
+</section>
+<section id="disability-data">
+<h2>Disability Data<a class="headerlink" href="#disability-data" title="Permalink to this heading"></a></h2>
+<p>The disability data used iis from the 2011 census, therefore a proportion is applied to population estimates for subsequent years. This method was suggested by the ONS Geo Spatial Department. These demographics might have changed since then.</p>
+<p>The definition used for disability is the <a class="reference external" href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/">GSS harmonized disability data</a>. The UN <a class="reference external" href="https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf">definition</a> appears to be much wider for disability. This could lead to different output statistics when aggregating up.</p>
+</section>
+<section id="annual-population-estimates">
+<h2>Annual Population Estimates<a class="headerlink" href="#annual-population-estimates" title="Permalink to this heading"></a></h2>
+<p>These are the annual population estimates that ONS produce every year. They are an official statistic. These, unlike the census, are estimates and have a defined methodology <a class="reference external" href="https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/methodologies/measuresofstatisticaluncertaintysummary">here</a>. The methodology includes a section on statistical uncertainty about these numbers.</p>
+</section>
+<section id="lad-boundaries">
+<h2>LAD Boundaries<a class="headerlink" href="#lad-boundaries" title="Permalink to this heading"></a></h2>
+<p>There are several different types of geo spatial boundaries that can be used. (BFE) Best Full Extent is the boundary type we use. To be consistent with official statistics that ONS produce this is the type of boundary we use.</p>
+<p>LA Boundaries are subject to change year on year. Big changes can occur such as merging of local authorities and name changes. Therefore comparisons between years need to be made carefully. There is a discussion on this point documented <a class="reference external" href="https://github.com/ONSdigital/SDG_11.2.1/issues/152">here</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="data_description.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Technical Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Paige Hunter, Antonio Felton, Nathan Shaw, James Westwood.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
