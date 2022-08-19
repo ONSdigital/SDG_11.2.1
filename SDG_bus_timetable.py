@@ -60,8 +60,8 @@ di._delete_junk(file_nm=bus_dataset_name,
 # can be done from a string.
 
 # stop times
-stop_times_types = {'trip_id': 'object',
-                    'departure_time': 'object', 'stop_id': 'object'}
+stop_times_types = {'trip_id': 'category',
+                    'departure_time': 'object', 'stop_id': 'category'}
 
 stop_times_df = di._csv_to_df(file_nm='stop_times',
                               csv_path=os.path.join(
@@ -69,15 +69,15 @@ stop_times_df = di._csv_to_df(file_nm='stop_times',
                               dtypes=stop_times_types)
 
 # trips
-trips_types = {'route_id': 'object',
-               'service_id': 'int64', 'trip_id': 'object'}
+trips_types = {'route_id': 'category',
+               'service_id': 'category', 'trip_id': 'category'}
 
 trips_df = di._csv_to_df(file_nm='trips',
                          csv_path=os.path.join(output_directory, 'trips.txt'),
                          dtypes=trips_types)
 
 # calendar
-calendar_types = {'service_id': 'int64', 'monday': 'int64', 'tuesday': 'int64',
+calendar_types = {'service_id': 'category', 'monday': 'int64', 'tuesday': 'int64',
                   'wednesday': 'int64', 'thursday': 'int64', 'friday': 'int64',
                   'start_date': 'object', 'end_date': 'object'}
 
