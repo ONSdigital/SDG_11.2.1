@@ -128,6 +128,7 @@ for local_auth in sc_auth:
 
     # filter only by current la 
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
+    
 
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
@@ -206,12 +207,39 @@ for local_auth in sc_auth:
                 "Disability: All categories: Long-term health problem or disability; measures: Value"]
     disability_df.drop(drop_lst, axis=1, inplace=True)
     # the col headers are database unfriendly. Defining their replacement names
-    replacements = {"geography": 'OA11CD',
+    replacements = {"geography": 'oa11cd',
                     "Disability: Day-to-day activities limited a lot; measures: Value": "disab_ltd_lot",
                     "Disability: Day-to-day activities limited a little; measures: Value": "disab_ltd_little",
                     'Disability: Day-to-day activities not limited; measures: Value': "disab_not_ltd"}
     # renaming the dodgy col names with their replacements
     disability_df.rename(columns=replacements, inplace=True)
+    
+    # Getting the disab total
+    disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
+                                   + disability_df["disab_ltd_little"])
+
+    # Calcualting the total "non-disabled"
+    la_pop_only = only_la_pwc_with_pop[['oa11cd','All people']]
+    disability_df = la_pop_only.merge(disability_df, on="oa11cd")
+    # Putting the result back into the disability df
+    disability_df["non-disabled"] = disability_df["All people"] - disability_df['disb_total']
+
+    # Calculating the proportion of disabled people in each OA
+    disability_df["proportion_disabled"] = (
+        disability_df['disb_total']
+        /
+        disability_df['All people']
+    )
+    
+    # Calculating the proportion of non-disabled people in each OA
+    disability_df["proportion_non-disabled"] = (
+        disability_df['non-disabled']
+        /
+        disability_df['All people']
+    )
+    
+    # Slice disability df that only has the proportion disabled column and the OA11CD col
+    disab_prop_df = disability_df[['oa11cd', 'proportion_disabled', 'proportion_non-disabled']]
 
     
 # every single LA
