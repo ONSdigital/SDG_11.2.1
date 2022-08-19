@@ -131,71 +131,6 @@ for local_auth in sc_auth:
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
     
 
-    # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
-    
-    # Deduplicate the df as OA appear multiple times 
-    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="oa11cd")
-
-    # all the figures we need
-    served = pop_in_poly_df["All people"].astype(int).sum()
-    full_pop = only_la_pwc_with_pop["All people"].astype(int).sum()
-    not_served = full_pop - served
-    pct_not_served = "{:.2f}".format(not_served/full_pop*100)
-    pct_served = "{:.2f}".format(served/full_pop*100)
-
-    print(f"""The number of people who are served by public transport is {served}.\n
-            The full population of {local_auth} is calculated as {full_pop}
-            While the number of people who are not served is {not_served}""")
-
-    # putting results into dataframe
-    la_results_df = pd.DataFrame({"All_pop":[full_pop],
-                                  "Served":[served],
-                                  "Unserved":[not_served],
-                                  "Percentage served":[pct_served],
-                                  "Percentage unserved":[pct_not_served]})
-    
-      
-    # Re-orienting the df to what's accepted by the reshaper and renaming col
-    la_results_df = la_results_df.T.rename(columns={0:"Total"})
-
-    # Feeding the la_results_df to the reshaper
-    la_results_df_out = do.reshape_for_output(la_results_df,
-                                              id_col="Total",
-                                              local_auth=local_auth)
-
-    # Finally for the local authority totals the id_col can be dropped
-    # That's because the disaggregations each have their own column, 
-    # but "Total" is not a disaggregation so doesn't have a column.
-    # It will simply show up as blanks (i.e. Total) in all disagg columns
-    la_results_df_out.drop("Total", axis=1, inplace=True)
-    
-    
-    # Sex disaggregation
-    # # # renaming Scotland sex col names with their replacements
-    replacements = {"Males": "male",
-                    "Females": "female"}
-    only_la_pwc_with_pop.rename(columns=replacements, inplace=True)
-    pop_in_poly_df.rename(columns=replacements, inplace=True)
-    # # Calculating those served and not served by sex
-    sex_cols = ['male', 'female']
-
-    sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
-                                                pop_in_poly_df=pop_in_poly_df,
-                                                cols_lst=sex_cols)
-
-    # Feeding the results to the reshaper
-    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
-                                             id_col="Sex",
-                                             local_auth=local_auth)
-
-
-    # Output this iteration's sex df to the dict
-    sex_df_dict[local_auth]=sex_servd_df_out
-
-    # Output this iteration's df to the dict
-    total_df_dict[local_auth] = la_results_df_out
-    
     ## Disability disaggregation
     
     disability_df = pd.read_csv(os.path.join(CWD,
@@ -265,13 +200,123 @@ for local_auth in sc_auth:
     )
     only_la_pwc_with_pop["number_non-disabled"] = only_la_pwc_with_pop["number_non-disabled"].astype(int)
     
+    # find all the pop centroids which are in the la_stops_geo_df
+    pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
+    
+    # Deduplicate the df as OA appear multiple times 
+    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="oa11cd")
+
+    # all the figures we need
+    served = pop_in_poly_df["All people"].astype(int).sum()
+    full_pop = only_la_pwc_with_pop["All people"].astype(int).sum()
+    not_served = full_pop - served
+    pct_not_served = "{:.2f}".format(not_served/full_pop*100)
+    pct_served = "{:.2f}".format(served/full_pop*100)
+
+    print(f"""The number of people who are served by public transport is {served}.\n
+            The full population of {local_auth} is calculated as {full_pop}
+            While the number of people who are not served is {not_served}""")
+
+    # putting results into dataframe
+    la_results_df = pd.DataFrame({"All_pop":[full_pop],
+                                  "Served":[served],
+                                  "Unserved":[not_served],
+                                  "Percentage served":[pct_served],
+                                  "Percentage unserved":[pct_not_served]})
+    
+      
+    # Re-orienting the df to what's accepted by the reshaper and renaming col
+    la_results_df = la_results_df.T.rename(columns={0:"Total"})
+
+    # Feeding the la_results_df to the reshaper
+    la_results_df_out = do.reshape_for_output(la_results_df,
+                                              id_col="Total",
+                                              local_auth=local_auth)
+
+    # Finally for the local authority totals the id_col can be dropped
+    # That's because the disaggregations each have their own column, 
+    # but "Total" is not a disaggregation so doesn't have a column.
+    # It will simply show up as blanks (i.e. Total) in all disagg columns
+    la_results_df_out.drop("Total", axis=1, inplace=True)
+    
+    
+    # Sex disaggregation
+    # # # renaming Scotland sex col names with their replacements
+    replacements = {"Males": "male",
+                    "Females": "female"}
+    only_la_pwc_with_pop.rename(columns=replacements, inplace=True)
+    pop_in_poly_df.rename(columns=replacements, inplace=True)
+    # # Calculating those served and not served by sex
+    sex_cols = ['male', 'female']
+
+    sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=sex_cols)
+
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
+                                             id_col="Sex",
+                                             local_auth=local_auth)
+
+
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth]=sex_servd_df_out
+
+    # Output this iteration's df to the dict
+    total_df_dict[local_auth] = la_results_df_out
+    
+    # Calculating those served and not served by disability
+    disab_cols = ["number_disabled"]
+
+    disab_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=disab_cols)
+
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+    
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    # Calculating non-disabled people served and not served
+    non_disab_cols = ["number_non-disabled"]
+
+    non_disab_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=non_disab_cols)
+
+    # Feeding the results to the reshaper
+    non_disab_servd_df_out = do.reshape_for_output(non_disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+    
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
+                               value="Non-disabled",
+                               inplace=True)
+    
+    # Concatting non-disabled and disabled dataframes
+    non_disab_disab_servd_df_out = pd.concat([non_disab_servd_df_out, disab_servd_df_out])
+    
+    # Output this local auth's disab df to the dict
+    disab_df_dict[local_auth] = non_disab_disab_servd_df_out
+
+    
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
+disab_all_la = pd.concat(disab_df_dict.values())
 
 
 # Stacking the dataframes
-all_results_dfs = [all_la, sex_all_la]
+all_results_dfs = [all_la, sex_all_la, disab_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
