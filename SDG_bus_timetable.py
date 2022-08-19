@@ -1,6 +1,7 @@
 # core
 import os
 import zipfile
+from datetime import datetime
 
 # third party
 import yaml
@@ -26,29 +27,45 @@ zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 
 
-# Create output directory
+# Calculate if bus timetable needs to be downloaded.
+# If current folder doesnt exist, or hasnt been modified for
+# 7 days then redownload the zip
+
 if not os.path.exists(output_directory):
     os.makedirs(output_directory)
+    download_bus_timetable = True
+else:
+    # Find when the last download occured
+    # If > 7 days ago, download the data again
+    todays_date = datetime.today()
+    modified_date = datetime.fromtimestamp(os.stat(output_directory).st_ctime)
+    days_since_last_download = (todays_date - modified_date).days
+
+    if days_since_last_download > 7:
+        download_bus_timetable = True
+    else:
+        download_bus_timetable = False
 
 # Download bus timetable data
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
-di._grab_zip(file_nm=bus_dataset_name,
-             zip_link=bus_timetable_zip_link,
-             zip_path=zip_path)
-
-# Extract the required files
-for file in required_files:
-    file_extension_name = f"{file}.txt"
-
-    di._extract_zip(file_nm=bus_dataset_name,
-                    csv_nm=file_extension_name,
-                    zip_path=zip_path,
-                    csv_path=output_directory)
-
-# Remove zip file
-di._delete_junk(file_nm=bus_dataset_name,
+if download_bus_timetable:
+    di._grab_zip(file_nm=bus_dataset_name,
+                zip_link=bus_timetable_zip_link,
                 zip_path=zip_path)
+
+    # Extract the required files
+    for file in required_files:
+        file_extension_name = f"{file}.txt"
+
+        di._extract_zip(file_nm=bus_dataset_name,
+                        csv_nm=file_extension_name,
+                        zip_path=zip_path,
+                        csv_path=output_directory)
+
+    # Remove zip file
+    di._delete_junk(file_nm=bus_dataset_name,
+                    zip_path=zip_path)
 
 # Load the text files into pandas dataframes
 # Specifying dtypes to remove unwanted columns and allow loading due to
