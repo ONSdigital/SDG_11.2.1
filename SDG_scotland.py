@@ -193,7 +193,27 @@ for local_auth in sc_auth:
 
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
+    
+    ## Disability disaggregation
+    
+    disability_df = pd.read_csv(os.path.join(CWD,
+                                             "data",
+                                             "QS303_scotland.csv"))
+    # drop the column "geography code" as it seems to be a duplicate of "geography" 
+    # also "All categories: Long-term health problem or disability" is not needed,
+    # nor is "year" as we know estimates are for 2011.
+    drop_lst = ["date", "geography code",
+                "Disability: All categories: Long-term health problem or disability; measures: Value"]
+    disability_df.drop(drop_lst, axis=1, inplace=True)
+    # the col headers are database unfriendly. Defining their replacement names
+    replacements = {"geography": 'OA11CD',
+                    "Disability: Day-to-day activities limited a lot; measures: Value": "disab_ltd_lot",
+                    "Disability: Day-to-day activities limited a little; measures: Value": "disab_ltd_little",
+                    'Disability: Day-to-day activities not limited; measures: Value': "disab_not_ltd"}
+    # renaming the dodgy col names with their replacements
+    disability_df.rename(columns=replacements, inplace=True)
 
+    
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
