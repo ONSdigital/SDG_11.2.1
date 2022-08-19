@@ -31,9 +31,13 @@ def reshape_for_output(df, id_col, local_auth, id_rename=None):
     #Reset the index 
     df = df.reset_index()
     # Rename column from index to id_column, e.g "Age"
-    df = df.rename(columns={"index":id_col})
+    df_renamed = df.rename(columns={"index":id_col})
     # Melt df with Age as ID vars, all the rest value vars
-    df = pd.melt(df, id_vars=id_col, value_vars=["Total", "Served", "Unserved", "Percentage served", "Percentage unserved"])
+    df = pd.melt(df_renamed, id_vars=id_col, value_vars=["Total", "Served", "Unserved", "Percentage served", "Percentage unserved"])
+    # add in total population for la when id_col = total
+    if id_col == "Total":
+        extra_row = pd.DataFrame({"Total":["Total"],"variable":[""],"value":[df_renamed["All_pop"][0]]})
+        df = pd.concat([extra_row,df])
     # Replace word "Total" with blanks
     df = df.replace({"Total":""})
     # Create "Unit Multiplier" map across from variable (percent or individual)
