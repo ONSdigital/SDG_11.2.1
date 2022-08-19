@@ -100,6 +100,21 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 right_on="oa11cd",
                                 how="left")
 
+# read in urban/rural classification
+urb_rur_path = os.path.join(CWD,"data","urban_rural","scotland",
+                        "oa2011_urban_rural_2013_2014.csv")
+urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011","UR6_2013_2014"])
+import numpy as np
+
+urb_rur["urb_rur_class"] = np.where((urb_rur["UR6_2013_2014"] == 1)|(urb_rur["UR6_2013_2014"] == 2),
+                            "urban",
+                            "rural")
+
+pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
+                                right=urb_rur,
+                                left_on="code",
+                                right_on="OA2011")
+
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
@@ -108,6 +123,7 @@ sc_auth = [random_la]
 # define output dicts to capture dfs
 total_df_dict = {}
 sex_df_dict = {}
+urb_rur_df_dict={}
 
 for local_auth in sc_auth:
     print(f"Processing: {local_auth}")
@@ -167,6 +183,9 @@ for local_auth in sc_auth:
     # but "Total" is not a disaggregation so doesn't have a column.
     # It will simply show up as blanks (i.e. Total) in all disagg columns
     la_results_df_out.drop("Total", axis=1, inplace=True)
+
+    # Output this iteration's df to the dict
+    total_df_dict[local_auth] = la_results_df_out
     
     
     # Sex disaggregation
@@ -187,20 +206,55 @@ for local_auth in sc_auth:
                                              id_col="Sex",
                                              local_auth=local_auth)
 
-
     # Output this iteration's sex df to the dict
     sex_df_dict[local_auth]=sex_servd_df_out
 
-    # Output this iteration's df to the dict
-    total_df_dict[local_auth] = la_results_df_out
+    # Urban/Rural disaggregation
+    # split into two different dataframes
+    urb_df = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
+    rur_df = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
+
+    urb_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=urb_df,
+                                                cols_lst=['All people'])
+
+    rur_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=rur_df,
+                                                cols_lst=['All people'])
+
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"All people":"Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"All people":"Rural"}, inplace=True)
+
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+    
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+
+        # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
+
+    #Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
+
+    # Output this iteration's urb and rur df to the dict
+    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
+
+
 
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
+urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 
 
 # Stacking the dataframes
-all_results_dfs = [all_la, sex_all_la]
+all_results_dfs = [all_la, sex_all_la,urb_rur_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
