@@ -1,0 +1,43 @@
+station_code,station_name,latitude,longitude,action,notes
+AGR,Angel Road Rail Station,51.612404791,-0.0487664558,delete from locs,Station is closed
+APN,Newcastle Airport Metro,55.0359539314,-1.7110611354,added to codes,metro station
+BIB,Bishop's Lydeard,51.0545801757,-3.194339982,delete from locs,heritage station
+BNR,Brockley Whins Rail Station,54.9595502728,-1.4613667215,added to codes,metro station
+PNC,Penychain Rail Station,52.9028982685,-4.3387298378,added to codes,special service station
+EBL,East Boldon Rail Station,54.9464212649,-1.4203275453,added to codes,metro station
+FRR,Frosterley Rail Station,54.7270012002,-1.9644205566,delete from locs,heritage station
+GCL,Glasgow Central Low Level Rail Station,55.858673532,-4.2584774599,delete from locs,Seems to be on the same site as Glasgow Central
+GQL,Glasgow Queen Street Low Level Rail Station,55.8623403235,-4.2506358523,delete from locs,Seems to be on the same site as Glasgow Queen Street
+HHY,Highbury & Islington Rail Station,51.5460878363,-0.1037411643,changed code,HHY seems to be correct for this station
+HTR,Heathrow Airport Central Bus Stn (Rail-Air),51.4710943355,-0.4532864637,delete from locs,bus station
+HAF,Heathrow Terminal 4 (Rail-Air),51.4593290581,-0.4469469959,changed code,HAF is the correct code
+HWV,Heathrow Airport Terminal 5,51.4712499812,-0.4893495013,changed code,HWV is the correct code
+HXX,Heathrow Terminals 1-3 Rail Station,51.4714046459,-0.4543126778,changed code,HXX is the correct code
+LIF,Lichfield Trent Valley High Level Rail Station,52.6869091229,-1.8002367619,delete from locs,Exactly on the same site as “Lichfield Trent Valley Rail Station”
+LVL,Liverpool Lime Street Low Level Rail Station,53.4082223458,-2.9777466846,delete from locs,Exactly on the same site as “Liverpool Lime Street Rail Station”
+MFD,Minffordd Ffestiniog Railway Station,52.9258888953,-4.0842164454,delete from locs,Narrow gauge rail. Not on the main line. 
+NTB,Norton Bridge Rail Station,52.8667125875,-2.1905418489,delete from locs,Station is closed
+OXP,Oxford Parkway Rail Station,51.8040758686,-1.2744681129,changed code,OXP is the correct code
+PMG,Porthmadog Harbour Ffestiniog Railway Station,52.9240544206,-4.1268252563,delete from locs,Narrow gauge rail. Not on the main line. 
+RBU,Reading Rail Station,51.4581455251,-0.9716410129,delete from locs,This is a duplicate with the wrong code
+REL,Retford Low Level Rail Station,53.314084796,-0.944772788,delete from locs,Same location as Retford Rail Station 
+SEB,Seaburn Rail Station,54.929542046,-1.3867070759,added to codes,metro station
+SHV,Southsea Hoverport,50.7853157325,-1.0999768593,delete from locs,ferry port. No train station there
+SNP,Stanhope Rail Station,54.7433166118,-2.003270368,delete from locs,heritage station
+SPX,London St Pancras International LL Rail Station,51.5321682332,-0.1273170838,delete from locs,Same site as St Pancras 
+STQ,Southampton Town Quay,50.8951417965,-1.4058217125,delete from locs,Ferry terminal. No rail station. 
+STZ,St Peters Rail Station,54.9114465319,-1.3838157241,added to codes,metro station
+TAH,Tamworth High Level Rail Station,52.6374896703,-1.6864429533,delete from locs,Same location as Tamworth Rail Station 
+TYB,Tan-y-Bwlch Ffestiniog Railway Station,52.9543847212,-4.0115223964,delete from locs,heritage station
+WLH,Wolsingham Rail Station,54.7263219512,-1.8835277375,delete from locs,Station is closed
+ZBU,Southease - Piddinghoe Road,50.8296187442,0.0178462867,delete from locs,Bus stops
+ZLW,Whitechapel Rail Station,51.5194686455,-0.0597305213,changed code,ZLW is the correct code. Not ZWL
+ZZT,Lintley Rail Station,54.853558347,-2.4883171256,delete from locs,heritage station
+WAW,Warrington West,53.394038,-2.638148,added to locs,missing station
+WOP,Worcestershire Parkway,52.156117,-2.16025,added to locs,missing station
+RRN,Robroyston Train Station ,55.886851,-4.174071,added to locs,missing station
+MRW,Meridian Water,51.609893,-0.04995,added to locs,missing station
+MNS,Maghull North,53.516772,2.921121,added to locs,missing station
+SPX,London St Pancras International Rail Station,51.532391,-0.127164,replace in locs,incorrect
+HRE,Horden,54.764121,-1.307826,added to locs,missing station
+HXX,Heathrow Terminals 1-3 Rail Station,51.471405,-0.454313,replace in locs,incorrect code
