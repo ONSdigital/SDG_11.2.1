@@ -194,5 +194,6 @@ with open(mca_file, 'r') as mca_data:
             
             # Ceate a new data frame for each station in this journey, adding
             # the calender days into it.
+            # Records in here with no arrival_time information so should remove.
             new_df = pd.DataFrame([[tiploc_code, arrival_time, calender]], columns = mca_df.keys())
             mca_df = pd.concat([mca_df, new_df], ignore_index=True)
