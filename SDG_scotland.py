@@ -134,7 +134,7 @@ for local_auth in sc_auth:
     ## Disability disaggregation
     
     disability_df = pd.read_csv(os.path.join(CWD,
-                                             "data",
+                                             "data", "disability_status",
                                              "QS303_scotland.csv"))
     # drop the column "geography code" as it seems to be a duplicate of "geography" 
     # also "All categories: Long-term health problem or disability" is not needed,
