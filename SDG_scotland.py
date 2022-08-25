@@ -99,6 +99,7 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 left_on="code",
                                 right_on="oa11cd",
                                 how="left")
+pwc_with_pop_with_la.rename(columns={'oa11cd':'OA11CD', "All people":"pop_count"}, inplace=True)
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
@@ -130,7 +131,6 @@ for local_auth in sc_auth:
     # filter only by current la 
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
     
-
     ## Disability disaggregation
     
     disability_df = pd.read_csv(os.path.join(CWD,
@@ -143,72 +143,25 @@ for local_auth in sc_auth:
                 "Disability: All categories: Long-term health problem or disability; measures: Value"]
     disability_df.drop(drop_lst, axis=1, inplace=True)
     # the col headers are database unfriendly. Defining their replacement names
-    replacements = {"geography": 'oa11cd',
+    replacements = {"geography": 'OA11CD',
                     "Disability: Day-to-day activities limited a lot; measures: Value": "disab_ltd_lot",
                     "Disability: Day-to-day activities limited a little; measures: Value": "disab_ltd_little",
                     'Disability: Day-to-day activities not limited; measures: Value': "disab_not_ltd"}
     # renaming the dodgy col names with their replacements
     disability_df.rename(columns=replacements, inplace=True)
     
-    # Getting the disab total
-    disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
-                                   + disability_df["disab_ltd_little"])
-
-    # Calcualting the total "non-disabled"
-    la_pop_only = only_la_pwc_with_pop[['oa11cd','All people']]
-    disability_df = la_pop_only.merge(disability_df, on="oa11cd")
-    # Putting the result back into the disability df
-    disability_df["non-disabled"] = disability_df["All people"] - disability_df['disb_total']
-
-    # Calculating the proportion of disabled people in each OA
-    disability_df["proportion_disabled"] = (
-        disability_df['disb_total']
-        /
-        disability_df['All people']
-    )
-    
-    # Calculating the proportion of non-disabled people in each OA
-    disability_df["proportion_non-disabled"] = (
-        disability_df['non-disabled']
-        /
-        disability_df['All people']
-    )
-    
-    # Slice disability df that only has the proportion disabled column and the OA11CD col
-    disab_prop_df = disability_df[['oa11cd', 'proportion_disabled', 'proportion_non-disabled']]
-
-    # Merge the proportion disability df into main the pop df with a left join
-    only_la_pwc_with_pop = only_la_pwc_with_pop.merge(disab_prop_df, on='oa11cd', how="left")
-
-    # Make the calculation of the number of people with disabilities in the year
-    # of the population estimates
-    only_la_pwc_with_pop["number_disabled"] = (
-        round
-        (only_la_pwc_with_pop["All people"]
-         *
-         only_la_pwc_with_pop["proportion_disabled"])
-    )
-    only_la_pwc_with_pop["number_disabled"] = only_la_pwc_with_pop["number_disabled"].astype(int)
-
-    # Make the calculation of the number of non-disabled people in the year
-    # of the population estimates
-    only_la_pwc_with_pop["number_non-disabled"] = (
-        round
-        (only_la_pwc_with_pop["All people"]
-         *
-         only_la_pwc_with_pop["proportion_non-disabled"])
-    )
-    only_la_pwc_with_pop["number_non-disabled"] = only_la_pwc_with_pop["number_non-disabled"].astype(int)
+    # Try to use new function
+    only_la_pwc_with_pop = dt.disability_disagg(disability_df, only_la_pwc_with_pop)
     
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
     
     # Deduplicate the df as OA appear multiple times 
-    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="oa11cd")
+    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
     # all the figures we need
-    served = pop_in_poly_df["All people"].astype(int).sum()
-    full_pop = only_la_pwc_with_pop["All people"].astype(int).sum()
+    served = pop_in_poly_df["pop_count"].astype(int).sum()
+    full_pop = only_la_pwc_with_pop["pop_count"].astype(int).sum()
     not_served = full_pop - served
     pct_not_served = "{:.2f}".format(not_served/full_pop*100)
     pct_served = "{:.2f}".format(served/full_pop*100)
