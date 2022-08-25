@@ -225,7 +225,7 @@ for local_auth in list_local_auth:
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
     disability_df = pd.read_csv(os.path.join(CWD,
-                                             "data",
+                                             "data", "disability_status",
                                              "nomis_QS303.csv"),
                                 header=5)
     # drop the column "mnemonic" as it seems to be a duplicate of the OA code
