@@ -36,7 +36,7 @@ if not di._persistent_exists(output_directory):
 else:
     # Find when the last download occured
     # If > 7 days ago, download the data again
-    download_bus_timetable = di.best_before(filepath=output_directory,
+    download_bus_timetable = di.best_before(path=output_directory,
                                             number_of_days=7)
 
 # Download bus timetable data
