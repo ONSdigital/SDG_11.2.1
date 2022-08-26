@@ -151,7 +151,7 @@ for local_auth in sc_auth:
     disability_df.rename(columns=replacements, inplace=True)
     
     # Try to use new function
-    only_la_pwc_with_pop = dt.disability_disagg(disability_df, only_la_pwc_with_pop)
+    only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
     
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)

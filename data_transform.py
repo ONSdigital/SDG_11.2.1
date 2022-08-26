@@ -221,8 +221,22 @@ def add_stop_capacity_type(stops_df):
 
     return stops_df
 
-def disability_disagg(disability_df,
+def disab_disagg(disability_df,
                       la_pop_df):
+    """Calculates number of people in the population that are classified as 
+        disabled or not disabled and this is merged onto the local authority 
+        population dataframe.
+        
+    Args:
+        disability_df (pd.DataFrame): Dataframe that includes disability estimates for 
+                                    each output area.
+        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes 
+                                output area codes and population estimates.
+
+    Returns:
+        gpd.GeoDataFrame: Dataframe that includes population estimates and proportion of   
+                        disabled/non-disabled in the output areas for the local authority.
+    """
     # Getting the disab total
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
                                    + disability_df["disab_ltd_little"])
