@@ -150,7 +150,7 @@ for local_auth in sc_auth:
     # renaming the dodgy col names with their replacements
     disability_df.rename(columns=replacements, inplace=True)
     
-    # Try to use new function
+    # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
     
     # find all the pop centroids which are in the la_stops_geo_df

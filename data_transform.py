@@ -234,8 +234,9 @@ def disab_disagg(disability_df,
                                 output area codes and population estimates.
 
     Returns:
-        gpd.GeoDataFrame: Dataframe that includes population estimates and proportion of   
-                        disabled/non-disabled in the output areas for the local authority.
+        gpd.GeoDataFrame: GeoPandas Dataframe that includes population estimates,
+                        geographical location, and proportion of disabled/non-disabled 
+                        for each output area in the local authority chosen.
     """
     # Getting the disab total
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
