@@ -101,6 +101,24 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 how="left")
 pwc_with_pop_with_la.rename(columns={'oa11cd':'OA11CD', "All people":"pop_count"}, inplace=True)
 
+# Read disability data for disaggregations later
+disability_df = pd.read_csv(os.path.join(CWD,
+                                        "data", "disability_status",
+                                        "QS303_scotland.csv"))
+# drop the column "geography code" as it seems to be a duplicate of "geography" 
+# also "All categories: Long-term health problem or disability" is not needed,
+# nor is "date" as we know estimates are for 2011.
+drop_lst = ["date", "geography code",
+            "Disability: All categories: Long-term health problem or disability; measures: Value"]
+disability_df.drop(drop_lst, axis=1, inplace=True)
+# the col headers are database unfriendly. Defining their replacement names
+replacements = {"geography": 'OA11CD',
+                "Disability: Day-to-day activities limited a lot; measures: Value": "disab_ltd_lot",
+                "Disability: Day-to-day activities limited a little; measures: Value": "disab_ltd_little",
+                'Disability: Day-to-day activities not limited; measures: Value': "disab_not_ltd"}
+# renaming the dodgy col names with their replacements
+disability_df.rename(columns=replacements, inplace=True)
+
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
@@ -132,23 +150,6 @@ for local_auth in sc_auth:
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
     
     ## Disability disaggregation
-    
-    disability_df = pd.read_csv(os.path.join(CWD,
-                                             "data", "disability_status",
-                                             "QS303_scotland.csv"))
-    # drop the column "geography code" as it seems to be a duplicate of "geography" 
-    # also "All categories: Long-term health problem or disability" is not needed,
-    # nor is "year" as we know estimates are for 2011.
-    drop_lst = ["date", "geography code",
-                "Disability: All categories: Long-term health problem or disability; measures: Value"]
-    disability_df.drop(drop_lst, axis=1, inplace=True)
-    # the col headers are database unfriendly. Defining their replacement names
-    replacements = {"geography": 'OA11CD',
-                    "Disability: Day-to-day activities limited a lot; measures: Value": "disab_ltd_lot",
-                    "Disability: Day-to-day activities limited a little; measures: Value": "disab_ltd_little",
-                    'Disability: Day-to-day activities not limited; measures: Value': "disab_not_ltd"}
-    # renaming the dodgy col names with their replacements
-    disability_df.rename(columns=replacements, inplace=True)
     
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
