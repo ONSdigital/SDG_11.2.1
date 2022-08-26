@@ -13,7 +13,7 @@ The following is a write up of the methodology we employed to make these calcula
 
 ## Acknowledgement
 
-The main support for this project on both methodology and finding appropriate data sources has come from the geospatial department, in particular Musa Chirikeni, to whom we are very grateful. Other help has come from Michael Hodge who laid out the initial method we might approach in Python, and from the SDG data team who have been supportive data end users. 
+The main support for this project on both methodology and finding appropriate data sources has come from the geospatial department, in particular Musa Chirikeni, to whom we are very grateful. Other help has come from Michael Hodge who laid out the initial method we might approach in Python, and from the SDG data team who have been supportive data end users. We also thank Mark Simons who contributed to data management code in early 2022.
 
 
 ## Background  
