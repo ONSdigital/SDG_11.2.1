@@ -3,6 +3,7 @@ import os
 
 # third party import 
 import yaml
+import pandas as pd
 
 # module imports
 import data_ingest as di
@@ -33,3 +34,14 @@ di.get_ni_stops_from_api(url=ni_train_stop_url,
 
 # reads in the NI train  stop data as geo df
 ni_train_stops = di.read_ni_stops(output_ni_train_csv)
+
+# Get usual population for Northern Ireland
+usual_pop_path = os.path.join(CWD, "data", "KS101NI.csv")
+
+ # reads in data and crops header
+df = pd.read_csv(usual_pop_path, 
+                header=2)
+
+# only use columns that we need
+essential_cols = ["SA Code", "All usual residents","Usual residents: Males","Usual residents: Females"]
+ni_usual_pop = df[essential_cols]
