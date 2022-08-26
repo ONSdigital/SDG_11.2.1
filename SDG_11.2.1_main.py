@@ -243,7 +243,7 @@ for local_auth in list_local_auth:
     disability_df.rename(columns=replacements, inplace=True)
     
     # Disability disaggregations
-    la_pop_df = dt.disability_disagg(disability_df, la_pop_df)
+    la_pop_df = dt.disab_disagg(disability_df, la_pop_df)
 
 
     # import the sex data
