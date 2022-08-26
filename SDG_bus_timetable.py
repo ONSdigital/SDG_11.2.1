@@ -1,6 +1,5 @@
 # core
 import os
-import zipfile
 from datetime import datetime
 
 # third party
