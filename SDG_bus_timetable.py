@@ -30,20 +30,14 @@ required_files = ['stop_times', 'trips', 'calendar']
 # If current folder doesnt exist, or hasnt been modified for
 # 7 days then redownload the zip
 
-if not os.path.exists(output_directory):
+if not di._persistent_exists(output_directory):
     os.makedirs(output_directory)
     download_bus_timetable = True
 else:
     # Find when the last download occured
     # If > 7 days ago, download the data again
-    todays_date = datetime.today()
-    modified_date = datetime.fromtimestamp(os.stat(output_directory).st_ctime)
-    days_since_last_download = (todays_date - modified_date).days
-
-    if days_since_last_download > 7:
-        download_bus_timetable = True
-    else:
-        download_bus_timetable = False
+    download_bus_timetable = di.best_before(filepath=output_directory,
+                                            number_of_days=7)
 
 # Download bus timetable data
 # Using individual data ingest functions (rather than import_extract_delete_zip)
