@@ -95,12 +95,13 @@ msn_df = msn_df.drop_duplicates(subset = ['crs_code'])
 # NOTE: Will need adding to cloud storage if we keep this method of
 # attaching coordinates.
 station_locations = os.path.join(output_directory, 'station_locations.csv')
-station_locations_df = pd.read_csv(station_locations, usecols = ['3alpha', 'latitude', 'longitude'])
+station_locations_df = pd.read_csv(station_locations, usecols = ['station_code', 'latitude', 'longitude'])
 
 # Join coordinates onto msn data
 
 # left join to master station names and see which ones dont have lat and long
-msn_data = pd.merge(msn_df, station_locations_df, how = 'left', left_on = 'crs_code', right_on='3alpha')
+msn_data = pd.merge(msn_df, station_locations_df, how = 'left',
+                        left_on = 'crs_code', right_on='station_code')
 msn_data = msn_data[['station_name', 'tiploc_code', 'crs_code', 'latitude', 'longitude']]
 
 # There are quite a few empty coords as the msn data contained alot
@@ -108,7 +109,7 @@ msn_data = msn_data[['station_name', 'tiploc_code', 'crs_code', 'latitude', 'lon
 no_coords = msn_data[msn_data['latitude'].isna()]
 
 # Remove these from the data for the time being
-msn_data = msn_data.dropna(subset=['latitude'])
+msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
 
 
 # Extract mca data
@@ -167,23 +168,24 @@ with open(mca_file, 'r') as mca_data:
             if line[0:2] == 'LO' or line[0:2] == 'LI':
                 # Extract tiploc_code
                 tiploc_code = line[2:10].strip()
-                # Extract arrival time
-                # sometimes scheduled arrival time is empty so use public one
+                # Extract departure time for jounrey origin station
+                # sometimes scheduled departure time is empty so use public one
                 # Need to remove letters at the end of some
-                if line[10:15] != '':
+                if line[10:15].strip() != '':
                     arrival_time = line[10:15]
                 else:
-                    arrival_time = line[25:29]
+                    arrival_time = line[15:20]
             elif line[0:2] == 'LT':
                 # Extract tiploc_code
                 tiploc_code = line[2:10].strip()
-                # Extract arrival time
-                # sometimes scheduled arrival time is empty so use public one
+                # Extract departure time
+                # sometimes scheduled departure time is empty so use public one
+                # NOTE: Should we use scheduled pass instead?
                 # Need to remove letters at the end of some
-                if line[10:15] != '':
-                    arrival_time = line[10:15]
+                if line[15:20].strip() != '':
+                    arrival_time = line[15:20]
                 else:
-                    arrival_time = line[25:29]
+                    arrival_time = line[29:33]
                 
                 # As we know that LT signifies the last stop in a journey
                 # and we have extracted everything we need we now switch the flag off
@@ -194,6 +196,6 @@ with open(mca_file, 'r') as mca_data:
             
             # Ceate a new data frame for each station in this journey, adding
             # the calender days into it.
-            # Records in here with no arrival_time information so should remove.
+            # Records in here with no departure_time information so should remove.
             new_df = pd.DataFrame([[tiploc_code, arrival_time, calender]], columns = mca_df.keys())
             mca_df = pd.concat([mca_df, new_df], ignore_index=True)
