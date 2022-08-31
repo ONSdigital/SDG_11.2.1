@@ -139,53 +139,50 @@ with open(mca_file, 'r') as mca_data:
     # Skip the header
     next(mca_data)
     for line in mca_data:
-        # Probably need to take into account N (new), D (delete) or R (revised)
-        # for each new journey. Ignoring for now.
-        if line[0:2] == 'BS':
+        # A schedule is started by a record beginning with BS.
+        # Other entries exist but are not needed for our purpose.
+
+        # Schedules are then further broken down by transaction type 
+        # (N - new, R - revised, D - delete)
+        # Remove any that are transaction type delete.
+        if line[0:3] == 'BSN' or line[0:3] == 'BSR':
             # Switch flag on as we have found a jounrey
             journey = True
+            # Extract start and end date of service
+            start_date = line[9:15].strip()
+            end_date = line[15:21].strip()
             # Extract the calender information for this journey
-            # i.e. whats days it runs
+            # i.e. what days of the week it runs
             calender = line[21:28].strip()
             # Skip as this is all we need to do for an entry starting
             # with BS
             continue 
 
         # If we have found a new journey, go through the lines that are
-        # part of this jounrey and extract relevant information
+        # part of this jounrey and extract relevant information.
+
+        # Journeys split into origin (LO), stops (LI) and terminus (LT)
         
-        # As mentioned above, ignoring CR and BX as I believe
-        # not of use to us.
-
-        # Only interested in stops with an arrival time
-        # Use either scheduled arrival time, or public arrival time if this
-        # doesnt exist. Should functionalise this
-
-        # Also, need to double string indexes are correct. Basically 
-        # lots of testing!
+        # CR (changes en route) and BX (extra schedule details) can be
+        # ignored as not relevant to our purpose.
 
         if journey:
             if line[0:2] == 'LO' or line[0:2] == 'LI':
                 # Extract tiploc_code
                 tiploc_code = line[2:10].strip()
-                # Extract departure time for jounrey origin station
-                # sometimes scheduled departure time is empty so use public one
-                # Need to remove letters at the end of some
+                # Extract departure time for journey origin station
                 if line[10:15].strip() != '':
-                    arrival_time = line[10:15]
+                    departure_time = line[10:15]
                 else:
-                    arrival_time = line[15:20]
+                    departure_time = line[15:20]
             elif line[0:2] == 'LT':
                 # Extract tiploc_code
                 tiploc_code = line[2:10].strip()
                 # Extract departure time
-                # sometimes scheduled departure time is empty so use public one
-                # NOTE: Should we use scheduled pass instead?
-                # Need to remove letters at the end of some
                 if line[15:20].strip() != '':
-                    arrival_time = line[15:20]
+                    departure_time = line[15:20]
                 else:
-                    arrival_time = line[29:33]
+                    departure_time = line[29:33]
                 
                 # As we know that LT signifies the last stop in a journey
                 # and we have extracted everything we need we now switch the flag off
@@ -196,6 +193,25 @@ with open(mca_file, 'r') as mca_data:
             
             # Ceate a new data frame for each station in this journey, adding
             # the calender days into it.
-            # Records in here with no departure_time information so should remove.
-            new_df = pd.DataFrame([[tiploc_code, arrival_time, calender]], columns = mca_df.keys())
+            new_df = pd.DataFrame([[tiploc_code, departure_time, start_date, end_date, calender]],
+                                    columns = mca_df.keys())
             mca_df = pd.concat([mca_df, new_df], ignore_index=True)
+
+
+# Filter the MCA data
+# -------------------
+
+# Remove records that dont contain a departure time.
+# We are not trying to add a time from either public scheduled / arrival time
+# or scheduled pass time as not relevant.
+
+
+
+
+# Only keep LI records where activity is T (stops to take up and set down
+# passengers). All other activity types unsuitable.
+# Do group by to see counts for different permutations to understand
+# what we would be losing.
+
+
+# Round up or down where time contains H (which means a half minute)
