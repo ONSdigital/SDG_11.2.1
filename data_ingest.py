@@ -16,6 +16,7 @@ from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union
+import numpy as np
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
@@ -681,5 +682,27 @@ def read_usual_pop_scotland(path:str):
         df_essential_cols[col] = df_essential_cols[col].astype(int)
         
     return df_essential_cols
+
+def read_urb_rur_class_scotland(urb_rur_path):
+    """Reads the urb/rural classification for Scotland.
+
+    This reads in the file containing all the urban/rural class
+    Then applies a mapping based on if living in a settlement >10,00
+    then urban, else rural.
+    
+    Args:
+        path (str): the path where the file exists
+    
+    Returns:
+        pd.DataFrame the classfication dataframe
+    """
+    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011","UR6_2013_2014"])
+
+
+    urb_rur["urb_rur_class"] = np.where((urb_rur["UR6_2013_2014"] == 1)|(urb_rur["UR6_2013_2014"] == 2),
+                                "urban",
+                                "rural")
+
+    return urb_rur
 
 
