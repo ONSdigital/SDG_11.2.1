@@ -130,6 +130,17 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
                                 left_on="code",
                                 right_on="OA2011")
 
+# read in urban/rural classification
+urb_rur_path = os.path.join(CWD,"data","urban_rural","scotland",
+                                "oa2011_urban_rural_2013_2014.csv")
+
+urb_rur = di.read_urb_rur_class_scotland(urb_rur_path)
+
+pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
+                                right=urb_rur,
+                                left_on="code",
+                                right_on="OA2011")
+
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
@@ -255,6 +266,31 @@ for local_auth in sc_auth:
     rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
                                                 pop_in_poly_df=rur_df_poly,
                                                 cols_lst=['All people'])
+
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"All people":"Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"All people":"Rural"}, inplace=True)
+
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+    
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+
+        # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
+
+    #Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
+
+    # Output this iteration's urb and rur df to the dict
+    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
+
+
 
     # Renaming pop_count to either urban or rural
     urb_servd_df.rename(columns={"All people":"Urban"}, inplace=True)
