@@ -223,10 +223,9 @@ def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLi
         csv_path (PathLike): The path where the csv should be written to, e.g. /data/.
     """
     # Open the zip file and extract
-    # TODO: Correction: zip.extract should be writing to the csv_path, not to "data".
     with ZipFile(zip_path, 'r') as zip:
         print(f"Extracting {csv_nm} from {zip_path}")
-        _ = zip.extract(csv_nm, "data")
+        _ = zip.extract(csv_nm, csv_path)
 
 
 def _delete_junk(file_nm: str, zip_path: PathLike):
@@ -264,25 +263,23 @@ def _make_data_path(*data_dir_files: str) -> PathLike:
 
 
 @lru_cache
-def _persistent_exists(persistent_file_path):
-    """Checks if a persistent file already exists or not.
-    Since persistent files will be Apache feather format
-    currently the function just checks for those
+def _persistent_exists(persistent_path):
+    """Checks if a persistent file or directory already exists or not.
 
     Args:
-        persistent_file_path (PathLike): path for file to check.
+        persistent_path (PathLike): path to check.
 
     Returns:
-        bool: True if a persistent file already exists.
+        bool: True if a persistent file or directory already exists.
     """
     # Change directory into project root
     os.chdir(CWD)
 
-    if os.path.isfile(persistent_file_path):
-        print(f"{persistent_file_path} already exists")
+    if os.path.exists(persistent_path):
+        print(f"{persistent_path} already exists")
         return True
     else:
-        print(f"{persistent_file_path} does not exist")
+        print(f"{persistent_path} does not exist")
         return False
 
 
@@ -683,3 +680,27 @@ def read_usual_pop_scotland(path:str):
     return df_essential_cols
 
 
+def best_before(path, number_of_days):
+    """
+    Checks whether a path has been modified within a period of days.
+    
+    Args:
+        path (str): the path to check
+        number_of_days (int): number of days previous to check for 
+            modifications
+    
+    Returns:
+        Bool: True if path has not been modified within the number of days
+            specified
+
+    """
+    todays_date = datetime.today()
+    last_modified_date = datetime.fromtimestamp(os.stat(path).st_ctime)
+    days_since_last_modification = (todays_date - last_modified_date).days
+
+    if days_since_last_modification > number_of_days:
+        expired = True
+    else:
+        expired = False
+
+    return expired

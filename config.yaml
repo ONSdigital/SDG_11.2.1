@@ -24,6 +24,7 @@ OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251
 NI_bus_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-9942-8d950b3a0ceb/resource/29f3f2fd-d131-4b86-8933-42b5b3763763/download/09-05-2022busstop-list.csv'
 NI_train_stops_data: 'https://www.opendatani.gov.uk/dataset/5f27f171-b8aa-4511-983d-6df6e87bbf20/resource/967e32c3-1cc2-4aee-b485-92121a32eb4d/download/nir-rail-stations.csv'
 ENG_train_timetable_data: 'https://data.atoc.org/system/files/'
+ENG_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
 high_cap_buffer: 1000
 low_cap_buffer: 500
 age_lst:

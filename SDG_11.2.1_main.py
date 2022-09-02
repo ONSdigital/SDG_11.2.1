@@ -88,6 +88,25 @@ uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
 
+# Read disability data for disaggregations later
+disability_df = pd.read_csv(os.path.join(CWD,
+                                        "data", "disability_status",
+                                        "nomis_QS303.csv"),
+                                        header=5)
+# drop the column "mnemonic" as it seems to be a duplicate of the OA code
+# also "All categories: Long-term health problem or disability" is not needed,
+# nor is "Day-to-day activities not limited"
+drop_lst = ["mnemonic",
+            "All categories: Long-term health problem or disability"]
+disability_df.drop(drop_lst, axis=1, inplace=True)
+# the col headers are database unfriendly. Defining their replacement names
+replacements = {"2011 output area": 'OA11CD',
+                "Day-to-day activities limited a lot": "disab_ltd_lot",
+                "Day-to-day activities limited a little": "disab_ltd_little",
+                'Day-to-day activities not limited': "disab_not_ltd"}
+# renaming the dodgy col names with their replacements
+disability_df.rename(columns=replacements, inplace=True)
+
 # Links were changed at the source site which made the script fail.
 # Manually downloading the csv for now
 OA_boundaries_df = pd.read_csv(
@@ -224,73 +243,9 @@ for local_auth in list_local_auth:
 
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
-    disability_df = pd.read_csv(os.path.join(CWD,
-                                             "data",
-                                             "nomis_QS303.csv"),
-                                header=5)
-    # drop the column "mnemonic" as it seems to be a duplicate of the OA code
-    # also "All categories: Long-term health problem or disability" is not needed,
-    # nor is "Day-to-day activities not limited"
-    drop_lst = ["mnemonic",
-                "All categories: Long-term health problem or disability"]
-    disability_df.drop(drop_lst, axis=1, inplace=True)
-    # the col headers are database unfriendly. Defining their replacement names
-    replacements = {"2011 output area": 'OA11CD',
-                    "Day-to-day activities limited a lot": "disab_ltd_lot",
-                    "Day-to-day activities limited a little": "disab_ltd_little",
-                    'Day-to-day activities not limited': "disab_not_ltd"}
-    # renaming the dodgy col names with their replacements
-    disability_df.rename(columns=replacements, inplace=True)
-
-    # Getting the disab total
-    disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
-                                   + disability_df["disab_ltd_little"])
-
-    # Calcualting the total "non-disabled"
-    la_pop_only = la_pop_df[['OA11CD','pop_count']]
-    disability_df = la_pop_only.merge(disability_df, on="OA11CD")
-    # Putting the result back into the disability df
-    disability_df["non-disabled"] = disability_df["pop_count"] - disability_df['disb_total']
-
-    # Calculating the proportion of disabled people in each OA
-    disability_df["proportion_disabled"] = (
-        disability_df['disb_total']
-        /
-        disability_df['pop_count']
-    )
     
-    # Calcualting the proportion of non-disabled people in each OA
-    disability_df["proportion_non-disabled"] = (
-        disability_df['non-disabled']
-        /
-        disability_df['pop_count']
-    )
-    
-    # Slice disability df that only has the proportion disabled column and the OA11CD col
-    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled', 'proportion_non-disabled']]
-
-    # Merge the proportion disability df into main the pop df with a left join
-    la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
-
-    # Make the calculation of the number of people with disabilities in the year
-    # of the population estimates
-    la_pop_df["number_disabled"] = (
-        round
-        (la_pop_df["pop_count"]
-         *
-         la_pop_df["proportion_disabled"])
-    )
-    la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
-
-    # Make the calculation of the number of non-disabled people in the year
-    # of the population estimates
-    la_pop_df["number_non-disabled"] = (
-        round
-        (la_pop_df["pop_count"]
-         *
-         la_pop_df["proportion_non-disabled"])
-    )
-    la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(int)
+    # Disability disaggregations
+    la_pop_df = dt.disab_disagg(disability_df, la_pop_df)
 
 
     # import the sex data
@@ -353,7 +308,7 @@ for local_auth in list_local_auth:
     total_df_dict[local_auth] = la_results_df_out
 
     # # Disaggregations!
-    pd.set_option("precision", 1)
+    #pd.set_option("precision", 1)
 
     # Calculating those served and not served by age
     age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
