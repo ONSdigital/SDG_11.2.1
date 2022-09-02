@@ -136,7 +136,7 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
-random_la = random.choice(list_local_auth)
+random_la = "Aberdeen City"#random.choice(list_local_auth)
 sc_auth = [random_la]
 
 # define output dicts to capture dfs
@@ -245,15 +245,19 @@ for local_auth in sc_auth:
                                                   cols_lst=disab_cols)
     # Urban/Rural disaggregation
     # split into two different dataframes
-    urb_df = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
-    rur_df = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
+    urb_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "urban"]
+    rur_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "rural"]
 
-    urb_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
-                                                pop_in_poly_df=urb_df,
+    urb_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
+    rur_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
+    
+
+    urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
+                                                pop_in_poly_df=urb_df_poly,
                                                 cols_lst=['All people'])
 
-    rur_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
-                                                pop_in_poly_df=rur_df,
+    rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
+                                                pop_in_poly_df=rur_df_poly,
                                                 cols_lst=['All people'])
 
     # Renaming pop_count to either urban or rural
@@ -331,7 +335,7 @@ final_result["Year"] = pop_year
 
 # Outputting to CSV
 
-final_result.to_csv("Scotland_results.csv", index=False)
+final_result.to_csv("Scotland_results_aberdeen.csv", index=False)
 
 end = time.time()
 
