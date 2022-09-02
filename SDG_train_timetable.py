@@ -1,13 +1,9 @@
 # core
 import os
-import zipfile
 
 # third party
 import yaml
 import pandas as pd
-
-# our modules
-import data_ingest as di
 
 # get current working directory
 CWD = os.getcwd()
@@ -57,7 +53,7 @@ with open(msn_file, 'r') as msn_data:
     # Skip header
     next(msn_data)
     for line in msn_data:
-        
+
         # Only interested in rows starting with A.
         # Rows starting with L display aliases of station names
         # Stripping the values because some are padded out with blank spaces
@@ -84,7 +80,8 @@ msn_df = msn_df.drop_duplicates(subset = ['crs_code'])
 
 # Attach the coordinates for each train station
 station_locations = os.path.join(output_directory, 'station_locations.csv')
-station_locations_df = pd.read_csv(station_locations, usecols = ['station_code', 'latitude', 'longitude'])
+station_locations_df = pd.read_csv(station_locations,
+                                   usecols = ['station_code', 'latitude', 'longitude'])
 
 # Join coordinates onto msn data
 # left join to master station names and see which ones dont have lat and long
@@ -130,7 +127,7 @@ with open(mca_file, 'r') as mca_data:
         # A schedule is started by a record beginning with BS.
         # Other entries exist but are not needed for our purpose.
 
-        # Schedules are then further broken down by transaction type 
+        # Schedules are then further broken down by transaction type
         # (N - new, R - revised, D - delete)
         # Ignore any that are transaction type delete.
         if line[0:3] == 'BSN' or line[0:3] == 'BSR':
@@ -144,7 +141,7 @@ with open(mca_file, 'r') as mca_data:
             calender = line[21:28].strip()
             # Skip as this is all we need to do for an entry starting
             # with BS
-            continue 
+            continue
 
         # If we have found a new journey, go through the lines that are
         # part of this jounrey and extract relevant information.
@@ -157,7 +154,7 @@ with open(mca_file, 'r') as mca_data:
         # and extract time, tiploc_code and activity type.
 
         # NB if departure time doesnt exist we are not the trying to extract
-        # from either public scheduled / arrival time or scheduled pass time 
+        # from either public scheduled / arrival time or scheduled pass time
         # as not relevant.
 
         # NB times can end on a H sometimes which indicates a half minute
@@ -210,9 +207,9 @@ with open(mca_file, 'r') as mca_data:
                 journey = False
             else:
                 # Skipping BR and CX
-                continue 
-            
-            # If time flag has been switched on, then create a new data frame for 
+                continue
+
+            # If time flag has been switched on, then create a new data frame for
             # this stop, adding the calender days into it.
             if time:
                 new_df = pd.DataFrame([[tiploc_code, departure_time,
