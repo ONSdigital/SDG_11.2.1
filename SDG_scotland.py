@@ -121,13 +121,9 @@ disability_df.rename(columns=replacements, inplace=True)
 
 # read in urban/rural classification
 urb_rur_path = os.path.join(CWD,"data","urban_rural","scotland",
-                        "oa2011_urban_rural_2013_2014.csv")
-urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011","UR6_2013_2014"])
-import numpy as np
+                                "oa2011_urban_rural_2013_2014.csv")
 
-urb_rur["urb_rur_class"] = np.where((urb_rur["UR6_2013_2014"] == 1)|(urb_rur["UR6_2013_2014"] == 2),
-                            "urban",
-                            "rural")
+urb_rur = di.read_urb_rur_class_scotland(urb_rur_path)
 
 pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
                                 right=urb_rur,
@@ -136,7 +132,7 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
-random_la = "Aberdeen City"#random.choice(list_local_auth)
+random_la = random.choice(list_local_auth)
 sc_auth = [random_la]
 
 # define output dicts to capture dfs
@@ -335,7 +331,7 @@ final_result["Year"] = pop_year
 
 # Outputting to CSV
 
-final_result.to_csv("Scotland_results_aberdeen.csv", index=False)
+final_result.to_csv("Scotland_results.csv", index=False)
 
 end = time.time()
 
