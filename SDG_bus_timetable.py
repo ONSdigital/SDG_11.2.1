@@ -39,7 +39,10 @@ else:
     download_bus_timetable = di.best_before(path=output_directory,
                                             number_of_days=7)
 
+# ---------------------------
 # Download bus timetable data
+# ---------------------------
+
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
 if download_bus_timetable:
@@ -60,8 +63,11 @@ if download_bus_timetable:
     di._delete_junk(file_nm=bus_dataset_name,
                     zip_path=zip_path)
 
+# ------------------------------------------
 # Load the text files into pandas dataframes
-# Specifying dtypes to remove unwanted columns and allow loading due to
+# ------------------------------------------
+
+# Specify dtypes to remove unwanted columns and allow loading due to
 # mixed data types in certain columns.
 # Cannot parse datetime dtypes, and current function doesnt allow the parse_dates
 # parameter in read_csv. So reading in as object type for the time being.
@@ -95,3 +101,17 @@ calendar_df = di._csv_to_df(file_nm='calendar',
                             csv_path=os.path.join(
                                 output_directory, 'calendar.txt'),
                             dtypes=calendar_types)
+
+# ----------
+# Clean data
+# ----------
+
+# Some departure times are > 24:00 so need to be removed
+valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in range(24)]
+
+stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
+
+# Convert departure times to datetime format
+# NB This took a while and unsure if needed. Could just extract time
+# using startswith and valid_hours above rather than converting.
+stop_times_df['departure_time'] = pd.to_datetime(stop_times_df['departure_time'])
