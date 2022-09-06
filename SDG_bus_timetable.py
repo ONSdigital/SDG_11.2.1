@@ -8,6 +8,7 @@ import pandas as pd
 
 # our modules
 import data_ingest as di
+import data_transform as dt
 
 # get current working directory
 CWD = os.getcwd()
@@ -93,6 +94,8 @@ trips_df = di._csv_to_df(file_nm='trips',
                          dtypes=trips_types)
 
 # calendar
+# NOTE: Not adding in saturday and sunday columns for stops because
+# we are only interested in weekday trips for highly serviced stops
 calendar_types = {'service_id': 'category', 'monday': 'int64', 'tuesday': 'int64',
                   'wednesday': 'int64', 'thursday': 'int64', 'friday': 'int64',
                   'start_date': 'object', 'end_date': 'object'}
@@ -111,7 +114,26 @@ valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in range(24)]
 
 stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
 
-# Convert departure times to datetime format
-# NB This took a while and unsure if needed. Could just extract time
-# using startswith and valid_hours above rather than converting.
-stop_times_df['departure_time'] = pd.to_datetime(stop_times_df['departure_time'])
+# Convert start and end date to datetime format
+calendar_df['start_date'] = pd.to_datetime(calendar_df['start_date'], format='%Y%m%d')
+calendar_df['end_date'] = pd.to_datetime(calendar_df['end_date'], format='%Y%m%d')
+
+# ----------------
+# Join data frames
+# ----------------
+
+bus_timetable_df = (
+    (stop_times_df.merge(trips_df, on='trip_id', how='left'))
+    .merge(calendar_df, on='service_id', how='left')
+)
+
+# Remove columns no longer required
+# NOTE: Route_id not used at all so could be removed at load
+bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id', 'service_id'])
+
+
+# ----------------------------
+# Extract stops for chosen day
+# ----------------------------
+
+serviced_bus_stops = dt.filter_bus_timetable_by_date(bus_timetable_df, '20220822')

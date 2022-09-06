@@ -1,5 +1,6 @@
 from typing import List
 import pandas as pd
+from datetime import datetime
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -288,3 +289,36 @@ def disab_disagg(disability_df,
     )
     la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(int)
     return la_pop_df
+
+
+def filter_bus_timetable_by_date(bus_timetable_df, filter_date):
+    """
+    Extract serviced bus stops based on specific date.
+
+    Args:
+        bus_timetable_df (pandas dataframe): df to filter
+        filter_date (str) : date to filter by in format YYYYMMDD
+
+    Returns:
+        pandas dataframe   
+    """
+    # Make sure date is correct format
+    try:
+        datetime.strptime(filter_date, '%Y%m%d')
+    except ValueError:
+        raise ValueError("Incorrect date format, should be YYYYMMDD")
+
+    date = datetime.strptime(filter_date, '%Y%m%d')
+    
+    # Make sure date is a weekday
+    if date.isoweekday() not in range(1,6):
+        raise ValueError("Date provided is not a weekday")
+
+    # Filter bus timetable data based on start and end date
+    # NOTE: Do we want this? What happens if user searches for date a couple
+    # of years ago and returns no records as always before start_date.
+    # Maybe best just to filter on day rather than date aswell.
+    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date'] >= date) & 
+                                        (bus_timetable_df['end_date'] <= date)]
+
+    return bus_timetable_df
