@@ -206,24 +206,23 @@ def add_stop_capacity_type(stops_df):
     Returns:
         pd.DataFrame: dataframe with new capacity_type column.
     """
-    dictionary_map={"RSE":"high",
-                    "RLY":"high",
-                    "RPL":"high",
-                    "TMU":"high",
-                    "MET":"high",
-                    "PLT":"high",
-                    "BCE":"low", 
-                    "BST":"low",
-                    "BCQ":"low", 
-                    "BCS":"low",
-                    "BCT":"low"}
+    dictionary_map = {"RSE": "high",
+                      "RLY": "high",
+                      "RPL": "high",
+                      "TMU": "high",
+                      "MET": "high",
+                      "PLT": "high",
+                      "BCE": "low",
+                      "BST": "low",
+                      "BCQ": "low",
+                      "BCS": "low",
+                      "BCT": "low"}
 
     stops_df["capacity_type"]=stops_df["StopType"].map(dictionary_map)
 
     return stops_df
 
-def disab_disagg(disability_df,
-                      la_pop_df):
+def disab_disagg(disability_df,la_pop_df):
     """Calculates number of people in the population that are classified as 
         disabled or not disabled and this is merged onto the local authority 
         population dataframe.
@@ -330,7 +329,7 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
     The day is selected from the available days in the date range present in
       timetable data. 
 
-    1) identifies which days dates in the minimum date range 
+    1) identifies which days dates in the entire date range 
     2) counts days of each type to get the maximum position order
     3) validates user's choice for `day` and `ord` - provides useful errors
     4) selects a date based on the day and ord parameters
@@ -348,15 +347,14 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
         pd.DataFrame: filtered pandas dataframe   
     """
 
-
     # Get the minimum date range
-    latest_start_date = bus_timetable_df.start_date.max()
-    earliest_end_date = bus_timetable_df.end_date.min()
+    earliest_start_date = bus_timetable_df.start_date.min()
+    latest_end_date = bus_timetable_df.end_date.max()
 
 
     # Identify days in the range and count them
-    date_range = pd.date_range(latest_start_date, earliest_end_date)
-    date_day_couplings_df = pd.DataFrame({"date":date_range,
+    date_range = pd.date_range(earliest_start_date, latest_end_date)
+    date_day_couplings_df = pd.DataFrame({"date": date_range,
                                          "day_name": date_range.day_name()})
     days_counted = date_day_couplings_df.day_name.value_counts()
     days_counted_dict = days_counted.to_dict()
@@ -368,3 +366,46 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
     if ord > max_ord:
         raise ValueError(f"The ord parameter is too high. There are {max_ord} {day}s in the data")
     
+    # filter all the dates down the to the day needed
+    day_filtered_dates = (date_day_couplings_df
+                          [date_day_couplings_df.day_name == day])
+
+    # Get date of the nth (ord) day
+    nth = ord - 1
+    date_of_day_entered = day_filtered_dates.iloc[nth].date
+
+    # Filter the bus_timetable_df 
+    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date'] >= 
+                                         date_of_day_entered) & 
+                                        (bus_timetable_df['end_date'] <= 
+                                        date_of_day_entered)]
+
+
+def filter_by_year(df, year="2022"):
+    """Filter the timetable_df by year
+    
+    Args:
+        bus_timetable_df (pandas dataframe): df to filter
+        day (str) : day of the week in title case, e.g. "Wednesday"
+    
+    Returns:
+        pd.DataFrame: pandas dataframe filtered by year specified   
+    """
+    # Measure the dataframe
+    original_rows = df.shape[0]
+
+    # Create string of start and end date of given year
+    start_year = f'{year}-01-01'
+    end_year = f'{year}-12-31'
+
+    # Create filter condition
+    start_end_date_during_year = ((df['start_date'] >= start_year)
+                                  & (df['start_date'] < end_year)
+                                  & (df['end_date'] >= start_year)
+                                  & (df['end_date'] < end_year))
+    # Filter df
+    df = df.loc[start_end_date_during_year]
+    
+    # Print how many rows have been dropped
+    print(f"Rows reduced by: {original_rows-df.shape[0]}")
+    return df
