@@ -608,38 +608,26 @@ def get_stops_file(url, dir):
     return stops_df
 
 
-def get_ni_stops_from_api(url, output_path):
-    """Gets the northern ireland stops data from api
-    from api
-    Args:
-        url (str): NI bus stops data
-        output_path (str): path where the stop data is stored.
-    Returns:
 
-    """
-    # creates the folders necessary 
-    CWD = os.getcwd()
-    NI_stops_folder = os.path.join(CWD,"data","stops","NI")
-    if not os.path.exists(NI_stops_folder):
-        os.mkdir(NI_stops_folder)
-
-    # requests the stop data 
-    r = requests.get(url)
-    url_content = r.content
-    csv_file = open(output_path, 'wb')
-    csv_file.write(url_content)
-    csv_file.close()
-
-def read_ni_stops(path):
+def read_ni_stops(url, path):
     """Gets the northern ireland bus stops data which
     is saved locally
     Args:
+        url (str): URL where the data we want to read in and save is.
         path (str): path where the stop data is stored.
     Returns:
 
     """
-    # read in bus stop
-    ni_stops = pd.read_csv(path, encoding = 'cp1252')
+    # creates the folders necessary to save data
+    NI_stops_folder = os.path.join(CWD,"data","stops","NI")
+    if not os.path.exists(NI_stops_folder):
+        os.mkdir(NI_stops_folder)
+
+    if os.path.exists(path):
+        ni_stops = pd.read_csv(path)
+    else:
+        ni_stops = pd.read_csv(url, encoding='cp1252')
+        ni_stops.to_csv(path)
 
     # convert into geo dataframe
     geo_stops = gpd.GeoDataFrame(ni_stops)
