@@ -616,7 +616,7 @@ def read_ni_stops(url, path):
         url (str): URL where the data we want to read in and save is.
         path (str): path where the stop data is stored.
     Returns:
-            Geopandas dataframe
+            Geopandas Dataframe
     """
     # creates the folders necessary to save data
     NI_stops_folder = os.path.join(CWD,"data","stops","NI")
