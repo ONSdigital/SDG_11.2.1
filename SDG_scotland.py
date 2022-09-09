@@ -278,29 +278,6 @@ for local_auth in sc_auth:
     # Output this iteration's urb and rur df to the dict
     urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
 
-    # Renaming pop_count to either urban or rural
-    urb_servd_df.rename(columns={"All people":"Urban"}, inplace=True)
-    rur_servd_df.rename(columns={"All people":"Rural"}, inplace=True)
-
-    # Sending each to reshaper
-    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
-                                             id_col="Urban",
-                                             local_auth=local_auth)
-    
-    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
-                                             id_col="Rural",
-                                             local_auth=local_auth)
-
-        # Renaming their columns to Urban/Rural
-    urb_servd_df_out.rename(columns={"Urban":"Urban/Rural"}, inplace=True)
-    rur_servd_df_out.rename(columns={"Rural":"Urban/Rural"}, inplace=True)
-
-    #Combining urban and rural dfs
-    urb_rur_servd_df_out = pd.concat([urb_servd_df_out,rur_servd_df_out])
-
-    # Output this iteration's urb and rur df to the dict
-    urb_rur_df_dict[local_auth]=urb_rur_servd_df_out
-
     # # disability disgaregation
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
