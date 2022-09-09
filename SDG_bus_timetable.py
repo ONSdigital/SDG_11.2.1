@@ -136,4 +136,9 @@ bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id', 'servic
 # Extract stops for chosen day
 # ----------------------------
 
-serviced_bus_stops = dt.filter_bus_timetable_by_date(bus_timetable_df, '20220822')
+# 
+single_year_bus_stops = dt.filter_by_year(bus_timetable_df)
+serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, "Wednesday")
+
+
+# serviced_bus_stops = dt.filter_bus_timetable_by_date(bus_timetable_df, '20220822')
