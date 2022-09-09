@@ -322,3 +322,50 @@ def filter_bus_timetable_by_date(bus_timetable_df, filter_date):
                                         (bus_timetable_df['end_date'] <= date)]
 
     return bus_timetable_df
+
+def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
+    """
+    Extract serviced bus stops based on specific day of the week.
+
+    The day is selected from the available days in the date range present in
+      timetable data. 
+
+    1) identifies which days dates in the minimum date range 
+    2) counts days of each type to get the maximum position order
+    3) validates user's choice for `day` and `ord` - provides useful errors
+    4) selects a date based on the day and ord parameters
+    5) filters the dataframe to that date
+
+    Args:
+        bus_timetable_df (pandas dataframe): df to filter
+        day (str) : day of the week in title case, e.g. "Wednesday"
+        ord (int): (for ordinal) the position in the month the day is, 
+            e.g. when day="Wednesday" and ord=1 that would be the 1st 
+            Wednesday of that date range
+    
+
+    Returns:
+        pd.DataFrame: filtered pandas dataframe   
+    """
+
+
+    # Get the minimum date range
+    latest_start_date = bus_timetable_df.start_date.min()
+    earliest_end_date = bus_timetable_df.start_date.max()
+
+
+    # Identify days in the range and count them
+    date_range = pd.date_range(latest_start_date, earliest_end_date)
+    date_day_couplings_df = pd.DataFrame({"date":date_range,
+                                         "day_name": date_range.day_name()})
+    days_counted = date_day_couplings_df.day_name.value_counts()
+    days_counted_dict = days_counted.to_dict()
+
+    # Validate user choices
+    if day not in days_counted_dict.keys():
+        raise KeyError("The day chosen in not available. Should be a weekday in title case.")
+    max_ord = days_counted_dict[day]
+    if ord > max_ord:
+        raise ValueError(f"The ord parameter is too high. There are {max_ord} {day}s in the data")
+    
+    

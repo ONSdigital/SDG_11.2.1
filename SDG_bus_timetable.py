@@ -76,7 +76,7 @@ if download_bus_timetable:
 # regardless of the date, and just want to extract the HH from the date which
 # can be done from a string.
 
-# stop times
+# Stop times
 stop_times_types = {'trip_id': 'category',
                     'departure_time': 'object', 'stop_id': 'category'}
 
