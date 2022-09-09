@@ -350,8 +350,8 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
 
 
     # Get the minimum date range
-    latest_start_date = bus_timetable_df.start_date.min()
-    earliest_end_date = bus_timetable_df.start_date.max()
+    latest_start_date = bus_timetable_df.start_date.max()
+    earliest_end_date = bus_timetable_df.end_date.min()
 
 
     # Identify days in the range and count them
@@ -367,5 +367,4 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
     max_ord = days_counted_dict[day]
     if ord > max_ord:
         raise ValueError(f"The ord parameter is too high. There are {max_ord} {day}s in the data")
-    
     
