@@ -34,8 +34,6 @@ output_ni_bus_csv = os.path.join(CWD,"data","Stops","NI","bus_stops_ni.csv")
 # reads in the NI bus stop data as geo df and saves bus data if it has not been saved
 ni_bus_stops = di.read_ni_stops(ni_bus_stop_url, output_ni_bus_csv)
 
-
-
 # gets the northern ireland train stops data from the api
 ni_train_stop_url = config["NI_train_stops_data"]
 output_ni_train_csv = os.path.join(CWD,"data","Stops","NI","train_stops_ni.csv")
