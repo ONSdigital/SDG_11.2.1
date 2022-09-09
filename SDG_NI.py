@@ -45,12 +45,12 @@ di.get_ni_stops_from_api(url=ni_train_stop_url,
 # reads in the NI train  stop data as geo df
 ni_train_stops = di.read_ni_stops(output_ni_train_csv)
 
-# Get usual population for Northern Ireland
+# Get usual population for Northern Ireland (Census 2011 data)
 whole_NI_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"),
                              header=2)
 # Only use columns that we need
 cols_NI_df = ["SA Code", "All usual residents","Usual residents: Males","Usual residents: Females"]
-ni_usual_pop = whole_NI_df[cols_NI_df]
+census_ni_df = whole_NI_df[cols_NI_df]
 
 # Read in mid-year population estimates for Northern Ireland
 pop_files = pd.read_csv(os.path.join(CWD, 
