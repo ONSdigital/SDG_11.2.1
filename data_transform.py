@@ -375,10 +375,15 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
     date_of_day_entered = day_filtered_dates.iloc[nth].date
 
     # Filter the bus_timetable_df 
-    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date'] >= 
-                                         date_of_day_entered) & 
-                                        (bus_timetable_df['end_date'] <= 
-                                        date_of_day_entered)]
+    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
+                                         >= date_of_day_entered) & 
+                                        (bus_timetable_df['end_date']
+                                         <= date_of_day_entered)]
+    
+    # Print date being used (consider logging)
+    print(f"The date of the {day} number {ord} is {date_of_day_entered}")
+
+    return bus_timetable_df
 
 
 def filter_by_year(df, year="2022"):
@@ -400,9 +405,9 @@ def filter_by_year(df, year="2022"):
 
     # Create filter condition
     start_end_date_during_year = ((df['start_date'] >= start_year)
-                                  & (df['start_date'] < end_year)
+                                  & (df['start_date'] <= end_year)
                                   & (df['end_date'] >= start_year)
-                                  & (df['end_date'] < end_year))
+                                  & (df['end_date'] <= end_year))
     # Filter df
     df = df.loc[start_end_date_during_year]
     
