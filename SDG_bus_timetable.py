@@ -130,7 +130,7 @@ bus_timetable_df = (
 
 # Remove columns no longer required
 # NOTE: Route_id not used at all so could be removed at load
-bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id', 'service_id'])
+bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id']) # 'service_id'
 
 
 # ----------------------------
