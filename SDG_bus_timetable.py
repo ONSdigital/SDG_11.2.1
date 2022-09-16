@@ -22,7 +22,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 bus_timetable_zip_link = config["ENG_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-output_directory = os.path.join(CWD, 'data', 'england_bus_timetable')
+DATA_DIR = di.DATA_DIR
+output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 
