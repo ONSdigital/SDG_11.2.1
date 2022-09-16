@@ -7,6 +7,7 @@ from time import perf_counter
 from attr import resolve_types
 import yaml
 from datetime import datetime
+import time
 
 # Third party imports for this module
 import geopandas as gpd
@@ -695,7 +696,7 @@ def best_before(path, number_of_days):
 
     """
     todays_date = datetime.today()
-    last_modified_date = datetime.fromtimestamp(os.stat(path).st_ctime)
+    last_modified_date = datetime.fromtimestamp(os.path.getmtime(path))
     days_since_last_modification = (todays_date - last_modified_date).days
 
     if days_since_last_modification > number_of_days:
