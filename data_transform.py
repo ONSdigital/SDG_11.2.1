@@ -1,6 +1,6 @@
 from typing import List
 import pandas as pd
-from datetime import datetime
+from datetime import date, datetime
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -322,7 +322,7 @@ def filter_bus_timetable_by_date(bus_timetable_df, filter_date):
 
     return bus_timetable_df
 
-def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
+def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
     """
     Extract serviced bus stops based on specific day of the week.
 
@@ -376,9 +376,9 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=1):
 
     # Filter the bus_timetable_df 
     bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
-                                         >= date_of_day_entered) & 
+                                         <= date_of_day_entered) & 
                                         (bus_timetable_df['end_date']
-                                         <= date_of_day_entered)]
+                                         >= date_of_day_entered)]
     
     # Print date being used (consider logging)
     print(f"The date of the {day} number {ord} is {date_of_day_entered}")
@@ -400,8 +400,8 @@ def filter_by_year(df, year="2022"):
     original_rows = df.shape[0]
 
     # Create string of start and end date of given year
-    start_year = f'{year}-01-01'
-    end_year = f'{year}-12-31'
+    start_year = f'{year}0101'
+    end_year = f'{year}1231'
 
     # Create filter condition
     start_end_date_during_year = ((df['start_date'] >= start_year)
