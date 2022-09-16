@@ -4,7 +4,6 @@ import os
 # third party
 import yaml
 import pandas as pd
-from tqdm import tqdm
 
 # get current working directory
 CWD = os.getcwd()
@@ -26,7 +25,7 @@ output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
 # As such, providing hard-coding filepaths for the time being, and
 # a shortened mca file just for proof of concept.
 msn_file = os.path.join(output_directory, 'ttisf467.msn')
-mca_file = os.path.join(output_directory, 'ttisf467_medium.mca')
+mca_file = os.path.join(output_directory, 'ttisf467.mca')
 
 
 # Below code can be used once we have the latest filename
@@ -130,7 +129,7 @@ stops = []
 with open(mca_file, 'r') as mca_data:
     # Skip the header
     next(mca_data)
-    for line in tqdm(mca_data):
+    for line in mca_data:
         # A schedule is started by a record beginning with BS.
         # Other entries exist but are not needed for our purpose.
 
@@ -238,21 +237,28 @@ mca_stop_df = pd.DataFrame(stops,
 									'tiploc_code',
 									'activity_type'])
 							
-							
-									
-			
+
 # Clean mca data
 # --------------
-# check schdule id unique in df!!!
-# schedule not unique as some have same id but with different date and different times???
 
-# 1 remove empty times. (use strip != '')
-# 2 Extract only activity type T. 
+# Drop any duplicate schedule IDs
+# As these are composed of an ID, start and end time, and calendar
+# any duplicates we have must be duplicates in the dataset.
+mca_schedule_df = mca_schedule_df.drop_duplicates(subset = ['schedule_id'])
+
+# Remove records with no departure time
+mca_stop_df = mca_stop_df[mca_stop_df['departure_time'] != '']
+
+# Only keep trains with activity type T
 # NB Only keep LI records where the activity_type contains T (stops to
 # take up and set down passengers). All other activity types unsuitable.
-# Extract activity type if it contains T
-# Activity type made up of upto 6 types
-# each 2 characters so search for 'T '
+mca_stop_df = mca_stop_df[mca_stop_df['activity_type'] == 'T']
 
 
-# Filter schdules by day and then use the unique id to extract stops from stop df.
+# Extract stops on certain date
+# -----------------------------
+
+# Using code developed in bus_timetable extract all stops that are
+# used on a certain day
+
+# First filter schedules by day, then use the unique ID to extract stops.
