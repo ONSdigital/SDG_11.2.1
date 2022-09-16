@@ -346,6 +346,11 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
     Returns:
         pd.DataFrame: filtered pandas dataframe   
     """
+    # Measure the dataframe
+    original_rows = bus_timetable_df.shape[0]
+
+    # Count the bus services
+    orig_service_count = bus_timetable_df.service_id.unique().shape[0]
 
     # Get the minimum date range
     earliest_start_date = bus_timetable_df.start_date.min()
@@ -380,8 +385,19 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
                                         (bus_timetable_df['end_date']
                                          >= date_of_day_entered)]
     
-    # Print date being used (consider logging)
-    print(f"The date of the {day} number {ord} is {date_of_day_entered}")
+    # Print date being used (consider logging instead)
+    day_date = date_of_day_entered.date()
+    print(f"The date of {day} number {ord} is {day_date}")
+
+    # Print how many rows have been dropped (consider logging instead)
+    print(f"Selecting only services covering {day_date} reduced records by {original_rows-bus_timetable_df.shape[0]} rows")
+
+    # Print how many bus services are in the analysis and how many were dropped
+    service_count = bus_timetable_df.service_id.unique().shape[0]
+    dropped_services = orig_service_count - service_count
+    print(f"There are {service_count} bus services in the analysis")
+    print(f"Filtering by day has reduced records by {dropped_services}")
+
 
     return bus_timetable_df
 
@@ -411,6 +427,6 @@ def filter_by_year(df, year="2022"):
     # Filter df
     df = df.loc[start_end_date_during_year]
     
-    # Print how many rows have been dropped
-    print(f"Rows reduced by: {original_rows-df.shape[0]}")
+    # Print how many rows have been dropped (consider logging instead)
+    print(f"Filtering by year dropped {original_rows-df.shape[0]} rows")
     return df
