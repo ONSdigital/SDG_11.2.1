@@ -20,6 +20,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Years
 # Getting the year for population data
 pop_year = str(config["calculation_year"])
+DATA_DIR = config["DATA_DIR"]
+boundary_year="2021"
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
@@ -57,6 +59,32 @@ pop_files = pd.read_csv(os.path.join(CWD,
 # Filter to small area code and population year columns only
 estimate_cols = ["Area_Code", pop_year]
 estimate_pop_NI = pop_files[estimate_cols]
+
+# getting path for .shp file for LA's
+uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
+                                                   "data",
+                                                   "LA_shp",
+                                                   boundary_year))
+
+# getting the coordinates for all LA's
+uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
+ni_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['N'])]
+
+# Get population weighted centroids into a dataframe
+ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
+                       (os.path.join
+                        (DATA_DIR,
+                         'pop_weighted_centroids',
+                         "NI",
+                         "2011",
+                         "SA2011.shp")))
+
+# get weighted centroids and merge with population
+pwc_with_pop = pd.merge(left=census_ni_df,
+                             right=ni_pop_wtd_centr_df,
+                             left_on=census_ni_df["SA Code"],
+                             right_on="SA2011",
+                             how="left")
 
 
 
