@@ -86,5 +86,15 @@ pwc_with_pop = pd.merge(left=census_ni_df,
                              right_on="SA2011",
                              how="left")
 
+# OA to LA lookup
+oa_to_la_lookup_path = os.path.join(CWD, "data","oa_la_mapping",
+                                    "NI",
+                                    "11DC_Lookup_1_0.csv")
+
+# reads in the OA to LA lookupfile 
+oa_to_la = pd.read_csv(oa_to_la_lookup_path,
+                        usecols=["SA2011","LGD2014"])
+
+
 
 
