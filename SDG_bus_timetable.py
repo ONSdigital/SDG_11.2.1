@@ -26,6 +26,7 @@ DATA_DIR = di.DATA_DIR
 output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
+calculation_year = config["calculation_year"]
 
 
 # Calculate if bus timetable needs to be downloaded.
