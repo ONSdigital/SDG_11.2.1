@@ -33,7 +33,8 @@ DATA_DIR = config["DATA_DIR"]
 def any_to_pd(file_nm: str,
               zip_link: str,
               ext_order: List,
-              dtypes: Optional[Dict]) -> pd.DataFrame:
+              dtypes: Optional[Dict],
+              data_dir = DATA_DIR) -> pd.DataFrame:
     """A function which ties together many other data ingest related functions 
     to import data. 
 
@@ -87,7 +88,7 @@ def any_to_pd(file_nm: str,
     for i in range(len(load_order)):
         # Indexing with i because the list loading in the wrong order
         data_file_nm = load_order[i]
-        data_file_path = _make_data_path("data", data_file_nm)
+        data_file_path = _make_data_path(data_dir, data_file_nm)
         if _persistent_exists(data_file_path):
             # Check if each persistent file exists
             # load the persistent file by dispatching the correct function
@@ -226,7 +227,10 @@ def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLi
     # Open the zip file and extract
     with ZipFile(zip_path, 'r') as zip:
         print(f"Extracting {csv_nm} from {zip_path}")
-        _ = zip.extract(csv_nm, csv_path)
+        try:
+            _ = zip.extract(csv_nm, csv_path)
+        except:
+            csv_nm
 
 
 def _delete_junk(file_nm: str, zip_path: PathLike):
