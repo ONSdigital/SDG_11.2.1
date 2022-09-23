@@ -34,7 +34,7 @@ def any_to_pd(file_nm: str,
               zip_link: str,
               ext_order: List,
               dtypes: Optional[Dict]) -> pd.DataFrame:
-    """A function which ties together many other data ingest related functions to 
+    """A function which ties together many other data ingest related functions 
     to import data. 
 
     Currently this function can handle the remote or local import of data 
