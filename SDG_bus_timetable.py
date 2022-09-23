@@ -27,6 +27,7 @@ output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 calculation_year = config["calculation_year"]
+auto_download_bus = config["auto_download_bus"]
 
 
 # Calculate if bus timetable needs to be downloaded.
@@ -48,7 +49,7 @@ else:
 
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
-if download_bus_timetable:
+if download_bus_timetable and auto_download_bus:
     di._grab_zip(file_nm=bus_dataset_name,
                 zip_link=bus_timetable_zip_link,
                 zip_path=zip_path)
