@@ -5,6 +5,7 @@ from datetime import datetime
 # third party
 import yaml
 import pandas as pd
+from numpy import datetime64
 
 # our modules
 import data_ingest as di
@@ -80,13 +81,17 @@ if download_bus_timetable and auto_download_bus:
 # can be done from a string.
 
 # Stop times
-stop_times_types = {'trip_id': 'category',
-                    'departure_time': 'object', 'stop_id': 'category'}
+feath_ = "/data-mount/england_bus_timetable/stop_times.feather"
+if os.path.exists(feath_):
+    stop_times_df = di._feath_to_df("stop_times", feath_)
+else:
+    stop_times_types = {'trip_id': 'category',
+                        'departure_time': 'object', 'stop_id': 'category'}
 
-stop_times_df = di._csv_to_df(file_nm='stop_times',
-                              csv_path=os.path.join(
-                                  output_directory, 'stop_times.txt'),
-                              dtypes=stop_times_types)
+    stop_times_df = di._csv_to_df(file_nm='stop_times',
+                                csv_path=os.path.join(
+                                    output_directory, 'stop_times.txt'),
+                                dtypes=stop_times_types)
 
 # trips
 trips_types = {'route_id': 'category',
@@ -113,7 +118,8 @@ calendar_df = di._csv_to_df(file_nm='calendar',
 # ----------
 
 # Some departure times are > 24:00 so need to be removed
-valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in range(24)]
+hour_range = range(config["early_bus_hour"],config["late_bus_hour"])
+valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
 stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
 
