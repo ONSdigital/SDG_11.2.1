@@ -1,11 +1,9 @@
 # core
 import os
-from datetime import datetime
 
 # third party
 import yaml
 import pandas as pd
-from numpy import datetime64
 
 # our modules
 import data_ingest as di
@@ -21,9 +19,9 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 
 # Parameters
+DATA_DIR = di.DATA_DIR
 bus_timetable_zip_link = config["ENG_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-DATA_DIR = di.DATA_DIR
 output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
@@ -81,7 +79,7 @@ if download_bus_timetable and auto_download_bus:
 # can be done from a string.
 
 # Stop times
-feath_ = "/data-mount/england_bus_timetable/stop_times.feather"
+feath_ = os.path.join(output_directory, "stop_times.feather")
 if os.path.exists(feath_):
     stop_times_df = di._feath_to_df("stop_times", feath_)
 else:
