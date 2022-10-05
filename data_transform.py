@@ -290,7 +290,7 @@ def disab_disagg(disability_df,la_pop_df):
     return la_pop_df
 
 
-def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
+def filter_bus_timetable_by_day(bus_timetable_df, day):
     """
     Extract serviced bus stops based on specific day of the week.
 
@@ -299,17 +299,15 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
 
     1) identifies which days dates in the entire date range 
     2) counts days of each type to get the maximum position order
-    3) validates user's choice for `day` and `ord` - provides useful errors
+    3) validates user's choice for `day` - provides useful errors
+    4) creates ord value that is half of maximum position order to ensure
+    as many services get included as possible.
     4) selects a date based on the day and ord parameters
     5) filters the dataframe to that date
 
     Args:
         bus_timetable_df (pandas dataframe): df to filter
         day (str) : day of the week in title case, e.g. "Wednesday"
-        ord (int): (for ordinal) the position in the month the day is, 
-            e.g. when day="Wednesday" and ord=1 that would be the 1st 
-            Wednesday of that date range
-    
 
     Returns:
         pd.DataFrame: filtered pandas dataframe   
@@ -336,8 +334,7 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
     if day not in days_counted_dict.keys():
         raise KeyError("The day chosen in not available. Should be a weekday in title case.")
     max_ord = days_counted_dict[day]
-    if ord > max_ord:
-        raise ValueError(f"The ord parameter is too high. There are {max_ord} {day}s in the data")
+    ord = round(max_ord/2)
     
     # filter all the dates down the to the day needed
     day_filtered_dates = (date_day_couplings_df
@@ -364,7 +361,7 @@ def filter_bus_timetable_by_day(bus_timetable_df, day, ord=14):
     service_count = bus_timetable_df.service_id.unique().shape[0]
     dropped_services = orig_service_count - service_count
     print(f"There are {service_count} bus services in the analysis")
-    print(f"Filtering by day has reduced records by {dropped_services}")
+    print(f"Filtering by day has reduced services by {dropped_services}")
 
 
     return bus_timetable_df
