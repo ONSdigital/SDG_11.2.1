@@ -25,7 +25,6 @@ bus_dataset_name = 'itm_all_gtfs'
 output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
-calculation_year = config["calculation_year"]
 auto_download_bus = config["auto_download_bus"]
 
 
