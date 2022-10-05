@@ -206,7 +206,7 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         zip_path (PathLike): path/to/the/write/directory, e.g. '/data/'.
     """
     # Grab the zipfile from URI
-    print(f"Dowloading {file_nm} from {zip_link}")
+    print(f"Downloading {file_nm} from {zip_link}")
     r = requests.get(zip_link)
     with open(zip_path, 'wb') as output_file:
         print(f"Saving {file_nm} to {zip_path}")
