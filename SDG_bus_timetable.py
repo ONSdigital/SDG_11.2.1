@@ -19,10 +19,9 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 
 # Parameters
-DATA_DIR = config[DATA_DIR]
 bus_timetable_zip_link = config["ENG_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
+output_directory = os.path.join(CWD, 'data', 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
@@ -141,8 +140,7 @@ bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id']) # 'ser
 # ----------------------------
 # Extract stops for chosen day
 # ----------------------------
-single_year_bus_stops = dt.filter_by_year(bus_timetable_df)
-serviced_bus_stops = dt.filter_bus_timetable_by_day(single_year_bus_stops, "Wednesday")
+serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, "Wednesday")
 
 
 serviced_bus_stops.head()
