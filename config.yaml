@@ -2,7 +2,7 @@
 calculation_year : 2019
 
 # Data
-DATA_DIR :  "/data-mount"
+DATA_DIR :  "./data"
 EXT_ORDER :
   - feather
   - csv

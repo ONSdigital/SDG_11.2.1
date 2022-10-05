@@ -19,7 +19,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 
 # Parameters
-DATA_DIR = di.DATA_DIR
+DATA_DIR = config[DATA_DIR]
 bus_timetable_zip_link = config["ENG_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
 output_directory = os.path.join(DATA_DIR, 'england_bus_timetable')
