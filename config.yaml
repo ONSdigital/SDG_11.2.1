@@ -25,6 +25,7 @@ OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251
 NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
 NAPTAN_API: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
 NAPTAN_TYPES :
+  ATCOCode: str
   NaptanCode: str
   CommonName: str
   Easting: int32
@@ -39,6 +40,7 @@ early_bus_hour: 06
 late_bus_hour: 20
 high_cap_buffer: 1000
 low_cap_buffer: 500
+timetable_day: 'wednesday'
 
 
 # Ages 
