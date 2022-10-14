@@ -5,6 +5,9 @@ import os
 import yaml
 import pandas as pd
 
+# our modules
+import data_transform as dt
+
 # get current working directory
 CWD = os.getcwd()
 
@@ -16,13 +19,15 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 
 # Parameters
-train_timetable_zip_link = config["ENG_train_timetable_data"]
 output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
 # TO DO Move these to the new config once bus changes have been merged
+# Could also move station_locations as well?
+station_locations = os.path.join(output_directory, 'station_locations.csv')
 msn_file = os.path.join(output_directory, 'ttisf467.msn')
 mca_file = os.path.join(output_directory, 'ttisf467.mca')
 timetable_day = config["timetable_day"]
 
+# ----------------
 # Extract msn data
 #-----------------
 
@@ -59,27 +64,7 @@ with open(msn_file, 'r') as msn_data:
 msn_df = pd.DataFrame(msn, columns = ['station_name', 'tiploc_code', 'crs_code'])
 
 
-# Clean msn data
-# --------------
-
-# Remove the duplicates in crs_code
-msn_df = msn_df.drop_duplicates(subset = ['crs_code'])
-
-# Attach the coordinates for each train station
-station_locations = os.path.join(output_directory, 'station_locations.csv')
-station_locations_df = pd.read_csv(station_locations,
-                                   usecols = ['station_code', 'latitude', 'longitude'])
-
-# Join coordinates onto msn data
-# left join to master station names and see which ones dont have lat and long
-msn_data = pd.merge(msn_df, station_locations_df, how = 'left',
-                        left_on = 'crs_code', right_on='station_code')
-msn_data = msn_data[['station_name', 'tiploc_code', 'crs_code', 'latitude', 'longitude']]
-
-# Remove stations with no coordinates
-msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
-
-
+# ----------------
 # Extract mca data
 #-----------------
 
@@ -132,11 +117,11 @@ with open(mca_file, 'r') as mca_data:
             # Extract the calender information for this journey
             # i.e. what days of the week it runs
             # Only interested in weekdays for the timebeing.
-            monday = line[21].strip()
-            tuesday = line[22].strip()
-            wednesday = line[23].strip()
-            thursday = line[24].strip()
-            friday = line[25].strip()
+            monday = int(line[21].strip())
+            tuesday = int(line[22].strip())
+            wednesday = int(line[23].strip())
+            thursday = int(line[24].strip())
+            friday = int(line[25].strip())
 			
 			# Store data to be added to the dataframe
             schedules.append([schedule_id,
@@ -216,41 +201,98 @@ mca_stop_df = pd.DataFrame(stops,
                                     'departure_time',
 									'tiploc_code',
 									'activity_type'])
-							
 
-# Clean mca data
-# --------------
+
+# ----------
+# Clean data
+# ----------
+
+# Remove the duplicates in crs_code
+msn_df = msn_df.drop_duplicates(subset = ['crs_code'])					
 
 # Drop any duplicate schedule IDs
 # As these are composed of an ID, start and end time, and calendar
 # any duplicates we have must be duplicates in the dataset.
 mca_schedule_df = mca_schedule_df.drop_duplicates(subset = ['schedule_id'])
 
-# Remove records with no departure time
-mca_stop_df = mca_stop_df[mca_stop_df['departure_time'] != '']
-
 # Only keep trains with activity type T
 # NB Only keep LI records where the activity_type contains T (stops to
 # take up and set down passengers). All other activity types unsuitable.
 mca_stop_df = mca_stop_df[mca_stop_df['activity_type'] == 'T']
+
+# Only keep records with departure time between highly serviced hours
+hour_range = range(config["early_train_hour"], config["late_train_hour"])
+valid_hours = [f'0{i}' if i <10 else f'{i}' for i in hour_range]
+
+mca_stop_df = mca_stop_df[mca_stop_df['departure_time'].str.startswith(tuple(valid_hours))]
+
+# Convert start and end date to datetime format
+mca_schedule_df['start_date'] = pd.to_datetime(mca_schedule_df['start_date'], format='%y%m%d')
+mca_schedule_df['end_date'] = pd.to_datetime(mca_schedule_df['end_date'], format='%y%m%d')
+
 
 
 # ---------------
 # Join dataframes
 # ---------------
 
-train_timetable_df = mca_stop_df.merge(mca_schedule_df, on='schedule_id', how='left')
+train_timetable_df = (
+    (mca_stop_df.merge(mca_schedule_df, on='schedule_id', how='left'))
+    .merge(msn_df, on='tiploc_code', how='left')
+)
 
-# -----------------------------
-# Extract stops on certain date
-# -----------------------------
+# Remove columns no longer required
+train_timetable_df = train_timetable_df.drop(columns=['schedule_id', 'tiploc_code', 'activity_type', 'station_name'])
+
+# ----------------------------
+# Extract stops for chosen day
+# ----------------------------
 
 # TO DO change name of function to be more generic!
 timetable_day = 'wednesday'
 serviced_train_stops_df = train_timetable_df[train_timetable_df[timetable_day] == 1]
-serviced_train_stops_df = dt.filter_bus_timetable_by_day(train_timetable_df, timetable_day.capitalize())
+#serviced_train_stops_df = dt.filter_bus_timetable_by_day(train_timetable_df, timetable_day.capitalize())
 
-# Using code developed in bus_timetable extract all stops that are
-# used on a certain day
 
-# First filter schedules by day, then use the unique ID to extract stops.
+
+# -----------------------
+# Find frequency of stops
+# -----------------------
+
+# Just take HH from departure time
+serviced_train_stops_df['departure_time'] = serviced_train_stops_df['departure_time'].str.slice(0,2)
+
+train_frequencies_df = pd.pivot_table(data=serviced_train_stops_df,
+                                      values=timetable_day,
+                                      index='crs_code',
+                                      columns='departure_time',
+                                      aggfunc=len,
+                                      fill_value=0)
+
+
+# -----------------------------
+# Extract highly serviced stops
+# -----------------------------
+
+# Only keep stations with at least 1 service per hour
+highly_serviced_train_stops_df = train_frequencies_df[(train_frequencies_df > 0).all(axis=1)]
+
+# Read in station location data
+# Attach the coordinates for each train station
+# TO DO add E and N to station location data.
+station_locations_df = pd.read_csv(station_locations,
+                                   usecols = ['station_code', 'latitude', 'longitude'])
+
+# Add easting and northing
+highly_serviced_train_stops_df = highly_serviced_train_stops_df.merge(station_locations_df,
+                                                                      how='inner',
+                                                                      left_on='crs_code',
+                                                                      right_on='station_code')
+
+
+# Remove stations with no coordinates
+highly_serviced_train_stops_df = highly_serviced_train_stops_df.dropna(subset=['easting', 'northing'], how='any')
+
+# Keep only reuired columns
+
+# Save a copy to be ingested into SDG_main
