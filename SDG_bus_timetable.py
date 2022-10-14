@@ -193,6 +193,9 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(stops_df,
                                                           left_on='stop_id',
                                                           right_on='ATCOCode')
 
+# Remove stops that dont have coordinates
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['easting', 'northing'], how='any')
+
 # Only keep required columns
 highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
 
