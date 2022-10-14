@@ -28,6 +28,7 @@ timetable_day = config["timetable_day"]
 early_timetable_hour = config["early_timetable_hour"]
 late_timetable_hour = config["late_timetable_hour"]
 
+# ----------------
 # Extract msn data
 # -----------------
 
@@ -223,8 +224,8 @@ mca_schedule_df = pd.DataFrame(schedules,
 mca_stop_df = pd.DataFrame(stops,
                            columns=['schedule_id',
                                     'departure_time',
-                                    'tiploc_code',
-                                    'activity_type'])
+									'tiploc_code',
+									'activity_type'])
 
 
 # Clean data
