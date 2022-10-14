@@ -48,6 +48,8 @@ else:
 # Note downloads if flag above, and flag in config, set as True.
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
+download_bus_timetable=True
+auto_download_bus=True
 if download_bus_timetable and auto_download_bus:
     di._grab_zip(file_nm=bus_dataset_name,
                 zip_link=bus_timetable_zip_link,
@@ -191,7 +193,7 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(stops_df,
                                                           right_on='ATCOCode')
 
 # Remove stops that dont have coordinates
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['easting', 'northing'], how='any')
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['Easting', 'Northing'], how='any')
 
 # Only keep required columns
 highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
