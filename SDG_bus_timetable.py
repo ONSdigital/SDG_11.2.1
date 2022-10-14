@@ -123,9 +123,6 @@ else:
 # Clean data
 # ----------
 
-# TODELETE
-# CReate sample for testing
-stop_times_df = stop_times_df.sample(n=1000000)
 # Some departure times are > 24:00 so need to be removed.
 # This is done automatically by restricting times to hours used
 # to define highly serviced stops
@@ -201,11 +198,3 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_
 
 # Save a copy to be ingested by SDG_11.2.1_main
 highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
-
-# TODELETE
-# CReate outputs from sample
-stop_times_df.to_csv(os.path.join(output_directory, 'stop_times_df.csv'))
-bus_timetable_df.to_csv(os.path.join(output_directory, 'bus_timetable_df.csv'))
-serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'serviced_bus_stops_df.csv'))
-bus_frequencies_df.to_csv(os.path.join(output_directory, 'bus_frequencies_df.csv'))
-highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_bus_stops_df.csv'))
