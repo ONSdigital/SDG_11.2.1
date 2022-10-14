@@ -18,30 +18,10 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 train_timetable_zip_link = config["ENG_train_timetable_data"]
 output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
-
-# Download link for zip
-# Name of zip changes each day so will need to scrape the page to extract
-# the latest
-# As such, providing hard-coding filepaths for the time being, and
-# a shortened mca file just for proof of concept.
+# TO DO Move these to the new config once bus changes have been merged
 msn_file = os.path.join(output_directory, 'ttisf467.msn')
 mca_file = os.path.join(output_directory, 'ttisf467.mca')
-
-
-# Below code can be used once we have the latest filename
-# train_dataset_name = 'trains'
-# changes each time so using holding name
-# zip_path = os.path.join(output_directory, train_dataset_name)
-
-#di._grab_zip(file_nm=train_dataset_name,
-#            zip_link=train_timetable_zip_link,
-#            zip_path=zip_path)
-
-#di._extract_zip(file_nm=train_dataset_name,
-#                csv_nm='ttisf467.msn',
-#                zip_path=zip_path,
-#                csv_path=output_directory)
-
+timetable_day = config["timetable_day"]
 
 # Extract msn data
 #-----------------
@@ -152,21 +132,21 @@ with open(mca_file, 'r') as mca_data:
             # Extract the calender information for this journey
             # i.e. what days of the week it runs
             # Only interested in weekdays for the timebeing.
-            mon = line[21].strip()
-            tues = line[22].strip()
-            wed = line[23].strip()
-            thurs = line[24].strip()
-            fri = line[25].strip()
+            monday = line[21].strip()
+            tuesday = line[22].strip()
+            wednesday = line[23].strip()
+            thursday = line[24].strip()
+            friday = line[25].strip()
 			
 			# Store data to be added to the dataframe
             schedules.append([schedule_id,
                             start_date,
 							end_date,
-							mon,
-							tues,
-							wed,
-							thurs,
-							fri])
+							monday,
+							tuesday,
+							wednesday,
+							thursday,
+							friday])
 			
             # Skip as this is all we need to do for an entry starting
             # with BS
@@ -224,11 +204,11 @@ mca_schedule_df = pd.DataFrame(schedules,
 							   columns=['schedule_id',
                                         'start_date',
 										'end_date',
-										'mon',
-										'tues',
-										'wed',
-										'thurs',
-										'fri'])
+										'monday',
+										'tuesday',
+										'wednesday',
+										'thursday',
+										'friday'])
 
 		
 mca_stop_df = pd.DataFrame(stops,
@@ -255,8 +235,20 @@ mca_stop_df = mca_stop_df[mca_stop_df['departure_time'] != '']
 mca_stop_df = mca_stop_df[mca_stop_df['activity_type'] == 'T']
 
 
+# ---------------
+# Join dataframes
+# ---------------
+
+train_timetable_df = mca_stop_df.merge(mca_schedule_df, on='schedule_id', how='left')
+
+# -----------------------------
 # Extract stops on certain date
 # -----------------------------
+
+# TO DO change name of function to be more generic!
+timetable_day = 'wednesday'
+serviced_train_stops_df = train_timetable_df[train_timetable_df[timetable_day] == 1]
+serviced_train_stops_df = dt.filter_bus_timetable_by_day(train_timetable_df, timetable_day.capitalize())
 
 # Using code developed in bus_timetable extract all stops that are
 # used on a certain day
