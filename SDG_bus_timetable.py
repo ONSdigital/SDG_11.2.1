@@ -181,23 +181,23 @@ bus_frequencies_df = pd.pivot_table(data=serviced_bus_stops_df,
 # -----------------------------
 
 # Only keep those which have at least one service an hour
-highly_serviced_stops_df = bus_frequencies_df[(bus_frequencies_df > 0).all(axis=1)]
+highly_serviced_bus_stops_df = bus_frequencies_df[(bus_frequencies_df > 0).all(axis=1)]
 
 # Read in naptan data
 stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                              dir=os.path.join(os.getcwd(), "data", "stops"))
 
 # Add easting and northing
-highly_serviced_stops_df = highly_serviced_stops_df.merge(stops_df,
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(stops_df,
                                                           how='inner',
                                                           left_on='stop_id',
                                                           right_on='ATCOCode')
 
 # Only keep required columns
-highly_serviced_stops_df = highly_serviced_stops_df[list(config["NAPTAN_TYPES"].keys())]
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
 
 # Save a copy to be ingested by SDG_11.2.1_main
-highly_serviced_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
+highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
 
 # TODELETE
 # CReate outputs from sample
@@ -205,4 +205,4 @@ stop_times_df.to_csv(os.path.join(output_directory, 'stop_times_df.csv'))
 bus_timetable_df.to_csv(os.path.join(output_directory, 'bus_timetable_df.csv'))
 serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'serviced_bus_stops_df.csv'))
 bus_frequencies_df.to_csv(os.path.join(output_directory, 'bus_frequencies_df.csv'))
-highly_serviced_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_stops_df.csv'))
+highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_bus_stops_df.csv'))
