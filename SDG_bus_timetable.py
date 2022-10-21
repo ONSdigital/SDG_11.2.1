@@ -200,3 +200,4 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_
 
 # Save a copy to be ingested by SDG_11.2.1_main
 highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
+highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_stops.csv'), index=False)
