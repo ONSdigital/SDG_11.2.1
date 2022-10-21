@@ -48,8 +48,6 @@ else:
 # Note downloads if flag above, and flag in config, set as True.
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
-download_bus_timetable=True
-auto_download_bus=True
 if download_bus_timetable and auto_download_bus:
     di._grab_zip(file_nm=bus_dataset_name,
                 zip_link=bus_timetable_zip_link,
