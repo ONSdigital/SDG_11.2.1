@@ -86,5 +86,29 @@ pwc_with_pop = pd.merge(left=census_ni_df,
                              right_on="SA2011",
                              how="left")
 
+# Drops SA code as repeat of SA2011
+pwc_with_pop.drop("SA Code", axis=1, inplace=True)
+
+# OA to LA lookup
+oa_to_la_lookup_path = os.path.join(CWD, "data","oa_la_mapping",
+                                    "NI",
+                                    "11DC_Lookup_1_0.csv")
+
+# reads in the OA to LA lookupfile 
+oa_to_la = pd.read_csv(oa_to_la_lookup_path,
+                        usecols=["SA2011","LGD2014"])
+
+# merges the pwc with it's corresponding LA
+pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
+                                right=oa_to_la,
+                                left_on="SA2011",
+                                right_on="SA2011",
+                                how="left")
+
+# Rename columns to fit functions below
+pwc_with_pop_with_la.rename(columns={'SA2011':'OA11CD', "All usual residents":"pop_count"}, 
+                            inplace=True)
+
+
 
 
