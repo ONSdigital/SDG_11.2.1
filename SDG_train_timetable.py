@@ -155,7 +155,7 @@ with open(mca_file, 'r') as mca_data:
 
         # NB if departure time doesnt exist we are not the trying to extract
         # from either public scheduled / arrival time or scheduled pass time
-        # as not relevant.
+        # as not relevant in this case.
 
         # NB times can end on a H sometimes which indicates a half minute
         # Rather than rounding up and down, just ignoring this for the moment
