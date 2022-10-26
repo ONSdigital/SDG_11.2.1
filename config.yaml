@@ -41,6 +41,7 @@ late_bus_hour: 20
 high_cap_buffer: 1000
 low_cap_buffer: 500
 timetable_day: 'wednesday'
+day_filter: 'general' #exact
 
 
 # Ages 

@@ -161,9 +161,16 @@ bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id']) # 'ser
 # ----------------------------
 
 # Only interested in stops that are used on a certain day
-serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
-#serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, timetable_day.capitalize())
 
+day_filter_type = config["day_filter"]
+if day_filter_type == "general":
+    timetable_day = timetable_day.lower()
+    serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
+elif day_filter_type == "exact":
+    timetable_day = timetable_day.capitalize()
+    serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, timetable_day.capitalize())
+else:
+    print("Error: input error on day filter setting.")
 
 # -----------------------
 # Find frequency of stops
