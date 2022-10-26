@@ -130,9 +130,7 @@ else:
 # Clean data
 # ----------
 
-# Some departure times are > 24:00 so need to be removed.
-# This is done automatically by restricting times to hours used
-# to define highly serviced stops
+# Restricting times to hours used to define highly serviced stops
 hour_range = range(config["early_bus_hour"],config["late_bus_hour"])
 valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
