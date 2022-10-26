@@ -32,8 +32,15 @@ timetable_day = config["timetable_day"]
 # If current folder doesnt exist, or hasnt been modified then
 # flag to be downloaded
 
-if not di._persistent_exists(output_directory):
-    os.makedirs(output_directory)
+files_to_check = [f"{file}.txt" for file in required_files]
+paths_to_check = [os.path.join(output_directory, file) for file in files_to_check]
+each_file_checked = [di._persistent_exists(path) for path in paths_to_check]
+
+if not all(each_file_checked):
+    try:
+        os.makedirs(output_directory)
+    except FileExistsError:
+        print(f"Directory {output_directory} already exists")
     download_bus_timetable = True
 else:
     # Find when the last download occured
