@@ -42,7 +42,8 @@ high_cap_buffer: 1000
 low_cap_buffer: 500
 timetable_day: 'wednesday'
 day_filter: 'general' #exact
-
+train_msn_filename: 'ttisf467.msn'
+train_mca_filename: 'ttisf467.mca'
 
 # Ages 
 age_lst:

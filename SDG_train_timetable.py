@@ -16,7 +16,6 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 
 # Parameters
-train_timetable_zip_link = config["ENG_train_timetable_data"]
 output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
 msn_file = os.path.join(output_directory, config["train_msn_filename"])
 mca_file = os.path.join(output_directory, config["train_mca_filename"])
