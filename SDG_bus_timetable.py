@@ -26,7 +26,7 @@ zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
 timetable_day = config["timetable_day"]
-
+day_filter_type = config["day_filter"]
 
 # Calculate if bus timetable needs to be downloaded.
 # If current folder doesnt exist, or hasnt been modified then
@@ -162,7 +162,6 @@ bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id']) # 'ser
 
 # Only interested in stops that are used on a certain day
 
-day_filter_type = config["day_filter"]
 if day_filter_type == "general":
     timetable_day = timetable_day.lower()
     serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
