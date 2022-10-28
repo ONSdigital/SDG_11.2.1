@@ -86,7 +86,7 @@ ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                         (DATA_DIR,
                          'pop_weighted_centroids',
                          "NI",
-                         "2011",
+                         "2001",
                          "OA_ni.shp")))
 
 pwc_with_lookup = pd.merge(left=sa_to_la,
@@ -103,14 +103,12 @@ pwc_with_pop = pd.merge(left=census_ni_df,
                              how="left")
 
 # Drops SA code as repeat of COA2011
-pwc_with_pop.drop("SA Code", axis=1, inplace=True)
+pwc_with_pop.drop(["SA Code", "OA_CODE", "COA2001",'X_COORD', 'Y_COORD', 'geometry'], axis=1, inplace=True)
 
 # SA to LA lookup
 sa_to_la_lookup_path = os.path.join(CWD, "data","oa_la_mapping",
                                     "NI",
                                     "11DC_Lookup_1_0.csv")
-
-
 
 # reads in the OA to LA lookupfile 
 sa_to_la = pd.read_csv(sa_to_la_lookup_path,
@@ -123,10 +121,37 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 right_on="SA2011",
                                 how="left")
 
+# We need geometry for small areas, not output areas so read in this file
+ni_sa_centr_df = (di.geo_df_from_geospatialfile
+                       (os.path.join
+                        (DATA_DIR,
+                         'pop_weighted_centroids',
+                         "NI",
+                         "2011",
+                         "SA2011.shp")))
+
+# We only need geometry and the SA2011 code for this
+ni_sa_centr_df = ni_sa_centr_df[['SA2011', 'geometry']]
+
+# find means of duplicate small areas using groupby function
+grouped_df = pwc_with_pop_with_la.groupby('SA2011').mean()
+
+# Merge in the LGD2014 again to have complete table
+pwc_with_pop_with_la = pd.merge(left=grouped_df,
+                             right=pwc_with_pop_with_la[['SA2011', 'LGD2014']],
+                             left_on='SA2011',
+                             right_on='SA2011',
+                             how="left")
+
+# Include small area geometry for complete table
+pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
+                             right=ni_sa_centr_df,
+                             left_on='SA2011',
+                             right_on='SA2011',
+                             how="left")
+
 # Rename columns to fit functions below
 pwc_with_pop_with_la.rename(columns={'SA2011':'OA11CD', "All usual residents":"pop_count"}, 
                             inplace=True)
-
-
 
 
