@@ -17,6 +17,7 @@ from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union
+import numpy as np
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
@@ -613,38 +614,26 @@ def get_stops_file(url, dir):
     return stops_df
 
 
-def get_ni_stops_from_api(url, output_path):
-    """Gets the northern ireland stops data from api
-    from api
-    Args:
-        url (str): NI bus stops data
-        output_path (str): path where the stop data is stored.
-    Returns:
 
+def read_ni_stops(url, path):
+    """Gets the northern ireland bus stops data. This function checks whether the data
+    is saved locally or needs to be saved locally from grabbing data via a URL.
+    Args:
+        url (str): URL where the data we want to read in and save is.
+        path (str): path where the stop data is stored.
+    Returns:
+            Geopandas Dataframe
     """
-    # creates the folders necessary 
-    CWD = os.getcwd()
+    # creates the folders necessary to save data
     NI_stops_folder = os.path.join(CWD,"data","stops","NI")
     if not os.path.exists(NI_stops_folder):
         os.mkdir(NI_stops_folder)
-
-    # requests the stop data 
-    r = requests.get(url)
-    url_content = r.content
-    csv_file = open(output_path, 'wb')
-    csv_file.write(url_content)
-    csv_file.close()
-
-def read_ni_stops(path):
-    """Gets the northern ireland bus stops data which
-    is saved locally
-    Args:
-        path (str): path where the stop data is stored.
-    Returns:
-
-    """
-    # read in bus stop
-    ni_stops = pd.read_csv(path, encoding = 'cp1252')
+    # Checks if the data is saved locally, and if not, gets the data and saves it locally
+    if os.path.exists(path):
+        ni_stops = pd.read_csv(path)
+    else:
+        ni_stops = pd.read_csv(url, encoding='cp1252')
+        ni_stops.to_csv(path)
 
     # convert into geo dataframe
     geo_stops = gpd.GeoDataFrame(ni_stops)
@@ -683,6 +672,28 @@ def read_usual_pop_scotland(path:str):
         df_essential_cols[col] = df_essential_cols[col].astype(int)
         
     return df_essential_cols
+
+def read_urb_rur_class_scotland(urb_rur_path):
+    """Reads the urb/rural classification for Scotland.
+
+    This reads in the file containing all the urban/rural class
+    Then applies a mapping based on if living in a settlement >10,00
+    then urban, else rural.
+    
+    Args:
+        path (str): the path where the file exists
+    
+    Returns:
+        pd.DataFrame the classfication dataframe
+    """
+    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011","UR6_2013_2014"])
+
+
+    urb_rur["urb_rur_class"] = np.where((urb_rur["UR6_2013_2014"] == 1)|(urb_rur["UR6_2013_2014"] == 2),
+                                "urban",
+                                "rural")
+
+    return urb_rur
 
 
 def best_before(path, number_of_days):
