@@ -129,7 +129,7 @@ dmypy.json
 .pyre/
 
 # csv data files
-Stops.csv
+*.csv
 
 #mac os system files
 .DS_Store
