@@ -18,29 +18,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 train_timetable_zip_link = config["ENG_train_timetable_data"]
 output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
-
-# Download link for zip
-# Name of zip changes each day so will need to scrape the page to extract
-# the latest
-# As such, providing hard-coding filepaths for the time being, and
-# a shortened mca file just for proof of concept.
-msn_file = os.path.join(output_directory, 'ttisf467.msn')
-mca_file = os.path.join(output_directory, 'ttisf467.mca')
-
-
-# Below code can be used once we have the latest filename
-# train_dataset_name = 'trains'
-# changes each time so using holding name
-# zip_path = os.path.join(output_directory, train_dataset_name)
-
-# di._grab_zip(file_nm=train_dataset_name,
-#            zip_link=train_timetable_zip_link,
-#            zip_path=zip_path)
-
-# di._extract_zip(file_nm=train_dataset_name,
-#                csv_nm='ttisf467.msn',
-#                zip_path=zip_path,
-#                csv_path=output_directory)
+msn_file = os.path.join(output_directory, config["train_msn_filename"])
+mca_file = os.path.join(output_directory, config["train_mca_filename"])
 
 
 # Extract msn data
