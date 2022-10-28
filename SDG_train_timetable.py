@@ -33,18 +33,18 @@ mca_file = os.path.join(output_directory, 'ttisf467.mca')
 # changes each time so using holding name
 # zip_path = os.path.join(output_directory, train_dataset_name)
 
-#di._grab_zip(file_nm=train_dataset_name,
+# di._grab_zip(file_nm=train_dataset_name,
 #            zip_link=train_timetable_zip_link,
 #            zip_path=zip_path)
 
-#di._extract_zip(file_nm=train_dataset_name,
+# di._extract_zip(file_nm=train_dataset_name,
 #                csv_nm='ttisf467.msn',
 #                zip_path=zip_path,
 #                csv_path=output_directory)
 
 
 # Extract msn data
-#-----------------
+# -----------------
 
 # Store msn data
 msn = []
@@ -71,37 +71,38 @@ with open(msn_file, 'r') as msn_data:
             crs_code = line[49:52].strip()
 
             msn.append([station_name,
-						tiploc_code,
-						crs_code])
+                        tiploc_code,
+                        crs_code])
 
 
 # Create dataframe
-msn_df = pd.DataFrame(msn, columns = ['station_name', 'tiploc_code', 'crs_code'])
+msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
 
 
 # Clean msn data
 # --------------
 
 # Remove the duplicates in crs_code
-msn_df = msn_df.drop_duplicates(subset = ['crs_code'])
+msn_df = msn_df.drop_duplicates(subset=['crs_code'])
 
 # Attach the coordinates for each train station
 station_locations = os.path.join(output_directory, 'station_locations.csv')
 station_locations_df = pd.read_csv(station_locations,
-                                   usecols = ['station_code', 'latitude', 'longitude'])
+                                   usecols=['station_code', 'latitude', 'longitude'])
 
 # Join coordinates onto msn data
 # left join to master station names and see which ones dont have lat and long
-msn_data = pd.merge(msn_df, station_locations_df, how = 'left',
-                        left_on = 'crs_code', right_on='station_code')
-msn_data = msn_data[['station_name', 'tiploc_code', 'crs_code', 'latitude', 'longitude']]
+msn_data = pd.merge(msn_df, station_locations_df, how='left',
+                    left_on='crs_code', right_on='station_code')
+msn_data = msn_data[['station_name', 'tiploc_code',
+                     'crs_code', 'latitude', 'longitude']]
 
 # Remove stations with no coordinates
 msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
 
 
 # Extract mca data
-#-----------------
+# -----------------
 
 # Each new journey starts with BS. Within this journey we have
 # multiple stops
@@ -139,16 +140,17 @@ with open(mca_file, 'r') as mca_data:
         if line[0:3] == 'BSN' or line[0:3] == 'BSR':
             # Switch flag on as we have found a journey
             journey = True
-			
-			# Get unique ID for schedule
+
+            # Get unique ID for schedule
             # ID in dataset is not actually unique as same train has several schedules
-            # with different dates and calendars. Create ID from these variables.
+            # with different dates and calendars. Create ID from these
+            # variables.
             schedule_id = line[3:9] + line[9:15] + line[15:21] + line[21:28]
-			
+
             # Extract start and end date of service (yymmdd)
             start_date = line[9:15].strip()
             end_date = line[15:21].strip()
-			
+
             # Extract the calender information for this journey
             # i.e. what days of the week it runs
             # Only interested in weekdays for the timebeing.
@@ -157,21 +159,21 @@ with open(mca_file, 'r') as mca_data:
             wed = line[23].strip()
             thurs = line[24].strip()
             fri = line[25].strip()
-			
-			# Store data to be added to the dataframe
+
+            # Store data to be added to the dataframe
             schedules.append([schedule_id,
-                            start_date,
-							end_date,
-							mon,
-							tues,
-							wed,
-							thurs,
-							fri])
-			
+                              start_date,
+                              end_date,
+                              mon,
+                              tues,
+                              wed,
+                              thurs,
+                              fri])
+
             # Skip as this is all we need to do for an entry starting
             # with BS
             continue
-		
+
         # If we have found a new journey, go through the lines that are
         # part of this jounrey and give them the schedule id.
 
@@ -179,26 +181,27 @@ with open(mca_file, 'r') as mca_data:
         # CR (changes en route) and BX (extra schedule details) can be
         # ignored as not relevant to our purpose.
 
-        # If station has a departure time extract time, tiploc_code and activity type.
+        # If station has a departure time extract time, tiploc_code and
+        # activity type.
 
         # NB times can end on a H sometimes which indicates a half minute
         # Rather than rounding up and down, just ignoring this for the moment
         # and taking only first four characters (hh:mm)
 
         if journey:
-			
+
             if line[0:2] == 'LO':
 
                 departure_time = line[10:14].strip()
                 tiploc_code = line[2:10].strip()
                 activity_type = line[29:41].strip()
-				
+
             elif line[0:2] == 'LI':
-                    
+
                 departure_time = line[15:19].strip()
                 tiploc_code = line[2:10].strip()
                 activity_type = line[42:54].strip()
-						
+
             elif line[0:2] == 'LT':
 
                 departure_time = line[15:19].strip()
@@ -206,37 +209,38 @@ with open(mca_file, 'r') as mca_data:
                 activity_type = line[25:37].strip()
 
                 # As we know that LT signifies the last stop in a journey
-                # and we have extracted everything we need we now switch the flag off
+                # and we have extracted everything we need we now switch the
+                # flag off
                 journey = False
             else:
                 # Skipping BR and CX
                 continue
 
-			# Store data to be added to dataframe
+                # Store data to be added to dataframe
             stops.append([schedule_id,
-						departure_time,
-						tiploc_code,
-						activity_type])
-								
-								
+                          departure_time,
+                          tiploc_code,
+                          activity_type])
+
+
 # Add data into dataframes
 mca_schedule_df = pd.DataFrame(schedules,
-							   columns=['schedule_id',
+                               columns=['schedule_id',
                                         'start_date',
-										'end_date',
-										'mon',
-										'tues',
-										'wed',
-										'thurs',
-										'fri'])
+                                        'end_date',
+                                        'mon',
+                                        'tues',
+                                        'wed',
+                                        'thurs',
+                                        'fri'])
 
-		
+
 mca_stop_df = pd.DataFrame(stops,
-						  columns = ['schedule_id',
+                           columns=['schedule_id',
                                     'departure_time',
-									'tiploc_code',
-									'activity_type'])
-							
+                                    'tiploc_code',
+                                    'activity_type'])
+
 
 # Clean mca data
 # --------------
@@ -244,7 +248,7 @@ mca_stop_df = pd.DataFrame(stops,
 # Drop any duplicate schedule IDs
 # As these are composed of an ID, start and end time, and calendar
 # any duplicates we have must be duplicates in the dataset.
-mca_schedule_df = mca_schedule_df.drop_duplicates(subset = ['schedule_id'])
+mca_schedule_df = mca_schedule_df.drop_duplicates(subset=['schedule_id'])
 
 # Remove records with no departure time
 mca_stop_df = mca_stop_df[mca_stop_df['departure_time'] != '']
