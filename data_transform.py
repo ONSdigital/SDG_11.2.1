@@ -344,11 +344,14 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
     nth = ord - 1
     date_of_day_entered = day_filtered_dates.iloc[nth].date
 
-    # Filter the bus_timetable_df 
+    # Filter the bus_timetable_df by date range
     bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
                                          <= date_of_day_entered) & 
                                         (bus_timetable_df['end_date']
                                          >= date_of_day_entered)]
+
+    # Then filter to day of interest
+    bus_timetable_df = bus_timetable_df[bus_timetable_df[day.lower()] == 1]
     
     # Print date being used (consider logging instead)
     day_date = date_of_day_entered.date()
@@ -365,33 +368,3 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
 
 
     return bus_timetable_df
-
-
-def filter_by_year(df, year="2022"):
-    """Filter the timetable_df by year
-    
-    Args:
-        bus_timetable_df (pandas dataframe): df to filter
-        day (str) : day of the week in title case, e.g. "Wednesday"
-    
-    Returns:
-        pd.DataFrame: pandas dataframe filtered by year specified   
-    """
-    # Measure the dataframe
-    original_rows = df.shape[0]
-
-    # Create string of start and end date of given year
-    start_year = f'{year}0101'
-    end_year = f'{year}1231'
-
-    # Create filter condition
-    start_end_date_during_year = ((df['start_date'] >= start_year)
-                                  & (df['start_date'] <= end_year)
-                                  & (df['end_date'] >= start_year)
-                                  & (df['end_date'] <= end_year))
-    # Filter df
-    df = df.loc[start_end_date_during_year]
-    
-    # Print how many rows have been dropped (consider logging instead)
-    print(f"Filtering by year dropped {original_rows-df.shape[0]} rows")
-    return df

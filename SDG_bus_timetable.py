@@ -25,14 +25,22 @@ output_directory = os.path.join(CWD, 'data', 'england_bus_timetable')
 zip_path = os.path.join(output_directory, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
-
+timetable_day = config["timetable_day"]
+day_filter_type = config["day_filter"]
 
 # Calculate if bus timetable needs to be downloaded.
-# If current folder doesnt exist, or hasnt been modified for
-# 7 days then redownload the zip
+# If current folder doesnt exist, or hasnt been modified then
+# flag to be downloaded
 
-if not di._persistent_exists(output_directory):
-    os.makedirs(output_directory)
+files_to_check = [f"{file}.txt" for file in required_files]
+paths_to_check = [os.path.join(output_directory, file) for file in files_to_check]
+each_file_checked = [di._persistent_exists(path) for path in paths_to_check]
+
+if not all(each_file_checked):
+    try:
+        os.makedirs(output_directory)
+    except FileExistsError:
+        print(f"Directory {output_directory} already exists")
     download_bus_timetable = True
 else:
     # Find when the last download occured
@@ -44,6 +52,7 @@ else:
 # Download bus timetable data
 # ---------------------------
 
+# Note downloads if flag above, and flag in config, set as True.
 # Using individual data ingest functions (rather than import_extract_delete_zip)
 # as files are .txt not .csv.
 if download_bus_timetable and auto_download_bus:
@@ -90,30 +99,40 @@ else:
                                 dtypes=stop_times_types)
 
 # trips
-trips_types = {'route_id': 'category',
-               'service_id': 'category', 'trip_id': 'category'}
+feath_ = os.path.join(output_directory, "trips.feather")
+if os.path.exists(feath_):
+    trips_df = di._feath_to_df("trips", feath_)
+else:
+    trips_types = {'route_id': 'category',
+                'service_id': 'category', 'trip_id': 'category'}
 
-trips_df = di._csv_to_df(file_nm='trips',
-                         csv_path=os.path.join(output_directory, 'trips.txt'),
-                         dtypes=trips_types)
+    trips_df = di._csv_to_df(file_nm='trips',
+                            csv_path=os.path.join(output_directory, 'trips.txt'),
+                            dtypes=trips_types)
 
 # calendar
 # NOTE: Not adding in saturday and sunday columns for stops because
 # we are only interested in weekday trips for highly serviced stops
-calendar_types = {'service_id': 'category', 'monday': 'int64', 'tuesday': 'int64',
-                  'wednesday': 'int64', 'thursday': 'int64', 'friday': 'int64',
-                  'start_date': 'object', 'end_date': 'object'}
+feath_ = os.path.join(output_directory, "calendar.feather")
+if os.path.exists(feath_):
+    calendar_df = di._feath_to_df("calendar", feath_)
+else:
+    calendar_types = {'service_id': 'category', 'monday': 'int64', 'tuesday': 'int64',
+                    'wednesday': 'int64', 'thursday': 'int64', 'friday': 'int64',
+                    'start_date': 'object', 'end_date': 'object'}
 
-calendar_df = di._csv_to_df(file_nm='calendar',
-                            csv_path=os.path.join(
-                                output_directory, 'calendar.txt'),
-                            dtypes=calendar_types)
+    calendar_df = di._csv_to_df(file_nm='calendar',
+                                csv_path=os.path.join(
+                                    output_directory, 'calendar.txt'),
+                                dtypes=calendar_types)
 
 # ----------
 # Clean data
 # ----------
 
-# Some departure times are > 24:00 so need to be removed
+# Some departure times are > 24:00 so need to be removed.
+# This is done automatically by restricting times to hours used
+# to define highly serviced stops
 hour_range = range(config["early_bus_hour"],config["late_bus_hour"])
 valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
@@ -140,8 +159,56 @@ bus_timetable_df = bus_timetable_df.drop(columns=['trip_id', 'route_id']) # 'ser
 # ----------------------------
 # Extract stops for chosen day
 # ----------------------------
-serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, "Wednesday")
+
+# Only interested in stops that are used on a certain day
+
+if day_filter_type == "general":
+    timetable_day = timetable_day.lower()
+    serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
+elif day_filter_type == "exact":
+    timetable_day = timetable_day.capitalize()
+    serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, timetable_day.capitalize())
+else:
+    print("Error: input error on day filter setting.")
+
+# -----------------------
+# Find frequency of stops
+# -----------------------
+
+# Take just HH from departure time
+serviced_bus_stops_df['departure_time'] = serviced_bus_stops_df['departure_time'].str.slice(0,2)
+
+bus_frequencies_df = pd.pivot_table(data=serviced_bus_stops_df,
+                                    values=timetable_day,
+                                    index='stop_id',
+                                    columns='departure_time',
+                                    aggfunc=len,
+                                    fill_value=0)
 
 
-serviced_bus_stops.head()
-# serviced_bus_stops = dt.filter_bus_timetable_by_date(bus_timetable_df, '20220822')
+# -----------------------------
+# Extract highly serviced stops
+# -----------------------------
+
+# Only keep those which have at least one service an hour
+highly_serviced_bus_stops_df = bus_frequencies_df[(bus_frequencies_df > 0).all(axis=1)]
+
+# Read in naptan data
+stops_df = di.get_stops_file(url=config["NAPTAN_API"],
+                             dir=os.path.join(os.getcwd(), "data", "stops"))
+
+# Add easting and northing
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(stops_df,
+                                                          how='inner',
+                                                          left_on='stop_id',
+                                                          right_on='ATCOCode')
+
+# Remove stops that dont have coordinates
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['Easting', 'Northing'], how='any')
+
+# Only keep required columns
+highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
+
+# Save a copy to be ingested by SDG_11.2.1_main
+highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
+highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_stops.csv'), index=False)
