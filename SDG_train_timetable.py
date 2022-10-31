@@ -305,7 +305,7 @@ highly_serviced_train_stops_df = (
 
 # Keep only required columns
 highly_serviced_train_stops_df = (
-    highly_serviced_train_stops_df['station_code', 'easting', 'northing']
+    highly_serviced_train_stops_df[['station_code', 'easting', 'northing']]
 )
 
 # Save a copy to be ingested into SDG_main
