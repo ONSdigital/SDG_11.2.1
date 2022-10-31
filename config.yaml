@@ -44,6 +44,7 @@ timetable_day: 'wednesday'
 day_filter: 'general' #exact
 train_msn_filename: 'ttisf467.msn'
 train_mca_filename: 'ttisf467.mca'
+station_locations: 'station_locations.csv'
 
 # Ages 
 age_lst:

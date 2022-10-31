@@ -20,8 +20,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Parameters
 output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
-# ADD station locations to config
-station_locations = os.path.join(output_directory, 'station_locations.csv')
+station_locations = os.path.join(output_directory, config['station_locations'])
 msn_file = os.path.join(output_directory, config["train_msn_filename"])
 mca_file = os.path.join(output_directory, config["train_mca_filename"])
 timetable_day = config["timetable_day"]
