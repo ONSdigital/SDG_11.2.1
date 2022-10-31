@@ -288,9 +288,8 @@ highly_serviced_train_stops_df = train_frequencies_df[(train_frequencies_df > 0)
 
 # Read in station location data
 # Attach the coordinates for each train station
-# TO DO add E and N to station location data.
 station_locations_df = pd.read_csv(station_locations,
-                                   usecols = ['station_code', 'latitude', 'longitude'])
+                                   usecols = ['station_code', 'easting', 'northing'])
 
 # Add easting and northing
 highly_serviced_train_stops_df = highly_serviced_train_stops_df.merge(station_locations_df,
@@ -302,6 +301,6 @@ highly_serviced_train_stops_df = highly_serviced_train_stops_df.merge(station_lo
 # Remove stations with no coordinates
 highly_serviced_train_stops_df = highly_serviced_train_stops_df.dropna(subset=['easting', 'northing'], how='any')
 
-# Keep only reuired columns
+# Keep only required columns
 
 # Save a copy to be ingested into SDG_main
