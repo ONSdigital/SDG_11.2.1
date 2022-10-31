@@ -23,6 +23,7 @@ output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
 station_locations = os.path.join(output_directory, config['station_locations'])
 msn_file = os.path.join(output_directory, config["train_msn_filename"])
 mca_file = os.path.join(output_directory, config["train_mca_filename"])
+day_filter_type = config["day_filter"]
 timetable_day = config["timetable_day"]
 early_train_hour = config["early_train_hour"]
 late_train_hour = config["late_train_hour"]
@@ -252,11 +253,15 @@ train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
 # Extract stops for chosen day
 # ----------------------------
 
-# TO DO change name of function to be more generic!
-timetable_day = 'wednesday'
-serviced_train_stops_df = train_timetable_df[train_timetable_df[timetable_day] == 1]
-#serviced_train_stops_df = dt.filter_bus_timetable_by_day(train_timetable_df, timetable_day.capitalize())
-
+# Only interested in stops on a certain day
+if day_filter_type == "general":
+    timetable_day = timetable_day.lower()
+    serviced_train_stops_df = train_timetable_df[train_timetable_df[timetable_day] == 1]
+elif day_filter_type == "exact":
+    timetable_day = timetable_day.capitalize()
+    serviced_train_stops_df = dt.filter_timetable_by_day(train_timetable_df, timetable_day.capitalize())
+else:
+    print("Error: input error on day filter setting.")
 
 
 # -----------------------

@@ -290,9 +290,9 @@ def disab_disagg(disability_df,la_pop_df):
     return la_pop_df
 
 
-def filter_bus_timetable_by_day(bus_timetable_df, day):
+def filter_timetable_by_day(timetable_df, day):
     """
-    Extract serviced bus stops based on specific day of the week.
+    Extract serviced stops based on specific day of the week.
 
     The day is selected from the available days in the date range present in
       timetable data. 
@@ -306,21 +306,21 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
     5) filters the dataframe to that date
 
     Args:
-        bus_timetable_df (pandas dataframe): df to filter
+        timetable_df (pandas dataframe): df to filter
         day (str) : day of the week in title case, e.g. "Wednesday"
 
     Returns:
         pd.DataFrame: filtered pandas dataframe   
     """
     # Measure the dataframe
-    original_rows = bus_timetable_df.shape[0]
+    original_rows = timetable_df.shape[0]
 
-    # Count the bus services
-    orig_service_count = bus_timetable_df.service_id.unique().shape[0]
+    # Count the services
+    orig_service_count = timetable_df.service_id.unique().shape[0]
 
     # Get the minimum date range
-    earliest_start_date = bus_timetable_df.start_date.min()
-    latest_end_date = bus_timetable_df.end_date.max()
+    earliest_start_date = timetable_df.start_date.min()
+    latest_end_date = timetable_df.end_date.max()
 
 
     # Identify days in the range and count them
@@ -344,27 +344,27 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
     nth = ord - 1
     date_of_day_entered = day_filtered_dates.iloc[nth].date
 
-    # Filter the bus_timetable_df by date range
-    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
+    # Filter the timetable_df by date range
+    timetable_df = timetable_df[(timetable_df['start_date']
                                          <= date_of_day_entered) & 
-                                        (bus_timetable_df['end_date']
+                                        (timetable_df['end_date']
                                          >= date_of_day_entered)]
 
     # Then filter to day of interest
-    bus_timetable_df = bus_timetable_df[bus_timetable_df[day.lower()] == 1]
+    timetable_df = timetable_df[timetable_df[day.lower()] == 1]
     
     # Print date being used (consider logging instead)
     day_date = date_of_day_entered.date()
     print(f"The date of {day} number {ord} is {day_date}")
 
     # Print how many rows have been dropped (consider logging instead)
-    print(f"Selecting only services covering {day_date} reduced records by {original_rows-bus_timetable_df.shape[0]} rows")
+    print(f"Selecting only services covering {day_date} reduced records by {original_rows-timetable_df.shape[0]} rows")
 
-    # Print how many bus services are in the analysis and how many were dropped
-    service_count = bus_timetable_df.service_id.unique().shape[0]
+    # Print how many services are in the analysis and how many were dropped
+    service_count = timetable_df.service_id.unique().shape[0]
     dropped_services = orig_service_count - service_count
-    print(f"There are {service_count} bus services in the analysis")
+    print(f"There are {service_count} services in the analysis")
     print(f"Filtering by day has reduced services by {dropped_services}")
 
 
-    return bus_timetable_df
+    return timetable_df
