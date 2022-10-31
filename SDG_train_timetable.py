@@ -299,8 +299,18 @@ highly_serviced_train_stops_df = highly_serviced_train_stops_df.merge(station_lo
 
 
 # Remove stations with no coordinates
-highly_serviced_train_stops_df = highly_serviced_train_stops_df.dropna(subset=['easting', 'northing'], how='any')
+highly_serviced_train_stops_df = (
+    highly_serviced_train_stops_df.dropna(subset=['easting', 'northing'], how='any')
+)
 
 # Keep only required columns
+highly_serviced_train_stops_df = (
+    highly_serviced_train_stops_df['station_code', 'easting', 'northing']
+)
 
 # Save a copy to be ingested into SDG_main
+highly_serviced_train_stops_df.to_feather(
+    os.path.join(output_directory, 'train_highly_serviced_stops.feather'))
+
+highly_serviced_train_stops_df.to_csv(
+    os.path.join(output_directory, 'train_highly_serviced_stops.csv'), index=False)
