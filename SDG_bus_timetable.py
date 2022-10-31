@@ -210,5 +210,5 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['East
 highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
 
 # Save a copy to be ingested by SDG_11.2.1_main
-highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
-highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_stops.csv'), index=False)
+highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'bus_highly_serviced_stops.feather'))
+highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'bus_highly_serviced_stops.csv'), index=False)
