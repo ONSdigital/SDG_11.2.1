@@ -1,32 +1,51 @@
+# General
 calculation_year : 2019
-centroid_year: 2011 #2001, 2011, or 2021
-NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
-DEFAULT_CRS : 'EPSG:27700'
+
+# Data
 DATA_DIR :  "./data"
 EXT_ORDER :
   - feather
   - csv
   - zip
-NAPTAN_API: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
+
+# Mapping - geospatial
+DEFAULT_CRS : 'EPSG:27700'
+
+
+# Population data
+centroid_year: 2011 #2001, 2011, or 2021
 Urb_Rur_ZIP_LINK : https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data
+URB_RUR_TYPES:
+  OA11CD: str
+  RUC11CD: category
+uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
+OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D'
+
+# Bus and train data
+NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
+NAPTAN_API: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
 NAPTAN_TYPES :
+  ATCOCode: str
   NaptanCode: str
   CommonName: str
   Easting: int32
   Northing: int32
   Status : str
   StopType: category
-URB_RUR_TYPES:
-  OA11CD: str
-  RUC11CD: category
-uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
-OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D'
 NI_bus_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-9942-8d950b3a0ceb/resource/29f3f2fd-d131-4b86-8933-42b5b3763763/download/09-05-2022busstop-list.csv'
 NI_train_stops_data: 'https://www.opendatani.gov.uk/dataset/5f27f171-b8aa-4511-983d-6df6e87bbf20/resource/967e32c3-1cc2-4aee-b485-92121a32eb4d/download/nir-rail-stations.csv'
-ENG_train_timetable_data: 'https://data.atoc.org/system/files/'
 ENG_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
+auto_download_bus: true
+early_bus_hour: 06
+late_bus_hour: 20
 high_cap_buffer: 1000
 low_cap_buffer: 500
+timetable_day: 'wednesday'
+day_filter: 'general' #exact
+train_msn_filename: 'ttisf467.msn'
+train_mca_filename: 'ttisf467.mca'
+
+# Ages 
 age_lst:
 - '0'
 - '1'
