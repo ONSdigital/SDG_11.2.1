@@ -24,7 +24,8 @@ station_locations = os.path.join(output_directory, config['station_locations'])
 msn_file = os.path.join(output_directory, config["train_msn_filename"])
 mca_file = os.path.join(output_directory, config["train_mca_filename"])
 timetable_day = config["timetable_day"]
-
+early_train_hour = config["early_train_hour"]
+late_train_hour = config["late_train_hour"]
 
 # Extract msn data
 # -----------------
@@ -221,7 +222,7 @@ mca_schedule_df = mca_schedule_df.drop_duplicates(subset=['schedule_id'])
 mca_stop_df = mca_stop_df[mca_stop_df['activity_type'] == 'T']
 
 # Only keep records with departure time between highly serviced hours
-hour_range = range(config["early_train_hour"], config["late_train_hour"])
+hour_range = range(early_train_hour, late_train_hour)
 valid_hours = [f'0{i}' if i <10 else f'{i}' for i in hour_range]
 
 mca_stop_df = mca_stop_df[mca_stop_df['departure_time'].str.startswith(tuple(valid_hours))]
@@ -242,7 +243,10 @@ train_timetable_df = (
 )
 
 # Remove columns no longer required
-train_timetable_df = train_timetable_df.drop(columns=['schedule_id', 'tiploc_code', 'activity_type', 'station_name'])
+train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
+                                                      'tiploc_code',
+                                                      'activity_type',
+                                                      'station_name'])
 
 # ----------------------------
 # Extract stops for chosen day
