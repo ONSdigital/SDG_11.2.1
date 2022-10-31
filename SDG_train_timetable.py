@@ -28,7 +28,6 @@ timetable_day = config["timetable_day"]
 early_timetable_hour = config["early_timetable_hour"]
 late_timetable_hour = config["late_timetable_hour"]
 
-# ----------------
 # Extract msn data
 # -----------------
 
@@ -275,7 +274,6 @@ train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
                                                       'tiploc_code',
                                                       'activity_type',
                                                       'station_name'])
-
 
 # Extract stops for chosen day
 # ----------------------------
