@@ -133,6 +133,25 @@ replacements = {"geography": 'OA11CD',
 # renaming the dodgy col names with their replacements
 disability_df.rename(columns=replacements, inplace=True)
 
+# age variable
+age_scotland_path = os.path.join(CWD,"data","QS103_scotland_age.csv")
+import pandas as pd
+age_scotland_df = pd.read_csv(age_scotland_path, 
+                              skiprows=4)
+
+# Get a list of ages from config
+age_lst = config['scot_age_lst']
+
+# Get a datframe limited to the data ages columns only
+age_df = dt.slice_age_df(age_scotland_df, age_lst)
+
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = dt.get_col_bins(age_lst)
+
+# get the ages in the age_df binned, and drop the original columns
+age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
+
+
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
@@ -141,7 +160,8 @@ sc_auth = [random_la]
 
 # define output dicts to capture dfs
 total_df_dict = {}
-sex_df_dict = {}
+sex_df_dict = {} 
+age_df_dict = {}
 disab_df_dict = {}
 urb_rur_df_dict={}
 
@@ -164,7 +184,7 @@ for local_auth in sc_auth:
 
     # filter only by current la 
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
-    
+
     ## Disability disaggregation
     
     # Calculate prop of disabled in each OA of the LA
@@ -212,7 +232,27 @@ for local_auth in sc_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
     
+    ## Age disaggregation
+    age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
+                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                 '55-59', '60-64', '65-69', '70-74', '75-79',
+                 '80-84', '85-89', '90+']
+
     
+    la_pop_df = pd.merge(pop_in_poly_df, age_df, left_index=True, right_index=True)
+
+    age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=age_bins)
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
+
+    # Output this local auth's age df to the dict
+    age_df_dict[local_auth] = age_servd_df_out
+
     # Sex disaggregation
     # # # renaming Scotland sex col names with their replacements
     replacements = {"Males": "male",
