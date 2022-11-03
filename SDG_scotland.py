@@ -365,15 +365,15 @@ all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
-age_df_la = pd.concat(age_df_dict.values())
+age_df_all_la = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, sex_all_la,disab_all_la,urb_rur_all_la,age_df_la]
+all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_df_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # Outputting to CSV
-
+final_result = do.reorder_final_df(final_result)
 final_result.to_csv("Scotland_results.csv", index=False)
 
 end = time.time()
