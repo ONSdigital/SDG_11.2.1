@@ -135,9 +135,8 @@ disability_df.rename(columns=replacements, inplace=True)
 
 # age variable
 age_scotland_path = os.path.join(CWD,"data","QS103_scotland_age.csv")
-import pandas as pd
-age_scotland_df = pd.read_csv(age_scotland_path, 
-                              skiprows=4)
+
+age_scotland_df = di.read_scottish_age(age_scotland_path)
 
 # Get a list of ages from config
 age_lst = config['scot_age_lst']
@@ -151,6 +150,7 @@ age_bins = dt.get_col_bins(age_lst)
 # get the ages in the age_df binned, and drop the original columns
 age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
+# merge ages back onto dataframe
 pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df_bins, left_index=True, right_index=True)
 
 # Unique list of LA's to iterate through
