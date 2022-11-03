@@ -1,5 +1,6 @@
 from typing import List
 import pandas as pd
+import numpy as np
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -57,6 +58,16 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         pd.DataFrame: Returns the age_df with bins.
     """
     # Grouping ages in 5 year brackets
+
+    # formatting scottish ages
+    columns = age_df.columns
+    for col in columns:
+        if age_df.dtypes[col] == np.object:
+            age_df[col] = age_df[col].str.replace(',', '')
+            age_df[col] = age_df[col].str.replace('-', '0')
+            age_df[col] = age_df[col].fillna(0)
+            age_df[col] = age_df[col].astype(float)
+
     for bin in age_bins:
         age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
 
@@ -276,7 +287,7 @@ def disab_disagg(disability_df,
          *
          la_pop_df["proportion_disabled"])
     )
-    la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
+   # la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
 
     # Make the calculation of the number of non-disabled people in the year
     # of the population estimates
