@@ -143,8 +143,10 @@ sdg_dstore_03.sdg
 envs
 
 #data files
+!.gitkeep
 data/
 .SDG_11.2.1
+
 
 # VS Code stuff
 workspace.code-workspace
