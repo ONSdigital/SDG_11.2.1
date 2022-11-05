@@ -17,10 +17,11 @@ def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
     return age_df
 
 
-def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this doctring not to work 
-    """Function to group/bin the ages together in 5 year steps. 
-        
-    Starts the sequence at age 0. 
+# type hint '-> List[tuple]' causing this doctring not to work
+def get_col_bins(col_nms: List[str]):
+    """Function to group/bin the ages together in 5 year steps.
+
+    Starts the sequence at age 0.
         Will return the ages in a list of tuples.
         The 0th position of the tuple being the lower limit
         of the age bin, the 1st position of the tuple being
@@ -32,14 +33,14 @@ def get_col_bins(col_nms: List[str]): # type hint '-> List[tuple]' causing this 
     Returns:
         list of tuples: a list of the ages with 5 year gaps.
     """
-    
-    ## Make a lists of starting and finishing indexes
+
+    # Make a lists of starting and finishing indexes
     cols_start = col_nms[0::5]
     cols_fin = col_nms[4::5]
     # Generating a list of tuples which will be the age groupings
     col_bins = [(s, f) for s, f in zip(cols_start, cols_fin)]
     # Again adding "90+", doubling it so it's doubled, like the other tuples
-    col_bins.append((cols_start[-1:]*2))
+    col_bins.append((cols_start[-1:] * 2))
     # TODO: make this more intelligent. Only if there is one col name left
     # over it should be doubled.
     return col_bins
@@ -96,7 +97,7 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         iv) the proportion who are not served by public transport
     """
     # First list the age bin columns
-   
+
     pop_sums = {}
     for col in cols_lst:
         # Total pop
@@ -104,10 +105,10 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
         # Served pop
         servd_pop = int(pop_in_poly_df[col].sum())
         # Unserved pop
-        unsrvd_pop = int(total_pop-servd_pop)
+        unsrvd_pop = int(total_pop - servd_pop)
         if total_pop == 0:
             # If the total population for that column is 0
-            # this standard of zeros and Nones is returned 
+            # this standard of zeros and Nones is returned
             pop_sums[col] = {"Total": str(total_pop),
                              "Served": str(servd_pop),
                              "Unserved": str(unsrvd_pop),
@@ -124,8 +125,8 @@ def served_proportions_disagg(pop_df: pd.DataFrame,
 
 
 def _calc_proprtn_srvd_unsrvd(total_pop,
-                                   servd_pop,
-                                   unsrvd_pop):
+                              servd_pop,
+                              unsrvd_pop):
     """Calculates proportions of people served and unserved by public transport.
 
     Args:
@@ -143,14 +144,14 @@ def _calc_proprtn_srvd_unsrvd(total_pop,
                 iv) the percentage ofwho are not served by public transport
     """
     # Get proportion served
-    pct_servd = round((servd_pop/total_pop)*100, 2)
+    pct_servd = round((servd_pop / total_pop) * 100, 2)
     # Get proportion unserved
-    pct_unserved = round(((total_pop-servd_pop)/total_pop)*100, 2)
+    pct_unserved = round(((total_pop - servd_pop) / total_pop) * 100, 2)
     results_dict = {"Total": str(total_pop),
-                        "Served": str(servd_pop),
-                        "Unserved": str(unsrvd_pop),
-                        "Percentage served": str(pct_servd),
-                        "Percentage unserved": str(pct_unserved)}
+                    "Served": str(servd_pop),
+                    "Unserved": str(unsrvd_pop),
+                    "Percentage served": str(pct_servd),
+                    "Percentage unserved": str(pct_unserved)}
     return results_dict
 
 
@@ -169,7 +170,7 @@ def highly_serv_stops(region):
 
 def filter_stops(stops_df):
     """Filters the stops dataframe based on two things:
-    
+
     | 1) Status column - We want to keep stops which are active, pending or new.
     | 2) StopType want only to include bus and rail stops.
 
@@ -181,25 +182,26 @@ def filter_stops(stops_df):
             of keeping based on status/stoptype columns.
     """
     # stop_types we would like to keep within the dataframe
-    stop_types = ["RSE","RLY","RPL","TMU","MET","PLT",
-                "BCE", "BST","BCQ", "BCS","BCT"]
+    stop_types = ["RSE", "RLY", "RPL", "TMU", "MET", "PLT",
+                  "BCE", "BST", "BCQ", "BCS", "BCT"]
 
     filtered_stops = stops_df[(stops_df["Status"] == "active") |
-                           (stops_df["Status"] == "pending") |
-                           (stops_df["Status"] == None) |
-                           (stops_df["Status"] == "new")]
+                              (stops_df["Status"] == "pending") |
+                              (stops_df["Status"] is None) |
+                              (stops_df["Status"] == "new")]
 
-    boolean_stops_type = filtered_stops["StopType"].isin(stop_types) 
-    filter_stops=filtered_stops[boolean_stops_type]
+    boolean_stops_type = filtered_stops["StopType"].isin(stop_types)
+    filter_stops = filtered_stops[boolean_stops_type]
 
     return filter_stops
 
+
 def add_stop_capacity_type(stops_df):
     """Adds capacity_type column.
-    
+
     Column is defined with the following dictionary using the StopType
-    Bus stops are low capacity, train stations are high capacity. 
-        
+    Bus stops are low capacity, train stations are high capacity.
+
     Args:
         stops_df (pd.DataFrame): The dataframe to add the column to.
 
@@ -218,24 +220,25 @@ def add_stop_capacity_type(stops_df):
                       "BCS": "low",
                       "BCT": "low"}
 
-    stops_df["capacity_type"]=stops_df["StopType"].map(dictionary_map)
+    stops_df["capacity_type"] = stops_df["StopType"].map(dictionary_map)
 
     return stops_df
 
-def disab_disagg(disability_df,la_pop_df):
-    """Calculates number of people in the population that are classified as 
-        disabled or not disabled and this is merged onto the local authority 
+
+def disab_disagg(disability_df, la_pop_df):
+    """Calculates number of people in the population that are classified as
+        disabled or not disabled and this is merged onto the local authority
         population dataframe.
-        
+
     Args:
-        disability_df (pd.DataFrame): Dataframe that includes disability estimates for 
+        disability_df (pd.DataFrame): Dataframe that includes disability estimates for
                                     each output area.
-        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes 
+        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                 output area codes and population estimates.
 
     Returns:
         gpd.GeoDataFrame: GeoPandas Dataframe that includes population estimates,
-                        geographical location, and proportion of disabled/non-disabled 
+                        geographical location, and proportion of disabled/non-disabled
                         for each output area in the local authority chosen.
     """
     # Getting the disab total
@@ -243,10 +246,11 @@ def disab_disagg(disability_df,la_pop_df):
                                    + disability_df["disab_ltd_little"])
 
     # Calcualting the total "non-disabled"
-    la_pop_only = la_pop_df[['OA11CD','pop_count']]
+    la_pop_only = la_pop_df[['OA11CD', 'pop_count']]
     disability_df = la_pop_only.merge(disability_df, on="OA11CD")
     # Putting the result back into the disability df
-    disability_df["non-disabled"] = disability_df["pop_count"] - disability_df['disb_total']
+    disability_df["non-disabled"] = disability_df["pop_count"] - \
+        disability_df['disb_total']
 
     # Calculating the proportion of disabled people in each OA
     disability_df["proportion_disabled"] = (
@@ -254,16 +258,18 @@ def disab_disagg(disability_df,la_pop_df):
         /
         disability_df['pop_count']
     )
-    
+
     # Calcualting the proportion of non-disabled people in each OA
     disability_df["proportion_non-disabled"] = (
         disability_df['non-disabled']
         /
         disability_df['pop_count']
     )
-    
-    # Slice disability df that only has the proportion disabled column and the OA11CD col
-    disab_prop_df = disability_df[['OA11CD', 'proportion_disabled', 'proportion_non-disabled']]
+
+    # Slice disability df that only has the proportion disabled column and the
+    # OA11CD col
+    disab_prop_df = disability_df[[
+        'OA11CD', 'proportion_disabled', 'proportion_non-disabled']]
 
     # Merge the proportion disability df into main the pop df with a left join
     la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
@@ -286,7 +292,8 @@ def disab_disagg(disability_df,la_pop_df):
          *
          la_pop_df["proportion_non-disabled"])
     )
-    la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(int)
+    la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(
+        int)
     return la_pop_df
 
 
@@ -295,9 +302,9 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
     Extract serviced bus stops based on specific day of the week.
 
     The day is selected from the available days in the date range present in
-      timetable data. 
+      timetable data.
 
-    1) identifies which days dates in the entire date range 
+    1) identifies which days dates in the entire date range
     2) counts days of each type to get the maximum position order
     3) validates user's choice for `day` - provides useful errors
     4) creates ord value that is half of maximum position order to ensure
@@ -310,7 +317,7 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
         day (str) : day of the week in title case, e.g. "Wednesday"
 
     Returns:
-        pd.DataFrame: filtered pandas dataframe   
+        pd.DataFrame: filtered pandas dataframe
     """
     # Measure the dataframe
     original_rows = bus_timetable_df.shape[0]
@@ -322,7 +329,6 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
     earliest_start_date = bus_timetable_df.start_date.min()
     latest_end_date = bus_timetable_df.end_date.max()
 
-
     # Identify days in the range and count them
     date_range = pd.date_range(earliest_start_date, latest_end_date)
     date_day_couplings_df = pd.DataFrame({"date": date_range,
@@ -332,10 +338,11 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
 
     # Validate user choices
     if day not in days_counted_dict.keys():
-        raise KeyError("The day chosen in not available. Should be a weekday in title case.")
+        raise KeyError(
+            "The day chosen in not available. Should be a weekday in title case.")
     max_ord = days_counted_dict[day]
-    ord = round(max_ord/2)
-    
+    ord = round(max_ord / 2)
+
     # filter all the dates down the to the day needed
     day_filtered_dates = (date_day_couplings_df
                           [date_day_couplings_df.day_name == day])
@@ -346,25 +353,25 @@ def filter_bus_timetable_by_day(bus_timetable_df, day):
 
     # Filter the bus_timetable_df by date range
     bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
-                                         <= date_of_day_entered) & 
+                                         <= date_of_day_entered) &
                                         (bus_timetable_df['end_date']
                                          >= date_of_day_entered)]
 
     # Then filter to day of interest
     bus_timetable_df = bus_timetable_df[bus_timetable_df[day.lower()] == 1]
-    
+
     # Print date being used (consider logging instead)
     day_date = date_of_day_entered.date()
     print(f"The date of {day} number {ord} is {day_date}")
 
     # Print how many rows have been dropped (consider logging instead)
-    print(f"Selecting only services covering {day_date} reduced records by {original_rows-bus_timetable_df.shape[0]} rows")
+    print(
+        f"Selecting only services covering {day_date} reduced records by {original_rows-bus_timetable_df.shape[0]} rows")
 
     # Print how many bus services are in the analysis and how many were dropped
     service_count = bus_timetable_df.service_id.unique().shape[0]
     dropped_services = orig_service_count - service_count
     print(f"There are {service_count} bus services in the analysis")
     print(f"Filtering by day has reduced services by {dropped_services}")
-
 
     return bus_timetable_df
