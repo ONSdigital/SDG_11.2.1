@@ -32,7 +32,9 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
+OUTPUT_DIR = config["DATA_OUTPUT"]
 EXT_ORDER = config['EXT_ORDER']
+OUTFILE = config['OUTFILE']
 # Years
 # Getting the year for population data
 pop_year = str(config["calculation_year"])
@@ -470,6 +472,7 @@ final_result.reset_index(inplace=True)
 
 # Outputting to CSV
 final_result = do.reorder_final_df(final_result)
-final_result.to_csv("All_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 print(f"Time taken is {time.time()-start_time:.2f} seconds")
