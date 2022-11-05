@@ -1,7 +1,6 @@
 # Core imports
 import os
 import time
-from datetime import datetime
 import random
 
 # Third party imports
@@ -21,10 +20,9 @@ start_time = time.time()
 
 # get current working directory
 CWD = os.getcwd()
-# TODO: find out best practice on CWD
 
 # Load config
-with open(os.path.join(CWD, "config.yaml")) as yamlfile:
+with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
@@ -37,9 +35,9 @@ EXT_ORDER = config['EXT_ORDER']
 OUTFILE = config['OUTFILE']
 # Years
 # Getting the year for population data
-pop_year = str(config["calculation_year"])
+POP_YEAR = str(config["calculation_year"])
 # Getting the year for centroid data
-centroid_year = str(config["centroid_year"])
+CENTROID_YEAR = str(config["centroid_year"])
 
 
 # Get the pandas dataframe for the stops data
@@ -61,32 +59,32 @@ stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # define la col which is LADXXNM where XX is last 2 digits of year e.g 21
 # from 2021
-lad_col = f'LAD{pop_year[-2:]}NM'
+lad_col = f'LAD{POP_YEAR[-2:]}NM'
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
                                                   "data",
                                                   "LA_shp",
-                                                  pop_year))
+                                                  POP_YEAR))
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data", "population_estimates",
-                                    pop_year
+                                    POP_YEAR
                                     )
                        )
 
 # Get the population data for the whole nation for the specified year
-whole_nation_pop_df = di.get_whole_nation_pop_df(pop_files, pop_year)
+whole_nation_pop_df = di.get_whole_nation_pop_df(pop_files, POP_YEAR)
 
 # Get population weighted centroids into a dataframe
 uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                        (os.path.join
                         (DATA_DIR,
                          'pop_weighted_centroids',
-                         centroid_year)))
+                         CENTROID_YEAR)))
 
 # Get output area boundaries
 # OA_df = pd.read_csv(config["OA_boundaries_csv"])
@@ -163,7 +161,7 @@ whole_nation_pop_df = whole_nation_pop_df.join(
 
 # Map OA codes to Local Authority Names
 oa_la_lookup_path = di.get_oa_la_csv_abspath(
-    os.path.join(os.getcwd(), "data", "oa_la_mapping", pop_year))
+    os.path.join(os.getcwd(), "data", "oa_la_mapping", POP_YEAR))
 
 LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
 whole_nation_pop_df = pd.merge(
@@ -244,31 +242,14 @@ for local_auth in list_local_auth:
     # expected
     la_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
 
-    # import the disability data - this is the based on the 2011 census
-    # TODO: use new csv_to_df func to make disability_df
-
     # Disability disaggregations
     la_pop_df = dt.disab_disagg(disability_df, la_pop_df)
 
-    # import the sex data
-    # # TODO: use new csv_to_df func to make the sex_df
-    # sex_df = pd.read_csv(os.path.join(CWD, "data", "nomis_QS104EW.csv"),
-    #                      header=6,
-    #                      usecols=["2011 output area",
-    #                               "Males", "Females"])
-
-    # sex_df = bham_pop_df['OA11CD', 'males_pop', 'fem_pop']
-
-    # # # renaming the dodgy col names with their replacements
+    # renaming the dodgy col names with their replacements
     replacements = {"males_pop": "male",
                     "fem_pop": "female"}
     la_pop_df.rename(columns=replacements, inplace=True)
 
-    # # merge the sex data with the rest of the population data
-    # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
-
-    # Make a polygon object from the geometry column of the stops df
-    # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
     # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
@@ -464,7 +445,7 @@ all_results_dfs = [
     disab_all_la,
     age_all_la]
 final_result = pd.concat(all_results_dfs)
-final_result["Year"] = pop_year
+final_result["Year"] = POP_YEAR
 
 # Resetting index for gptables
 final_result.reset_index(inplace=True)
