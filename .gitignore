@@ -142,8 +142,10 @@ sdg_dstore_03.sdg
 #conda environment
 envs
 
-#data files
-data/
+# Excluding data files, but keeping folder structure
+data/**
+!data/**/
+!data/**/.gitkeep
 .SDG_11.2.1
 
 # VS Code stuff

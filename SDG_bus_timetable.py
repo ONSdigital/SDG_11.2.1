@@ -27,6 +27,8 @@ required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
 timetable_day = config["timetable_day"]
 day_filter_type = config["day_filter"]
+early_timetable_hour = config["early_timetable_hour"]
+late_timetable_hour = config["late_timetable_hour"]
 
 # Calculate if bus timetable needs to be downloaded.
 # If current folder doesnt exist, or hasnt been modified then
@@ -133,7 +135,7 @@ else:
 # Some departure times are > 24:00 so need to be removed.
 # This is done automatically by restricting times to hours used
 # to define highly serviced stops
-hour_range = range(config["early_bus_hour"],config["late_bus_hour"])
+hour_range = range(early_timetable_hour, late_timetable_hour)
 valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
 stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
@@ -167,7 +169,7 @@ if day_filter_type == "general":
     serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
 elif day_filter_type == "exact":
     timetable_day = timetable_day.capitalize()
-    serviced_bus_stops = dt.filter_bus_timetable_by_day(bus_timetable_df, timetable_day.capitalize())
+    serviced_bus_stops = dt.filter_timetable_by_day(bus_timetable_df, timetable_day.capitalize())
 else:
     print("Error: input error on day filter setting.")
 
@@ -210,5 +212,5 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(subset=['East
 highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(config["NAPTAN_TYPES"].keys())]
 
 # Save a copy to be ingested by SDG_11.2.1_main
-highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'highly_serviced_stops.feather'))
-highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'highly_serviced_stops.csv'), index=False)
+highly_serviced_bus_stops_df.to_feather(os.path.join(output_directory, 'bus_highly_serviced_stops.feather'))
+highly_serviced_bus_stops_df.to_csv(os.path.join(output_directory, 'bus_highly_serviced_stops.csv'), index=False)

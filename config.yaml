@@ -36,14 +36,15 @@ NI_bus_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-994
 NI_train_stops_data: 'https://www.opendatani.gov.uk/dataset/5f27f171-b8aa-4511-983d-6df6e87bbf20/resource/967e32c3-1cc2-4aee-b485-92121a32eb4d/download/nir-rail-stations.csv'
 ENG_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
 auto_download_bus: true
-early_bus_hour: 06
-late_bus_hour: 20
+early_timetable_hour: 06
+late_timetable_hour: 20
 high_cap_buffer: 1000
 low_cap_buffer: 500
 timetable_day: 'wednesday'
 day_filter: 'general' #exact
 train_msn_filename: 'ttisf467.msn'
 train_mca_filename: 'ttisf467.mca'
+station_locations: 'station_locations.csv'
 
 # Ages 
 age_lst:
