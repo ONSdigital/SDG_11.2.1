@@ -1,6 +1,5 @@
 from typing import List
 import pandas as pd
-from datetime import date, datetime
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -171,7 +170,7 @@ def highly_serv_stops(region):
 def filter_stops(stops_df):
     """Filters the stops dataframe based on two things:
 
-    | 1) Status column - We want to keep stops which are active, pending or new.
+    | 1) Status column. We want to keep stops which are active, pending or new.
     | 2) StopType want only to include bus and rail stops.
 
     Args:
@@ -231,15 +230,16 @@ def disab_disagg(disability_df, la_pop_df):
         population dataframe.
 
     Args:
-        disability_df (pd.DataFrame): Dataframe that includes disability estimates for
-                                    each output area.
+        disability_df (pd.DataFrame): Dataframe that includes disability
+                                    estimates for each output area.
         la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                 output area codes and population estimates.
 
     Returns:
-        gpd.GeoDataFrame: GeoPandas Dataframe that includes population estimates,
-                        geographical location, and proportion of disabled/non-disabled
-                        for each output area in the local authority chosen.
+        gpd.GeoDataFrame: GeoPandas Dataframe that includes population
+                        estimates, geographical location, and proportion
+                        of disabled/non-disabled for each output area in
+                        the local authority chosen.
     """
     # Getting the disab total
     disability_df["disb_total"] = (disability_df["disab_ltd_lot"]
@@ -274,8 +274,8 @@ def disab_disagg(disability_df, la_pop_df):
     # Merge the proportion disability df into main the pop df with a left join
     la_pop_df = la_pop_df.merge(disab_prop_df, on='OA11CD', how="left")
 
-    # Make the calculation of the number of people with disabilities in the year
-    # of the population estimates
+    # Make the calculation of the number of people with disabilities in the
+    # year of the population estimates
     la_pop_df["number_disabled"] = (
         round
         (la_pop_df["pop_count"]
@@ -339,7 +339,8 @@ def filter_timetable_by_day(timetable_df, day):
     # Validate user choices
     if day not in days_counted_dict.keys():
         raise KeyError(
-            "The day chosen in not available. Should be a weekday in title case.")
+            """The day chosen in not available.
+            Should be a weekday in title case.""")
     max_ord = days_counted_dict[day]
     ord = round(max_ord / 2)
 
@@ -351,18 +352,18 @@ def filter_timetable_by_day(timetable_df, day):
     nth = ord - 1
     date_of_day_entered = day_filtered_dates.iloc[nth].date
 
-    # Filter the bus_timetable_df by date range
-    bus_timetable_df = bus_timetable_df[(bus_timetable_df['start_date']
-                                         <= date_of_day_entered) &
-                                        (bus_timetable_df['end_date']
-                                         >= date_of_day_entered)]
+    # Filter the timetable_df by date range
+    timetable_df = timetable_df[(timetable_df['start_date']
+                                 <= date_of_day_entered) &
+                                (timetable_df['end_date']
+                                 >= date_of_day_entered)]
 
     # Then filter to day of interest
-    bus_timetable_df = bus_timetable_df[bus_timetable_df[day.lower()] == 1]
+    timetable_df = timetable_df[timetable_df[day.lower()] == 1]
 
     # Filter the timetable_df by date range
     timetable_df = timetable_df[(timetable_df['start_date']
-                                 <= date_of_day_entered) & 
+                                 <= date_of_day_entered) &
                                 (timetable_df['end_date']
                                  >= date_of_day_entered)]
 
@@ -375,7 +376,8 @@ def filter_timetable_by_day(timetable_df, day):
 
     # Print how many rows have been dropped (consider logging instead)
     print(
-        f"Selecting only services covering {day_date} reduced records by {original_rows-timetable_df.shape[0]} rows"
+        f"Selecting only services covering {day_date} reduced records"
+        f"by {original_rows-timetable_df.shape[0]} rows"
     )
 
     # Print how many services are in the analysis and how many were dropped

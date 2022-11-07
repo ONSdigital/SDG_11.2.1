@@ -56,8 +56,8 @@ else:
 # ---------------------------
 
 # Note downloads if flag above, and flag in config, set as True.
-# Using individual data ingest functions (rather than import_extract_delete_zip)
-# as files are .txt not .csv.
+# Using individual data ingest functions (rather than
+# import_extract_delete_zip) as files are .txt not .csv.
 if download_bus_timetable and auto_download_bus:
     di._grab_zip(file_nm=bus_dataset_name,
                  zip_link=bus_timetable_zip_link,
@@ -82,7 +82,7 @@ if download_bus_timetable and auto_download_bus:
 
 # Specify dtypes to remove unwanted columns and allow loading due to
 # mixed data types in certain columns.
-# Cannot parse datetime dtypes, and current function doesnt allow the parse_dates
+# Cannot parse datetime dtypes, and current function doesnt allow parse_dates
 # parameter in read_csv. So reading in as object type for the time being.
 # Dont think they need to be datetime format as we are using every trip
 # regardless of the date, and just want to extract the HH from the date which
@@ -181,7 +181,9 @@ bus_timetable_df = bus_timetable_df.drop(
 
 if day_filter_type == "general":
     timetable_day = timetable_day.lower()
-    serviced_bus_stops_df = bus_timetable_df[bus_timetable_df[timetable_day] == 1]
+    serviced_bus_stops_df = (
+        bus_timetable_df[bus_timetable_df[timetable_day] == 1]
+    )
 elif day_filter_type == "exact":
     timetable_day = timetable_day.capitalize()
     serviced_bus_stops = dt.filter_bus_timetable_by_day(
@@ -194,9 +196,9 @@ else:
 # -----------------------
 
 # Take just HH from departure time
-serviced_bus_stops_df['departure_time'] = serviced_bus_stops_df['departure_time'].str.slice(
-    0,
-    2)
+serviced_bus_stops_df['departure_time'] = (
+    serviced_bus_stops_df['departure_time'].str.slice(0, 2)
+)
 
 bus_frequencies_df = pd.pivot_table(data=serviced_bus_stops_df,
                                     values=timetable_day,
