@@ -27,6 +27,8 @@ required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
 timetable_day = config["timetable_day"]
 day_filter_type = config["day_filter"]
+early_timetable_hour = config["early_timetable_hour"]
+late_timetable_hour = config["late_timetable_hour"]
 
 # Calculate if bus timetable needs to be downloaded.
 # If current folder doesnt exist, or hasnt been modified then
@@ -143,7 +145,8 @@ else:
 # Some departure times are > 24:00 so need to be removed.
 # This is done automatically by restricting times to hours used
 # to define highly serviced stops
-hour_range = range(config["early_bus_hour"], config["late_bus_hour"])
+
+hour_range = range(early_timetable_hour, late_timetable_hour)
 valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
 stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(
