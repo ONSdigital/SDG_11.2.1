@@ -10,3 +10,10 @@ repos:
     rev: 21.12b0
     hooks:
     -   id: black
+- repo: local
+hooks:
+    - id: restricted-filenames
+      name: Check commits for restricted file extensions
+      entry: These file extensions are restricted. Data should be removed from the commit
+      language: fail
+      files: .*\.(csv|feather|xlsx|zip|hdf5|h5|txt|json|xml|hd|parquet)
