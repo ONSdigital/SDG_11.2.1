@@ -86,6 +86,9 @@ uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
                                                   POP_YEAR))
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
+# filter for just england and wales
+lad_code_col = f'LAD{pop_year[-2:]}CD'
+eng_wales_la_file = uk_la_file[uk_la_file[lad_code_col].str.startswith('E', 'W')]
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(os.getcwd(),
@@ -187,7 +190,8 @@ whole_nation_pop_df = pd.merge(
 
 
 # Unique list of LA's to iterate through
-list_local_auth = uk_la_file[lad_col].unique()
+list_local_auth = eng_wales_la_file[lad_col].unique()
+
 
 # selecting random LA for dev purposes
 # eventually will iterate through all LA's
@@ -207,7 +211,7 @@ for local_auth in list_local_auth:
     print(f"Processing: {local_auth}")
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
-        geo_df=uk_la_file,
+        geo_df=eng_wales_la_file,
         dissolveby=lad_col,
         search=local_auth))
 
@@ -217,10 +221,10 @@ for local_auth in list_local_auth:
                         polygon_obj=la_poly))
 
     # Make LA LSOA just containing local auth
-    uk_la_file = uk_la_file[[lad_col, 'geometry']]
+    eng_wales_la_file = eng_wales_la_file[[lad_col, 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    la_pop_df = whole_nation_pop_df.merge(uk_la_file,
+    la_pop_df = whole_nation_pop_df.merge(eng_wales_la_file,
                                           how='right',
                                           left_on=lad_col,
                                           right_on=lad_col,
