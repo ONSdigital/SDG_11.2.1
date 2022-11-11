@@ -4,10 +4,8 @@ import re
 import json
 from functools import lru_cache, reduce
 from time import perf_counter
-from attr import resolve_types
 import yaml
 from datetime import datetime
-import time
 
 # Third party imports for this module
 import geopandas as gpd
@@ -137,14 +135,17 @@ def _csv_to_df(
         dtypes: Optional[Dict],
         persistent_exists=True,
         zip_url=None) -> pd.DataFrame:
-    """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
+    """Creates pandas DataFrame from csv; optionally using datatypes &
+    selected columns.
 
     Sub func of both any_to_pd and _import_extract_delete_zip.
 
     Args:
-        file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv".
+        file_nm (str): The name of the source csv without the extension.
+            e.g. "stops", not "stops.csv".
         csv_path (PathLike): The path/to/csv_file on local machine.
-        dtypes (Optional[Dict]): Datatypes of columns in the csv. Helps optimise import.
+        dtypes (Optional[Dict]): Datatypes of columns in the csv.
+            Helps optimise import.
         persistent_exists (bool, optional): Boolean supplied by the
             _persistent_exists function. Defaults to True.
         zip_url (str, optional): URL for the zip resource if it is to be
@@ -232,7 +233,8 @@ def _extract_zip(
         csv_nm (str): the name of the csv file that is
             expected inside the zip file.
         zip_path (PathLike): path/to/local/zip/file.zip.
-        csv_path (PathLike): The path where the csv should be written to, e.g. /data/.
+        csv_path (PathLike): The path where the csv should be
+            written to, e.g. /data/.
     """
     # Open the zip file and extract
     with ZipFile(zip_path, 'r') as zip:
@@ -390,15 +392,19 @@ def capture_region(file_nm: str):
 
 
 def get_whole_nation_pop_df(pop_files, pop_year):
-    """Gets the population data for all regions in the country and puts them into one dataframe.
+    """Gets the population data for all regions in the country and
+    puts them into one dataframe.
 
     Args:
         pop_files (list): Population data to be unioned.
         pop_year (str): The year of population estimation data to process.
 
     Returns:
-        pd.DataFrame: Dataframe of population data for all regions in the country
+        pd.DataFrame: Dataframe of population data for all regions
+            in the country
     """
+    # Remove gitkeep file from list of pop files
+    pop_files = [f for f in pop_files if f != '.gitkeep']
     # Dict of region:file_name. Capture the region name from the filename
     region_dict = {capture_region(file): file for file in pop_files}
     # make a df of each region then concat
@@ -484,7 +490,8 @@ def get_shp_abs_path(dir):
 
 
 def get_oa_la_csv_abspath(dir):
-    """Takes a directory as str and returns the absolute path of output area csv file.
+    """Takes a directory as str and returns the absolute path of
+    output area csv file.
 
     Args:
         dir (str): Path created with os.path.join.
@@ -636,8 +643,10 @@ def get_stops_file(url, dir):
 
 
 def read_ni_stops(url, path):
-    """Gets the northern ireland bus stops data. This function checks whether the data
-    is saved locally or needs to be saved locally from grabbing data via a URL.
+    """Gets the northern ireland bus stops data. This function checks whether
+    the data is saved locally or needs to be saved locally
+    from grabbing data via a URL.
+
     Args:
         url (str): URL where the data we want to read in and save is.
         path (str): path where the stop data is stored.

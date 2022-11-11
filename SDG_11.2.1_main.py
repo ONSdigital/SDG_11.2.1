@@ -7,7 +7,7 @@ import random
 import geopandas as gpd
 import pandas as pd
 import yaml
-#import gptables as gpt
+# import gptables as gpt
 
 # Module imports
 import geospatial_mods as gs
@@ -250,7 +250,6 @@ for local_auth in list_local_auth:
                     "fem_pop": "female"}
     la_pop_df.rename(columns=replacements, inplace=True)
 
-
     # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
     # Dedupe the df because many OAs are appearing multiple times (i.e. they
@@ -293,7 +292,7 @@ for local_auth in list_local_auth:
     total_df_dict[local_auth] = la_results_df_out
 
     # # Disaggregations!
-    #pd.set_option("precision", 1)
+    # pd.set_option("precision", 1)
 
     # Calculating those served and not served by age
     age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
@@ -355,7 +354,9 @@ for local_auth in list_local_auth:
     non_disab_cols = ["number_non-disabled"]
 
     non_disab_servd_df = dt.served_proportions_disagg(
-        pop_df=la_pop_df, pop_in_poly_df=pop_in_poly_df, cols_lst=non_disab_cols)
+        pop_df=la_pop_df,
+        pop_in_poly_df=pop_in_poly_df,
+        cols_lst=non_disab_cols)
 
     # Feeding the results to the reshaper
     non_disab_servd_df_out = do.reshape_for_output(
