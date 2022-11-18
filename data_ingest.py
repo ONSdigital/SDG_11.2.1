@@ -665,10 +665,7 @@ def read_ni_stops(url, path):
         ni_stops = pd.read_csv(url, encoding='cp1252')
         ni_stops.to_csv(path)
 
-    # convert into geo dataframe
-    geo_stops = gpd.GeoDataFrame(ni_stops)
-
-    return geo_stops
+    return ni_stops
 
 
 def read_usual_pop_scotland(path: str):
