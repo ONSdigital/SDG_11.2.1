@@ -175,7 +175,7 @@ pwc_with_pop_with_la.rename(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-ni_auth = ['Belfast']
+ni_auth = [random_la]
 
 total_df_dict = {}
 
