@@ -37,6 +37,12 @@ output_ni_bus_csv = os.path.join(CWD, "data", "Stops", "NI", "bus_stops_ni.csv")
 ni_bus_stops = di.read_ni_stops(ni_bus_stop_url, output_ni_bus_csv)
 ni_bus_stops['capacity_type'] = 'high'
 
+# converts from bus stops pandas df to geo df
+bus_geo_df = (di.geo_df_from_pd_df(pd_df=ni_bus_stops,
+                                     geom_x='Easting',
+                                     geom_y='Northing',
+                                     crs=DEFAULT_CRS))
+
 # gets the northern ireland train stops data from the api
 ni_train_stop_url = config["NI_train_stops_data"]
 output_ni_train_csv = os.path.join(
@@ -47,7 +53,14 @@ output_ni_train_csv = os.path.join(
 ni_train_stops = di.read_ni_stops(ni_train_stop_url, output_ni_train_csv)
 ni_train_stops['capacity_type'] = 'low'
 
+# converts from bus stops pandas df to geo df
+train_geo_df = (di.geo_df_from_pd_df(pd_df=ni_train_stops,
+                                     geom_x='EASTING',
+                                     geom_y='NORTHING',
+                                     crs=DEFAULT_CRS))
+
 # Join the two stops dataframes together
+stops_geo_df = bus_geo_df.merge(train_geo_df, on=['geometry', 'capacity_type'], how='outer')
 
 
 # Get usual population for Northern Ireland (Census 2011 data)
@@ -123,9 +136,8 @@ sa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
                                     "NI",
                                     "11DC_Lookup_1_0.csv")
 
-# reads in the OA to LA lookupfile
-sa_to_la = pd.read_csv(sa_to_la_lookup_path,
-                       usecols=["SA2011", "LGD2014"])
+# reads in the OA to LA lookupfile 
+sa_to_la = pd.read_csv(sa_to_la_lookup_path)
 
 # merges the pwc with it's corresponding LA
 pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
@@ -163,7 +175,7 @@ pwc_with_pop_with_la.rename(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-ni_auth = [random_la]
+ni_auth = ['Belfast']
 
 total_df_dict = {}
 
@@ -185,17 +197,17 @@ for local_auth in ni_auth:
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
     # filter only by current la 
-    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"]==local_auth])
+    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"]==local_auth])
 
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
 
     # Deduplicate the df as OA appear multiple times 
-    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="oa11cd")
+    pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
     # all the figures we need
-    served = pop_in_poly_df["All people"].astype(int).sum()
-    full_pop = only_la_pwc_with_pop["All people"].astype(int).sum()
+    served = pop_in_poly_df["pop_count"].astype(int).sum()
+    full_pop = only_la_pwc_with_pop["pop_count"].astype(int).sum()
     not_served = full_pop - served
     pct_not_served = "{:.2f}".format(not_served/full_pop*100)
     pct_served = "{:.2f}".format(served/full_pop*100)
@@ -232,6 +244,7 @@ for local_auth in ni_auth:
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 
-all_la.to_csv("Scotland_results.csv", index=False)
+all_la.to_csv("NI_results.csv", index=False)
 
 end = time.time()
+print()
