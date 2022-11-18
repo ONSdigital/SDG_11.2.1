@@ -660,9 +660,9 @@ def read_ni_stops(url, path):
     # Checks if the data is saved locally, and if not, gets the data and saves
     # it locally
     if os.path.exists(path):
-        ni_stops = pd.read_csv(path)
+        ni_stops = pd.read_csv(path, index_col=0)
     else:
-        ni_stops = pd.read_csv(url, encoding='cp1252')
+        ni_stops = pd.read_csv(url, index_col=0, encoding='cp1252')
         ni_stops.to_csv(path)
 
     return ni_stops
