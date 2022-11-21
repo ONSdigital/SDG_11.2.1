@@ -250,7 +250,9 @@ for local_auth in list_local_auth:
     # merging summed+grouped ages back in
     la_pop_df = pd.merge(la_pop_df, age_df, left_index=True, right_index=True)
     # converting into GeoDataFrame
-    la_pop_df = gpd.GeoDataFrame(la_pop_df)
+    la_pop_df = gpd.GeoDataFrame(la_pop_df,
+                                 geometry='geometry_LA',
+                                 crs='EPSG:27700')
 
     # create a buffer around the stops, in column "geometry" #forthedemo
     # the `buffer_points` function changes the df in situ
