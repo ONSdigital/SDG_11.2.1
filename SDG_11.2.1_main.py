@@ -206,23 +206,25 @@ for local_auth in list_local_auth:
     eng_wales_la_file = eng_wales_la_file[[lad_col, 'geometry']]
 
     # merge the two dataframes limiting to just the la
-    la_pop_df = whole_nation_pop_df.merge(eng_wales_la_file,
+    eng_wales_la_pop_df = whole_nation_pop_df.merge(eng_wales_la_file,
                                           how='right',
                                           left_on=lad_col,
                                           right_on=lad_col,
                                           suffixes=('_pop', '_LA'))
 
     # subset by the local authority name needed
-    la_pop_df = la_pop_df.loc[la_pop_df[lad_col] == local_auth]
+    eng_wales_la_pop_df = (
+        eng_wales_la_pop_df.loc[eng_wales_la_pop_df[lad_col] == local_auth]
+    )
 
     # rename the "All Ages" column to pop_count as it's the population count
-    la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
+    eng_wales_la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
 
     # Get a list of ages from config
     age_lst = config['age_lst']
 
     # Get a datframe limited to the data ages columns only
-    age_df = dt.slice_age_df(la_pop_df, age_lst)
+    age_df = dt.slice_age_df(eng_wales_la_pop_df, age_lst)
 
     # Create a list of tuples of the start and finish indexes for the age bins
     age_bins = dt.get_col_bins(age_lst)
@@ -231,25 +233,25 @@ for local_auth in list_local_auth:
     age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
     # Ridding the la_pop df of the same cols
-    la_pop_df.drop(age_lst, axis=1, inplace=True)
+    eng_wales_la_pop_df.drop(age_lst, axis=1, inplace=True)
 
     # merging summed+grouped ages back in
-    la_pop_df = pd.merge(la_pop_df, age_df, left_index=True, right_index=True)
+    eng_wales_la_pop_df = pd.merge(eng_wales_la_pop_df, age_df, left_index=True, right_index=True)
     # converting into GeoDataFrame
-    la_pop_df = gpd.GeoDataFrame(la_pop_df)
+    eng_wales_la_pop_df = gpd.GeoDataFrame(eng_wales_la_pop_df)
 
     # create a buffer around the stops, in column "geometry" #forthedemo
     # the `buffer_points` function changes the df in situ
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
     # renaming the column to geometry so the point in polygon func gets expected
-    la_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
+    eng_wales_la_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
 
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
     
     # Disability disaggregations
-    la_pop_df = dt.disab_disagg(disability_df, la_pop_df)
+    eng_wales_la_pop_df = dt.disab_disagg(disability_df, eng_wales_la_pop_df)
 
 
     # import the sex data
@@ -264,7 +266,7 @@ for local_auth in list_local_auth:
     # # # renaming the dodgy col names with their replacements
     replacements = {"males_pop": "male",
                     "fem_pop": "female"}
-    la_pop_df.rename(columns=replacements, inplace=True)
+    eng_wales_la_pop_df.rename(columns=replacements, inplace=True)
 
     # # merge the sex data with the rest of the population data
     # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
@@ -273,13 +275,13 @@ for local_auth in list_local_auth:
     # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
     # # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(la_pop_df, la_stops_geo_df)
+    pop_in_poly_df = gs.find_points_in_poly(eng_wales_la_pop_df, la_stops_geo_df)
     # Dedupe the df because many OAs are appearing multiple times (i.e. they are served by multiple stops)
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
     # Count the population served by public transport
     served = pop_in_poly_df.pop_count.sum()
-    full_pop = la_pop_df.pop_count.sum()
+    full_pop = eng_wales_la_pop_df.pop_count.sum()
     not_served = full_pop - served
     pct_not_served = "{:.2f}".format(not_served/full_pop*100)
     pct_served = "{:.2f}".format(served/full_pop*100)
@@ -320,7 +322,7 @@ for local_auth in list_local_auth:
                  '55-59', '60-64', '65-69', '70-74', '75-79',
                  '80-84', '85-89', '90+']
 
-    age_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+    age_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins_)
     
@@ -337,7 +339,7 @@ for local_auth in list_local_auth:
     # # Calculating those served and not served by sex
     sex_cols = ['male', 'female']
 
-    sex_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+    sex_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=sex_cols)
 
@@ -353,7 +355,7 @@ for local_auth in list_local_auth:
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
 
-    disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+    disab_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
                                                   pop_in_poly_df=pop_in_poly_df,
                                                   cols_lst=disab_cols)
 
@@ -375,7 +377,7 @@ for local_auth in list_local_auth:
     # Calculating non-disabled people served and not served
     non_disab_cols = ["number_non-disabled"]
 
-    non_disab_servd_df = dt.served_proportions_disagg(pop_df=la_pop_df,
+    non_disab_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
                                                   pop_in_poly_df=pop_in_poly_df,
                                                   cols_lst=non_disab_cols)
 
@@ -402,8 +404,8 @@ for local_auth in list_local_auth:
     urb_col = ["urb_rur_class"]
 
     # Filtering by urban and rural to make 2 dfs
-    urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
-    rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
+    urb_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "urban"]
+    rur_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "rural"]
 
     # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
     # filtered in the same way
