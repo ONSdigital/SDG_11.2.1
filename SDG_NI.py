@@ -24,7 +24,6 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Constants
 pop_year = str(config["calculation_year"])
-DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 boundary_year = "2021"
 
@@ -34,7 +33,7 @@ ni_bus_stops_path= os.path.join(CWD,"data","stops","NI","bus_stops_ni.csv")
 # reads in NI bus stop data as pandas df
 ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
 
-# assigns capacity type as low
+# assigns capacity type for bus stops as low
 ni_bus_stops['capacity_type'] = 'low'
 
 # gets the northern ireland train stops data path
@@ -43,8 +42,9 @@ ni_train_stops_path = os.path.join(CWD,"data","stops","NI","train_stops_ni.csv")
 # reads in the NI train stop data as pandas df
 ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
 
-# assigns capacity type as high
+# assigns capacity type for train stops as high
 ni_train_stops['capacity_type'] = 'high'
+
 
 # Join the two stops dataframes together
 stops_df = ni_bus_stops.merge(ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
@@ -52,9 +52,7 @@ stops_df = ni_bus_stops.merge(ni_train_stops, on=['capacity_type', 'Latitude', '
 stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_x='Longitude',
                                      geom_y='Latitude',
-                                     crs='epsg:4326')
-
-
+                                     crs='EPSG:4326')
 
 # Get usual population for Northern Ireland (Census 2011 data)
 whole_NI_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"),
@@ -168,7 +166,7 @@ pwc_with_pop_with_la.rename(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-ni_auth = [random_la]
+ni_auth = ['Lisburn and Castlereagh']
 
 total_df_dict = {}
 
@@ -190,7 +188,8 @@ for local_auth in ni_auth:
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
     # filter only by current la 
-    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"]==local_auth])
+    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"]==local_auth],
+                                            geometry='geometry', crs='EPSG:27700')
 
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)

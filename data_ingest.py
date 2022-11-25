@@ -335,7 +335,7 @@ def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
     geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
     geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
     geo_df.crs = crs
-    geo_df.to_crs(crs, inplace=True)
+    geo_df.to_crs('EPSG:27700', inplace=True)
     return geo_df
 
 
