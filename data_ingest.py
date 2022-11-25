@@ -4,10 +4,8 @@ import re
 import json
 from functools import lru_cache, reduce
 from time import perf_counter
-from attr import resolve_types
 import yaml
 from datetime import datetime
-import time
 
 # Third party imports for this module
 import geopandas as gpd
@@ -35,20 +33,20 @@ def any_to_pd(file_nm: str,
               zip_link: str,
               ext_order: List,
               dtypes: Optional[Dict],
-              data_dir = DATA_DIR) -> pd.DataFrame:
-    """A function which ties together many other data ingest related functions 
-    to import data. 
+              data_dir=DATA_DIR) -> pd.DataFrame:
+    """A function which ties together many other data ingest related functions
+    to import data.
 
-    Currently this function can handle the remote or local import of data 
+    Currently this function can handle the remote or local import of data
     from zip (containing csv files), and csv files.
 
     The main purpose is to check for locally stored persistent data
     files and get that data into a dataframe for further processing.
 
-    Each time the function checks for download/extracted data so it 
+    Each time the function checks for download/extracted data so it
     doesn't have to go through the process again.
 
-    Firstly the function checks for a feather file and loads that if 
+    Firstly the function checks for a feather file and loads that if
     available.
 
     If the feather is not available the function checks for a csv file,
@@ -68,7 +66,7 @@ def any_to_pd(file_nm: str,
         file_nm (str): The name of the file without extension.
         zip_link (str): URL containing zipped data.
         ext_order (list): The order in which to try extraction methods.
-        dtypes (Optional[Dict]): Datatypes of columns in the csv. 
+        dtypes (Optional[Dict]): Datatypes of columns in the csv.
 
     Returns:
         pd.DataFrame: A dataframe of the data that has been imported.
@@ -126,28 +124,36 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     tic = perf_counter()
     pd_df = pd.read_feather(feather_path)
     toc = perf_counter()
-    print(f"""Time taken for {file_nm}.feather 
+    print(f"""Time taken for {file_nm}.feather
           reading is {toc - tic:.2f} seconds""")
     return pd_df
 
 
-def _csv_to_df(file_nm: str, csv_path: PathLike, dtypes: Optional[Dict], persistent_exists=True, zip_url=None) -> pd.DataFrame:
-    """Creates pandas DataFrame from csv; optionally using datatypes & selected columns.
-        
+def _csv_to_df(
+        file_nm: str,
+        csv_path: PathLike,
+        dtypes: Optional[Dict],
+        persistent_exists=True,
+        zip_url=None) -> pd.DataFrame:
+    """Creates pandas DataFrame from csv; optionally using datatypes &
+    selected columns.
+
     Sub func of both any_to_pd and _import_extract_delete_zip.
 
     Args:
-        file_nm (str): The name of the source csv without the extension. e.g. "stops", not "stops.csv".
+        file_nm (str): The name of the source csv without the extension.
+            e.g. "stops", not "stops.csv".
         csv_path (PathLike): The path/to/csv_file on local machine.
-        dtypes (Optional[Dict]): Datatypes of columns in the csv. Helps optimise import.
-        persistent_exists (bool, optional): Boolean supplied by the 
+        dtypes (Optional[Dict]): Datatypes of columns in the csv.
+            Helps optimise import.
+        persistent_exists (bool, optional): Boolean supplied by the
             _persistent_exists function. Defaults to True.
-        zip_url (str, optional): URL for the zip resource if it is to be 
+        zip_url (str, optional): URL for the zip resource if it is to be
             downloaded. Defaults to None.
 
     Returns:
         pd.DataFrame
-    """    
+    """
     print(f"Reading {file_nm}.csv from {csv_path}.")
     if dtypes:
         cols = list(dtypes.keys())
@@ -170,20 +176,20 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                *cols,
                                **dtypes) -> pd.DataFrame:
     """Downloads and opens zip file, extracts contents, deletes zip.
-        
+
     Subfunc of any_to_pd.
 
     Args:
         file_nm (str): The name of the target csv within the zip.
         zip_path (PathLike): the path/to/zip_file on local machine
-        persistent_exists (bool, optional): Boolean supplied by the 
+        persistent_exists (bool, optional): Boolean supplied by the
             _persistent_exists function. Defaults to True.
-        zip_url (str, optional): URL for the zip resource if it is to be 
+        zip_url (str, optional): URL for the zip resource if it is to be
             downloaded. Defaults to None.
 
     Returns:
         pd.DataFrame: dataframe of the data from the CSV
-    """    
+    """
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
         _grab_zip(file_nm, zip_url, zip_path)
@@ -198,7 +204,7 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
 
 def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
-    a zip file from the URI specified in the the zip_link 
+    a zip file from the URI specified in the the zip_link
     parameter.
 
     Args:
@@ -214,23 +220,28 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         output_file.write(r.content)
 
 
-def _extract_zip(file_nm: str, csv_nm: str, zip_path: PathLike, csv_path: PathLike):
+def _extract_zip(
+        file_nm: str,
+        csv_nm: str,
+        zip_path: PathLike,
+        csv_path: PathLike):
     """Used by _import_extract_delete_zip function to extract
     the needed csv dataset from the locally stored zip file.
 
     Args:
         file_nm (str): the name of the file without extension.
-        csv_nm (str): the name of the csv file that is 
+        csv_nm (str): the name of the csv file that is
             expected inside the zip file.
         zip_path (PathLike): path/to/local/zip/file.zip.
-        csv_path (PathLike): The path where the csv should be written to, e.g. /data/.
+        csv_path (PathLike): The path where the csv should be
+            written to, e.g. /data/.
     """
     # Open the zip file and extract
     with ZipFile(zip_path, 'r') as zip:
         print(f"Extracting {csv_nm} from {zip_path}")
         try:
             _ = zip.extract(csv_nm, csv_path)
-        except:
+        except BaseException:
             csv_nm
 
 
@@ -300,7 +311,7 @@ def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
         current_file_path (PathLike): The path/to/current_file
             on local machine.
     """
-    feather_path = os.path.splitext(current_file_path)[0]+'.feather'
+    feather_path = os.path.splitext(current_file_path)[0] + '.feather'
 
     # TODO: this function should make use of _persistent_existsD
     if not os.path.isfile(feather_path):
@@ -373,7 +384,7 @@ def capture_region(file_nm: str):
 
     Returns:
         str: The name of the region that the file covers
-    """    
+    """
     patt = re.compile("^(.*estimates[-]?)(?P<region>.*)(\.xls)")
     region = re.search(patt, file_nm).group("region")
     region = region.replace("-", " ").capitalize()
@@ -381,15 +392,19 @@ def capture_region(file_nm: str):
 
 
 def get_whole_nation_pop_df(pop_files, pop_year):
-    """Gets the population data for all regions in the country and puts them into one dataframe.
+    """Gets the population data for all regions in the country and
+    puts them into one dataframe.
 
     Args:
         pop_files (list): Population data to be unioned.
         pop_year (str): The year of population estimation data to process.
 
     Returns:
-        pd.DataFrame: Dataframe of population data for all regions in the country
+        pd.DataFrame: Dataframe of population data for all regions
+            in the country
     """
+    # Remove gitkeep file from list of pop files
+    pop_files = [f for f in pop_files if f != '.gitkeep']
     # Dict of region:file_name. Capture the region name from the filename
     region_dict = {capture_region(file): file for file in pop_files}
     # make a df of each region then concat
@@ -411,9 +426,21 @@ def get_whole_nation_pop_df(pop_files, pop_year):
             total_pop = pd.read_excel(
                 xlFile, f"Mid-{pop_year} Persons", header=4)
             males_pop = pd.read_excel(
-                xlFile, f"Mid-{pop_year} Males", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+                xlFile,
+                f"Mid-{pop_year} Males",
+                header=4,
+                usecols=[
+                    "OA11CD",
+                    "LSOA11CD",
+                    "All Ages"])
             fem_pop = pd.read_excel(
-                xlFile,  f"Mid-{pop_year} Females", header=4, usecols=["OA11CD", "LSOA11CD", "All Ages"])
+                xlFile,
+                f"Mid-{pop_year} Females",
+                header=4,
+                usecols=[
+                    "OA11CD",
+                    "LSOA11CD",
+                    "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
             total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
             males_pop.rename(columns={"All Ages": "males_pop"}, inplace=True)
@@ -452,7 +479,7 @@ def get_shp_abs_path(dir):
 
     Returns:
         str: the absolute path of the .shp file within a directory.
-    """    
+    """
     files = os.listdir(dir)
     shp_files = [file for file in files if file.endswith(".shp")]
     shp_file = shp_files[0]
@@ -463,14 +490,15 @@ def get_shp_abs_path(dir):
 
 
 def get_oa_la_csv_abspath(dir):
-    """Takes a directory as str and returns the absolute path of output area csv file.
+    """Takes a directory as str and returns the absolute path of
+    output area csv file.
 
     Args:
         dir (str): Path created with os.path.join.
 
     Returns:
         str: Absolute path of the csv file of the Output area.
-    """    
+    """
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(".csv")]
     csv_file = csv_files[0]
@@ -484,12 +512,12 @@ def _get_stops_from_api(url, file_name):
     """Gets stops data from the NaPTAN API.
 
     Sub function of `get_stops_file`.
-    
+
     Args:
         url (str): the URL of the API endpoint.
         file_name (str): Name of the file, including extension
             to be written out containing the stops data.
-    """    
+    """
     # requests page
     r = requests.get(url)
 
@@ -530,7 +558,7 @@ def _get_latest_stop_file_date(dir):
 
 
 def save_latest_stops_as_feather(file_name):
-    """Saves the latest stop file as a feather file into 
+    """Saves the latest stop file as a feather file into
     the data folder.
 
     Args:
@@ -548,7 +576,7 @@ def save_latest_stops_as_feather(file_name):
                                "Stops.feather")
     # output to feather
     file.to_feather(output_path)
-    
+
     return output_path
 
 
@@ -561,11 +589,11 @@ def _dl_stops_make_df(today, url):
 
     Returns:
         pd.DataFrame: df of latest stops data
-    """    
+    """
     csv_path = os.path.join(os.getcwd(),
-                             "data",
-                             "stops",
-                             f"stops_{today}.csv")
+                            "data",
+                            "stops",
+                            f"stops_{today}.csv")
     # Save latest data as csv
     _get_stops_from_api(url, csv_path)
     # Save as feather
@@ -579,7 +607,7 @@ def get_stops_file(url, dir):
     """Gets the latest stop dataset.
 
     If the latest stop df from the api is older then 28 days
-    then function grabs a new version of file from API and 
+    then function grabs a new version of file from API and
     saves this as a feather file.
 
     If the latest stop df from the api is less then 28 days old
@@ -588,11 +616,11 @@ def get_stops_file(url, dir):
     Args:
         url (str): NAPTAN API url.
         dir (str): directory where the stop data is stored.
-    
+
     Returns:
         pd.DataFrame
     """
-    
+
     # gets todays date and latest date of stops df
     today = int(datetime.now().strftime('%Y%m%d'))
 
@@ -604,9 +632,9 @@ def get_stops_file(url, dir):
     # Check that the feather exists
     if not _persistent_exists(feather_path):
         stops_df = _dl_stops_make_df(today, url)
-    else: # does exist
-        latest_date = _get_latest_stop_file_date(dir) 
-        if today-latest_date < 28:
+    else:  # does exist
+        latest_date = _get_latest_stop_file_date(dir)
+        if today - latest_date < 28:
             stops_df = pd.read_feather(feather_path)
         else:
             stops_df = _dl_stops_make_df(today, url)
@@ -614,10 +642,11 @@ def get_stops_file(url, dir):
     return stops_df
 
 
-
 def read_ni_stops(url, path):
-    """Gets the northern ireland bus stops data. This function checks whether the data
-    is saved locally or needs to be saved locally from grabbing data via a URL.
+    """Gets the northern ireland bus stops data. This function checks whether
+    the data is saved locally or needs to be saved locally
+    from grabbing data via a URL.
+
     Args:
         url (str): URL where the data we want to read in and save is.
         path (str): path where the stop data is stored.
@@ -625,10 +654,11 @@ def read_ni_stops(url, path):
             Geopandas Dataframe
     """
     # creates the folders necessary to save data
-    NI_stops_folder = os.path.join(CWD,"data","stops","NI")
+    NI_stops_folder = os.path.join(CWD, "data", "stops", "NI")
     if not os.path.exists(NI_stops_folder):
         os.mkdir(NI_stops_folder)
-    # Checks if the data is saved locally, and if not, gets the data and saves it locally
+    # Checks if the data is saved locally, and if not, gets the data and saves
+    # it locally
     if os.path.exists(path):
         ni_stops = pd.read_csv(path)
     else:
@@ -640,22 +670,23 @@ def read_ni_stops(url, path):
 
     return geo_stops
 
-def read_usual_pop_scotland(path:str):
+
+def read_usual_pop_scotland(path: str):
     """Reads the usual population Scotland.
 
-    This reads in the file containing all the 
-    output areas in scotland with their corresponding 
+    This reads in the file containing all the
+    output areas in scotland with their corresponding
     population number.
 
     Args:
         path (str): the path where the file exists
-    
+
     Returns:
         pd.DataFrame the usual population dataframe
     """
     # reads in data and crops of header and footer
-    df = pd.read_csv(path, 
-                     header=4, 
+    df = pd.read_csv(path,
+                     header=4,
                      index_col=0,
                      skipfooter=4)
 
@@ -663,15 +694,16 @@ def read_usual_pop_scotland(path:str):
     df_oa_only = df.drop(index=['Scotland'])
 
     # only use columns that we need
-    essential_cols = ["All people","Males","Females"]
+    essential_cols = ["All people", "Males", "Females"]
     df_essential_cols = df_oa_only[essential_cols]
 
     # ensure no commas in the dataset so no errors with dtypes
     for col in essential_cols:
         df_essential_cols[col] = df_essential_cols[col].str.replace(',', '')
         df_essential_cols[col] = df_essential_cols[col].astype(int)
-        
+
     return df_essential_cols
+
 
 def read_urb_rur_class_scotland(urb_rur_path):
     """Reads the urb/rural classification for Scotland.
@@ -679,19 +711,18 @@ def read_urb_rur_class_scotland(urb_rur_path):
     This reads in the file containing all the urban/rural class
     Then applies a mapping based on if living in a settlement >10,00
     then urban, else rural.
-    
+
     Args:
         path (str): the path where the file exists
-    
+
     Returns:
         pd.DataFrame the classfication dataframe
     """
-    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011","UR6_2013_2014"])
+    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011", "UR6_2013_2014"])
 
-
-    urb_rur["urb_rur_class"] = np.where((urb_rur["UR6_2013_2014"] == 1)|(urb_rur["UR6_2013_2014"] == 2),
-                                "urban",
-                                "rural")
+    urb_rur["urb_rur_class"] = np.where(
+        (urb_rur["UR6_2013_2014"] == 1) | (
+            urb_rur["UR6_2013_2014"] == 2), "urban", "rural")
 
     return urb_rur
 
@@ -699,12 +730,12 @@ def read_urb_rur_class_scotland(urb_rur_path):
 def best_before(path, number_of_days):
     """
     Checks whether a path has been modified within a period of days.
-    
+
     Args:
         path (str): the path to check
-        number_of_days (int): number of days previous to check for 
+        number_of_days (int): number of days previous to check for
             modifications
-    
+
     Returns:
         Bool: True if path has not been modified within the number of days
             specified
