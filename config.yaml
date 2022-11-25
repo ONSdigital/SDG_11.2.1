@@ -3,10 +3,12 @@ calculation_year : 2019
 
 # Data
 DATA_DIR :  "./data"
+DATA_OUTPUT: "./data/data_output"
 EXT_ORDER :
   - feather
   - csv
   - zip
+OUTFILE: "SDG_11.2.1_results.csv"
 
 # Mapping - geospatial
 DEFAULT_CRS : 'EPSG:27700'
