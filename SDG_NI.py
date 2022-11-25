@@ -37,12 +37,6 @@ ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
 # assigns capacity type as low
 ni_bus_stops['capacity_type'] = 'low'
 
-# converts from bus stops pandas df to geo df
-bus_geo_df = (di.geo_df_from_pd_df(pd_df=ni_bus_stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
-                                     crs=DEFAULT_CRS))
-
 # gets the northern ireland train stops data path
 ni_train_stops_path = os.path.join(CWD,"data","stops","NI","train_stops_ni.csv")
 
@@ -52,14 +46,14 @@ ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
 # assigns capacity type as high
 ni_train_stops['capacity_type'] = 'high'
 
-# converts from bus stops pandas df to geo df
-train_geo_df = (di.geo_df_from_pd_df(pd_df=ni_train_stops,
-                                     geom_x='EASTING',
-                                     geom_y='NORTHING',
-                                     crs=DEFAULT_CRS))
-
 # Join the two stops dataframes together
-stops_geo_df = bus_geo_df.merge(train_geo_df, on=['geometry', 'capacity_type'], how='outer')
+stops_df = ni_bus_stops.merge(ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
+
+stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
+                                     geom_x='Longitude',
+                                     geom_y='Latitude',
+                                     crs='epsg:4326')
+
 
 
 # Get usual population for Northern Ireland (Census 2011 data)
