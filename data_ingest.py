@@ -641,34 +641,7 @@ def get_stops_file(url, dir):
 
     return stops_df
 
-
-def read_ni_stops(url, path):
-    """Gets the northern ireland bus stops data. This function checks whether
-    the data is saved locally or needs to be saved locally
-    from grabbing data via a URL.
-
-    Args:
-        url (str): URL where the data we want to read in and save is.
-        path (str): path where the stop data is stored.
-    Returns:
-            Geopandas Dataframe
-    """
-    # creates the folders necessary to save data
-    NI_stops_folder = os.path.join(CWD, "data", "stops", "NI")
-    if not os.path.exists(NI_stops_folder):
-        os.mkdir(NI_stops_folder)
-    # Checks if the data is saved locally, and if not, gets the data and saves
-    # it locally
-    if os.path.exists(path):
-        ni_stops = pd.read_csv(path, index_col=0)
-    else:
-        ni_stops = pd.read_csv(url, index_col=0, encoding='cp1252')
-        ni_stops.to_csv(path)
-
-    return ni_stops
-
-
-def read_usual_pop_scotland(path: str):
+def read_usual_pop_scotland(path:str):
     """Reads the usual population Scotland.
 
     This reads in the file containing all the

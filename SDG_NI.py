@@ -28,13 +28,13 @@ DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 boundary_year = "2021"
 
-# gets the northern ireland bus stops data from the api
-ni_bus_stop_url = config["NI_bus_stops_data"]
-output_ni_bus_csv = os.path.join(CWD, "data", "Stops", "NI", "bus_stops_ni.csv")
+# grabs northern ireland bus stops path
+ni_bus_stops_path= os.path.join(CWD,"data","stops","NI","bus_stops_ni.csv")
 
-# reads in the NI bus stop data as geo df and saves bus data if it has not
-# been saved
-ni_bus_stops = di.read_ni_stops(ni_bus_stop_url, output_ni_bus_csv)
+# reads in NI bus stop data as pandas df
+ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
+
+# assigns capacity type as high
 ni_bus_stops['capacity_type'] = 'high'
 
 # converts from bus stops pandas df to geo df
@@ -43,14 +43,13 @@ bus_geo_df = (di.geo_df_from_pd_df(pd_df=ni_bus_stops,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-# gets the northern ireland train stops data from the api
-ni_train_stop_url = config["NI_train_stops_data"]
-output_ni_train_csv = os.path.join(
-    CWD, "data", "Stops", "NI", "train_stops_ni.csv")
+# gets the northern ireland train stops data path
+ni_train_stops_path = os.path.join(CWD,"data","stops","NI","train_stops_ni.csv")
 
-# reads in the NI train  stop data as geo df and saves train data if it
-# has not been saved
-ni_train_stops = di.read_ni_stops(ni_train_stop_url, output_ni_train_csv)
+# reads in the NI train stop data as pandas df
+ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
+
+# assigns capacity type as low
 ni_train_stops['capacity_type'] = 'low'
 
 # converts from bus stops pandas df to geo df
