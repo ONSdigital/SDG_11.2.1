@@ -87,7 +87,7 @@ uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 # filter for just england and wales
-lad_code_col = f'LAD{pop_year[-2:]}CD'
+lad_code_col = f'LAD{POP_YEAR[-2:]}CD'
 eng_wales_la_file = uk_la_file[uk_la_file[lad_code_col].str.startswith('E', 'W')]
 
 # Get list of all pop_estimate files for target year
