@@ -34,8 +34,8 @@ ni_bus_stops_path= os.path.join(CWD,"data","stops","NI","bus_stops_ni.csv")
 # reads in NI bus stop data as pandas df
 ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
 
-# assigns capacity type as high
-ni_bus_stops['capacity_type'] = 'high'
+# assigns capacity type as low
+ni_bus_stops['capacity_type'] = 'low'
 
 # converts from bus stops pandas df to geo df
 bus_geo_df = (di.geo_df_from_pd_df(pd_df=ni_bus_stops,
@@ -49,8 +49,8 @@ ni_train_stops_path = os.path.join(CWD,"data","stops","NI","train_stops_ni.csv")
 # reads in the NI train stop data as pandas df
 ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
 
-# assigns capacity type as low
-ni_train_stops['capacity_type'] = 'low'
+# assigns capacity type as high
+ni_train_stops['capacity_type'] = 'high'
 
 # converts from bus stops pandas df to geo df
 train_geo_df = (di.geo_df_from_pd_df(pd_df=ni_train_stops,
