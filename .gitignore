@@ -131,15 +131,15 @@ dmypy.json
 # Data files
 *.csv
 *.feather
-*.xlsx
-*.zip
-*.hdf5
 *.h5
-*.txt
-*.json
-*.xml
 *.hd
-.parquet
+*.hdf5
+*.json
+*.parquet
+*.txt
+*.xlsx
+*.xml
+*.zip
 
 
 #mac os system files
