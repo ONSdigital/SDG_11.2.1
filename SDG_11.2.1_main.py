@@ -40,13 +40,32 @@ POP_YEAR = str(config["calculation_year"])
 CENTROID_YEAR = str(config["centroid_year"])
 
 
-# Get the pandas dataframe for the stops data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(),
-                                              "data",
-                                              "stops"))
-# filter out on inactive stops
-filtered_stops = dt.filter_stops(stops_df=stops_df)
+# ------------------
+# Load in stops data
+# ------------------
+
+# Highly serviced bus and train stops created from SDG_bus_timetable
+# and SDG_train_timetable
+# Metros and trains added from NAPTAN as we dont have timetable
+# data for these stops. Hence, they wont be highly serviced.
+
+highly_serviced_bus_stops = di._feath_to_df()
+highly_serviced_train_stops = di._feath_to_df()
+
+# Metro and tram data read in from NAPTAN
+naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
+                              dir=os.path.join(os.getcwd(),
+                                               "data",
+                                               "stops"))
+
+metro_stops = 
+tram_stops = 
+
+# Take only active, pending or new tram and metro stops
+
+# Merge into one dataframe (taking care of columns)
+# Convert to geopandas df
+
 
 # coverts from pandas df to geo df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
@@ -54,8 +73,7 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
-# adds in high/low capacity column
-stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+
 
 # define la col which is LADXXNM where XX is last 2 digits of year e.g 21
 # from 2021

@@ -342,6 +342,9 @@ highly_serviced_train_stops_df = (
 )
 
 # Keep only required columns
+# Match NATAN exports and bus
+# Keep only actibe, pending and new
+# TO DO
 highly_serviced_train_stops_df = (
     highly_serviced_train_stops_df[['station_code', 'easting', 'northing']]
 )
