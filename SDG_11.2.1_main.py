@@ -246,7 +246,7 @@ for local_auth in list_local_auth:
     # converting into GeoDataFrame
     eng_wales_la_pop_df = gpd.GeoDataFrame(eng_wales_la_pop_df,
                                            geometry='geometry_LA',
-                                           crs='EPSG:27700'))
+                                           crs='EPSG:27700')
 
     # create a buffer around the stops, in column "geometry" #forthedemo
     # the `buffer_points` function changes the df in situ
