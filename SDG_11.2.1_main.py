@@ -88,7 +88,9 @@ uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 # filter for just england and wales
 lad_code_col = f'LAD{POP_YEAR[-2:]}CD'
-eng_wales_la_file = uk_la_file[uk_la_file[lad_code_col].str.startswith('E', 'W')]
+eng_wales_la_file = (
+    uk_la_file[uk_la_file[lad_code_col].str.startswith('E', 'W')]
+)
 
 # Get list of all pop_estimate files for target year
 pop_files = os.listdir(os.path.join(os.getcwd(),
@@ -225,10 +227,10 @@ for local_auth in list_local_auth:
 
     # merge the two dataframes limiting to just the la
     eng_wales_la_pop_df = whole_nation_pop_df.merge(eng_wales_la_file,
-                                          how='right',
-                                          left_on=lad_col,
-                                          right_on=lad_col,
-                                          suffixes=('_pop', '_LA'))
+                                                    how='right',
+                                                    left_on=lad_col,
+                                                    right_on=lad_col,
+                                                    suffixes=('_pop', '_LA'))
 
     # subset by the local authority name needed
     eng_wales_la_pop_df = (
@@ -254,7 +256,11 @@ for local_auth in list_local_auth:
     eng_wales_la_pop_df.drop(age_lst, axis=1, inplace=True)
 
     # merging summed+grouped ages back in
-    eng_wales_la_pop_df = pd.merge(eng_wales_la_pop_df, age_df, left_index=True, right_index=True)
+    eng_wales_la_pop_df = pd.merge(eng_wales_la_pop_df,
+                                   age_df,
+                                   left_index=True,
+                                   right_index=True)
+
     # converting into GeoDataFrame
     eng_wales_la_pop_df = gpd.GeoDataFrame(eng_wales_la_pop_df)
 
@@ -262,8 +268,10 @@ for local_auth in list_local_auth:
     # the `buffer_points` function changes the df in situ
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
-    # renaming the column to geometry so the point in polygon func gets expected
-    eng_wales_la_pop_df.rename(columns={"geometry_pop": "geometry"}, inplace=True)
+    # renaming the column to geometry so the point in
+    # polygon func gets expected
+    eng_wales_la_pop_df.rename(columns={"geometry_pop": "geometry"},
+                               inplace=True)
 
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
@@ -283,9 +291,11 @@ for local_auth in list_local_auth:
     # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
     # # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(eng_wales_la_pop_df, la_stops_geo_df)
-    # Dedupe the df because many OAs are appearing multiple times (i.e. they
-    # are served by multiple stops)
+    pop_in_poly_df = gs.find_points_in_poly(eng_wales_la_pop_df,
+                                            la_stops_geo_df)
+
+    # Dedupe the df because many OAs are appearing multiple times
+    # (i.e. they are served by multiple stops)
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
     # Count the population served by public transport
@@ -364,9 +374,11 @@ for local_auth in list_local_auth:
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
 
-    disab_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
-                                                  pop_in_poly_df=pop_in_poly_df,
-                                                  cols_lst=disab_cols)
+    disab_servd_df = (
+        dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
+                                     pop_in_poly_df=pop_in_poly_df,
+                                     cols_lst=disab_cols)
+    )
 
     # Feeding the results to the reshaper
     disab_servd_df_out = do.reshape_for_output(disab_servd_df,
@@ -386,9 +398,11 @@ for local_auth in list_local_auth:
     # Calculating non-disabled people served and not served
     non_disab_cols = ["number_non-disabled"]
 
-    non_disab_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
-                                                  pop_in_poly_df=pop_in_poly_df,
-                                                  cols_lst=non_disab_cols)
+    non_disab_servd_df = (
+        dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
+                                     pop_in_poly_df=pop_in_poly_df,
+                                     cols_lst=non_disab_cols)
+    )
 
     # Feeding the results to the reshaper
     non_disab_servd_df_out = do.reshape_for_output(
