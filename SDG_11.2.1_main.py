@@ -53,19 +53,20 @@ CENTROID_YEAR = str(config["centroid_year"])
 # data for these stops. Hence, they wont be highly serviced.
 
 highly_serviced_bus_stops = di._feath_to_df('highly_serviced_stops', BUS_IN_DIR)
-highly_serviced_train_stops = di._feath_to_df('highly_serviced_stops', TRAIN_IN_DIR)
+highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops', TRAIN_IN_DIR)
 
 # Metro and tram data read in from NAPTAN
 naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                               dir=os.path.join(os.getcwd(),
                                                "data",
                                                "stops"))
+# Take only active, pending or new stops                           
+naptan_df = naptan_df[naptan_df['Status'].isin(['active', 'pending', 'new'])]
 
-# metro_stops = 
-# tram_stops = 
+# Extract metro and tram stops from NAPTAN
+tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 
-# Take only active, pending or new tram and metro stops
-
+# Combine all stops
 # Merge into one dataframe (taking care of columns)
 
 # Convert to geopandas df
