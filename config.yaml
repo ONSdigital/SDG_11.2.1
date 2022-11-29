@@ -46,7 +46,7 @@ day_filter: 'general' #exact
 train_msn_filename: 'ttisf467.msn'
 train_mca_filename: 'ttisf467.mca'
 station_locations: 'station_locations.csv'
-bus_in_dir : 'data/england_bus_timetable'
+bus_in_dir : 'data/england_bus_timetable/'
 # train_in_dir : 
 
 # Ages 
