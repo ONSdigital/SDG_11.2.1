@@ -284,7 +284,7 @@ for local_auth in list_local_auth:
     # renaming the dodgy col names with their replacements
     replacements = {"males_pop": "male",
                     "fem_pop": "female"}
-    la_pop_df.rename(columns=replacements, inplace=True)
+    eng_wales_la_pop_df.rename(columns=replacements, inplace=True)
 
     # # merge the sex data with the rest of the population data
     # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
