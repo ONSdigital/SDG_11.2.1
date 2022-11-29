@@ -341,13 +341,14 @@ highly_serviced_train_stops_df = (
                                           how='any')
 )
 
-# Keep only required columns
+# Keep only required columns in highly_serviced_train_stops_df
+required_columns = ['station_code', 'easting', 'northing']
+highly_serviced_train_stops_df = highly_serviced_train_stops_df[required_columns]
+
+
 # Match NATAN exports and bus
-# Keep only actibe, pending and new
-# TO DO
-highly_serviced_train_stops_df = (
-    highly_serviced_train_stops_df[['station_code', 'easting', 'northing']]
-)
+# Keep only active, pending and new
+
 
 # Save a copy to be ingested into SDG_main
 highly_serviced_train_stops_df.to_feather(
