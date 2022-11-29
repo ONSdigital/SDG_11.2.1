@@ -19,10 +19,10 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 
 # Parameters
-output_directory = os.path.join(CWD, 'data', 'england_train_timetable')
-station_locations = os.path.join(output_directory, config['station_locations'])
-msn_file = os.path.join(output_directory, config["train_msn_filename"])
-mca_file = os.path.join(output_directory, config["train_mca_filename"])
+trn_data_output_dir = os.path.join(CWD, 'data', 'england_train_timetable')
+station_locations = os.path.join(trn_data_output_dir, config['station_locations'])
+msn_file = os.path.join(trn_data_output_dir, config["train_msn_filename"])
+mca_file = os.path.join(trn_data_output_dir, config["train_mca_filename"])
 day_filter_type = config["day_filter"]
 timetable_day = config["timetable_day"]
 early_timetable_hour = config["early_timetable_hour"]
@@ -71,7 +71,7 @@ msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
 msn_df = msn_df.drop_duplicates(subset=['crs_code'])
 
 # Attach the coordinates for each train station
-station_locations = os.path.join(output_directory, 'station_locations.csv')
+station_locations = os.path.join(trn_data_output_dir, 'station_locations.csv')
 station_locations_df = pd.read_csv(
     station_locations, usecols=[
         'station_code', 'latitude', 'longitude'])
@@ -351,8 +351,8 @@ highly_serviced_train_stops_df = (
 
 # Save a copy to be ingested into SDG_main
 highly_serviced_train_stops_df.to_feather(
-    os.path.join(output_directory, 'train_highly_serviced_stops.feather'))
+    os.path.join(trn_data_output_dir, 'train_highly_serviced_stops.feather'))
 
 highly_serviced_train_stops_df.to_csv(
-    os.path.join(output_directory,
+    os.path.join(trn_data_output_dir,
                  'train_highly_serviced_stops.csv'), index=False)
