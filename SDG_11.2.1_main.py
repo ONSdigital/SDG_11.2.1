@@ -34,7 +34,7 @@ OUTPUT_DIR = config["DATA_OUTPUT"]
 EXT_ORDER = config['EXT_ORDER']
 OUTFILE = config['OUTFILE']
 BUS_IN_DIR = config['bus_in_dir']
-# TRAIN_IN_DIR = config['train_in_dir']
+TRAIN_IN_DIR = config['train_in_dir']
 
 # Years
 # Getting the year for population data
@@ -53,7 +53,7 @@ CENTROID_YEAR = str(config["centroid_year"])
 # data for these stops. Hence, they wont be highly serviced.
 
 highly_serviced_bus_stops = di._feath_to_df('highly_serviced_stops', BUS_IN_DIR)
-# highly_serviced_train_stops = di._feath_to_df()
+highly_serviced_train_stops = di._feath_to_df('highly_serviced_stops', TRAIN_IN_DIR)
 
 # Metro and tram data read in from NAPTAN
 naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
@@ -67,9 +67,8 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
 # Take only active, pending or new tram and metro stops
 
 # Merge into one dataframe (taking care of columns)
+
 # Convert to geopandas df
-
-
 # coverts from pandas df to geo df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
                                      geom_x='Easting',
