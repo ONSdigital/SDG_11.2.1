@@ -342,8 +342,13 @@ highly_serviced_train_stops_df = (
 )
 
 # Keep only required columns in highly_serviced_train_stops_df
-required_columns = ['station_code', 'easting', 'northing']
-highly_serviced_train_stops_df = highly_serviced_train_stops_df[required_columns]
+highly_serviced_train_stops_df = (
+    highly_serviced_train_stops_df.drop(columns=valid_hours)
+   )
+
+# Get the naptan data
+stops_df = di.get_stops_file(url=config["NAPTAN_API"],
+                             dir=os.path.join(os.getcwd(), "data", "stops"))
 
 
 # Match NATAN exports and bus
