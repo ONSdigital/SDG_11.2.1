@@ -20,7 +20,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Parameters
 trn_data_output_dir = os.path.join(CWD, 'data', 'england_train_timetable')
-station_locations = os.path.join(trn_data_output_dir, config['station_locations'])
+station_locations = os.path.join(trn_data_output_dir,
+                                 config['station_locations'])
 msn_file = os.path.join(trn_data_output_dir, config["train_msn_filename"])
 mca_file = os.path.join(trn_data_output_dir, config["train_mca_filename"])
 day_filter_type = config["day_filter"]
@@ -345,15 +346,6 @@ highly_serviced_train_stops_df = (
 highly_serviced_train_stops_df = (
     highly_serviced_train_stops_df.drop(columns=valid_hours)
    )
-
-# Get the naptan data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(), "data", "stops"))
-
-
-# Match NATAN exports and bus
-# Keep only active, pending and new
-
 
 # Save a copy to be ingested into SDG_main
 highly_serviced_train_stops_df.to_feather(

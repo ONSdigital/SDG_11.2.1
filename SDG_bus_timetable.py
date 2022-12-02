@@ -153,10 +153,11 @@ valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 if stop_times_df['departure_time'].isna().any():
     print("There are NA values in departure_time column")
     # If there are any, remove them
-    stop_times_df = stop_times_df.dropna(subset=['departure_time']) 
+    stop_times_df = stop_times_df.dropna(subset=['departure_time'])
 
 # Filter stop times to only include valid hours
-stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
+stop_times_df = stop_times_df[
+    stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
 
 # Convert start and end date to datetime format
 calendar_df['start_date'] = pd.to_datetime(

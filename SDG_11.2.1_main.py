@@ -52,43 +52,61 @@ CENTROID_YEAR = str(config["centroid_year"])
 # Metros and trains added from NAPTAN as we dont have timetable
 # data for these stops. Hence, they wont be highly serviced.
 
-highly_serviced_bus_stops = di._feath_to_df('highly_serviced_stops', BUS_IN_DIR)
-highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops', TRAIN_IN_DIR)
+highly_serviced_bus_stops = di._feath_to_df('highly_serviced_stops',
+                                            BUS_IN_DIR)
+highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
+                                              TRAIN_IN_DIR)
 
 # Metro and tram data read in from NAPTAN
 naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                               dir=os.path.join(os.getcwd(),
                                                "data",
                                                "stops"))
-# Extract metro and tram stops from NAPTAN
+
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 
-# Take only active, pending or new stops                           
-tram_metro_stops = tram_metro_stops[tram_metro_stops['Status'].isin(['active', 'pending', 'new'])]
+# Take only active, pending or new stops
+tram_metro_stops = (
+    tram_metro_stops[tram_metro_stops['Status'].isin(['active',
+                                                      'pending',
+                                                      'new'])]
+)
 
-# Combine all stops
+# ------------------
+# Combine stops data
+# ------------------
 
-# Filter naptan so it has only 3 columns in common with bus and train
+# Add a column for transport mode
+tram_metro_stops['transport_mode'] = 'tram_metro'
+highly_serviced_bus_stops['transport_mode'] = 'bus'
+highly_serviced_train_stops['transport_mode'] = 'train'
+
+# Standardise dataset columns for union
 column_renamer = {"NaptanCode": "station_code",
-                  "Easting" : "easting",
-                  "Northing" : "northing"}
-tram_metro_stops.rename(columns=column_renamer, inplace=True) 
-tram_metro_stops = tram_metro_stops[["station_code", "easting", "northing"]]  
+                  "Easting": "easting",
+                  "Northing": "northing"}
 
-# Merge into one dataframe (taking care of columns)
+tram_metro_stops.rename(columns=column_renamer, inplace=True)
+tram_metro_stops = tram_metro_stops[["station_code", "easting",
+                                     "northing", "transport_mode"]]
+
 highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
+highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
+                                                       "easting",
+                                                       "northing",
+                                                       "transport_mode"]]
 
+# Merge into one dataframe
 dfs_to_combine = [highly_serviced_bus_stops,
                   highly_serviced_train_stops,
                   tram_metro_stops]
 
-filtered_stops_df = pd.concat(dfs_to_combine, axis=1)
+filtered_stops_df = pd.concat(dfs_to_combine)
 
 # Convert to geopandas df
-# coverts from pandas df to geo df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
+                                     geom_x='easting',
+                                     geom_y='northing',
                                      crs=DEFAULT_CRS))
 
 
@@ -294,7 +312,7 @@ for local_auth in list_local_auth:
 
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
-    
+
     # Disability disaggregations
     eng_wales_la_pop_df = dt.disab_disagg(disability_df, eng_wales_la_pop_df)
 
