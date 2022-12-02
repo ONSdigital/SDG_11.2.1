@@ -60,25 +60,39 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                               dir=os.path.join(os.getcwd(),
                                                "data",
                                                "stops"))
-# Take only active, pending or new stops                           
-naptan_df = naptan_df[naptan_df['Status'].isin(['active', 'pending', 'new'])]
-
 # Extract metro and tram stops from NAPTAN
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 
+# Take only active, pending or new stops                           
+tram_metro_stops = tram_metro_stops[tram_metro_stops['Status'].isin(['active', 'pending', 'new'])]
+
 # Combine all stops
+
+# Filter naptan so it has only 3 columns in common with bus and train
+column_renamer = {"NaptanCode": "station_code",
+                  "Easting" : "easting",
+                  "Northing" : "northing"}
+tram_metro_stops.rename(columns=column_renamer, inplace=True) 
+tram_metro_stops = tram_metro_stops[["station_code", "easting", "northing"]]  
+
 # Merge into one dataframe (taking care of columns)
+highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
+
+dfs_to_combine = [highly_serviced_bus_stops,
+                  highly_serviced_train_stops,
+                  tram_metro_stops]
+
+filtered_stops_df = pd.concat(dfs_to_combine, axis=1)
 
 # Convert to geopandas df
 # coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
+stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
                                      geom_x='Easting',
                                      geom_y='Northing',
                                      crs=DEFAULT_CRS))
 
 
-
-# define la col which is LADXXNM where XX is last 2 digits of year e.g 21
+# Define la col which is LADXXNM where XX is last 2 digits of year e.g 21
 # from 2021
 lad_col = f'LAD{POP_YEAR[-2:]}NM'
 
