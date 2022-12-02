@@ -234,13 +234,10 @@ highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(
 highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(
     subset=['Easting', 'Northing'], how='any')
 
-# Keep only active stops
-# TO DO
-
-
-# Only keep required columns
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(
-    config["NAPTAN_TYPES"].keys())]
+# Drop the hours columns
+highly_serviced_bus_stops_df = (
+    highly_serviced_bus_stops_df['NaptanCode', 'Easting', 'Northing']
+   )
 
 # Save a copy to be ingested by SDG_11.2.1_main
 highly_serviced_bus_stops_df.to_feather(os.path.join(
