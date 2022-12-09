@@ -32,7 +32,7 @@ DATA_DIR = config["DATA_DIR"]
 boundary_year = "2021"
 
 # grabs northern ireland bus stops path
-ni_bus_stops_path= os.path.join(CWD,"data","stops","NI","bus_stops_ni.csv")
+ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
 
 # reads in NI bus stop data as pandas df
 ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
@@ -41,7 +41,8 @@ ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
 ni_bus_stops['capacity_type'] = 'low'
 
 # gets the northern ireland train stops data path
-ni_train_stops_path = os.path.join(CWD,"data","stops","NI","train_stops_ni.csv")
+ni_train_stops_path = os.path.join(
+    CWD, "data", "stops", "NI", "train_stops_ni.csv")
 
 # reads in the NI train stop data as pandas df
 ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
@@ -51,14 +52,15 @@ ni_train_stops['capacity_type'] = 'high'
 
 
 # Join the two stops dataframes together
-stops_df = ni_bus_stops.merge(ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
+stops_df = ni_bus_stops.merge(
+    ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
 
 stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
-                                     geom_x='Longitude',
-                                     geom_y='Latitude',
-                                     crs='EPSG:4326')
+                                    geom_x='Longitude',
+                                    geom_y='Latitude',
+                                    crs='EPSG:4326')
 
-# Convert latitude and longitude to easting and northing 
+# Convert latitude and longitude to easting and northing
 stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 
 # Get usual population for Northern Ireland (Census 2011 data)
@@ -132,7 +134,7 @@ sa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
                                     "NI",
                                     "11DC_Lookup_1_0.csv")
 
-# reads in the OA to LA lookupfile 
+# reads in the OA to LA lookupfile
 sa_to_la = pd.read_csv(sa_to_la_lookup_path)
 
 # merges the pwc with it's corresponding LA
@@ -173,37 +175,37 @@ for local_auth in ni_auth:
     # buffer around the stops
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
-    # filter only by current la 
-    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"]==local_auth],
+    # filter only by current la
+    only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"] == local_auth],
                                             geometry='geometry', crs='EPSG:27700')
 
     # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(only_la_pwc_with_pop, la_stops_geo_df)
+    pop_in_poly_df = gs.find_points_in_poly(
+        only_la_pwc_with_pop, la_stops_geo_df)
 
-    # Deduplicate the df as OA appear multiple times 
+    # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
     # all the figures we need
     served = pop_in_poly_df["pop_count"].astype(int).sum()
     full_pop = only_la_pwc_with_pop["pop_count"].astype(int).sum()
     not_served = full_pop - served
-    pct_not_served = "{:.2f}".format(not_served/full_pop*100)
-    pct_served = "{:.2f}".format(served/full_pop*100)
+    pct_not_served = "{:.2f}".format(not_served / full_pop * 100)
+    pct_served = "{:.2f}".format(served / full_pop * 100)
 
     print(f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
             While the number of people who are not served is {not_served}""")
 
     # putting results into dataframe
-    la_results_df = pd.DataFrame({"All_pop":[full_pop],
-                                  "Served":[served],
-                                  "Unserved":[not_served],
-                                  "Percentage served":[pct_served],
-                                  "Percentage unserved":[pct_not_served]})
-
+    la_results_df = pd.DataFrame({"All_pop": [full_pop],
+                                  "Served": [served],
+                                  "Unserved": [not_served],
+                                  "Percentage served": [pct_served],
+                                  "Percentage unserved": [pct_not_served]})
 
     # Re-orienting the df to what's accepted by the reshaper and renaming col
-    la_results_df = la_results_df.T.rename(columns={0:"Total"})
+    la_results_df = la_results_df.T.rename(columns={0: "Total"})
 
     # Feeding the la_results_df to the reshaper
     la_results_df_out = do.reshape_for_output(la_results_df,
@@ -211,7 +213,7 @@ for local_auth in ni_auth:
                                               local_auth=local_auth)
 
     # Finally for the local authority totals the id_col can be dropped
-    # That's because the disaggregations each have their own column, 
+    # That's because the disaggregations each have their own column,
     # but "Total" is not a disaggregation so doesn't have a column.
     # It will simply show up as blanks (i.e. Total) in all disagg columns
     la_results_df_out.drop("Total", axis=1, inplace=True)
