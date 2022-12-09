@@ -139,25 +139,6 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 right_on="SA2011",
                                 how="left")
 
-# We need geometry for small areas, not output areas so read in this file
-#ni_sa_centr_df = (di.geo_df_from_geospatialfile
-                  #(os.path.join
-                   #(DATA_DIR,
-                    #'pop_weighted_centroids',
-                    #"NI",
-                    #"2011",
-                    #"SA2011.shp")))
-
-# We only need geometry and the SA2011 code for this
-#ni_sa_centr_df = ni_sa_centr_df[['SA2011', 'geometry']]
-
-# Include small area geometry for complete table
-#pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
-                                #right=ni_sa_centr_df,
-                                #left_on='SA2011',
-                                #right_on='SA2011',
-                                #how="left")
-
 # Rename columns to fit functions below
 pwc_with_pop_with_la.rename(
     columns={
