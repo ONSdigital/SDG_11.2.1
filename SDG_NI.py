@@ -1,6 +1,7 @@
 # core imports
 import os
 import random
+import time
 
 # third party import
 import yaml
@@ -12,6 +13,9 @@ import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
 import data_output as do
+
+# timings
+start = time.time()
 
 # get current working directory
 CWD = os.getcwd()
@@ -234,4 +238,10 @@ for local_auth in ni_auth:
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 
+# output to CSV
 all_la.to_csv("NI_results.csv", index=False)
+
+# end time
+end = time.time()
+
+print(f"This took {(end-start)} seconds to run")
