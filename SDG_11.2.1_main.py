@@ -81,6 +81,13 @@ tram_metro_stops['transport_mode'] = 'tram_metro'
 highly_serviced_bus_stops['transport_mode'] = 'bus'
 highly_serviced_train_stops['transport_mode'] = 'train'
 
+# Add a column for stop capcity type
+# Buses are low capcity
+# Trains, trams and metros are high capacity
+tram_metro_stops['capacity_type'] = 'high'
+highly_serviced_bus_stops['capacity_type'] = 'low'
+highly_serviced_train_stops['capacity_type'] = 'high'
+
 # Standardise dataset columns for union
 column_renamer = {"NaptanCode": "station_code",
                   "Easting": "easting",
@@ -108,7 +115,6 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
                                      geom_x='easting',
                                      geom_y='northing',
                                      crs=DEFAULT_CRS))
-
 
 # Define la col which is LADXXNM where XX is last 2 digits of year e.g 21
 # from 2021
@@ -304,11 +310,6 @@ for local_auth in list_local_auth:
     # create a buffer around the stops, in column "geometry" #forthedemo
     # the `buffer_points` function changes the df in situ
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
-
-    # renaming the column to geometry so the point in
-    # polygon func gets expected
-    eng_wales_la_pop_df.rename(columns={"geometry_pop": "geometry"},
-                               inplace=True)
 
     # import the disability data - this is the based on the 2011 census
     # TODO: use new csv_to_df func to make disability_df
