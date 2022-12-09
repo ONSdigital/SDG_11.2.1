@@ -101,8 +101,7 @@ ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                         (DATA_DIR,
                          'pop_weighted_centroids',
                          "NI",
-                         "2001",
-                         "OA_ni.shp")))
+                         "NI_PWC_BNG.shp")))
 
 pwc_with_lookup = pd.merge(left=sa_to_la,
                            right=ni_pop_wtd_centr_df,
@@ -119,8 +118,7 @@ pwc_with_pop = pd.merge(left=census_ni_df,
 
 # Drops OA codes as not required, Coords as geographical, and geometry as
 # this is for output areas not small areas
-pwc_with_pop.drop(["SA Code", "OA_CODE", "COA2001_1", 'X_COORD',
-                  'Y_COORD', 'geometry'], axis=1, inplace=True)
+pwc_with_pop.drop(["SA Code", "OA_CODE", "COA2001_1"], axis=1, inplace=True)
 
 # SA to LA lookup
 sa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
@@ -138,23 +136,23 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 how="left")
 
 # We need geometry for small areas, not output areas so read in this file
-ni_sa_centr_df = (di.geo_df_from_geospatialfile
-                  (os.path.join
-                   (DATA_DIR,
-                    'pop_weighted_centroids',
-                    "NI",
-                    "2011",
-                    "SA2011.shp")))
+#ni_sa_centr_df = (di.geo_df_from_geospatialfile
+                  #(os.path.join
+                   #(DATA_DIR,
+                    #'pop_weighted_centroids',
+                    #"NI",
+                    #"2011",
+                    #"SA2011.shp")))
 
 # We only need geometry and the SA2011 code for this
-ni_sa_centr_df = ni_sa_centr_df[['SA2011', 'geometry']]
+#ni_sa_centr_df = ni_sa_centr_df[['SA2011', 'geometry']]
 
 # Include small area geometry for complete table
-pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
-                                right=ni_sa_centr_df,
-                                left_on='SA2011',
-                                right_on='SA2011',
-                                how="left")
+#pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
+                                #right=ni_sa_centr_df,
+                                #left_on='SA2011',
+                                #right_on='SA2011',
+                                #how="left")
 
 # Rename columns to fit functions below
 pwc_with_pop_with_la.rename(
@@ -166,7 +164,7 @@ pwc_with_pop_with_la.rename(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-ni_auth = ['Lisburn and Castlereagh']
+ni_auth = [random_la]
 
 total_df_dict = {}
 
@@ -237,6 +235,3 @@ for local_auth in ni_auth:
 all_la = pd.concat(total_df_dict.values())
 
 all_la.to_csv("NI_results.csv", index=False)
-
-end = time.time()
-print()
