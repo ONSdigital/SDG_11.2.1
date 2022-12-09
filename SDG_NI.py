@@ -58,6 +58,9 @@ stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
                                      geom_y='Latitude',
                                      crs='EPSG:4326')
 
+# Convert latitude and longitude to easting and northing 
+stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
+
 # Get usual population for Northern Ireland (Census 2011 data)
 whole_NI_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"),
                           header=2)

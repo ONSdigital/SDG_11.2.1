@@ -1,5 +1,6 @@
 from typing import List
 import pandas as pd
+from convertbng.util import convert_bng
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -387,3 +388,16 @@ def filter_timetable_by_day(timetable_df, day):
     print(f"Filtering by day has reduced services by {dropped_services}")
 
     return timetable_df
+
+def convert_east_north(df, long, lat):
+    """
+    Converts latitude and longitude coordinates to British National Grid
+    Args:
+        df (pd.DataFrame): df including the longitude and latitude coordinates
+        long(str): The name of the longitude column in df
+        lat (str): The name of the latitude column in df 
+    Returns:
+        pd.DataFrame: dataframe including easting and northing coordinates.
+    """
+    df['Easting'], df['Northing'] = convert_bng(df[long], df[lat])
+    return df
