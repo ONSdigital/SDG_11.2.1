@@ -33,6 +33,9 @@ DATA_DIR = config["DATA_DIR"]
 OUTPUT_DIR = config["DATA_OUTPUT"]
 EXT_ORDER = config['EXT_ORDER']
 OUTFILE = config['OUTFILE']
+BUS_IN_DIR = config['bus_in_dir']
+TRAIN_IN_DIR = config['train_in_dir']
+
 # Years
 # Getting the year for population data
 POP_YEAR = str(config["calculation_year"])
@@ -40,24 +43,83 @@ POP_YEAR = str(config["calculation_year"])
 CENTROID_YEAR = str(config["centroid_year"])
 
 
-# Get the pandas dataframe for the stops data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(),
-                                              "data",
-                                              "stops"))
-# filter out on inactive stops
-filtered_stops = dt.filter_stops(stops_df=stops_df)
+# ------------------
+# Load in stops data
+# ------------------
 
-# coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
+# Highly serviced bus and train stops created from SDG_bus_timetable
+# and SDG_train_timetable
+# Metros and trains added from NAPTAN as we dont have timetable
+# data for these stops. Hence, they wont be highly serviced.
+
+highly_serviced_bus_stops = di._feath_to_df('bus_highly_serviced_stops',
+                                            BUS_IN_DIR)
+highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
+                                              TRAIN_IN_DIR)
+
+# Metro and tram data read in from NAPTAN
+naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
+                              dir=os.path.join(os.getcwd(),
+                                               "data",
+                                               "stops"))
+
+tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
+
+# Take only active, pending or new stops
+tram_metro_stops = (
+    tram_metro_stops[tram_metro_stops['Status'].isin(['active',
+                                                      'pending',
+                                                      'new'])]
+)
+
+# ------------------
+# Combine stops data
+# ------------------
+
+# Add a column for transport mode
+tram_metro_stops['transport_mode'] = 'tram_metro'
+highly_serviced_bus_stops['transport_mode'] = 'bus'
+highly_serviced_train_stops['transport_mode'] = 'train'
+
+# Add a column for stop capacity type
+# Buses are low capcity
+# Trains, trams and metros are high capacity
+tram_metro_stops['capacity_type'] = 'high'
+highly_serviced_bus_stops['capacity_type'] = 'low'
+highly_serviced_train_stops['capacity_type'] = 'high'
+# PLACEHOLDER old code with function
+# To be run on unioned dataset (filtered_stops_df)
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+
+# Standardise dataset columns for union
+column_renamer = {"NaptanCode": "station_code",
+                  "Easting": "easting",
+                  "Northing": "northing"}
+
+tram_metro_stops.rename(columns=column_renamer, inplace=True)
+tram_metro_stops = tram_metro_stops[["station_code", "easting",
+                                     "northing", "transport_mode"]]
+
+highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
+highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
+                                                       "easting",
+                                                       "northing",
+                                                       "transport_mode"]]
+
+# Merge into one dataframe
+dfs_to_combine = [highly_serviced_bus_stops,
+                  highly_serviced_train_stops,
+                  tram_metro_stops]
+
+filtered_stops_df = pd.concat(dfs_to_combine)
+
+# Convert to geopandas df
+stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
+                                     geom_x='easting',
+                                     geom_y='northing',
                                      crs=DEFAULT_CRS))
 
-# adds in high/low capacity column
-stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
-
-# define la col which is LADXXNM where XX is last 2 digits of year e.g 21
+# Define la col which is LADXXNM where XX is last 2 digits of year e.g 21
 # from 2021
 lad_col = f'LAD{POP_YEAR[-2:]}NM'
 
@@ -252,10 +314,8 @@ for local_auth in list_local_auth:
     # the `buffer_points` function changes the df in situ
     la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
-    # renaming the column to geometry so the point in
-    # polygon func gets expected
-    eng_wales_la_pop_df.rename(columns={"geometry_pop": "geometry"},
-                               inplace=True)
+    # import the disability data - this is the based on the 2011 census
+    # TODO: use new csv_to_df func to make disability_df
 
     # Disability disaggregations
     eng_wales_la_pop_df = dt.disab_disagg(disability_df, eng_wales_la_pop_df)
@@ -264,6 +324,12 @@ for local_auth in list_local_auth:
     replacements = {"males_pop": "male",
                     "fem_pop": "female"}
     eng_wales_la_pop_df.rename(columns=replacements, inplace=True)
+
+    # # merge the sex data with the rest of the population data
+    # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
+
+    # Make a polygon object from the geometry column of the stops df
+    # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
 
     # # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(eng_wales_la_pop_df,

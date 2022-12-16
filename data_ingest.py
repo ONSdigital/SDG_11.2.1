@@ -121,6 +121,11 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
         pd.DataFrame: Pandas dataframe read from the persistent feather file.
     """
     print(f"Reading {file_nm}.feather from {feather_path}.")
+    # check if supplied path is a directory or a file
+    if os.path.isdir(feather_path):
+        # if directory then append the file name
+        feather_path = os.path.join(feather_path, f"{file_nm}.feather")
+    # Time the read
     tic = perf_counter()
     pd_df = pd.read_feather(feather_path)
     toc = perf_counter()
