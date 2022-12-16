@@ -751,3 +751,25 @@ def best_before(path, number_of_days):
         expired = False
 
     return expired
+
+def read_scottish_age(path):
+    """
+    Reads in the scottish age information
+    
+    Args:
+        path (str): the path of the file
+    
+    Returns:
+        Bool: True if path has not been modified within the number of days
+            specified
+
+    """
+    # read in scottish file
+    age_scotland_df = pd.read_csv(path, 
+                                skiprows=4)
+
+    # dropping first row as this is the whole of scotland
+    age_scotland_df = age_scotland_df.iloc[1:,:]
+    age_scotland_df = age_scotland_df.reset_index()
+
+    return age_scotland_df
