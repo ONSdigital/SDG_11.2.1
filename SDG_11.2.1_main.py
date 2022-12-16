@@ -81,12 +81,15 @@ tram_metro_stops['transport_mode'] = 'tram_metro'
 highly_serviced_bus_stops['transport_mode'] = 'bus'
 highly_serviced_train_stops['transport_mode'] = 'train'
 
-# Add a column for stop capcity type
+# Add a column for stop capacity type
 # Buses are low capcity
 # Trains, trams and metros are high capacity
 tram_metro_stops['capacity_type'] = 'high'
 highly_serviced_bus_stops['capacity_type'] = 'low'
 highly_serviced_train_stops['capacity_type'] = 'high'
+# PLACEHOLDER old code with function
+# To be run on unioned dataset (filtered_stops_df)
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # Standardise dataset columns for union
 column_renamer = {"NaptanCode": "station_code",

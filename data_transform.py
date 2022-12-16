@@ -195,6 +195,32 @@ def filter_stops(stops_df):
     return filter_stops
 
 
+def add_stop_capacity_type(stops_df):
+    """Adds capacity_type column.
+    Column is defined with the following dictionary using the StopType
+    Bus stops are low capacity, train stations are high capacity.
+    Args:
+        stops_df (pd.DataFrame): The dataframe to add the column to.
+    Returns:
+        pd.DataFrame: dataframe with new capacity_type column.
+    """
+    dictionary_map = {"RSE": "high",
+                      "RLY": "high",
+                      "RPL": "high",
+                      "TMU": "high",
+                      "MET": "high",
+                      "PLT": "high",
+                      "BCE": "low",
+                      "BST": "low",
+                      "BCQ": "low",
+                      "BCS": "low",
+                      "BCT": "low"}
+
+    stops_df["capacity_type"] = stops_df["StopType"].map(dictionary_map)
+
+    return stops_df
+
+
 def disab_disagg(disability_df, la_pop_df):
     """Calculates number of people in the population that are classified as
         disabled or not disabled and this is merged onto the local authority
