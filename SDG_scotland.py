@@ -33,23 +33,13 @@ DATA_DIR = config["DATA_DIR"]
 pop_year = "2011"
 boundary_year = "2021"
 
-
-# Get the pandas dataframe for the stops data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(),
-                                              "data",
-                                              "stops"))
-# filter out on inactive stops
-filtered_stops = dt.filter_stops(stops_df=stops_df)
-
-# coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
-                                     crs=DEFAULT_CRS))
+# Rather than repeating the code in the main function, import the highly
+# serviced stops and stops_geo_df from the main function
+from main import stops_geo_df
 
 # adds in high/low capacity column
-stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+# Commenting this out for now. TODO: add back in
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # get usual population for scotland
 usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
