@@ -220,7 +220,7 @@ bus_frequencies_df = pd.pivot_table(data=serviced_bus_stops_df,
 # -----------------------------
 
 # Only keep those which have at least one service an hour
-highly_serviced_bus_stops_df = bus_frequencies_df[(
+bus_highly_serviced_stops = bus_frequencies_df[(
     bus_frequencies_df > 0).all(axis=1)]
 
 # Read in naptan data
@@ -228,23 +228,23 @@ stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                              dir=os.path.join(os.getcwd(), "data", "stops"))
 
 # Add easting and northing
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(
+bus_highly_serviced_stops = bus_highly_serviced_stops.merge(
     stops_df, how='inner', left_on='stop_id', right_on='ATCOCode')
 
 # Remove stops that dont have coordinates
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(
+bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
     subset=['Easting', 'Northing'], how='any')
 
 # Drop the hours columns
-highly_serviced_bus_stops_df = (
-    highly_serviced_bus_stops_df['NaptanCode', 'Easting', 'Northing']
+bus_highly_serviced_stops = (
+    bus_highly_serviced_stops['NaptanCode', 'Easting', 'Northing']
    )
 
 # Save a copy to be ingested by SDG_11.2.1_main
-highly_serviced_bus_stops_df.to_feather(os.path.join(
-    bus_data_output_dir, 'highly_serviced_stops.feather'))
-highly_serviced_bus_stops_df.to_csv(
+bus_highly_serviced_stops.to_feather(os.path.join(
+    bus_data_output_dir, 'bus_highly_serviced_stops.feather'))
+bus_highly_serviced_stops.to_csv(
     os.path.join(
         bus_data_output_dir,
-        'highly_serviced_stops.csv'),
+        'bus_highly_serviced_stops.csv'),
     index=False)
