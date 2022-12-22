@@ -108,7 +108,8 @@ def points_in_polygons(points: gpd.GeoDataFrame,
     Returns:
         gpd.GeoDataFrame: Points found in polygons.
     """
-    # Extract the polygon geometries
+    # Extract the polygon geometries, this avoids creating uneeded columns
+    # in the joined dataframe
     polygons = gpd.GeoDataFrame(polygons.geometry)
     
     # Carry out points in polygons query using sjoin
