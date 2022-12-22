@@ -14,6 +14,9 @@ import data_ingest as di
 import data_transform as dt
 import data_output as do
 
+# Data object import
+from main import stops_geo_df
+
 # timings
 start = time.time()
 # get current working directory
@@ -35,7 +38,6 @@ boundary_year = "2021"
 
 # Rather than repeating the code in the main function, import the highly
 # serviced stops and stops_geo_df from the main function
-from main import stops_geo_df
 
 # adds in high/low capacity column
 # Commenting this out for now. TODO: add back in
@@ -197,8 +199,9 @@ for local_auth in sc_auth:
     #     only_la_pwc_with_pop, la_stops_geo_df)
 
     # use the new points in polygons function
-    pop_in_poly_df = gs.points_in_polygons(only_la_pwc_with_pop, buffd_la_stops_geo_df)
-    
+    pop_in_poly_df = gs.points_in_polygons(
+        only_la_pwc_with_pop, buffd_la_stops_geo_df)
+
     # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
 
