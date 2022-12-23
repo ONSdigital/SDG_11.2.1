@@ -69,15 +69,17 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
 # Tiploc is a unique identifier for train stations (and other points)
 # The first 3 digits are the CRS (Computer reservation system) code for the station
 
-# Create a new column for Tiploc
-naptan_df['Tiploc'] = np.NaN
+
+# naptan_df['Tiploc'] = np.NaN
 
 # Applying only to train stations, RLY is the stop type for train stations
 rail_filter = naptan_df.StopType == "RLY"
-naptan_df.loc[rail_filter, "Tiploc"] =(
-    naptan_df.loc[rail_filter]
-    .ATCOCode
-    .str.extract(r'([A-Za-z]{1,7})')
+# Create a new column for Tiploc by extracting upto 7 alpha characters
+Tiploc_col = (naptan_df.loc[rail_filter]
+                  .ATCOCode
+                  .str.extract(r'([A-Za-z]{1,7})')
+                 )
+naptan_df.merge(Tiploc_col, left_index=True, right_index=True)
 
 # Isolating the tram and metro stops
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
