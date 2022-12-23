@@ -60,17 +60,27 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     """
     # Grouping ages in 5 year brackets
 
-    # formatting scottish ages
-    columns = age_df.columns
-    for col in columns:
+    # cleaning scottish data and changing dtype to float
+    original_columns = age_df.columns
+    for col in original_columns:
         if age_df.dtypes[col] == np.object:
-            age_df[col] = age_df[col].str.replace(',', '')
             age_df[col] = age_df[col].str.replace('-', '0')
-            age_df[col] = age_df[col].fillna(0)
-            age_df[col] = age_df[col].astype(float)
+            age_df[col] = age_df[col].astype(int)
+    
+    def age_bin(age_df, age_bins):
+        for bin in age_bins:
+            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
 
-    for bin in age_bins:
-        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
+    # create 90+ column for when there are more columns than 90
+    if len(age_df.columns)>91:
+        age_df['90+'] = age_df.iloc[:,90:].sum(axis=1)
+        age_bin(age_df, age_bins)
+    else:
+        age_bin(age_df, age_bins)
+    
+    # delete the last 3 columns (90-94, 95-99, 100 and over)
+    # move first column (90+) to the end.
+    # line 164 in scotland.py, remove 100 and over and maybe fix 0-4 earlier?
 
     # Drop the original age columns
     age_df.drop(col_nms, axis=1, inplace=True)
