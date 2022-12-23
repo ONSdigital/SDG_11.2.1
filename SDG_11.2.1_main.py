@@ -63,11 +63,10 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                                                "data",
                                                "stops"))
 
-# Create Tiploc column. It means Timing point locations
+# Create Tiploc column. Tiploc means Timing point locations
 # TIPLOCs are used by train planners to identify what time trains should arrive at, depart or pass a particular point.  
-# They are limited to seven characters.
-# Tiploc is a unique identifier for train stations
-# It is a 7 digit code
+# They are limited to seven alpha-characters.
+# Tiploc is a unique identifier for train stations (and other points)
 # The first 3 digits are the CRS (Computer reservation system) code for the station
 
 # Create a new column for Tiploc
