@@ -63,6 +63,24 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                                                "data",
                                                "stops"))
 
+# Create Tiploc column. It means Timing point locations
+# TIPLOCs are used by train planners to identify what time trains should arrive at, depart or pass a particular point.  
+# They are limited to seven characters.
+# Tiploc is a unique identifier for train stations
+# It is a 7 digit code
+# The first 3 digits are the CRS (Computer reservation system) code for the station
+
+# Create a new column for Tiploc
+naptan_df['Tiploc'] = np.NaN
+
+# Applying only to train stations, RLY is the stop type for train stations
+rail_filter = naptan_df.StopType == "RLY"
+naptan_df.loc[rail_filter, "Tiploc"] =(
+    naptan_df.loc[rail_filter]
+    .ATCOCode
+    .str.extract(r'([A-Za-z]{1,7})')
+
+# Isolating the tram and metro stops
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 
 # Take only active, pending or new stops
