@@ -73,19 +73,29 @@ def bin_pop_ages(age_df, age_bins, col_nms):
 
     # create 90+ column for when there are more columns than 90
     if len(age_df.columns)>91:
+        # create 90+ column summing all those from 90 and above.
         age_df['90+'] = age_df.iloc[:,90:].sum(axis=1)
         age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # drop the columns that we are replacing with 90+
+        age_df.drop(age_df.iloc[:,19:], axis=1, inplace=True)
+        # moving first column to last so 90+ at the end.
+        temp_cols=age_df.columns.tolist()
+        new_cols=temp_cols[1:] + temp_cols[0:1]
+        age_df=age_df[new_cols]
+
+
     else:
         age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # rename the 90+ column
+        age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     
     # delete the last 3 columns (90-94, 95-99, 100 and over)
     # move first column (90+) to the end.
     # line 164 in scotland.py, remove 100 and over and maybe fix 0-4 earlier?
-
-    # Drop the original age columns
-    age_df.drop(col_nms, axis=1, inplace=True)
-    # Rename the '90+' col
-    age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
 
