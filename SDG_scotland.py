@@ -161,8 +161,7 @@ age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
 pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df_bins, left_index=True, right_index=True)
 
 # change columns names
-pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4",
-                                                         "100 and over-100 and over":"100+"})
+pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4"})
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
