@@ -47,9 +47,9 @@ def get_col_bins(col_nms: List[str]):
 
 
 def bin_pop_ages(age_df, age_bins, col_nms):
-    """ Bins the ages in the age_df in 5 year spans,
+    """ Bins the ages in the age_df in 5 year spans from 0 to 90+,
     sums the counts in those bins
-    and drops the original age columns
+    and drops the original age columns.
 
     Args:
         df (pd.DataFrame): A dataframe of population data
@@ -68,6 +68,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
             age_df[col] = age_df[col].astype(int)
     
     def _age_bin(age_df, age_bins):
+        "Function sums the counts for corresponding age-bins and assigns them a column in age_df."
         for bin in age_bins:
             age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
         return age_df
@@ -76,7 +77,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     if len(age_df.columns)>91:
         # create 90+ column summing all those from 90 and above.
         age_df['90+'] = age_df.iloc[:,90:].sum(axis=1)
-        _age_bin(age_df, age_bins)
+        age_df = _age_bin(age_df, age_bins)
         # drop the original age columns
         age_df.drop(col_nms, axis=1, inplace=True)
         # drop the columns that we are replacing with 90+
@@ -86,7 +87,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         new_cols=temp_cols[1:] + temp_cols[0:1]
         age_df=age_df[new_cols]
     else:
-        _age_bin(age_df, age_bins)
+        age_df = _age_bin(age_df, age_bins)
         # drop the original age columns
         age_df.drop(col_nms, axis=1, inplace=True)
         # rename the 90+ column
