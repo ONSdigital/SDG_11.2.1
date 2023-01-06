@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, datetime
 
+
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
     """Slices a dataframe according to the list of column names provided.
 
@@ -412,6 +413,7 @@ def filter_timetable_by_day(timetable_df, day):
 
     return timetable_df
 
+
 def create_tiploc_col(naptan_df):
     """Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.
 
@@ -420,18 +422,19 @@ def create_tiploc_col(naptan_df):
 
     Returns:
         pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column added for train stations
-    """    
+    """
     # Applying only to train stations, RLY is the stop type for train stations
     rail_filter = naptan_df.StopType == "RLY"
-    
+
     # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha characters
     tiploc_col = (naptan_df.loc[rail_filter]
-              .ATCOCode
-              .str.extract(r'([A-Za-z]{1,7})')
-              )
+                  .ATCOCode
+                  .str.extract(r'([A-Za-z]{1,7})')
+                  )
     tiploc_col.columns = ["tiploc_code"]
 
     # Merge the new Tiploc column with the naptan_df
-    naptan_df = naptan_df.merge(tiploc_col, how='left', left_index=True, right_index=True)
-    
+    naptan_df = naptan_df.merge(
+        tiploc_col, how='left', left_index=True, right_index=True)
+
     return naptan_df

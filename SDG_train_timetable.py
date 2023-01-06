@@ -1,4 +1,5 @@
 # core
+from main import naptan_df
 import os
 
 # third party
@@ -326,7 +327,6 @@ highly_serviced_train_stops_df = (
 #                                             'easting',
 #                                             'northing'])
 # Get the naptan data from main.py
-from main import naptan_df
 # limit to only the columns we need
 stations_df = naptan_df[naptan_df['StopType'] == 'RLY']
 station_locations_df = stations_df[['Easting', 'Northing', 'tiploc_code']]
@@ -348,7 +348,7 @@ highly_serviced_train_stops_df = (
 # Keep only required columns in highly_serviced_train_stops_df
 highly_serviced_train_stops_df = (
     highly_serviced_train_stops_df.drop(columns=valid_hours)
-   )
+)
 
 # Save a copy to be ingested into SDG_main
 highly_serviced_train_stops_df.to_feather(
