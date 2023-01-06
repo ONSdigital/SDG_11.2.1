@@ -67,9 +67,10 @@ def bin_pop_ages(age_df, age_bins, col_nms):
             age_df[col] = age_df[col].str.replace('-', '0')
             age_df[col] = age_df[col].astype(int)
     
-    def age_bin(age_df, age_bins):
+    def _age_bin(age_df, age_bins):
         for bin in age_bins:
             age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
+        return age_df
 
     # create 90+ column for when there are more columns than 90
     if len(age_df.columns)>91:
