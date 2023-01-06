@@ -194,8 +194,6 @@ for local_auth in ni_auth:
     
     # Disability disaggregation
 
-    # Calculate prop of disabled in each OA of the LA
-
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
     # find all the pop centroids which are in the la_stops_geo_df
@@ -240,52 +238,8 @@ for local_auth in ni_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
-    # # disability disgaregation
-    # Calculating those served and not served by disability
-    disab_cols = ["number_disabled"]
-
-    disab_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
-                                                  pop_in_poly_df=pop_in_poly_df,
-                                                  cols_lst=disab_cols)
-
-    # Feeding the results to the reshaper
-    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
-                                               id_col=disab_cols[0],
-                                               local_auth=local_auth,
-                                               id_rename="Disability Status")
-
-    # The disability df is unusual. I think all rows correspond to people with
-    # disabilities only. There is no "not-disabled" status here (I think)
-    disab_servd_df_out.replace(to_replace="number_disabled",
-                               value="Disabled",
-                               inplace=True)
-    # Calculating non-disabled people served and not served
-    non_disab_cols = ["number_non-disabled"]
-
-    non_disab_servd_df = dt.served_proportions_disagg(
-        pop_df=only_la_pwc_with_pop,
-        pop_in_poly_df=pop_in_poly_df,
-        cols_lst=non_disab_cols)
-
-    # Feeding the results to the reshaper
-    non_disab_servd_df_out = do.reshape_for_output(
-        non_disab_servd_df,
-        id_col=disab_cols[0],
-        local_auth=local_auth,
-        id_rename="Disability Status")
-
-    # The disability df is unusual. I think all rows correspond to people with
-    # disabilities only. There is no "not-disabled" status here (I think)
-    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
-                                   value="Non-disabled",
-                                   inplace=True)
-
-    # Concatting non-disabled and disabled dataframes
-    non_disab_disab_servd_df_out = pd.concat(
-        [non_disab_servd_df_out, disab_servd_df_out])
-
-    # Output this local auth's disab df to the dict
-    disab_df_dict[local_auth] = non_disab_disab_servd_df_out
+    # Disability disaggregation - get disability results in disab_df_dict
+    disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
 
 # every single LA
 all_la = pd.concat(total_df_dict.values())
