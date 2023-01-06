@@ -31,7 +31,9 @@ DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
 
 pop_year = "2011"
-boundary_year = "2021"
+boundary_year = "2011"
+
+lad_col = f"LAD{boundary_year[-2:]}NM"
 
 
 # Get the pandas dataframe for the stops data
@@ -55,15 +57,17 @@ stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
 sc_usual_pop = di.read_usual_pop_scotland(usual_pop_path)
 
-# getting path for .shp file for LA's
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
-                                                  "LA_shp",
-                                                  boundary_year))
-
-# getting the coordinates for all LA's
-uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
-sc_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['S'])]
+# get shp path for scotland
+scotland_la_shp_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
+                                                        "data",
+                                                        "LA_shp",
+                                                        "scotland",
+                                                        boundary_year))
+# read in scotland la file
+sc_la_file = di.geo_df_from_geospatialfile(path_to_file=scotland_la_shp_path)
+sc_la_file = sc_la_file[sc_la_file["geo_code"].str[0].isin(["S"])]
+sc_la_file.rename(columns={"geo_code":lad_col})
+                                                   
 
 # Get population weighted centroids into a dataframe
 sc_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
@@ -165,7 +169,7 @@ pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4",
                                                          "100 and over-100 and over":"100+"})
 
 # Unique list of LA's to iterate through
-list_local_auth = sc_la_file["LAD21NM"].unique()
+list_local_auth = sc_la_file[lad_col].unique()
 random_la = random.choice(list_local_auth)
 sc_auth = [random_la]
 
@@ -182,7 +186,7 @@ for local_auth in sc_auth:
     # Get a polygon of la based on the Location Code
     la_poly = (gs.get_polygons_of_loccode(
         geo_df=sc_la_file,
-        dissolveby="LAD21NM",
+        dissolveby=lad_col,
         search=local_auth))
 
     # Creating a Geo Dataframe of only stops in la
