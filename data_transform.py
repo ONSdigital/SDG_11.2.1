@@ -76,7 +76,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     if len(age_df.columns)>91:
         # create 90+ column summing all those from 90 and above.
         age_df['90+'] = age_df.iloc[:,90:].sum(axis=1)
-        age_bin(age_df, age_bins)
+        _age_bin(age_df, age_bins)
         # drop the original age columns
         age_df.drop(col_nms, axis=1, inplace=True)
         # drop the columns that we are replacing with 90+
@@ -86,7 +86,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         new_cols=temp_cols[1:] + temp_cols[0:1]
         age_df=age_df[new_cols]
     else:
-        age_bin(age_df, age_bins)
+        _age_bin(age_df, age_bins)
         # drop the original age columns
         age_df.drop(col_nms, axis=1, inplace=True)
         # rename the 90+ column
