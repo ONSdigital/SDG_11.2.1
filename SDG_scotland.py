@@ -161,8 +161,7 @@ age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
 pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df_bins, left_index=True, right_index=True)
 
 # change columns names
-pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4",
-                                                         "100 and over-100 and over":"100+"})
+pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4"})
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
@@ -249,7 +248,7 @@ for local_auth in sc_auth:
     age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
                  '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
                  '55-59', '60-64', '65-69', '70-74', '75-79',
-                 '80-84', '85-89', '90-94',"95-99","100+"]
+                 '80-84', '85-89', '90+']
     
     age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
                                                 pop_in_poly_df=pop_in_poly_df,
