@@ -272,7 +272,6 @@ train_timetable_df = (
 
 # Remove columns no longer required
 train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
-                                                      'tiploc_code',
                                                       'activity_type',
                                                       'station_name'])
 
@@ -334,7 +333,6 @@ highly_serviced_train_stops_df = (
                                          left_on='crs_code',
                                          right_on='station_code')
 )
-
 
 # Remove stations with no coordinates
 highly_serviced_train_stops_df = (
