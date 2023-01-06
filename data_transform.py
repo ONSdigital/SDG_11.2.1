@@ -63,7 +63,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     # cleaning scottish data and changing dtype to float
     original_columns = age_df.columns
     for col in original_columns:
-        if age_df.dtypes[col] == np.object:
+        if age_df[col].dtypes == "O":
             age_df[col] = age_df[col].str.replace('-', '0')
             age_df[col] = age_df[col].astype(int)
     
