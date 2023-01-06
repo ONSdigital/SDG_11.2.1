@@ -1,6 +1,7 @@
 from typing import List
 import pandas as pd
 from convertbng.util import convert_bng
+import data_output as do
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -229,13 +230,11 @@ def disab_disagg(disability_df, la_pop_df):
     """Calculates number of people in the population that are classified as
         disabled or not disabled and this is merged onto the local authority
         population dataframe.
-
     Args:
         disability_df (pd.DataFrame): Dataframe that includes disability
                                     estimates for each output area.
         la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                 output area codes and population estimates.
-
     Returns:
         gpd.GeoDataFrame: GeoPandas Dataframe that includes population
                         estimates, geographical location, and proportion
@@ -295,7 +294,75 @@ def disab_disagg(disability_df, la_pop_df):
     )
     la_pop_df["number_non-disabled"] = la_pop_df["number_non-disabled"].astype(
         int)
+
     return la_pop_df
+
+
+def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
+    """Creates the dataframe including those who are and are not served by public transport
+    and places it into a disability dictionary for each local authority of interest for 
+    the final csv output.
+
+    Args:
+        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
+                                    output area codes and population estimates.
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside 
+                                            the polygon.
+        disability_dict (dict): Dictionary to store the disability
+                                    dataframe.
+        local_auth (str): The local authority of interest.
+
+    Returns:
+        disab_df_dict (dict): Dictionary with a disability total dataframe for 
+                            unserved and served populations for all given local authorities.
+    """
+    # Calculating those served and not served by disability
+    disab_cols = ["number_disabled"]
+
+    disab_servd_df = served_proportions_disagg(la_pop_df,
+                                                pop_in_poly_df,
+                                                disab_cols)
+
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    # Calculating non-disabled people served and not served
+    non_disab_cols = ["number_non-disabled"]
+
+    non_disab_servd_df = served_proportions_disagg(
+        pop_df=la_pop_df,
+        pop_in_poly_df=pop_in_poly_df,
+        cols_lst=non_disab_cols)
+
+    # Feeding the results to the reshaper
+    non_disab_servd_df_out = do.reshape_for_output(
+        non_disab_servd_df,
+        id_col=disab_cols[0],
+        local_auth=local_auth,
+        id_rename="Disability Status")
+
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
+                                   value="Non-disabled",
+                                   inplace=True)
+
+    # Concatting non-disabled and disabled dataframes
+    non_disab_disab_servd_df_out = pd.concat(
+        [non_disab_servd_df_out, disab_servd_df_out])
+
+    # Output this local auth's disab df to the dict
+    disability_dict[local_auth] = non_disab_disab_servd_df_out
+
+    return disability_dict
 
 
 def filter_timetable_by_day(timetable_df, day):
