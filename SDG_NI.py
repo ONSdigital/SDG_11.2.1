@@ -145,12 +145,31 @@ pwc_with_pop_with_la.rename(
         "All usual residents": "pop_count"},
     inplace=True)
 
+# Read disability data for disaggregations later
+disability_df = pd.read_csv(os.path.join(CWD,
+                                         "data", "disability_status",
+                                         "qs303_ni.csv"), skiprows=5)
+
+# Remove the first column because it's a repeat of SA code
+disability_df.drop(['SA'], axis=1, inplace=True)
+
+# the col headers are database unfriendly. Defining their replacement names
+replacements = {
+    "SA Code": 'OA11CD',
+    "Long-term health problem or disability: Day-to-day activities limited a lot": "disab_ltd_lot",
+    "Long-term health problem or disability: Day-to-day activities limited a little": "disab_ltd_little",
+    'Long-term health problem or disability: Day-to-day activities not limited': "disab_not_ltd"}
+
+# renaming the dodgy col names with their replacements
+disability_df.rename(columns=replacements, inplace=True)
+
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
 ni_auth = [random_la]
 
 total_df_dict = {}
+disab_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -172,6 +191,12 @@ for local_auth in ni_auth:
     # filter only by current la
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"] == local_auth],
                                             geometry='geometry', crs='EPSG:27700')
+    
+    # Disability disaggregation
+
+    # Calculate prop of disabled in each OA of the LA
+
+    only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(
@@ -215,11 +240,65 @@ for local_auth in ni_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
+    # # disability disgaregation
+    # Calculating those served and not served by disability
+    disab_cols = ["number_disabled"]
+
+    disab_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                  pop_in_poly_df=pop_in_poly_df,
+                                                  cols_lst=disab_cols)
+
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
+
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    # Calculating non-disabled people served and not served
+    non_disab_cols = ["number_non-disabled"]
+
+    non_disab_servd_df = dt.served_proportions_disagg(
+        pop_df=only_la_pwc_with_pop,
+        pop_in_poly_df=pop_in_poly_df,
+        cols_lst=non_disab_cols)
+
+    # Feeding the results to the reshaper
+    non_disab_servd_df_out = do.reshape_for_output(
+        non_disab_servd_df,
+        id_col=disab_cols[0],
+        local_auth=local_auth,
+        id_rename="Disability Status")
+
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
+                                   value="Non-disabled",
+                                   inplace=True)
+
+    # Concatting non-disabled and disabled dataframes
+    non_disab_disab_servd_df_out = pd.concat(
+        [non_disab_servd_df_out, disab_servd_df_out])
+
+    # Output this local auth's disab df to the dict
+    disab_df_dict[local_auth] = non_disab_disab_servd_df_out
+
 # every single LA
 all_la = pd.concat(total_df_dict.values())
+disab_all_la = pd.concat(disab_df_dict.values())
+
+# Stacking the dataframes
+all_results_dfs = [all_la, disab_all_la]
+final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
 
 # output to CSV
-all_la.to_csv("NI_results.csv", index=False)
+final_result.to_csv("NI_results.csv", index=False)
+
 
 # end time
 end = time.time()
