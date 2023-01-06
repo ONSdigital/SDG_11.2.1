@@ -429,7 +429,7 @@ def create_tiploc_col(naptan_df):
               .ATCOCode
               .str.extract(r'([A-Za-z]{1,7})')
               )
-    tiploc_col.columns = ["Tiploc"]
+    tiploc_col.columns = ["tiploc_code"]
 
     # Merge the new Tiploc column with the naptan_df
     naptan_df = naptan_df.merge(tiploc_col, how='left', left_index=True, right_index=True)
