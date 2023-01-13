@@ -4,6 +4,11 @@ from convertbng.util import convert_bng
 import numpy as np
 from datetime import date, datetime
 import data_output as do
+import logging
+
+
+# Create logger
+logger = logging.getLogger(__name__)
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -519,10 +524,10 @@ def filter_timetable_by_day(timetable_df, day):
 
     # Print date being used (consider logging instead)
     day_date = date_of_day_entered.date()
-    print(f"The date of {day} number {ord} is {day_date}")
+    logger(f"The date of {day} number {ord} is {day_date}")
 
     # Print how many rows have been dropped (consider logging instead)
-    print(
+    logger(
         f"Selecting only services covering {day_date} reduced records"
         f"by {original_rows-timetable_df.shape[0]} rows"
           )
@@ -530,8 +535,8 @@ def filter_timetable_by_day(timetable_df, day):
     # Print how many services are in the analysis and how many were dropped
     service_count = timetable_df.service_id.unique().shape[0]
     dropped_services = orig_service_count - service_count
-    print(f"There are {service_count} services in the analysis")
-    print(f"Filtering by day has reduced services by {dropped_services}")
+    logger(f"There are {service_count} services in the analysis")
+    logger(f"Filtering by day has reduced services by {dropped_services}")
 
     return timetable_df
 
