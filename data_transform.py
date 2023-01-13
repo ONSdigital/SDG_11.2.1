@@ -227,7 +227,8 @@ def add_stop_capacity_type(stops_df):
     Returns:
         pd.DataFrame: dataframe with new capacity_type column.
     """
-    dictionary_map = {"RSE": "high",
+    # Create a dictionary to map the StopType to capacity level
+    capacity_map = {"RSE": "high",
                       "RLY": "high",
                       "RPL": "high",
                       "TMU": "high",
@@ -239,7 +240,7 @@ def add_stop_capacity_type(stops_df):
                       "BCS": "low",
                       "BCT": "low"}
 
-    stops_df["capacity_type"] = stops_df["StopType"].map(dictionary_map)
+    stops_df["capacity_type"] = stops_df["StopType"].map(capacity_map)
 
     return stops_df
 
