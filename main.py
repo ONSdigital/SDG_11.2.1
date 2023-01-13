@@ -62,65 +62,66 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                               dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
+
+# Metro and tram data 
+
+tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
+
+# Take only active, pending or new stops
+tram_metro_stops = (
+    tram_metro_stops[tram_metro_stops['Status'].isin(['active',
+                                                    'pending',
+                                                    'new'])]
+)
+
+# ------------------
+# Combine stops data
+# ------------------
+
+# Add a column for transport mode
+tram_metro_stops['transport_mode'] = 'tram_metro'
+highly_serviced_bus_stops['transport_mode'] = 'bus'
+highly_serviced_train_stops['transport_mode'] = 'train'
+
+# Add a column for stop capacity type
+# Buses are low capcity
+# Trains, trams and metros are high capacity
+tram_metro_stops['capacity_type'] = 'high'
+highly_serviced_bus_stops['capacity_type'] = 'low'
+highly_serviced_train_stops['capacity_type'] = 'high'
+# PLACEHOLDER old code with function
+# To be run on unioned dataset (filtered_stops_df)
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+
+# Standardise dataset columns for union
+column_renamer = {"NaptanCode": "station_code",
+                "Easting": "easting",
+                "Northing": "northing"}
+
+tram_metro_stops.rename(columns=column_renamer, inplace=True)
+tram_metro_stops = tram_metro_stops[["station_code", "easting",
+                                    "northing", "transport_mode"]]
+
+highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
+highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
+                                                    "easting",
+                                                    "northing",
+                                                    "transport_mode"]]
+
+# Merge into one dataframe
+dfs_to_combine = [highly_serviced_bus_stops,
+                highly_serviced_train_stops,
+                tram_metro_stops]
+
+filtered_stops_df = pd.concat(dfs_to_combine)
+
+# Convert to geopandas df
+stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
+                                    geom_x='easting',
+                                    geom_y='northing',
+                                    crs=DEFAULT_CRS))
 if __name__ == "__main__":
-    # Metro and tram data 
-    
-    tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
-    
-    # Take only active, pending or new stops
-    tram_metro_stops = (
-        tram_metro_stops[tram_metro_stops['Status'].isin(['active',
-                                                        'pending',
-                                                        'new'])]
-    )
-    
-    # ------------------
-    # Combine stops data
-    # ------------------
-    
-    # Add a column for transport mode
-    tram_metro_stops['transport_mode'] = 'tram_metro'
-    highly_serviced_bus_stops['transport_mode'] = 'bus'
-    highly_serviced_train_stops['transport_mode'] = 'train'
-    
-    # Add a column for stop capacity type
-    # Buses are low capcity
-    # Trains, trams and metros are high capacity
-    tram_metro_stops['capacity_type'] = 'high'
-    highly_serviced_bus_stops['capacity_type'] = 'low'
-    highly_serviced_train_stops['capacity_type'] = 'high'
-    # PLACEHOLDER old code with function
-    # To be run on unioned dataset (filtered_stops_df)
-    # stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
-    
-    # Standardise dataset columns for union
-    column_renamer = {"NaptanCode": "station_code",
-                    "Easting": "easting",
-                    "Northing": "northing"}
-    
-    tram_metro_stops.rename(columns=column_renamer, inplace=True)
-    tram_metro_stops = tram_metro_stops[["station_code", "easting",
-                                        "northing", "transport_mode"]]
-    
-    highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
-    highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
-                                                        "easting",
-                                                        "northing",
-                                                        "transport_mode"]]
-    
-    # Merge into one dataframe
-    dfs_to_combine = [highly_serviced_bus_stops,
-                    highly_serviced_train_stops,
-                    tram_metro_stops]
-    
-    filtered_stops_df = pd.concat(dfs_to_combine)
-    
-    # Convert to geopandas df
-    stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
-                                        geom_x='easting',
-                                        geom_y='northing',
-                                        crs=DEFAULT_CRS))
-    
+        
     # Define la col which is LADXXNM where XX is last 2 digits of year e.g 21
     # from 2021
     lad_col = f'LAD{POP_YEAR[-2:]}NM'
