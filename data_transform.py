@@ -240,6 +240,7 @@ def add_stop_capacity_type(stops_df):
                       "BCS": "low",
                       "BCT": "low"}
 
+    # Add the capacity_type column to the stops dataframe
     stops_df["capacity_type"] = stops_df["StopType"].map(capacity_map)
 
     return stops_df
@@ -385,8 +386,7 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
 
 
 def filter_timetable_by_day(timetable_df, day):
-    """
-    Extract serviced stops based on specific day of the week.
+    """Extract serviced stops based on specific day of the week.
 
     The day is selected from the available days in the date range present in
       timetable data.
@@ -428,10 +428,11 @@ def filter_timetable_by_day(timetable_df, day):
         raise KeyError(
             """The day chosen in not available.
             Should be a weekday in title case.""")
+    # Get the maximum position order (ordinal)
     max_ord = days_counted_dict[day]
     ord = round(max_ord / 2)
 
-    # filter all the dates down the to the day needed
+    # Filter all the dates down the to the day needed
     day_filtered_dates = (date_day_couplings_df
                           [date_day_couplings_df.day_name == day])
 
@@ -465,7 +466,7 @@ def filter_timetable_by_day(timetable_df, day):
     print(
         f"Selecting only services covering {day_date} reduced records"
         f"by {original_rows-timetable_df.shape[0]} rows"
-    )
+          )
 
     # Print how many services are in the analysis and how many were dropped
     service_count = timetable_df.service_id.unique().shape[0]
