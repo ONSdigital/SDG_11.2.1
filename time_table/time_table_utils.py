@@ -157,3 +157,26 @@ def filter_timetable_by_day(timetable_df, day):
     logger(f"Filtering by day has reduced services by {dropped_services}")
 
     return timetable_df
+
+def extract_msn_data(msn_file, msn):
+    with open(msn_file, 'r') as msn_data:
+    # Skip header
+        next(msn_data)
+        for line in msn_data:
+        # Only interested in rows starting with A.
+        # Rows starting with L display aliases of station names
+        # Stripping the values because some are padded out with blank spaces
+        # as part of the file format.
+        # Coordinate data provided is actually the grid reference
+        # but without the 100km square (two letters at the start) so
+        # very difficult to extract coordinates. Hence, will add in
+        # coordinate data from an external source.
+        # NB tiploc_code is unique, but crs_code isnt.
+            if line.startswith('A'):
+                station_name = line[5:31].strip()
+                tiploc_code = line[36:43].strip()
+                crs_code = line[49:52].strip()
+
+                msn.append([station_name,
+                        tiploc_code,
+                        crs_code])
