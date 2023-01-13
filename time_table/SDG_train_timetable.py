@@ -8,6 +8,7 @@ import pandas as pd
 
 # our modules
 import data_transform as dt
+import time_table_utils as ttu
 
 # get current working directory
 CWD = os.getcwd()
@@ -35,11 +36,10 @@ late_timetable_hour = config["late_timetable_hour"]
 
 
 
-extract_msn_data(msn_file, msn)
+ttu.extract_msn_data(msn_file)
 
 
-# Store msn data
-msn = []
+
 # Create dataframe
 msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
 
