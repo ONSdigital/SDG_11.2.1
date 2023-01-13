@@ -191,21 +191,42 @@ def extract_msn_data(msn_file):
                         crs_code])
 
 def extract_mca(mca_file):
-    """_summary_
+    """Extract data from the mca file.
+
+    * Each new journey starts with "BS". Within this journey we have
+        * multiple stops
+        * LO is origin
+        * LI are inbetween stops
+        * LT is terminating stop
+        * Then a new journey starts with BS again
+        * Within each journey are a few more lines that we can ignore e.g.
+        * BX = extra details of the journey
+        * CR = changes en route. Doesnt contain any arrival / departure times.
+
+
+
+    * Starts by finding all the schedules within the file. 
+    * Extract relevant information into the journey dataframe, and then copy unique_id
+    * onto all trips within that journey.
 
     Args:
         mca_file (_type_): _description_
-        schedules (_type_): _description_
-        stops (_type_): _description_
+    
+    
+    Returns:
+        schedules (list): list of lists containing schedule information 
+            ready for dataframe
+        stops (list): list of lists containing stop information
+            ready for dataframe
     """    
     # Create a flag that specifies when we have found a new journey
     journey = False
 
     # Store schedule information
     schedules = []
-
     # Store stop information
     stops = []
+
     with open(mca_file, 'r') as mca_data:
     # Skip the header
         next(mca_data)

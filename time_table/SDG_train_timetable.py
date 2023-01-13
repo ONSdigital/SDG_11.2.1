@@ -61,24 +61,7 @@ msn_data = msn_data[['station_name', 'tiploc_code',
 msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
 
 
-# Extract mca data
-# -----------------
 
-# Each new journey starts with BS. Within this journey we have
-# multiple stops
-# LO is origin
-# LI are inbetween stops
-# LT is terminating stop
-# Then a new journey starts with BS again
-# Within each journey are a few more lines that we can ignore e.g.
-# BX = extra details of the journey
-# CR = changes en route. Doesnt contain any arrival / departure times.
-
-
-
-# Start by finding all the schedules within the file. Extract relevant
-# information into the journey dataframe, and then copy unique_id
-# onto all trips within that journey.
 
 
 
