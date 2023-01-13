@@ -185,19 +185,6 @@ def _calc_proprtn_srvd_unsrvd(total_pop,
     return results_dict
 
 
-def highly_serv_stops(region):
-    """Retrieves timetable data from the Traveline National Dataset for
-    any region. Filters stops with that have >1 departure per hour
-    on a weekday (Wed is default) between 6am and 8pm.
-
-    Args:
-        region (str): the name of the region of the UK that the data
-            is needed for.
-    """
-    #  day="Wed"
-    return None
-
-
 def filter_stops(stops_df):
     """Filters the stops dataframe based on two things:
 
