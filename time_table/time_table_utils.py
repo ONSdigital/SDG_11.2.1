@@ -158,7 +158,16 @@ def filter_timetable_by_day(timetable_df, day):
 
     return timetable_df
 
-def extract_msn_data(msn_file, msn):
+def extract_msn_data(msn_file):
+    """Extract data from the msn file.
+
+    Args:
+        msn_file (msn): A text file containing the msn data.
+    """    
+
+    # Store msn data
+    msn = []
+
     with open(msn_file, 'r') as msn_data:
     # Skip header
         next(msn_data)
