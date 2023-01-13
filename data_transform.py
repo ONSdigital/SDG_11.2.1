@@ -202,11 +202,13 @@ def filter_stops(stops_df):
     stop_types = ["RSE", "RLY", "RPL", "TMU", "MET", "PLT",
                   "BCE", "BST", "BCQ", "BCS", "BCT"]
 
+    # Filter the stops based on the status column (active, pending, new and None)
     filtered_stops = stops_df[(stops_df["Status"] == "active") |
                               (stops_df["Status"] == "pending") |
                               (stops_df["Status"] is None) |
                               (stops_df["Status"] == "new")]
 
+    # Filter the stops based on the stop types (bus and rail)
     boolean_stops_type = filtered_stops["StopType"].isin(stop_types)
     filter_stops = filtered_stops[boolean_stops_type]
 
