@@ -217,10 +217,13 @@ def filter_stops(stops_df):
 
 def add_stop_capacity_type(stops_df):
     """Adds capacity_type column.
+    
     Column is defined with the following dictionary using the StopType
     Bus stops are low capacity, train stations are high capacity.
+    
     Args:
         stops_df (pd.DataFrame): The dataframe to add the column to.
+    
     Returns:
         pd.DataFrame: dataframe with new capacity_type column.
     """
