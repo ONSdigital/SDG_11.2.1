@@ -9,7 +9,11 @@ import pandas as pd
 
 # our modules
 import time_table_utils as ttu
-import data_transform as dt
+
+# add the parent directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import src.data_transform as dt
 
 
 # get current working directory
