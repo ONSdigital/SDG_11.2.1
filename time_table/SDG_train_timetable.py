@@ -40,13 +40,11 @@ late_timetable_hour = config["late_timetable_hour"]
 # Extract msn data
 msn= ttu.extract_msn_data(msn_file)
 
-
-
 # Create dataframe from msn data
 msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
+
 # Clean msn data
-
-
+# --------------
 # Remove the duplicates in crs_code
 msn_df = msn_df.drop_duplicates(subset=['crs_code'])
 
@@ -58,13 +56,13 @@ station_locations_df = pd.read_csv(
 
 # Join coordinates onto msn data
 # left join to master station names and see which ones dont have lat and long
-msn_data = pd.merge(msn_df, station_locations_df, how='left',
+msn_data_df = pd.merge(msn_df, station_locations_df, how='left',
                     left_on='crs_code', right_on='station_code')
-msn_data = msn_data[['station_name', 'tiploc_code',
+msn_data_df = msn_data_df[['station_name', 'tiploc_code',
                      'crs_code', 'latitude', 'longitude']]
 
 # Remove stations with no coordinates
-msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
+msn_data_df = msn_data_df.dropna(subset=['latitude', 'longitude'], how='any')
 
 
 
