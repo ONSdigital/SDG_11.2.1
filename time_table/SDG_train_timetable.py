@@ -8,15 +8,10 @@ import yaml
 import pandas as pd
 
 # our modules
-
-
 import time_table_utils as ttu
-
-
-# setting path
-sys.path.append('../src')
-
 import data_transform as dt
+
+
 # get current working directory
 CWD = os.getcwd()
 
