@@ -166,7 +166,7 @@ def extract_msn_data(msn_file):
     """    
 
     # Store msn data
-    msn = []
+    msn_data_lst = []
 
     with open(msn_file, 'r') as msn_data:
     # Skip header
@@ -186,9 +186,10 @@ def extract_msn_data(msn_file):
                 tiploc_code = line[36:43].strip()
                 crs_code = line[49:52].strip()
 
-                msn.append([station_name,
+                msn_data_lst.append([station_name,
                         tiploc_code,
                         crs_code])
+    return msn_data_lst
 
 def extract_mca(mca_file):
     """Extract data from the mca file.
