@@ -1,14 +1,14 @@
 """All functions realted to the bus and train timetable data."""
 
 import logging
-
 import pandas as pd
+from typing import List, Tuple
 
 # Create logger
 logger = logging.getLogger(__name__)
 
 
-def filter_stops(stops_df):
+def filter_stops(stops_df: pd.DataFrame) -> pd.DataFrame:
     """Filters the stops dataframe based on two things:
 
     | 1) Status column. We want to keep stops which are active, pending or new.
@@ -38,7 +38,7 @@ def filter_stops(stops_df):
     return filter_stops
 
 
-def add_stop_capacity_type(stops_df):
+def add_stop_capacity_type(stops_df: pd.DataFrame) -> pd.DataFrame:
     """Adds capacity_type column.
 
     Column is defined with the following dictionary using the StopType
@@ -69,7 +69,7 @@ def add_stop_capacity_type(stops_df):
     return stops_df
 
 
-def filter_timetable_by_day(timetable_df, day):
+def filter_timetable_by_day(timetable_df: pd.DataFrame, day: str) -> pd.DataFrame:
     """Extract serviced stops based on specific day of the week.
 
     The day is selected from the available days in the date range present in
@@ -161,11 +161,14 @@ def filter_timetable_by_day(timetable_df, day):
     return timetable_df
 
 
-def extract_msn_data(msn_file):
+def extract_msn_data(msn_file: str) -> List[List]:
     """Extract data from the msn file.
 
     Args:
         msn_file (msn): A text file containing the msn data.
+
+    Returns:
+        list: A list of lists containing the msn data.
     """
 
     # Store msn data
@@ -194,22 +197,22 @@ def extract_msn_data(msn_file):
                                      crs_code])
     return msn_data_lst
 
-
-def extract_mca(mca_file):
+# add type hints
+def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
     """Extract data from the mca file.
 
-    * Each new journey starts with "BS". Within this journey we have
+    The logic for this extraction is as follows:
+        Each new journey starts with "BS". Within this journey we have
         * multiple stops
         * LO is origin
         * LI are inbetween stops
         * LT is terminating stop
         * Then a new journey starts with BS again
-        * Within each journey are a few more lines that we can ignore e.g.
+        Within each journey are a few more lines that we can ignore e.g.
         * BX = extra details of the journey
         * CR = changes en route. Doesnt contain any arrival / departure times.
 
-
-
+    Process:
     * Starts by finding all the schedules within the file. 
     * Extract relevant information into the journey dataframe, and then copy unique_id
     * onto all trips within that journey.
