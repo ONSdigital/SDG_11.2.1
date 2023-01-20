@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from datetime import date, datetime
 
+
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
     """Slices a dataframe according to the list of column names provided.
 
@@ -47,9 +48,9 @@ def get_col_bins(col_nms: List[str]):
 
 
 def bin_pop_ages(age_df, age_bins, col_nms):
-    """ Bins the ages in the age_df in 5 year spans,
+    """ Bins the ages in the age_df in 5 year spans from 0 to 90+,
     sums the counts in those bins
-    and drops the original age columns
+    and drops the original age columns.
 
     Args:
         df (pd.DataFrame): A dataframe of population data
@@ -60,22 +61,39 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     """
     # Grouping ages in 5 year brackets
 
-    # formatting scottish ages
-    columns = age_df.columns
-    for col in columns:
-        if age_df.dtypes[col] == np.object:
-            age_df[col] = age_df[col].str.replace(',', '')
+    # cleaning scottish data and changing dtype to float
+    original_columns = age_df.columns
+    for col in original_columns:
+        if age_df[col].dtypes == "O":
             age_df[col] = age_df[col].str.replace('-', '0')
-            age_df[col] = age_df[col].fillna(0)
-            age_df[col] = age_df[col].astype(float)
+            age_df[col] = age_df[col].astype(int)
 
-    for bin in age_bins:
-        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
+    def _age_bin(age_df, age_bins):
+        "Function sums the counts for corresponding age-bins and assigns them a column in age_df."
+        for bin in age_bins:
+            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,
+                                                      bin[0]:bin[1]].sum(axis=1)
+        return age_df
 
-    # Drop the original age columns
-    age_df.drop(col_nms, axis=1, inplace=True)
-    # Rename the '90+' col
-    age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
+    # create 90+ column for when there are more columns than 90
+    if len(age_df.columns) > 91:
+        # create 90+ column summing all those from 90 and above.
+        age_df['90+'] = age_df.iloc[:, 90:].sum(axis=1)
+        age_df = _age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # drop the columns that we are replacing with 90+
+        age_df.drop(age_df.iloc[:, 19:], axis=1, inplace=True)
+        # moving first column to last so 90+ at the end.
+        temp_cols = age_df.columns.tolist()
+        new_cols = temp_cols[1:] + temp_cols[0:1]
+        age_df = age_df[new_cols]
+    else:
+        age_df = _age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # rename the 90+ column
+        age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
 
@@ -396,6 +414,7 @@ def filter_timetable_by_day(timetable_df, day):
 
     return timetable_df
 
+
 def create_tiploc_col(naptan_df):
     """Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.
 
@@ -404,18 +423,19 @@ def create_tiploc_col(naptan_df):
 
     Returns:
         pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column added for train stations
-    """    
+    """
     # Applying only to train stations, RLY is the stop type for train stations
     rail_filter = naptan_df.StopType == "RLY"
-    
+
     # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha characters
     tiploc_col = (naptan_df.loc[rail_filter]
-              .ATCOCode
-              .str.extract(r'([A-Za-z]{1,7})')
-              )
-    tiploc_col.columns = ["Tiploc"]
+                  .ATCOCode
+                  .str.extract(r'([A-Za-z]{1,7})')
+                  )
+    tiploc_col.columns = ["tiploc_code"]
 
     # Merge the new Tiploc column with the naptan_df
-    naptan_df = naptan_df.merge(tiploc_col, how='left', left_index=True, right_index=True)
-    
+    naptan_df = naptan_df.merge(
+        tiploc_col, how='left', left_index=True, right_index=True)
+
     return naptan_df

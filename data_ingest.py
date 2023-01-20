@@ -376,7 +376,9 @@ def geo_df_from_geospatialfile(path_to_file, crs='epsg:27700'):
         Geopandas Dataframe
     """
     geo_df = gpd.read_file(path_to_file)
-    if geo_df.crs != crs:
+    if geo_df.crs is None:
+        geo_df.crs = 'epsg:27700'
+    elif geo_df.crs != crs:
         geo_df = geo_df.to_crs('epsg:27700')
     return geo_df
 
@@ -487,6 +489,9 @@ def get_shp_abs_path(dir):
     """
     files = os.listdir(dir)
     shp_files = [file for file in files if file.endswith(".shp")]
+    # Add warning if there isn't a shp file in the directory
+    if len(shp_files) == 0:
+        raise ValueError("No .shp file in directory")
     shp_file = shp_files[0]
 
     absolute_path = os.path.join(dir, shp_file)
@@ -770,11 +775,10 @@ def read_scottish_age(path):
 
     """
     # read in scottish file
-    age_scotland_df = pd.read_csv(path, 
-                                skiprows=4)
+    age_scotland_df = pd.read_csv(path, skiprows=4)
 
     # dropping first row as this is the whole of scotland
-    age_scotland_df = age_scotland_df.iloc[1:,:]
+    age_scotland_df = age_scotland_df.iloc[1:-4,:]
     age_scotland_df = age_scotland_df.reset_index()
 
     return age_scotland_df
