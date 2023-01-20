@@ -224,8 +224,8 @@ mca_schedule_df = pd.DataFrame(schedules,
 mca_stop_df = pd.DataFrame(stops,
                            columns=['schedule_id',
                                     'departure_time',
-                                    'tiploc_code',
-                                    'activity_type'])
+									'tiploc_code',
+									'activity_type'])
 
 
 # Clean data
@@ -275,7 +275,6 @@ train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
                                                       'tiploc_code',
                                                       'activity_type',
                                                       'station_name'])
-
 
 # Extract stops for chosen day
 # ----------------------------
