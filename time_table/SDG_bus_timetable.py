@@ -1,8 +1,8 @@
-# core
+# Core modules
 import os
 import sys
 
-# third party
+# Third party modules
 import yaml
 import pandas as pd
 
