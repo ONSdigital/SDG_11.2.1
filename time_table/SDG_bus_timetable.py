@@ -6,14 +6,17 @@ import sys
 import yaml
 import pandas as pd
 
-# add src to path
-sys.path.append("../src")
+# Getting the parent directory of the current file
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+# Appending to path so that we can import modules from the src folder
+sys.path.append(parent)
 
-# our modules
-import data_ingest as di
-import data_transform as dt
+# Our modules
+import src.data_ingest as di
+import src.data_transform as dt
 
-# get current working directory
+# Get current working directory
 CWD = os.getcwd()
 
 # Load config
