@@ -1,9 +1,13 @@
 # core
 import os
+import sys
 
 # third party
 import yaml
 import pandas as pd
+
+# add src to path
+sys.path.append("../src")
 
 # our modules
 import data_ingest as di
