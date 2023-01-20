@@ -20,3 +20,4 @@ gptables
 openpyxl
 sphinx_rtd_theme
 convertbng
+pre-commit

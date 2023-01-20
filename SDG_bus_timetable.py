@@ -21,8 +21,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 bus_timetable_zip_link = config["ENG_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-output_directory = os.path.join(CWD, 'data', 'england_bus_timetable')
-zip_path = os.path.join(output_directory, bus_dataset_name)
+bus_data_output_dir = os.path.join(CWD, 'data', 'england_bus_timetable')
+zip_path = os.path.join(bus_data_output_dir, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
 timetable_day = config["timetable_day"]
@@ -35,20 +35,20 @@ late_timetable_hour = config["late_timetable_hour"]
 # flag to be downloaded
 
 files_to_check = [f"{file}.txt" for file in required_files]
-paths_to_check = [os.path.join(output_directory, file)
+paths_to_check = [os.path.join(bus_data_output_dir, file)
                   for file in files_to_check]
 each_file_checked = [di._persistent_exists(path) for path in paths_to_check]
 
 if not all(each_file_checked):
     try:
-        os.makedirs(output_directory)
+        os.makedirs(bus_data_output_dir)
     except FileExistsError:
-        print(f"Directory {output_directory} already exists")
+        print(f"Directory {bus_data_output_dir} already exists")
     download_bus_timetable = True
 else:
     # Find when the last download occured
     # If > 7 days ago, download the data again
-    download_bus_timetable = di.best_before(path=output_directory,
+    download_bus_timetable = di.best_before(path=bus_data_output_dir,
                                             number_of_days=7)
 
 # ---------------------------
@@ -70,7 +70,7 @@ if download_bus_timetable and auto_download_bus:
         di._extract_zip(file_nm=bus_dataset_name,
                         csv_nm=file_extension_name,
                         zip_path=zip_path,
-                        csv_path=output_directory)
+                        csv_path=bus_data_output_dir)
 
     # Remove zip file
     di._delete_junk(file_nm=bus_dataset_name,
@@ -89,7 +89,7 @@ if download_bus_timetable and auto_download_bus:
 # can be done from a string.
 
 # Stop times
-feath_ = os.path.join(output_directory, "stop_times.feather")
+feath_ = os.path.join(bus_data_output_dir, "stop_times.feather")
 if os.path.exists(feath_):
     stop_times_df = di._feath_to_df("stop_times", feath_)
 else:
@@ -98,11 +98,11 @@ else:
 
     stop_times_df = di._csv_to_df(file_nm='stop_times',
                                   csv_path=os.path.join(
-                                      output_directory, 'stop_times.txt'),
+                                      bus_data_output_dir, 'stop_times.txt'),
                                   dtypes=stop_times_types)
 
 # trips
-feath_ = os.path.join(output_directory, "trips.feather")
+feath_ = os.path.join(bus_data_output_dir, "trips.feather")
 if os.path.exists(feath_):
     trips_df = di._feath_to_df("trips", feath_)
 else:
@@ -112,14 +112,14 @@ else:
     trips_df = di._csv_to_df(
         file_nm='trips',
         csv_path=os.path.join(
-            output_directory,
+            bus_data_output_dir,
             'trips.txt'),
         dtypes=trips_types)
 
 # calendar
 # NOTE: Not adding in saturday and sunday columns for stops because
 # we are only interested in weekday trips for highly serviced stops
-feath_ = os.path.join(output_directory, "calendar.feather")
+feath_ = os.path.join(bus_data_output_dir, "calendar.feather")
 if os.path.exists(feath_):
     calendar_df = di._feath_to_df("calendar", feath_)
 else:
@@ -135,7 +135,7 @@ else:
 
     calendar_df = di._csv_to_df(file_nm='calendar',
                                 csv_path=os.path.join(
-                                    output_directory, 'calendar.txt'),
+                                    bus_data_output_dir, 'calendar.txt'),
                                 dtypes=calendar_types)
 
 # ----------
@@ -149,8 +149,15 @@ else:
 hour_range = range(early_timetable_hour, late_timetable_hour)
 valid_hours = [f'0{i}' if i < 10 else f'{i}' for i in hour_range]
 
-stop_times_df = stop_times_df[stop_times_df['departure_time'].str.startswith(
-    tuple(valid_hours))]
+# Check departure times for any NA values
+if stop_times_df['departure_time'].isna().any():
+    print("There are NA values in departure_time column")
+    # If there are any, remove them
+    stop_times_df = stop_times_df.dropna(subset=['departure_time'])
+
+# Filter stop times to only include valid hours
+stop_times_df = stop_times_df[
+    stop_times_df['departure_time'].str.startswith(tuple(valid_hours))]
 
 # Convert start and end date to datetime format
 calendar_df['start_date'] = pd.to_datetime(
@@ -213,7 +220,7 @@ bus_frequencies_df = pd.pivot_table(data=serviced_bus_stops_df,
 # -----------------------------
 
 # Only keep those which have at least one service an hour
-highly_serviced_bus_stops_df = bus_frequencies_df[(
+bus_highly_serviced_stops = bus_frequencies_df[(
     bus_frequencies_df > 0).all(axis=1)]
 
 # Read in naptan data
@@ -221,22 +228,23 @@ stops_df = di.get_stops_file(url=config["NAPTAN_API"],
                              dir=os.path.join(os.getcwd(), "data", "stops"))
 
 # Add easting and northing
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.merge(
+bus_highly_serviced_stops = bus_highly_serviced_stops.merge(
     stops_df, how='inner', left_on='stop_id', right_on='ATCOCode')
 
 # Remove stops that dont have coordinates
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df.dropna(
+bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
     subset=['Easting', 'Northing'], how='any')
 
-# Only keep required columns
-highly_serviced_bus_stops_df = highly_serviced_bus_stops_df[list(
-    config["NAPTAN_TYPES"].keys())]
+# Drop the hours columns
+bus_highly_serviced_stops = (
+    bus_highly_serviced_stops['NaptanCode', 'Easting', 'Northing']
+   )
 
 # Save a copy to be ingested by SDG_11.2.1_main
-highly_serviced_bus_stops_df.to_feather(os.path.join(
-    output_directory, 'highly_serviced_stops.feather'))
-highly_serviced_bus_stops_df.to_csv(
+bus_highly_serviced_stops.to_feather(os.path.join(
+    bus_data_output_dir, 'bus_highly_serviced_stops.feather'))
+bus_highly_serviced_stops.to_csv(
     os.path.join(
-        output_directory,
-        'highly_serviced_stops.csv'),
+        bus_data_output_dir,
+        'bus_highly_serviced_stops.csv'),
     index=False)

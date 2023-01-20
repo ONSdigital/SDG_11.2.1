@@ -14,6 +14,9 @@ import data_ingest as di
 import data_transform as dt
 import data_output as do
 
+# Data object import
+from main import stops_geo_df
+
 # timings
 start = time.time()
 # get current working directory
@@ -33,23 +36,12 @@ DATA_DIR = config["DATA_DIR"]
 pop_year = "2011"
 boundary_year = "2021"
 
-
-# Get the pandas dataframe for the stops data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(),
-                                              "data",
-                                              "stops"))
-# filter out on inactive stops
-filtered_stops = dt.filter_stops(stops_df=stops_df)
-
-# coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
-                                     crs=DEFAULT_CRS))
+# Rather than repeating the code in the main function, import the highly
+# serviced stops and stops_geo_df from the main function
 
 # adds in high/low capacity column
-stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+# Commenting this out for now. TODO: add back in
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # get usual population for scotland
 usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
@@ -140,6 +132,28 @@ replacements = {
 # renaming the dodgy col names with their replacements
 disability_df.rename(columns=replacements, inplace=True)
 
+# age variable
+age_scotland_path = os.path.join(CWD,"data","QS103_scotland_age.csv")
+
+age_scotland_df = di.read_scottish_age(age_scotland_path)
+
+# Get a list of ages from config
+age_lst = config['scot_age_lst']
+
+# Get a datframe limited to the data ages columns only
+age_df = dt.slice_age_df(age_scotland_df, age_lst)
+
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = dt.get_col_bins(age_lst)
+
+# get the ages in the age_df binned, and drop the original columns
+age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
+
+# merge ages back onto dataframe
+pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df_bins, left_index=True, right_index=True)
+
+# change columns names
+pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4"})
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
@@ -148,7 +162,8 @@ sc_auth = [random_la]
 
 # define output dicts to capture dfs
 total_df_dict = {}
-sex_df_dict = {}
+sex_df_dict = {} 
+age_df_dict = {}
 disab_df_dict = {}
 urb_rur_df_dict = {}
 
@@ -167,20 +182,24 @@ for local_auth in sc_auth:
                         polygon_obj=la_poly))
 
     # buffer around the stops
-    la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
+    buffd_la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
     # filter only by current la
     only_la_pwc_with_pop = gpd.GeoDataFrame(
         pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"] == local_auth])
 
     # Disability disaggregation
-
+    
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
-    # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(
-        only_la_pwc_with_pop, la_stops_geo_df)
+    # # find all the pop centroids which are in the la_stops_geo_df
+    # pop_in_poly_df = gs.find_points_in_poly(
+    #     only_la_pwc_with_pop, la_stops_geo_df)
+
+    # use the new points in polygons function
+    pop_in_poly_df = gs.points_in_polygons(
+        only_la_pwc_with_pop, buffd_la_stops_geo_df)
 
     # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
@@ -220,6 +239,24 @@ for local_auth in sc_auth:
 
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
+    
+    ## Age disaggregation
+    age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
+                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                 '55-59', '60-64', '65-69', '70-74', '75-79',
+                 '80-84', '85-89', '90+']
+    
+    age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=age_bins)
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
+
+    # Output this local auth's age df to the dict
+    age_df_dict[local_auth] = age_servd_df_out
 
     # Sex disaggregation
     # # # renaming Scotland sex col names with their replacements
@@ -337,14 +374,15 @@ all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
+age_df_all_la = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, sex_all_la, disab_all_la, urb_rur_all_la]
+all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_df_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # Outputting to CSV
-
+final_result = do.reorder_final_df(final_result)
 final_result.to_csv("Scotland_results.csv", index=False)
 
 end = time.time()

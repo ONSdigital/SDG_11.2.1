@@ -128,8 +128,19 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# csv data files
-Stops.csv
+# Data files
+*.csv
+*.feather
+*.h5
+*.hd
+*.hdf5
+*.json
+*.parquet
+*.txt
+*.xlsx
+*.xml
+*.zip
+
 
 #mac os system files
 .DS_Store

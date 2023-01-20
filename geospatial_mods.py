@@ -1,7 +1,5 @@
 # Third party imports for this module
 import geopandas as gpd
-import pandas as pd
-from shapely.ops import unary_union
 import numpy as np
 import os
 import yaml
@@ -19,7 +17,6 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 LOWERBUFFER = config["low_cap_buffer"]
 UPPERBUFFER = config["high_cap_buffer"]
 
-
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
                             dissolveby='OA11CD',
                             search=None) -> gpd.GeoDataFrame:
@@ -27,9 +24,11 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
 
     Args:
         geo_df (gpd.GeoDataFrame): Lookup geospatial data frame.
-        loc_code (str): Can be one of LSOA11CD, OA11CD or LSOA11NM. OA11CD by default.
-        search (str): Search terms to find in the LSOA11NM column. Only needed if
-            intending to dissolve on a name in the LSOA11NM column. Defualt is None.
+        loc_code (str): Can be one of LSOA11CD, OA11CD or LSOA11NM.
+            OA11CD by default.
+        search (str): Search terms to find in the LSOA11NM column. Only needed
+            if intending to dissolve on a name in the LSOA11NM column.
+            Defualt is None.
 
     Returns:
         gpd.DataFrame: GeoDataFrame with multipolygons agregated on LSOA,
@@ -47,16 +46,13 @@ def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
 
 def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     """Creates a 500m or 1000m buffer around points.
-
     Draws 500m if the capacity_type is low
     Draws 1000m if the capacity_type is high
     Puts the results into a new column called "geometry"
     As 'epsg:27700' projections units of km, 500m is 0.5km.
-
     Args:
         geo_df (gpd.DataFrame): Data frame of points to be buffered
             including a column with the capacity_type for each point.
-
     Returns:
         gpd.DataFrame: A dataframe of polygons create from the buffer.
     """
@@ -82,16 +78,44 @@ def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
         polygon_obj (str): a geopandas dataframe with a polygon column.
 
     Returns:
-        gpd.GeoDataFrame: A geodata frame with the points inside the supplied polygon.
+        gpd.GeoDataFrame: A geodata frame with the points inside the supplied
+        polygon.
     """
     wanted_cols = geo_df.columns.to_list()
     joined_df = (gpd.sjoin
                  (geo_df,
                   polygon_obj,
                   how='left',
-                  op='intersects'))  # op = 'within'
+                  predicate='intersects'))  # op = 'within'
     filtered_df = (joined_df
                    [joined_df
                     ['index_right'].notna()])
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
+
+
+def points_in_polygons(points: gpd.GeoDataFrame,
+                       polygons: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
+    """Finds points in polygons.
+
+    A function to carry out a standard points in polygons query
+    between a geodataframe of points and a geodataframe of polygons
+    
+    Args:
+        points (gpd.GeoDataFrame): Points to be found in polygons.
+        polygons (gpd.GeoDataFrame): Polygons to find points in.
+
+    Returns:
+        gpd.GeoDataFrame: Points found in polygons.
+    """
+    # Extract the polygon geometries, this avoids creating uneeded columns
+    # in the joined dataframe
+    polygons = gpd.GeoDataFrame(polygons.geometry)
+    
+    # Carry out points in polygons query using sjoin
+    joined_df = gpd.sjoin(points,
+                          polygons,
+                          how='left',
+                          predicate='within')
+    
+    return joined_df

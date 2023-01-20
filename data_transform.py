@@ -1,6 +1,8 @@
 from typing import List
 import pandas as pd
 from convertbng.util import convert_bng
+import numpy as np
+from datetime import date, datetime
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -47,9 +49,9 @@ def get_col_bins(col_nms: List[str]):
 
 
 def bin_pop_ages(age_df, age_bins, col_nms):
-    """ Bins the ages in the age_df in 5 year spans,
+    """ Bins the ages in the age_df in 5 year spans from 0 to 90+,
     sums the counts in those bins
-    and drops the original age columns
+    and drops the original age columns.
 
     Args:
         df (pd.DataFrame): A dataframe of population data
@@ -59,13 +61,40 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         pd.DataFrame: Returns the age_df with bins.
     """
     # Grouping ages in 5 year brackets
-    for bin in age_bins:
-        age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
 
-    # Drop the original age columns
-    age_df.drop(col_nms, axis=1, inplace=True)
-    # Rename the '90+' col
-    age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
+    # cleaning scottish data and changing dtype to float
+    original_columns = age_df.columns
+    for col in original_columns:
+        if age_df[col].dtypes == "O":
+            age_df[col] = age_df[col].str.replace('-', '0')
+            age_df[col] = age_df[col].astype(int)
+
+    def _age_bin(age_df, age_bins):
+        "Function sums the counts for corresponding age-bins and assigns them a column in age_df."
+        for bin in age_bins:
+            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,
+                                                      bin[0]:bin[1]].sum(axis=1)
+        return age_df
+
+    # create 90+ column for when there are more columns than 90
+    if len(age_df.columns) > 91:
+        # create 90+ column summing all those from 90 and above.
+        age_df['90+'] = age_df.iloc[:, 90:].sum(axis=1)
+        age_df = _age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # drop the columns that we are replacing with 90+
+        age_df.drop(age_df.iloc[:, 19:], axis=1, inplace=True)
+        # moving first column to last so 90+ at the end.
+        temp_cols = age_df.columns.tolist()
+        new_cols = temp_cols[1:] + temp_cols[0:1]
+        age_df = age_df[new_cols]
+    else:
+        age_df = _age_bin(age_df, age_bins)
+        # drop the original age columns
+        age_df.drop(col_nms, axis=1, inplace=True)
+        # rename the 90+ column
+        age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
     return age_df
 
@@ -198,13 +227,10 @@ def filter_stops(stops_df):
 
 def add_stop_capacity_type(stops_df):
     """Adds capacity_type column.
-
     Column is defined with the following dictionary using the StopType
     Bus stops are low capacity, train stations are high capacity.
-
     Args:
         stops_df (pd.DataFrame): The dataframe to add the column to.
-
     Returns:
         pd.DataFrame: dataframe with new capacity_type column.
     """
@@ -283,7 +309,7 @@ def disab_disagg(disability_df, la_pop_df):
          *
          la_pop_df["proportion_disabled"])
     )
-    la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
+   # la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
 
     # Make the calculation of the number of non-disabled people in the year
     # of the population estimates
