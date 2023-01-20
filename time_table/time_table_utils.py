@@ -7,6 +7,7 @@ import pandas as pd
 # Create logger
 logger = logging.getLogger(__name__)
 
+
 def filter_stops(stops_df):
     """Filters the stops dataframe based on two things:
 
@@ -39,33 +40,34 @@ def filter_stops(stops_df):
 
 def add_stop_capacity_type(stops_df):
     """Adds capacity_type column.
-    
+
     Column is defined with the following dictionary using the StopType
     Bus stops are low capacity, train stations are high capacity.
-    
+
     Args:
         stops_df (pd.DataFrame): The dataframe to add the column to.
-    
+
     Returns:
         pd.DataFrame: dataframe with new capacity_type column.
     """
     # Create a dictionary to map the StopType to capacity level
     capacity_map = {"RSE": "high",
-                      "RLY": "high",
-                      "RPL": "high",
-                      "TMU": "high",
-                      "MET": "high",
-                      "PLT": "high",
-                      "BCE": "low",
-                      "BST": "low",
-                      "BCQ": "low",
-                      "BCS": "low",
-                      "BCT": "low"}
+                    "RLY": "high",
+                    "RPL": "high",
+                    "TMU": "high",
+                    "MET": "high",
+                    "PLT": "high",
+                    "BCE": "low",
+                    "BST": "low",
+                    "BCQ": "low",
+                    "BCS": "low",
+                    "BCT": "low"}
 
     # Add the capacity_type column to the stops dataframe
     stops_df["capacity_type"] = stops_df["StopType"].map(capacity_map)
 
     return stops_df
+
 
 def filter_timetable_by_day(timetable_df, day):
     """Extract serviced stops based on specific day of the week.
@@ -148,7 +150,7 @@ def filter_timetable_by_day(timetable_df, day):
     logger(
         f"Selecting only services covering {day_date} reduced records"
         f"by {original_rows-timetable_df.shape[0]} rows"
-          )
+    )
 
     # Print how many services are in the analysis and how many were dropped
     service_count = timetable_df.service_id.unique().shape[0]
@@ -158,38 +160,40 @@ def filter_timetable_by_day(timetable_df, day):
 
     return timetable_df
 
+
 def extract_msn_data(msn_file):
     """Extract data from the msn file.
 
     Args:
         msn_file (msn): A text file containing the msn data.
-    """    
+    """
 
     # Store msn data
     msn_data_lst = []
 
     with open(msn_file, 'r') as msn_data:
-    # Skip header
+        # Skip header
         next(msn_data)
         for line in msn_data:
-        # Only interested in rows starting with A.
-        # Rows starting with L display aliases of station names
-        # Stripping the values because some are padded out with blank spaces
-        # as part of the file format.
-        # Coordinate data provided is actually the grid reference
-        # but without the 100km square (two letters at the start) so
-        # very difficult to extract coordinates. Hence, will add in
-        # coordinate data from an external source.
-        # NB tiploc_code is unique, but crs_code isnt.
+            # Only interested in rows starting with A.
+            # Rows starting with L display aliases of station names
+            # Stripping the values because some are padded out with blank spaces
+            # as part of the file format.
+            # Coordinate data provided is actually the grid reference
+            # but without the 100km square (two letters at the start) so
+            # very difficult to extract coordinates. Hence, will add in
+            # coordinate data from an external source.
+            # NB tiploc_code is unique, but crs_code isnt.
             if line.startswith('A'):
                 station_name = line[5:31].strip()
                 tiploc_code = line[36:43].strip()
                 crs_code = line[49:52].strip()
 
                 msn_data_lst.append([station_name,
-                        tiploc_code,
-                        crs_code])
+                                     tiploc_code,
+                                     crs_code])
     return msn_data_lst
+
 
 def extract_mca(mca_file):
     """Extract data from the mca file.
@@ -212,14 +216,14 @@ def extract_mca(mca_file):
 
     Args:
         mca_file (_type_): _description_
-    
-    
+
+
     Returns:
         schedules (list): list of lists containing schedule information 
             ready for dataframe
         stops (list): list of lists containing stop information
             ready for dataframe
-    """    
+    """
     # Create a flag that specifies when we have found a new journey
     journey = False
 
@@ -229,16 +233,16 @@ def extract_mca(mca_file):
     stops = []
 
     with open(mca_file, 'r') as mca_data:
-    # Skip the header
+        # Skip the header
         next(mca_data)
         for line in mca_data:
-        # A schedule is started by a record beginning with BS.
-        # Other entries exist but are not needed for our purpose.
-        # Schedules are then further broken down by transaction type
-        # (N - new, R - revised, D - delete)
-        # Ignore any that are transaction type delete.
+            # A schedule is started by a record beginning with BS.
+            # Other entries exist but are not needed for our purpose.
+            # Schedules are then further broken down by transaction type
+            # (N - new, R - revised, D - delete)
+            # Ignore any that are transaction type delete.
             if line[0:3] == 'BSN' or line[0:3] == 'BSR':
-            # Switch flag on as we have found a journey
+                # Switch flag on as we have found a journey
                 journey = True
 
             # Get unique ID for schedule
@@ -262,13 +266,13 @@ def extract_mca(mca_file):
 
             # Store data to be added to the dataframe
                 schedules.append([schedule_id,
-                              start_date,
-                              end_date,
-                              monday,
-                              tuesday,
-                              wednesday,
-                              thursday,
-                              friday])
+                                  start_date,
+                                  end_date,
+                                  monday,
+                                  tuesday,
+                                  wednesday,
+                                  thursday,
+                                  friday])
 
             # Skip as this is all we need to do for an entry starting
             # with BS
@@ -309,12 +313,12 @@ def extract_mca(mca_file):
                 # flag off
                     journey = False
                 else:
-                # Skipping BR and CX
+                    # Skipping BR and CX
                     continue
 
                 # Store data to be added to dataframe
                 stops.append([schedule_id,
-                          departure_time,
-                          tiploc_code,
-                          activity_type])
+                              departure_time,
+                              tiploc_code,
+                              activity_type])
     return schedules, stops
