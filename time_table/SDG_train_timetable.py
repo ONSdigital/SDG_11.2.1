@@ -38,10 +38,10 @@ early_timetable_hour = config["early_timetable_hour"]
 late_timetable_hour = config["late_timetable_hour"]
 
 # Extract msn data
-msn= ttu.extract_msn_data(msn_file)
+msn_data = ttu.extract_msn_data(msn_file)
 
 # Create dataframe from msn data
-msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
+msn_df = pd.DataFrame(msn_data, columns=['station_name', 'tiploc_code', 'crs_code'])
 
 # Clean msn data
 # --------------
