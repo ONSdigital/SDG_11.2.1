@@ -93,9 +93,6 @@ mca_stop_df = pd.DataFrame(stops,
 # Clean data
 # ----------
 
-# Remove the duplicates in crs_code
-msn_df = msn_df.drop_duplicates(subset=['crs_code'])
-
 # Drop any duplicate schedule IDs
 # As these are composed of an ID, start and end time, and calendar
 # any duplicates we have must be duplicates in the dataset.
