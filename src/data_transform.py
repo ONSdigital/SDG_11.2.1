@@ -5,6 +5,11 @@ import numpy as np
 from datetime import date, datetime
 import data_output as do
 import logging
+import os
+
+
+# Get CWD
+CWD = os.getcwd()
 
 
 # Create logger
