@@ -1,5 +1,6 @@
 # core
 from main import naptan_df
+import src.data_transform as dt
 import os
 import sys
 
@@ -12,8 +13,6 @@ import time_table_utils as ttu
 
 # add the parent directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import src.data_transform as dt
 
 
 # get current working directory
@@ -41,7 +40,8 @@ late_timetable_hour = config["late_timetable_hour"]
 msn_data = ttu.extract_msn_data(msn_file)
 
 # Create dataframe from msn data
-msn_df = pd.DataFrame(msn_data, columns=['station_name', 'tiploc_code', 'crs_code'])
+msn_df = pd.DataFrame(
+    msn_data, columns=['station_name', 'tiploc_code', 'crs_code'])
 
 # Clean msn data
 # --------------
@@ -57,16 +57,12 @@ station_locations_df = pd.read_csv(
 # Join coordinates onto msn data
 # left join to master station names and see which ones dont have lat and long
 msn_data_df = pd.merge(msn_df, station_locations_df, how='left',
-                    left_on='crs_code', right_on='station_code')
+                       left_on='crs_code', right_on='station_code')
 msn_data_df = msn_data_df[['station_name', 'tiploc_code',
-                     'crs_code', 'latitude', 'longitude']]
+                           'crs_code', 'latitude', 'longitude']]
 
 # Remove stations with no coordinates
 msn_data_df = msn_data_df.dropna(subset=['latitude', 'longitude'], how='any')
-
-
-
-
 
 
 schedules, stops = ttu.extract_mca(mca_file)
@@ -86,8 +82,8 @@ mca_schedule_df = pd.DataFrame(schedules,
 mca_stop_df = pd.DataFrame(stops,
                            columns=['schedule_id',
                                     'departure_time',
-									'tiploc_code',
-									'activity_type'])
+                                    'tiploc_code',
+                                    'activity_type'])
 
 
 # Clean data
