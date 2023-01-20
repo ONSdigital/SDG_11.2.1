@@ -64,29 +64,30 @@ def bin_pop_ages(age_df, age_bins, col_nms):
     # cleaning scottish data and changing dtype to float
     original_columns = age_df.columns
     for col in original_columns:
-        if age_df.dtypes[col] == np.object:
+        if age_df[col].dtypes == "O":
             age_df[col] = age_df[col].str.replace('-', '0')
             age_df[col] = age_df[col].astype(int)
-    
+
     def _age_bin(age_df, age_bins):
         "Function sums the counts for corresponding age-bins and assigns them a column in age_df."
         for bin in age_bins:
-            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:, bin[0]:bin[1]].sum(axis=1)
+            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,
+                                                      bin[0]:bin[1]].sum(axis=1)
         return age_df
 
     # create 90+ column for when there are more columns than 90
-    if len(age_df.columns)>91:
+    if len(age_df.columns) > 91:
         # create 90+ column summing all those from 90 and above.
-        age_df['90+'] = age_df.iloc[:,90:].sum(axis=1)
+        age_df['90+'] = age_df.iloc[:, 90:].sum(axis=1)
         age_df = _age_bin(age_df, age_bins)
         # drop the original age columns
         age_df.drop(col_nms, axis=1, inplace=True)
         # drop the columns that we are replacing with 90+
-        age_df.drop(age_df.iloc[:,19:], axis=1, inplace=True)
+        age_df.drop(age_df.iloc[:, 19:], axis=1, inplace=True)
         # moving first column to last so 90+ at the end.
-        temp_cols=age_df.columns.tolist()
-        new_cols=temp_cols[1:] + temp_cols[0:1]
-        age_df=age_df[new_cols]
+        temp_cols = age_df.columns.tolist()
+        new_cols = temp_cols[1:] + temp_cols[0:1]
+        age_df = age_df[new_cols]
     else:
         age_df = _age_bin(age_df, age_bins)
         # drop the original age columns
