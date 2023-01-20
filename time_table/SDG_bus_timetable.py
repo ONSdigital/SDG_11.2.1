@@ -238,7 +238,7 @@ bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
 # Drop the hours columns
 bus_highly_serviced_stops = (
     bus_highly_serviced_stops['NaptanCode', 'Easting', 'Northing']
-   )
+)
 
 # Save a copy to be ingested by SDG_11.2.1_main
 bus_highly_serviced_stops.to_feather(os.path.join(
