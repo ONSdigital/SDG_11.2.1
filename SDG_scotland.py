@@ -14,6 +14,9 @@ import data_ingest as di
 import data_transform as dt
 import data_output as do
 
+# Data object import
+from main import stops_geo_df
+
 # timings
 start = time.time()
 # get current working directory
@@ -33,23 +36,12 @@ DATA_DIR = config["DATA_DIR"]
 pop_year = "2011"
 boundary_year = "2021"
 
-
-# Get the pandas dataframe for the stops data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
-                             dir=os.path.join(os.getcwd(),
-                                              "data",
-                                              "stops"))
-# filter out on inactive stops
-filtered_stops = dt.filter_stops(stops_df=stops_df)
-
-# coverts from pandas df to geo df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
-                                     crs=DEFAULT_CRS))
+# Rather than repeating the code in the main function, import the highly
+# serviced stops and stops_geo_df from the main function
 
 # adds in high/low capacity column
-stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
+# Commenting this out for now. TODO: add back in
+# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # get usual population for scotland
 usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
@@ -190,7 +182,7 @@ for local_auth in sc_auth:
                         polygon_obj=la_poly))
 
     # buffer around the stops
-    la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
+    buffd_la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
 
     # filter only by current la
     only_la_pwc_with_pop = gpd.GeoDataFrame(
@@ -201,9 +193,13 @@ for local_auth in sc_auth:
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
-    # find all the pop centroids which are in the la_stops_geo_df
-    pop_in_poly_df = gs.find_points_in_poly(
-        only_la_pwc_with_pop, la_stops_geo_df)
+    # # find all the pop centroids which are in the la_stops_geo_df
+    # pop_in_poly_df = gs.find_points_in_poly(
+    #     only_la_pwc_with_pop, la_stops_geo_df)
+
+    # use the new points in polygons function
+    pop_in_poly_df = gs.points_in_polygons(
+        only_la_pwc_with_pop, buffd_la_stops_geo_df)
 
     # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
