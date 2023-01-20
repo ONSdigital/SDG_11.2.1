@@ -34,44 +34,36 @@ DEFAULT_CRS = config["DEFAULT_CRS"]
 
 
 #grabs northern ireland bus stops path
-# ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
+ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
 
-# # reads in NI bus stop data as pandas df
-# ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
+# reads in NI bus stop data as pandas df
+ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
 
-# # assigns capacity type for bus stops as low
-# ni_bus_stops['capacity_type'] = 'low'
+# assigns capacity type for bus stops as low
+ni_bus_stops['capacity_type'] = 'low'
 
-# # gets the northern ireland train stops data path
-# ni_train_stops_path = os.path.join(
-#     CWD, "data", "stops", "NI", "train_stops_ni.csv")
+# gets the northern ireland train stops data path
+ni_train_stops_path = os.path.join(
+    CWD, "data", "stops", "NI", "train_stops_ni.csv")
 
-# # reads in the NI train stop data as pandas df
-# ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
+# reads in the NI train stop data as pandas df
+ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
 
-# # assigns capacity type for train stops as high
-# ni_train_stops['capacity_type'] = 'high'
+# assigns capacity type for train stops as high
+ni_train_stops['capacity_type'] = 'high'
 
 
-# # Join the two stops dataframes together
-# stops_df = ni_bus_stops.merge(
-#     ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
+# Join the two stops dataframes together
+stops_df = ni_bus_stops.merge(
+    ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
 
-# stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
-#                                     geom_x='Longitude',
-#                                     geom_y='Latitude',
-#                                     crs='EPSG:4326')
-# read in stops
-stops = pd.read_csv(os.path.join(CWD, "data", "stops", "NI", "ni_stops.csv"))
-
-# covert to geo
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=stops,
-                                     geom_x='Easting',
-                                     geom_y='Northing',
-                                     crs=DEFAULT_CRS))
+stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
+                                    geom_x='Longitude',
+                                    geom_y='Latitude',
+                                    crs='EPSG:4326')
 
 # Convert latitude and longitude to easting and northing
-#stops_geo_df = dt.convert_east_north(stops, 'Longitude', 'Latitude')
+stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 
 # Get usual population for Northern Ireland (Census 2011 data)
 census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
