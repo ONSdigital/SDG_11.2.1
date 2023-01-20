@@ -62,9 +62,11 @@ naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
                               dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
+# Create Tiploc column
+naptan_df = dt.create_tiploc_col(naptan_df)  
 
+# Isolating the tram and metro stops
 # Metro and tram data 
-
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 
 # Take only active, pending or new stops

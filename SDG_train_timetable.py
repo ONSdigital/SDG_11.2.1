@@ -1,4 +1,5 @@
 # core
+from main import naptan_df
 import os
 
 # third party
@@ -272,7 +273,6 @@ train_timetable_df = (
 
 # Remove columns no longer required
 train_timetable_df = train_timetable_df.drop(columns=['schedule_id',
-                                                      'tiploc_code',
                                                       'activity_type',
                                                       'station_name'])
 
@@ -305,7 +305,7 @@ serviced_train_stops_df['departure_time'] = (
 
 train_frequencies_df = pd.pivot_table(data=serviced_train_stops_df,
                                       values=timetable_day,
-                                      index='crs_code',
+                                      index='tiploc_code',
                                       columns='departure_time',
                                       aggfunc=len,
                                       fill_value=0)
@@ -321,30 +321,33 @@ highly_serviced_train_stops_df = (
 
 # Read in station location data
 # Attach the coordinates for each train station
-station_locations_df = pd.read_csv(station_locations,
-                                   usecols=['station_code',
-                                            'easting',
-                                            'northing'])
+# station_locations_df = pd.read_csv(station_locations,
+#                                    usecols=['station_code',
+#                                             'easting',
+#                                             'northing'])
+# Get the naptan data from main.py
+# limit to only the columns we need
+stations_df = naptan_df[naptan_df['StopType'] == 'RLY']
+station_locations_df = stations_df[['Easting', 'Northing', 'tiploc_code']]
+
 
 # Add easting and northing
 highly_serviced_train_stops_df = (
     highly_serviced_train_stops_df.merge(station_locations_df,
                                          how='inner',
-                                         left_on='crs_code',
-                                         right_on='station_code')
+                                         on='tiploc_code')
 )
-
 
 # Remove stations with no coordinates
 highly_serviced_train_stops_df = (
-    highly_serviced_train_stops_df.dropna(subset=['easting', 'northing'],
+    highly_serviced_train_stops_df.dropna(subset=['Easting', 'Northing'],
                                           how='any')
 )
 
 # Keep only required columns in highly_serviced_train_stops_df
 highly_serviced_train_stops_df = (
     highly_serviced_train_stops_df.drop(columns=valid_hours)
-   )
+)
 
 # Save a copy to be ingested into SDG_main
 highly_serviced_train_stops_df.to_feather(
