@@ -1,6 +1,5 @@
 # core
 from main import naptan_df
-import src.data_transform as dt
 import os
 import sys
 
@@ -13,6 +12,9 @@ import time_table_utils as ttu
 
 # add the parent directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Parent directory imports
+import src.data_transform as dt
 
 
 # get current working directory
