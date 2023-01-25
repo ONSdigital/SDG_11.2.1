@@ -752,3 +752,27 @@ def read_scottish_age(path):
     age_scotland_df = age_scotland_df.reset_index()
 
     return age_scotland_df
+
+def read_ni_age_df(path):
+    """
+    Reads in the nothern ireland age information
+    
+    Args:
+        path (str): the path of the file
+    
+    Returns:
+        pd.DataFrame the age_df dataframe
+    """
+    # read in age df
+    age_df = pd.read_excel(path,
+                          sheet_name="SA",
+                          header=5,
+                          index_col="SA Code")
+    # replace col names from string e.g "Age 82"
+    # to just the number 82
+    for col in age_df.columns:
+        if bool(re.search(r"\d", col)):
+            number = re.findall(r"[0-9]{1,3}", col)[0]
+            age_df.rename(columns={col:number}, inplace=True)
+
+    return age_df

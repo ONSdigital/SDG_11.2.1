@@ -165,20 +165,14 @@ disability_df.rename(columns=replacements, inplace=True)
 
 # defining age data path
 age_path = os.path.join(CWD,"Data","census-2011-qs103ni.xlsx")
-# reading in age data
-age_df = pd.read_excel(age_path,
-                       sheet_name="SA",
-                       header=5,
-                       index_col="SA Code")
-import re
-for col in age_df.columns:
-    if bool(re.search(r"\d", col)):
-        number = re.findall(r"[0-9]{1,3}", col)[0]
-        age_df.rename(columns={col:number}, inplace=True)
 
-# gets northern ireland list
+# reading in age data
+age_df = di.read_ni_age_df(age_path)
+                       
+# gets northern ireland age list
 age_lst = config['ni_age_lst']      
 
+# slices df to just age cols
 age_df_sliced = dt.slice_age_df(age_df, age_lst)
 
 # Create a list of tuples of the start and finish indexes for the age bins
