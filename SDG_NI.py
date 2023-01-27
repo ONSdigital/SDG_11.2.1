@@ -164,7 +164,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # defining age data path
-age_path = os.path.join(CWD,"Data","census-2011-qs103ni.xlsx")
+age_path = os.path.join(CWD,"data","census-2011-qs103ni.xlsx")
 
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
