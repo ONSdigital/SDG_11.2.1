@@ -192,6 +192,7 @@ ni_auth = [random_la]
 total_df_dict = {}
 disab_df_dict = {}
 age_df_dict = {}
+sex_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -263,6 +264,28 @@ for local_auth in ni_auth:
     # Disability disaggregation - get disability results in disab_df_dict
     disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
 
+    # Sex disaggregation
+    # # # renaming Scotland sex col names with their replacements
+    replacements = {"Males": "male",
+                    "Females": "female"}
+    only_la_pwc_with_pop.rename(columns=replacements, inplace=True)
+    pop_in_poly_df.rename(columns=replacements, inplace=True)
+    # # Calculating those served and not served by sex
+    sex_cols = ['male', 'female']
+
+    sex_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=sex_cols)
+
+    # Feeding the results to the reshaper
+    sex_servd_df_out = do.reshape_for_output(sex_servd_df,
+                                             id_col="Sex",
+                                             local_auth=local_auth)
+
+    # Output this iteration's sex df to the dict
+    sex_df_dict[local_auth] = sex_servd_df_out
+
+
     ## Age disaggregation
     age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
                  '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
@@ -283,11 +306,12 @@ for local_auth in ni_auth:
 
 # every single LA
 all_la = pd.concat(total_df_dict.values())
+sex_all_la = pd.concat(sex_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
 all_age = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, disab_all_la,all_age]
+all_results_dfs = [all_la, disab_all_la,all_age, sex_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
