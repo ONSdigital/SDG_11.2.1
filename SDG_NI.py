@@ -145,12 +145,31 @@ pwc_with_pop_with_la.rename(
         "All usual residents": "pop_count"},
     inplace=True)
 
+# Read disability data for disaggregations later
+disability_df = pd.read_csv(os.path.join(CWD,
+                                         "data", "disability_status",
+                                         "qs303_ni.csv"), skiprows=5)
+
+# Remove the first column because it's a repeat of SA code
+disability_df.drop(['SA'], axis=1, inplace=True)
+
+# the col headers are database unfriendly. Defining their replacement names
+replacements = {
+    "SA Code": 'OA11CD',
+    "Long-term health problem or disability: Day-to-day activities limited a lot": "disab_ltd_lot",
+    "Long-term health problem or disability: Day-to-day activities limited a little": "disab_ltd_little",
+    'Long-term health problem or disability: Day-to-day activities not limited': "disab_not_ltd"}
+
+# renaming the dodgy col names with their replacements
+disability_df.rename(columns=replacements, inplace=True)
+
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
 ni_auth = [random_la]
 
 total_df_dict = {}
+disab_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -172,6 +191,10 @@ for local_auth in ni_auth:
     # filter only by current la
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"] == local_auth],
                                             geometry='geometry', crs='EPSG:27700')
+    
+    # Disability disaggregation
+
+    only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
     # find all the pop centroids which are in the la_stops_geo_df
     pop_in_poly_df = gs.find_points_in_poly(
@@ -215,11 +238,21 @@ for local_auth in ni_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
+    # Disability disaggregation - get disability results in disab_df_dict
+    disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
+
 # every single LA
 all_la = pd.concat(total_df_dict.values())
+disab_all_la = pd.concat(disab_df_dict.values())
+
+# Stacking the dataframes
+all_results_dfs = [all_la, disab_all_la]
+final_result = pd.concat(all_results_dfs)
+final_result["Year"] = pop_year
 
 # output to CSV
-all_la.to_csv("NI_results.csv", index=False)
+final_result.to_csv("NI_results.csv", index=False)
+
 
 # end time
 end = time.time()
