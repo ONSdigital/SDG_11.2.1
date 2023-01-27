@@ -163,6 +163,27 @@ replacements = {
 # renaming the dodgy col names with their replacements
 disability_df.rename(columns=replacements, inplace=True)
 
+# defining age data path
+age_path = os.path.join(CWD,"data","census-2011-qs103ni.xlsx")
+
+# reading in age data
+age_df = di.read_ni_age_df(age_path)
+                       
+# gets northern ireland age list
+age_lst = config['ni_age_lst']      
+
+# slices df to just age cols
+age_df_sliced = dt.slice_age_df(age_df, age_lst)
+
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = dt.get_col_bins(age_lst)
+
+# get the ages in the age_df binned, and drop the original columns
+age_df = dt.bin_pop_ages(age_df_sliced, age_bins, age_lst)
+
+# merge ages back onto dataframe
+pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df, left_on="OA11CD", right_index=True)
+
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
@@ -170,6 +191,7 @@ ni_auth = [random_la]
 
 total_df_dict = {}
 disab_df_dict = {}
+age_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -241,12 +263,31 @@ for local_auth in ni_auth:
     # Disability disaggregation - get disability results in disab_df_dict
     disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
 
+    ## Age disaggregation
+    age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
+                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                 '55-59', '60-64', '65-69', '70-74', '75-79',
+                 '80-84', '85-89', '90+']
+    
+    age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
+                                                pop_in_poly_df=pop_in_poly_df,
+                                                cols_lst=age_bins)
+    
+    # Feeding the results to the reshaper
+    age_servd_df_out = do.reshape_for_output(age_servd_df,
+                                             id_col="Age",
+                                             local_auth=local_auth)
+
+    # Output this local auth's age df to the dict
+    age_df_dict[local_auth] = age_servd_df_out
+
 # every single LA
 all_la = pd.concat(total_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
+all_age = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, disab_all_la]
+all_results_dfs = [all_la, disab_all_la,all_age]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
