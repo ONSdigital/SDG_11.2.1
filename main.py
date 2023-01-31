@@ -102,13 +102,15 @@ column_renamer = {"NaptanCode": "station_code",
 
 tram_metro_stops.rename(columns=column_renamer, inplace=True)
 tram_metro_stops = tram_metro_stops[["station_code", "easting",
-                                    "northing", "transport_mode"]]
+                                    "northing", "transport_mode",
+                                    "capacity_type"]]
 
 highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
 highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
                                                     "easting",
                                                     "northing",
-                                                    "transport_mode"]]
+                                                    "transport_mode",
+                                                    "capacity_type"]]
 
 # Merge into one dataframe
 dfs_to_combine = [highly_serviced_bus_stops,
