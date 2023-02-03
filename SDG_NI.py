@@ -138,6 +138,18 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 right_on="SA2011",
                                 how="left")
 
+# read in urban/rural classification
+urb_rur_path = os.path.join(CWD, "data", "urban_rural", "NI",
+                            "NI_urb_rur_class.csv")
+
+urb_rur = di.read_urb_rur_ni(urb_rur_path)
+
+pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
+                                right=urb_rur,
+                                left_on="SA2011",
+                                right_on = 'SA2011_Code',
+                                how='left')
+
 # Rename columns to fit functions below
 pwc_with_pop_with_la.rename(
     columns={
