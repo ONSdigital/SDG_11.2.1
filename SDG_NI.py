@@ -205,6 +205,7 @@ total_df_dict = {}
 disab_df_dict = {}
 age_df_dict = {}
 sex_df_dict = {}
+urb_rur_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -273,6 +274,46 @@ for local_auth in ni_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
+    # Urban/Rural disaggregation
+    # split into two different dataframes
+    urb_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "urban"]
+    rur_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "rural"]
+
+    urb_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
+    rur_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
+
+    urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
+                                                pop_in_poly_df=urb_df_poly,
+                                                cols_lst=['pop_count'])
+
+    rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
+                                                pop_in_poly_df=rur_df_poly,
+                                                cols_lst=['pop_count'])
+
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count": "Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count": "Rural"}, inplace=True)
+
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban": "Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural": "Urban/Rural"}, inplace=True)
+
+    # Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
+
+    # Output this iteration's urb and rur df to the dict
+    urb_rur_df_dict[local_auth] = urb_rur_servd_df_out
+
+
     # Disability disaggregation - get disability results in disab_df_dict
     disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
 
@@ -320,14 +361,16 @@ for local_auth in ni_auth:
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
-all_age = pd.concat(age_df_dict.values())
+all_age_all_la = pd.concat(age_df_dict.values())
+urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, disab_all_la,all_age, sex_all_la]
+all_results_dfs = [all_la, disab_all_la,all_age_all_la, sex_all_la, urb_rur_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # output to CSV
+final_result = do.reorder_final_df(final_result)
 final_result.to_csv("NI_results.csv", index=False)
 
 
