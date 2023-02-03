@@ -443,57 +443,9 @@ if __name__ == "__main__":
         # Calculating non-disabled people served and not served
         # Disability disaggregation - get disability results in disab_df_dict
         disab_df_dict = dt.disab_dict(eng_wales_la_pop_df, pop_in_poly_df, disab_df_dict, local_auth)
-
-        # Calculating those served and not served by urban/rural
-        urb_col = ["urb_rur_class"]
     
-        # Filtering by urban and rural to make 2 dfs
-        urb_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "urban"]
-        rur_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "rural"]
-    
-        # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
-        # filtered in the same way
-        urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
-                                        on="OA11CD", how="left")
-                            .loc[:, ['OA11CD', 'pop_count_y']])
-        urb_pop_in_poly_df.rename(
-            columns={'pop_count_y': 'pop_count'}, inplace=True)
-        rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df,
-                                        on="OA11CD", how="left")
-                            .loc[:, ['OA11CD', 'pop_count_y']])
-        rur_pop_in_poly_df.rename(
-            columns={'pop_count_y': 'pop_count'}, inplace=True)
-    
-        urb_servd_df = dt.served_proportions_disagg(
-            pop_df=urb_df,
-            pop_in_poly_df=urb_pop_in_poly_df,
-            cols_lst=['pop_count'])
-    
-        rur_servd_df = dt.served_proportions_disagg(
-            pop_df=rur_df,
-            pop_in_poly_df=rur_pop_in_poly_df,
-            cols_lst=['pop_count'])
-    
-        # Renaming pop_count to either urban or rural
-        urb_servd_df.rename(columns={"pop_count": "Urban"}, inplace=True)
-        rur_servd_df.rename(columns={"pop_count": "Rural"}, inplace=True)
-    
-        # Sending each to reshaper
-        urb_servd_df_out = do.reshape_for_output(urb_servd_df,
-                                                id_col="Urban",
-                                                local_auth=local_auth)
-        rur_servd_df_out = do.reshape_for_output(rur_servd_df,
-                                                id_col="Rural",
-                                                local_auth=local_auth)
-        # Renaming their columns to Urban/Rural
-        urb_servd_df_out.rename(columns={"Urban": "Urban/Rural"}, inplace=True)
-        rur_servd_df_out.rename(columns={"Rural": "Urban/Rural"}, inplace=True)
-    
-        # Combining urban and rural dfs
-        urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
-    
-        # Output this iteration's urb and rur df to the dict
-        urb_rur_df_dict[local_auth] = urb_rur_servd_df_out
+        # Urban rural classification disaggregation
+        urb_rur_df_dict = dt.urban_rural_results(eng_wales_la_pop_df, pop_in_poly_df, urb_rur_df_dict, local_auth)
     
     all_la = pd.concat(total_df_dict.values())
     sex_all_la = pd.concat(sex_df_dict.values())
