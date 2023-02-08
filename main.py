@@ -11,11 +11,21 @@ import yaml
 
 # Module imports
 import geospatial_mods as gs
-import data_ingest as di
 import data_transform as dt
 import data_output as do
 
 start_time = time.time()
+
+# Data imports
+from eng_wales_pre_process import stops_geo_df
+from eng_wales_pre_process import ew_urb_rur_df
+from eng_wales_pre_process import ew_la_df
+from eng_wales_pre_process import ew_oa_la_lookup_df
+from eng_wales_pre_process import ew_oa_boundaries_df
+from eng_wales_pre_process import ew_pop_df
+from eng_wales_pre_process import ew_pop_wtd_centr_df
+from eng_wales_pre_process import ew_disability_df
+from eng_wales_pre_process import ew_urb_rur_df
 
 
 # get current working directory
@@ -27,228 +37,44 @@ with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
 
-# Constants
-DEFAULT_CRS = config["DEFAULT_CRS"]
-DATA_DIR = config["DATA_DIR"]
-OUTPUT_DIR = config["DATA_OUTPUT"]
-EXT_ORDER = config['EXT_ORDER']
-OUTFILE = config['OUTFILE']
-BUS_IN_DIR = config['bus_in_dir']
-TRAIN_IN_DIR = config['train_in_dir']
 
 # Years
 # Getting the year for population data
-POP_YEAR = str(config["calculation_year"])
-# Getting the year for centroid data
-CENTROID_YEAR = str(config["centroid_year"])
+CALCULATION_YEAR = str(config["calculation_year"])
 
+# Constants
+lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
 
-# ------------------
-# Load in stops data
-# ------------------
-
-# Highly serviced bus and train stops created from SDG_bus_timetable
-# and SDG_train_timetable
-# Metros and trains added from NAPTAN as we dont have timetable
-# data for these stops. Hence, they wont be highly serviced.
-
-highly_serviced_bus_stops = di._feath_to_df('bus_highly_serviced_stops',
-                                            BUS_IN_DIR)
-highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
-                                              TRAIN_IN_DIR)
-
-# Read in from NAPTAN
-naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
-                              dir=os.path.join(os.getcwd(),
-                                                "data",
-                                                "stops"))
-# Create Tiploc column
-naptan_df = dt.create_tiploc_col(naptan_df)  
-
-# Isolating the tram and metro stops
-# Metro and tram data 
-tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
-
-# Take only active, pending or new stops
-tram_metro_stops = (
-    tram_metro_stops[tram_metro_stops['Status'].isin(['active',
-                                                    'pending',
-                                                    'new'])]
-)
-
-# ------------------
-# Combine stops data
-# ------------------
-
-# Add a column for transport mode
-tram_metro_stops['transport_mode'] = 'tram_metro'
-highly_serviced_bus_stops['transport_mode'] = 'bus'
-highly_serviced_train_stops['transport_mode'] = 'train'
-
-# Add a column for stop capacity type
-# Buses are low capcity
-# Trains, trams and metros are high capacity
-tram_metro_stops['capacity_type'] = 'high'
-highly_serviced_bus_stops['capacity_type'] = 'low'
-highly_serviced_train_stops['capacity_type'] = 'high'
-# PLACEHOLDER old code with function
-# To be run on unioned dataset (filtered_stops_df)
-# stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
-
-# Standardise dataset columns for union
-column_renamer = {"NaptanCode": "station_code",
-                "Easting": "easting",
-                "Northing": "northing"}
-
-tram_metro_stops.rename(columns=column_renamer, inplace=True)
-tram_metro_stops = tram_metro_stops[["station_code", "easting",
-                                    "northing", "transport_mode"]]
-
-highly_serviced_bus_stops.rename(columns=column_renamer, inplace=True)
-highly_serviced_bus_stops = highly_serviced_bus_stops[["station_code",
-                                                    "easting",
-                                                    "northing",
-                                                    "transport_mode"]]
-
-# Merge into one dataframe
-dfs_to_combine = [highly_serviced_bus_stops,
-                highly_serviced_train_stops,
-                tram_metro_stops]
-
-filtered_stops_df = pd.concat(dfs_to_combine)
-
-# Convert to geopandas df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
-                                    geom_x='easting',
-                                    geom_y='northing',
-                                    crs=DEFAULT_CRS))
 if __name__ == "__main__":
         
-    # Define la col which is LADXXNM where XX is last 2 digits of year e.g 21
-    # from 2021
-    lad_col = f'LAD{POP_YEAR[-2:]}NM'
+    # Merge datasets into PWCs ready for analysis
+
+    # 1 output area boundaries
+    ew_df = ew_pop_wtd_centr_df.merge(
+        ew_oa_boundaries_df, on="OA11CD", how='left')
     
-    # getting path for .shp file for LA's
-    uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                    "data",
-                                                    "LA_shp",
-                                                    POP_YEAR))
-    # getting the coordinates for all LA's
-    uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
-    # filter for just england and wales
-    lad_code_col = f'LAD{POP_YEAR[-2:]}CD'
-    eng_wales_la_file = (
-        uk_la_file[uk_la_file[lad_code_col].str.startswith('E', 'W')]
-    )
+    # 2 Rural urban classification
+    ew_df = ew_df.merge(ew_urb_rur_df, on="OA11CD", how='left')
     
-    # Get list of all pop_estimate files for target year
-    pop_files = os.listdir(os.path.join(os.getcwd(),
-                                        "data", "population_estimates",
-                                        POP_YEAR
-                                        )
-                        )
-    
-    # Get the population data for the whole nation for the specified year
-    whole_nation_pop_df = di.get_whole_nation_pop_df(pop_files, POP_YEAR)
-    
-    # Get population weighted centroids into a dataframe
-    uk_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
-                        (os.path.join
-                            (DATA_DIR,
-                            'pop_weighted_centroids',
-                            CENTROID_YEAR)))
-    
-    # Get output area boundaries
-    # OA_df = pd.read_csv(config["OA_boundaries_csv"])
-        # Read disability data for disaggregations later
-    disability_df = pd.read_csv(os.path.join(CWD,
-                                            "data", "disability_status",
-                                            "nomis_QS303.csv"),
-                                header=5)
-    # drop the column "mnemonic" as it seems to be a duplicate of the OA code
-    # also "All categories: Long-term health problem or disability" is not needed,
-    # nor is "Day-to-day activities not limited"
-    drop_lst = ["mnemonic",
-                "All categories: Long-term health problem or disability"]
-    disability_df.drop(drop_lst, axis=1, inplace=True)
-    # the col headers are database unfriendly. Defining their replacement names
-    replacements = {"2011 output area": 'OA11CD',
-                    "Day-to-day activities limited a lot": "disab_ltd_lot",
-                    "Day-to-day activities limited a little": "disab_ltd_little",
-                    'Day-to-day activities not limited': "disab_not_ltd"}
-    # renaming the dodgy col names with their replacements
-    disability_df.rename(columns=replacements, inplace=True)
-    
-    # Links were changed at the source site which made the script fail.
-    # Manually downloading the csv for now
-    OA_boundaries_df = pd.read_csv(
-        os.path.join("data",
-                    "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
-    
-    # Merge with uk population df
-    uk_pop_wtd_centr_df = uk_pop_wtd_centr_df.merge(
-        OA_boundaries_df, on="OA11CD", how='left')
-    
-    # Clean after merge
-    uk_pop_wtd_centr_df.drop('OBJECTID_y', axis=1, inplace=True)
-    uk_pop_wtd_centr_df.rename({'OBJECTID_x': 'OBJECTID'}, inplace=True)
-    
-    # Getting the urban-rural classification by OA for England and Wales
-    Urb_Rur_ZIP_LINK = config["Urb_Rur_ZIP_LINK"]
-    URB_RUR_TYPES = config["URB_RUR_TYPES"]
-    
-    # Make a df of the urban-rural classification
-    urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
-                            Urb_Rur_ZIP_LINK,
-                            ['csv'],
-                            URB_RUR_TYPES))
-    
-    # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
-    # I could make this more succinct, but leaving here
-    # for clarity and maintainability
-    urban_dictionary = {'A1': 'Urban major conurbation',
-                        'C1': 'Urban city and town',
-                        'B1': 'Urban minor conurbation',
-                        'C2': 'Urban city and town in a sparse setting'}
-    
-    # mapping to a simple urban or rural classification
-    urb_rur_df["urb_rur_class"] = (urb_rur_df.RUC11CD.map
-                                (lambda x: "urban"
-                                    if x in urban_dictionary.keys()
-                                    else "rural"))
-    
-    # filter the df. We only want OA11CD and an urban/rurual classification
-    urb_rur_df = urb_rur_df[['OA11CD', 'urb_rur_class']]
-    
-    # joining urban rural classification onto the pop df
-    uk_pop_wtd_centr_df = (uk_pop_wtd_centr_df.merge
-                        (urb_rur_df,
-                            on="OA11CD",
-                            how='left'))
-    
-    # Joining the population dataframe to the centroids dataframe,
-    whole_nation_pop_df = whole_nation_pop_df.join(
-        other=uk_pop_wtd_centr_df.set_index('OA11CD'), on='OA11CD', how='left')
-    
-    # Map OA codes to Local Authority Names
-    oa_la_lookup_path = di.get_oa_la_csv_abspath(
-        os.path.join(os.getcwd(), "data", "oa_la_mapping", POP_YEAR))
-    
-    LA_df = pd.read_csv(oa_la_lookup_path, usecols=["OA11CD", lad_col])
-    whole_nation_pop_df = pd.merge(
-        whole_nation_pop_df, LA_df, how="left", on="OA11CD")
-    
-    
+    # 3 Population data
+    # First join output area lookup onto popualtion data
+    ew_pop_df = ew_pop_df.merge(ew_oa_la_lookup_df, on='OA11CD', how='left')
+    # Then add into PWC
+    ew_df = ew_df.join(ew_pop_df.set_index('OA11CD'), on='OA11CD', how='left')
+
+    # 5 local authority boundaries
+    ew_df = ew_df.merge(ew_la_df, how='right', left_on=lad_col,
+                        right_on=lad_col, suffixes=('_pop', '_la'))
+
     # Unique list of LA's to iterate through
-    list_local_auth = eng_wales_la_file[lad_col].unique()
-    
+    list_local_auth = ew_la_df[lad_col].unique()
     
     # selecting random LA for dev purposes
     # eventually will iterate through all LA's
     random_la = random.choice(list_local_auth)
     
-    list_local_auth = [random_la]
-    
+    #list_local_auth = [random_la]
+    list_local_auth = ['Hastings']
     
     # define output dicts to capture dfs
     total_df_dict = {}
@@ -258,76 +84,55 @@ if __name__ == "__main__":
     age_df_dict = {}
     
     for local_auth in list_local_auth:
+
         print(f"Processing: {local_auth}")
-        # Get a polygon of la based on the Location Code
-        la_poly = (gs.get_polygons_of_loccode(
-            geo_df=eng_wales_la_file,
-            dissolveby=lad_col,
-            search=local_auth))
+
+        # Get a polygon of the selected local authority
+        la_poly = gs.get_polygons_of_loccode(geo_df=ew_la_df,
+                                            dissolveby=lad_col,
+                                            search=local_auth)
     
-        # Creating a Geo Dataframe of only stops in la
-        la_stops_geo_df = (gs.find_points_in_poly
-                        (geo_df=stops_geo_df,
-                            polygon_obj=la_poly))
+        # Creating a Geo Dataframe of only stops in slected la
+        stops_in_la_poly = gs.find_points_in_poly(geo_df=stops_geo_df,
+                                                 polygon_obj=la_poly)
     
-        # Make LA LSOA just containing local auth
-        eng_wales_la_file = eng_wales_la_file[[lad_col, 'geometry']]
+        # Subset population data to local authority
+        ew_df = ew_df.loc[ew_df[lad_col] == local_auth]
     
-        # merge the two dataframes limiting to just the la
-        eng_wales_la_pop_df = whole_nation_pop_df.merge(eng_wales_la_file,
-                                                        how='right',
-                                                        left_on=lad_col,
-                                                        right_on=lad_col,
-                                                        suffixes=('_pop', '_LA'))
-    
-        # subset by the local authority name needed
-        eng_wales_la_pop_df = (
-            eng_wales_la_pop_df.loc[eng_wales_la_pop_df[lad_col] == local_auth]
-        )
-    
-        # rename the "All Ages" column to pop_count as it's the population count
-        eng_wales_la_pop_df.rename(columns={"All Ages": "pop_count"}, inplace=True)
-    
+        # Group and reformat age data
+        # ---------------------------
         # Get a list of ages from config
         age_lst = config['age_lst']
     
         # Get a datframe limited to the data ages columns only
-        age_df = dt.slice_age_df(eng_wales_la_pop_df, age_lst)
+        ew_age_df = dt.slice_age_df(ew_df, age_lst)
     
         # Create a list of tuples of the start and finish indexes for the age bins
         age_bins = dt.get_col_bins(age_lst)
     
         # get the ages in the age_df binned, and drop the original columns
-        age_df = dt.bin_pop_ages(age_df, age_bins, age_lst)
+        ew_age_df = dt.bin_pop_ages(ew_age_df, age_bins, age_lst)
     
         # Ridding the la_pop df of the same cols
-        eng_wales_la_pop_df.drop(age_lst, axis=1, inplace=True)
+        ew_df.drop(age_lst, axis=1, inplace=True)
     
         # merging summed+grouped ages back in
-        eng_wales_la_pop_df = pd.merge(eng_wales_la_pop_df,
-                                    age_df,
-                                    left_index=True,
-                                    right_index=True)
+        ew_df = pd.merge(ew_df, ew_age_df, left_index=True, right_index=True)
     
-        # converting into GeoDataFrame
-        eng_wales_la_pop_df = gpd.GeoDataFrame(eng_wales_la_pop_df,
-                                            geometry='geometry_pop',
-                                            crs='EPSG:27700')
+        # Convert new population df into a geodataframe
+        ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs='EPSG:27700')
     
-        # create a buffer around the stops, in column "geometry" #forthedemo
-        # the `buffer_points` function changes the df in situ
-        la_stops_geo_df = gs.buffer_points(la_stops_geo_df)
+        # create a buffer around the stops
+        stops_in_la_poly_buffer = gs.buffer_points(stops_in_la_poly)
     
-        # import the disability data - this is the based on the 2011 census
-        # TODO: use new csv_to_df func to make disability_df
-    
-        # Disability disaggregations
-        eng_wales_la_pop_df = dt.disab_disagg(disability_df, eng_wales_la_pop_df)
+        # Diasggregate disability data and join into population df
+        # --------------------------------------------------------
+        ew_df = dt.disab_disagg(ew_disability_df, ew_df)
     
         # renaming the dodgy col names with their replacements
         replacements = {"males_pop": "male",
                         "fem_pop": "female"}
-        eng_wales_la_pop_df.rename(columns=replacements, inplace=True)
+        ew_df.rename(columns=replacements, inplace=True)
     
         # # merge the sex data with the rest of the population data
         # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
@@ -335,17 +140,17 @@ if __name__ == "__main__":
         # Make a polygon object from the geometry column of the stops df
         # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
     
-        # # find all the pop centroids which are in the la_stops_geo_df
-        pop_in_poly_df = gs.find_points_in_poly(eng_wales_la_pop_df,
-                                                la_stops_geo_df)
+        # find all the pop centroids which are in the la_stops_geo_df
+        pwc_in_poly_df = gs.find_points_in_poly(ew_df,
+                                                stops_in_la_poly_buffer)
     
         # Dedupe the df because many OAs are appearing multiple times
         # (i.e. they are served by multiple stops)
-        pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
+        pwc_in_poly_df = pwc_in_poly_df.drop_duplicates(subset="OA11CD")
     
         # Count the population served by public transport
-        served = pop_in_poly_df.pop_count.sum()
-        full_pop = eng_wales_la_pop_df.pop_count.sum()
+        served = pwc_in_poly_df.pop_count.sum()
+        full_pop = ew_df.pop_count.sum()
         not_served = full_pop - served
         pct_not_served = "{:.2f}".format(not_served / full_pop * 100)
         pct_served = "{:.2f}".format(served / full_pop * 100)
