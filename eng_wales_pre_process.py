@@ -1,19 +1,14 @@
 # Core imports
 import os
-import time
-import random
 
 # Third party imports
-import geopandas as gpd
 import pandas as pd
 import yaml
 # import gptables as gpt
 
 # Module imports
-import geospatial_mods as gs
 import data_ingest as di
 import data_transform as dt
-import data_output as do
 
 # get current working directory
 CWD = os.getcwd()
@@ -27,9 +22,6 @@ with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
-OUTPUT_DIR = config["DATA_OUTPUT"]
-EXT_ORDER = config['EXT_ORDER']
-OUTFILE = config['OUTFILE']
 BUS_IN_DIR = config['bus_in_dir']
 TRAIN_IN_DIR = config['train_in_dir']
 URB_RUR_ZIP_LINK = config["Urb_Rur_ZIP_LINK"]

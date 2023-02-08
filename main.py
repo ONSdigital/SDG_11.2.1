@@ -43,11 +43,13 @@ with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
 CALCULATION_YEAR = str(config["calculation_year"])
 
 # Constants
-lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
+OUTPUT_DIR = config["DATA_OUTPUT"]
+OUTFILE = config['OUTFILE']
 
 if __name__ == "__main__":
         
     # Merge datasets into PWCs ready for analysis
+    lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
 
     # 1 output area boundaries
     ew_df = ew_pop_wtd_centr_df.merge(
@@ -92,9 +94,12 @@ if __name__ == "__main__":
                                             dissolveby=lad_col,
                                             search=local_auth)
     
-        # Creating a Geo Dataframe of only stops in slected la
+        # Creating a Geo Dataframe of only stops in selected la
         stops_in_la_poly = gs.find_points_in_poly(geo_df=stops_geo_df,
                                                  polygon_obj=la_poly)
+
+        # create a buffer around the stops
+        stops_in_la_poly_buffer = gs.buffer_points(stops_in_la_poly)
     
         # Subset population data to local authority
         ew_df = ew_df.loc[ew_df[lad_col] == local_auth]
@@ -116,15 +121,13 @@ if __name__ == "__main__":
         # Ridding the la_pop df of the same cols
         ew_df.drop(age_lst, axis=1, inplace=True)
     
-        # merging summed+grouped ages back in
+        # merging summed and grouped ages back into population df
         ew_df = pd.merge(ew_df, ew_age_df, left_index=True, right_index=True)
     
         # Convert new population df into a geodataframe
         ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs='EPSG:27700')
     
-        # create a buffer around the stops
-        stops_in_la_poly_buffer = gs.buffer_points(stops_in_la_poly)
-    
+
         # Diasggregate disability data and join into population df
         # --------------------------------------------------------
         ew_df = dt.disab_disagg(ew_disability_df, ew_df)
@@ -134,22 +137,21 @@ if __name__ == "__main__":
                         "fem_pop": "female"}
         ew_df.rename(columns=replacements, inplace=True)
     
-        # # merge the sex data with the rest of the population data
-        # bham_pop_df = bham_pop_df.merge(sex_df, on='OA11CD', how='left')
+
+        # Extract the population served by public transport
+        # -------------------------------------------------
     
-        # Make a polygon object from the geometry column of the stops df
-        # all_stops_poly = gs.poly_from_polys(birmingham_stops_geo_df)
-    
-        # find all the pop centroids which are in the la_stops_geo_df
-        pwc_in_poly_df = gs.find_points_in_poly(ew_df,
-                                                stops_in_la_poly_buffer)
+        # find all the pop centroids which are in the buffered stops
+        pwc_in_stops_buffer_df = (
+            gs.find_points_in_poly(ew_df, stops_in_la_poly_buffer)
+        )
     
         # Dedupe the df because many OAs are appearing multiple times
         # (i.e. they are served by multiple stops)
-        pwc_in_poly_df = pwc_in_poly_df.drop_duplicates(subset="OA11CD")
+        pwc_in_stops_buffer_df = pwc_in_stops_buffer_df.drop_duplicates(subset="OA11CD")
     
         # Count the population served by public transport
-        served = pwc_in_poly_df.pop_count.sum()
+        served = pwc_in_stops_buffer_df.pop_count.sum()
         full_pop = ew_df.pop_count.sum()
         not_served = full_pop - served
         pct_not_served = "{:.2f}".format(not_served / full_pop * 100)
@@ -166,6 +168,9 @@ if __name__ == "__main__":
                                     "Percentage served": [pct_served],
                                     "Percentage unserved": [pct_not_served]})
     
+        # Reformat data for output
+        # ------------------------
+
         # Re-orienting the df to what's accepted by the reshaper and renaming col
         la_results_df = la_results_df.T.rename(columns={0: "Total"})
     
@@ -183,34 +188,34 @@ if __name__ == "__main__":
         # Output this iteration's df to the dict
         total_df_dict[local_auth] = la_results_df_out
     
-        # # Disaggregations!
-        # pd.set_option("precision", 1)
-    
-        # Calculating those served and not served by age
-        age_bins_ = ['0-4', '5-9', '10-14', '15-19', '20-24',
+        # Run the disaggregations
+        # -----------------------
+        # Age
+        # ---
+        grouped_age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
                     '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
                     '55-59', '60-64', '65-69', '70-74', '75-79',
                     '80-84', '85-89', '90+']
     
-        age_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
-                                                    pop_in_poly_df=pop_in_poly_df,
-                                                    cols_lst=age_bins_)
+        age_servd_df = (
+            dt.served_proportions_disagg(pop_df=ew_df,
+                                        pop_in_poly_df=pwc_in_stops_buffer_df,
+                                        cols_lst=grouped_age_bins)
+        )
     
         # Feeding the results to the reshaper
         age_servd_df_out = do.reshape_for_output(age_servd_df,
                                                 id_col="Age",
                                                 local_auth=local_auth)
     
-        # Output this local auth's age df to the dict
         age_df_dict[local_auth] = age_servd_df_out
     
-        # print(age_servd_df)
-    
-        # # Calculating those served and not served by sex
+        # Sex
+        # ---
         sex_cols = ['male', 'female']
     
-        sex_servd_df = dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
-                                                    pop_in_poly_df=pop_in_poly_df,
+        sex_servd_df = dt.served_proportions_disagg(pop_df=ew_df,
+                                                    pop_in_poly_df=pwc_in_stops_buffer_df,
                                                     cols_lst=sex_cols)
     
         # Feeding the results to the reshaper
@@ -218,15 +223,15 @@ if __name__ == "__main__":
                                                 id_col="Sex",
                                                 local_auth=local_auth)
     
-        # Output this iteration's sex df to the dict
         sex_df_dict[local_auth] = sex_servd_df_out
     
-        # Calculating those served and not served by disability
+        # Disabled
+        # --------
         disab_cols = ["number_disabled"]
     
         disab_servd_df = (
-            dt.served_proportions_disagg(pop_df=eng_wales_la_pop_df,
-                                        pop_in_poly_df=pop_in_poly_df,
+            dt.served_proportions_disagg(pop_df=ew_df,
+                                        pop_in_poly_df=pwc_in_stops_buffer_df,
                                         cols_lst=disab_cols)
         )
     
@@ -242,30 +247,33 @@ if __name__ == "__main__":
                                 value="Disabled",
                                 inplace=True)
     
-        # Output this iteration's sex df to the dict
         sex_df_dict[local_auth] = sex_servd_df_out
     
-        # Calculating non-disabled people served and not served
+        # Not disabled
+        # ------------
         # Disability disaggregation - get disability results in disab_df_dict
-        disab_df_dict = dt.disab_dict(eng_wales_la_pop_df, pop_in_poly_df, disab_df_dict, local_auth)
+        disab_df_dict = dt.disab_dict(ew_df, pwc_in_stops_buffer_df, disab_df_dict, local_auth)
 
-        # Calculating those served and not served by urban/rural
+        # Urban and rural
         urb_col = ["urb_rur_class"]
     
         # Filtering by urban and rural to make 2 dfs
-        urb_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "urban"]
-        rur_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "rural"]
+        urb_df = ew_df[ew_df.urb_rur_class == "urban"]
+        rur_df = ew_df[ew_df.urb_rur_class == "rural"]
     
-        # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
-        # filtered in the same way
-        urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
+        # Because these dfs a filtered to fewer rows, the pwc_in_stops_buffer_df
+        # must be filtered in the same way
+        urb_pop_in_poly_df = (urb_df.merge(pwc_in_stops_buffer_df,
                                         on="OA11CD", how="left")
                             .loc[:, ['OA11CD', 'pop_count_y']])
+
         urb_pop_in_poly_df.rename(
             columns={'pop_count_y': 'pop_count'}, inplace=True)
-        rur_pop_in_poly_df = (rur_df.merge(pop_in_poly_df,
+
+        rur_pop_in_poly_df = (rur_df.merge(pwc_in_stops_buffer_df,
                                         on="OA11CD", how="left")
                             .loc[:, ['OA11CD', 'pop_count_y']])
+
         rur_pop_in_poly_df.rename(
             columns={'pop_count_y': 'pop_count'}, inplace=True)
     
@@ -297,15 +305,17 @@ if __name__ == "__main__":
         # Combining urban and rural dfs
         urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
     
-        # Output this iteration's urb and rur df to the dict
         urb_rur_df_dict[local_auth] = urb_rur_servd_df_out
     
+
+    # Outputting results to CSV
+    # -------------------------
+    # Create dataframes for dissaggregations accross all local authorities
     all_la = pd.concat(total_df_dict.values())
     sex_all_la = pd.concat(sex_df_dict.values())
     urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
     disab_all_la = pd.concat(disab_df_dict.values())
     age_all_la = pd.concat(age_df_dict.values())
-    
     
     output_tabs = {}
     
@@ -317,11 +327,10 @@ if __name__ == "__main__":
         disab_all_la,
         age_all_la]
     final_result = pd.concat(all_results_dfs)
-    final_result["Year"] = POP_YEAR
+    final_result["Year"] = CALCULATION_YEAR
     
     # Resetting index for gptables
     final_result.reset_index(inplace=True)
-    
     
     # Outputting to CSV
     final_result = do.reorder_final_df(final_result)
