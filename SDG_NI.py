@@ -31,6 +31,8 @@ pop_year = str(config["calculation_year"])
 DATA_DIR = config["DATA_DIR"]
 boundary_year = "2021"
 DEFAULT_CRS = config["DEFAULT_CRS"]
+OUTFILE = config['OUTFILE_NI']
+OUTPUT_DIR = config["DATA_OUTPUT"]
 
 
 #grabs northern ireland bus stops path
@@ -335,7 +337,8 @@ final_result["Year"] = pop_year
 
 # output to CSV
 final_result = do.reorder_final_df(final_result)
-final_result.to_csv("NI_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 
 # end time

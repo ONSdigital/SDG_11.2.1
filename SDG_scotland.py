@@ -32,6 +32,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Constants
 DEFAULT_CRS = config["DEFAULT_CRS"]
 DATA_DIR = config["DATA_DIR"]
+OUTFILE = config['OUTFILE_SC']
+OUTPUT_DIR = config["DATA_OUTPUT"]
 
 pop_year = "2011"
 boundary_year = "2021"
@@ -303,7 +305,8 @@ final_result["Year"] = pop_year
 
 # Outputting to CSV
 final_result = do.reorder_final_df(final_result)
-final_result.to_csv("Scotland_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 end = time.time()
 

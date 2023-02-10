@@ -9,6 +9,8 @@ EXT_ORDER :
   - csv
   - zip
 OUTFILE: "SDG_11.2.1_results.csv"
+OUTFILE_NI: "NI_results.csv"
+OUTFILE_SC: "SC_results.csv"
 
 # Mapping - geospatial
 DEFAULT_CRS : 'EPSG:27700'
