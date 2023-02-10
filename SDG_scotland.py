@@ -198,6 +198,7 @@ for local_auth in sc_auth:
     only_la_pwc_with_pop = (
         only_la_pwc_with_pop.drop(['easting', 'northing'], axis=1)
     )
+
     pop_in_poly_df = gs.find_points_in_poly(
         only_la_pwc_with_pop, la_stops_geo_df)
 

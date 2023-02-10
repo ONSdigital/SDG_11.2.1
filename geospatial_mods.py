@@ -105,30 +105,3 @@ def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
                     ['index_right'].notna()])
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
-
-
-def points_in_polygons(points: gpd.GeoDataFrame,
-                       polygons: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
-    """Finds points in polygons.
-
-    A function to carry out a standard points in polygons query
-    between a geodataframe of points and a geodataframe of polygons
-    
-    Args:
-        points (gpd.GeoDataFrame): Points to be found in polygons.
-        polygons (gpd.GeoDataFrame): Polygons to find points in.
-
-    Returns:
-        gpd.GeoDataFrame: Points found in polygons.
-    """
-    # Extract the polygon geometries, this avoids creating uneeded columns
-    # in the joined dataframe
-    polygons = gpd.GeoDataFrame(polygons.geometry)
-    
-    # Carry out points in polygons query using sjoin
-    joined_df = gpd.sjoin(points,
-                          polygons,
-                          how='left',
-                          predicate='within')
-    
-    return joined_df
