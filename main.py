@@ -7,28 +7,23 @@ import random
 import geopandas as gpd
 import pandas as pd
 import yaml
-# import gptables as gpt
 
 # Module imports
 import geospatial_mods as gs
 import data_transform as dt
 import data_output as do
 
-start_time = time.time()
-
 # Data imports
 from eng_wales_pre_process import stops_geo_df
-from eng_wales_pre_process import ew_urb_rur_df
 from eng_wales_pre_process import ew_la_df
-from eng_wales_pre_process import ew_oa_la_lookup_df
-from eng_wales_pre_process import ew_oa_boundaries_df
-from eng_wales_pre_process import ew_pop_df
-from eng_wales_pre_process import ew_pop_wtd_centr_df
 from eng_wales_pre_process import ew_disability_df
-from eng_wales_pre_process import ew_urb_rur_df
+from eng_wales_pre_process import ew_df
 
 
-# get current working directory
+# Start pipeline
+start_time = time.time()
+
+# Get current working directory
 CWD = os.getcwd()
 
 # Load config
@@ -38,35 +33,17 @@ with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
     print(f"Config loaded in {module}")
 
 
-# Years
-# Getting the year for population data
+# Load years
 CALCULATION_YEAR = str(config["calculation_year"])
 
-# Constants
-OUTPUT_DIR = config["DATA_OUTPUT"]
-OUTFILE = config['OUTFILE']
+# Load constants
+OUTPUT_DIR = config["data_output"]
+OUTFILE = config['outfile']
+DEFAULT_CRS = config['default_crs']
 
 if __name__ == "__main__":
-        
-    # Merge datasets into PWCs ready for analysis
+
     lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
-
-    # 1 output area boundaries
-    ew_df = ew_pop_wtd_centr_df.merge(
-        ew_oa_boundaries_df, on="OA11CD", how='left')
-    
-    # 2 Rural urban classification
-    ew_df = ew_df.merge(ew_urb_rur_df, on="OA11CD", how='left')
-    
-    # 3 Population data
-    # First join output area lookup onto popualtion data
-    ew_pop_df = ew_pop_df.merge(ew_oa_la_lookup_df, on='OA11CD', how='left')
-    # Then add into PWC
-    ew_df = ew_df.join(ew_pop_df.set_index('OA11CD'), on='OA11CD', how='left')
-
-    # 5 local authority boundaries
-    ew_df = ew_df.merge(ew_la_df, how='right', left_on=lad_col,
-                        right_on=lad_col, suffixes=('_pop', '_la'))
 
     # Unique list of LA's to iterate through
     list_local_auth = ew_la_df[lad_col].unique()
@@ -98,34 +75,14 @@ if __name__ == "__main__":
         stops_in_la_poly = gs.find_points_in_poly(geo_df=stops_geo_df,
                                                  polygon_obj=la_poly)
 
-        # create a buffer around the stops
+        # Create a buffer around the stops
         stops_in_la_poly_buffer = gs.buffer_points(stops_in_la_poly)
     
         # Subset population data to local authority
         ew_df = ew_df.loc[ew_df[lad_col] == local_auth]
-    
-        # Group and reformat age data
-        # ---------------------------
-        # Get a list of ages from config
-        age_lst = config['age_lst']
-    
-        # Get a datframe limited to the data ages columns only
-        ew_age_df = dt.slice_age_df(ew_df, age_lst)
-    
-        # Create a list of tuples of the start and finish indexes for the age bins
-        age_bins = dt.get_col_bins(age_lst)
-    
-        # get the ages in the age_df binned, and drop the original columns
-        ew_age_df = dt.bin_pop_ages(ew_age_df, age_bins, age_lst)
-    
-        # Ridding the la_pop df of the same cols
-        ew_df.drop(age_lst, axis=1, inplace=True)
-    
-        # merging summed and grouped ages back into population df
-        ew_df = pd.merge(ew_df, ew_age_df, left_index=True, right_index=True)
-    
-        # Convert new population df into a geodataframe
-        ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs='EPSG:27700')
+          
+        # Convert population df into a geodataframe
+        ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs=DEFAULT_CRS)
     
 
         # Diasggregate disability data and join into population df

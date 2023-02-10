@@ -30,8 +30,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 
 # Constants
-DEFAULT_CRS = config["DEFAULT_CRS"]
-DATA_DIR = config["DATA_DIR"]
+DEFAULT_CRS = config["default_crs"]
+DATA_DIR = config["data_dir"]
 
 pop_year = "2011"
 boundary_year = "2021"

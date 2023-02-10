@@ -20,18 +20,18 @@ with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
     print(f"Config loaded in {module}")
 
 # Constants
-DEFAULT_CRS = config["DEFAULT_CRS"]
-DATA_DIR = config["DATA_DIR"]
+DEFAULT_CRS = config["default_crs"]
+DATA_DIR = config["data_dir"]
 BUS_IN_DIR = config['bus_in_dir']
 TRAIN_IN_DIR = config['train_in_dir']
-URB_RUR_ZIP_LINK = config["Urb_Rur_ZIP_LINK"]
-URB_RUR_TYPES = config["URB_RUR_TYPES"]
+URB_RUR_ZIP_LINK = config["urb_rur_zip_link"]
+URB_RUR_TYPES = config["urb_rur_types"]
 
 # Years
 CALCULATION_YEAR = str(config["calculation_year"])
 CENTROID_YEAR = str(config["centroid_year"])
-EW_OA_LOOKUP_YEAR = '2019'
-POP_YEAR = '2019'
+EW_OA_LOOKUP_YEAR = str(config["ew_oa_lookup_year"])
+POP_YEAR = str(config["population_year"])
 
 
 # ---------------------------
@@ -49,7 +49,7 @@ highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
                                               TRAIN_IN_DIR)
 
 # Get Tram data
-naptan_df = di.get_stops_file(url=config["NAPTAN_API"],
+naptan_df = di.get_stops_file(url=config["naptan_api"],
                               dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
@@ -165,8 +165,6 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 # Load and process population data
 # --------------------------------
 
-# England and wales
-
 # Get list of all pop_estimate files for target year
 ew_pop_files = os.listdir(os.path.join(os.getcwd(),
                                     "data", "population_estimates",
@@ -179,6 +177,25 @@ ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
 
 # Keep only required columns
 ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD', 'index'], axis=1)
+
+# Group and reformat age data
+# Get a list of ages from config
+age_lst = config['age_lst']
+    
+# Get a datframe limited to the data ages columns only
+ew_age_df = dt.slice_age_df(ew_pop_df, age_lst)
+    
+# Create a list of tuples of the start and finish indexes for the age bins
+age_bins = dt.get_col_bins(age_lst)
+    
+# get the ages in the age_df binned, and drop the original columns
+ew_age_df = dt.bin_pop_ages(ew_age_df, age_bins, age_lst)
+
+# Remove the same columns from original population data
+ew_pop_df.drop(age_lst, axis=1, inplace=True)
+
+# merging summed and grouped ages back into population df
+ew_pop_df = pd.merge(ew_pop_df, ew_age_df, left_index=True, right_index=True)
 
 
 # -----------------------------------------------
@@ -221,9 +238,9 @@ replacements = {"2011 output area": 'OA11CD',
 ew_disability_df.rename(columns=replacements, inplace=True)
 
 
-# --------------------------------
+# -------------------------
 # Load and process RUC data
-# --------------------------------
+# -------------------------
 
 ew_urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
                         URB_RUR_ZIP_LINK,
@@ -246,3 +263,28 @@ ew_urb_rur_df["urb_rur_class"] = (ew_urb_rur_df.RUC11CD.map
 
 # filter the df. We only want OA11CD and an urban/rurual classification
 ew_urb_rur_df = ew_urb_rur_df[['OA11CD', 'urb_rur_class']]
+
+
+# -----------------------------------
+# Merge relevant datasets in the PWCs
+# -----------------------------------
+
+# Merge datasets into PWCs ready for analysis
+lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
+
+# 1 output area boundaries
+ew_df = ew_pop_wtd_centr_df.merge(
+    ew_oa_boundaries_df, on="OA11CD", how='left')
+    
+# 2 Rural urban classification
+ew_df = ew_df.merge(ew_urb_rur_df, on="OA11CD", how='left')
+    
+# 3 Population data
+# First join output area lookup onto popualtion data
+ew_pop_df = ew_pop_df.merge(ew_oa_la_lookup_df, on='OA11CD', how='left')
+# Then add into PWC
+ew_df = ew_df.join(ew_pop_df.set_index('OA11CD'), on='OA11CD', how='left')
+
+# 4 local authority boundaries
+ew_df = ew_df.merge(ew_la_df, how='right', left_on=lad_col,
+                    right_on=lad_col, suffixes=('_pop', '_la'))

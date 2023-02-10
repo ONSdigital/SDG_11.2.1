@@ -28,9 +28,9 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Constants
 pop_year = str(config["calculation_year"])
-DATA_DIR = config["DATA_DIR"]
+DATA_DIR = config["data_dir"]
 boundary_year = "2021"
-DEFAULT_CRS = config["DEFAULT_CRS"]
+DEFAULT_CRS = config["default_crs"]
 
 
 #grabs northern ireland bus stops path

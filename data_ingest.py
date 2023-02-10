@@ -26,7 +26,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
-DATA_DIR = config["DATA_DIR"]
+DATA_DIR = config["data_dir"]
 
 
 def any_to_pd(file_nm: str,
@@ -576,8 +576,8 @@ def save_latest_stops_as_feather(file_name):
     """
     # read in csv
     file = pd.read_csv(file_name,
-                       usecols=config["NAPTAN_TYPES"].keys(),
-                       dtype=config["NAPTAN_TYPES"])
+                       usecols=config["naptan_types"].keys(),
+                       dtype=config["naptan_types"])
 
     # get output path
     output_path = os.path.join(os.getcwd(),
