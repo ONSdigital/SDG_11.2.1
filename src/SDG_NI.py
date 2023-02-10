@@ -35,7 +35,7 @@ OUTFILE = config['OUTFILE_NI']
 OUTPUT_DIR = config["DATA_OUTPUT"]
 
 
-#grabs northern ireland bus stops path
+# grabs northern ireland bus stops path
 ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
 
 # reads in NI bus stop data as pandas df
@@ -178,13 +178,13 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # defining age data path
-age_path = os.path.join(CWD,"data","census-2011-qs103ni.xlsx")
+age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
 
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
-                       
+
 # gets northern ireland age list
-age_lst = config['ni_age_lst']      
+age_lst = config['ni_age_lst']
 
 # slices df to just age cols
 age_df_sliced = dt.slice_age_df(age_df, age_lst)
@@ -196,7 +196,11 @@ age_bins = dt.get_col_bins(age_lst)
 age_df = dt.bin_pop_ages(age_df_sliced, age_bins, age_lst)
 
 # merge ages back onto dataframe
-pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df, left_on="OA11CD", right_index=True)
+pwc_with_pop_with_la = pd.merge(
+    pwc_with_pop_with_la,
+    age_df,
+    left_on="OA11CD",
+    right_index=True)
 
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
@@ -229,7 +233,7 @@ for local_auth in ni_auth:
     # filter only by current la
     only_la_pwc_with_pop = gpd.GeoDataFrame(pwc_with_pop_with_la[pwc_with_pop_with_la["LGD2014NAME"] == local_auth],
                                             geometry='geometry', crs='EPSG:27700')
-    
+
     # Disability disaggregation
 
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
@@ -248,7 +252,8 @@ for local_auth in ni_auth:
     pct_not_served = "{:.2f}".format(not_served / full_pop * 100)
     pct_served = "{:.2f}".format(served / full_pop * 100)
 
-    print(f"""The number of people who are served by public transport is {served}.\n
+    print(
+        f"""The number of people who are served by public transport is {served}.\n
             The full population of {local_auth} is calculated as {full_pop}
             While the number of people who are not served is {not_served}""")
 
@@ -281,7 +286,11 @@ for local_auth in ni_auth:
                                             urb_rur_df_dict, local_auth)
 
     # Disability disaggregation - get disability results in disab_df_dict
-    disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
+    disab_df_dict = dt.disab_dict(
+        only_la_pwc_with_pop,
+        pop_in_poly_df,
+        disab_df_dict,
+        local_auth)
 
     # Sex disaggregation
     # # # renaming Scotland sex col names with their replacements
@@ -304,17 +313,16 @@ for local_auth in ni_auth:
     # Output this iteration's sex df to the dict
     sex_df_dict[local_auth] = sex_servd_df_out
 
-
-    ## Age disaggregation
+    # Age disaggregation
     age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
-                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
-                 '55-59', '60-64', '65-69', '70-74', '75-79',
-                 '80-84', '85-89', '90+']
-    
+                '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                '55-59', '60-64', '65-69', '70-74', '75-79',
+                '80-84', '85-89', '90+']
+
     age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins)
-    
+
     # Feeding the results to the reshaper
     age_servd_df_out = do.reshape_for_output(age_servd_df,
                                              id_col="Age",

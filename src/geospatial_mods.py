@@ -17,6 +17,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 LOWERBUFFER = config["low_cap_buffer"]
 UPPERBUFFER = config["high_cap_buffer"]
 
+
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
                             dissolveby='OA11CD',
                             search=None) -> gpd.GeoDataFrame:
@@ -59,16 +60,16 @@ def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     # raise an error if high or low not correct capacity type
     for value in geo_df["capacity_type"]:
         if value not in ["high", "low"]:
-            raise ValueError(f"""{value} is not a valid capacity type, 
+            raise ValueError(f"""{value} is not a valid capacity type,
                              should be either high or low""")
     # conditions
     conditions = [geo_df['capacity_type'] == "low",
                   geo_df['capacity_type'] == "high"]
-    
+
     # values
     values = [geo_df.geometry.buffer(LOWERBUFFER),
-               geo_df.geometry.buffer(UPPERBUFFER)]
-    
+              geo_df.geometry.buffer(UPPERBUFFER)]
+
     # apply conditions
     geo_df['geometry'] = np.select(condlist=conditions,
                                    choicelist=values)
