@@ -56,9 +56,22 @@ def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     Returns:
         gpd.DataFrame: A dataframe of polygons create from the buffer.
     """
-    geo_df['geometry'] = np.where(geo_df['capacity_type'] == "low",
-                                  geo_df.geometry.buffer(LOWERBUFFER),
-                                  geo_df.geometry.buffer(UPPERBUFFER))
+    # raise an error if high or low not correct capacity type
+    for value in geo_df["capacity_type"]:
+        if value not in ["high", "low"]:
+            raise ValueError(f"""{value} is not a valid capacity type, 
+                             should be either high or low""")
+    # conditions
+    conditions = [geo_df['capacity_type'] == "low",
+                  geo_df['capacity_type'] == "high"]
+    
+    # values
+    values = [geo_df.geometry.buffer(LOWERBUFFER),
+               geo_df.geometry.buffer(UPPERBUFFER)]
+    
+    # apply conditions
+    geo_df['geometry'] = np.select(condlist=conditions,
+                                   choicelist=values)
 
     return geo_df
 
