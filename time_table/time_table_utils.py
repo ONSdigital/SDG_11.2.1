@@ -25,7 +25,8 @@ def filter_stops(stops_df: pd.DataFrame) -> pd.DataFrame:
     stop_types = ["RSE", "RLY", "RPL", "TMU", "MET", "PLT",
                   "BCE", "BST", "BCQ", "BCS", "BCT"]
 
-    # Filter the stops based on the status column (active, pending, new and None)
+    # Filter the stops based on the status column (active, pending, new and
+    # None)
     filtered_stops = stops_df[(stops_df["Status"] == "active") |
                               (stops_df["Status"] == "pending") |
                               (stops_df["Status"] is None) |
@@ -180,8 +181,8 @@ def extract_msn_data(msn_file: str) -> List[List]:
         for line in msn_data:
             # Only interested in rows starting with A.
             # Rows starting with L display aliases of station names
-            # Stripping the values because some are padded out with blank spaces
-            # as part of the file format.
+            # Stripping the values because some are padded out with blank
+            # spaces as part of the file format.
             # Coordinate data provided is actually the grid reference
             # but without the 100km square (two letters at the start) so
             # very difficult to extract coordinates. Hence, will add in
@@ -196,6 +197,7 @@ def extract_msn_data(msn_file: str) -> List[List]:
                                      tiploc_code,
                                      crs_code])
     return msn_data_lst
+
 
 # add type hints
 def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
@@ -213,8 +215,9 @@ def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
         * CR = changes en route. Doesnt contain any arrival / departure times.
 
     Process:
-    * Starts by finding all the schedules within the file. 
-    * Extract relevant information into the journey dataframe, and then copy unique_id
+    * Starts by finding all the schedules within the file.
+    * Extract relevant information into the journey dataframe, and then copy
+    unique_id
     * onto all trips within that journey.
 
     Args:
@@ -222,7 +225,7 @@ def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
 
 
     Returns:
-        schedules (list): list of lists containing schedule information 
+        schedules (list): list of lists containing schedule information
             ready for dataframe
         stops (list): list of lists containing stop information
             ready for dataframe
