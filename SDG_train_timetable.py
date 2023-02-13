@@ -1,5 +1,4 @@
 # core
-from main import naptan_df
 import os
 
 # third party
@@ -8,6 +7,7 @@ import pandas as pd
 
 # our modules
 import data_transform as dt
+import data_ingest as di
 
 # get current working directory
 CWD = os.getcwd()
@@ -21,8 +21,6 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Parameters
 trn_data_output_dir = os.path.join(CWD, 'data', 'england_train_timetable')
-station_locations = os.path.join(trn_data_output_dir,
-                                 config['station_locations'])
 msn_file = os.path.join(trn_data_output_dir, config["train_msn_filename"])
 mca_file = os.path.join(trn_data_output_dir, config["train_mca_filename"])
 day_filter_type = config["day_filter"]
@@ -71,22 +69,6 @@ msn_df = pd.DataFrame(msn, columns=['station_name', 'tiploc_code', 'crs_code'])
 
 # Remove the duplicates in crs_code
 msn_df = msn_df.drop_duplicates(subset=['crs_code'])
-
-# Attach the coordinates for each train station
-station_locations = os.path.join(trn_data_output_dir, 'station_locations.csv')
-station_locations_df = pd.read_csv(
-    station_locations, usecols=[
-        'station_code', 'latitude', 'longitude'])
-
-# Join coordinates onto msn data
-# left join to master station names and see which ones dont have lat and long
-msn_data = pd.merge(msn_df, station_locations_df, how='left',
-                    left_on='crs_code', right_on='station_code')
-msn_data = msn_data[['station_name', 'tiploc_code',
-                     'crs_code', 'latitude', 'longitude']]
-
-# Remove stations with no coordinates
-msn_data = msn_data.dropna(subset=['latitude', 'longitude'], how='any')
 
 
 # Extract mca data
@@ -319,17 +301,17 @@ highly_serviced_train_stops_df = (
     train_frequencies_df[(train_frequencies_df > 0).all(axis=1)]
 )
 
-# Read in station location data
-# Attach the coordinates for each train station
-# station_locations_df = pd.read_csv(station_locations,
-#                                    usecols=['station_code',
-#                                             'easting',
-#                                             'northing'])
-# Get the naptan data from main.py
-# limit to only the columns we need
+# Extract easting, northing and tiploc code from naptan data
+naptan_df = di.get_stops_file(url=config["naptan_api"],
+                              dir=os.path.join(os.getcwd(),
+                                                "data",
+                                                "stops"))
 stations_df = naptan_df[naptan_df['StopType'] == 'RLY']
-station_locations_df = stations_df[['Easting', 'Northing', 'tiploc_code']]
 
+# Create Tiploc column
+stations_df = dt.create_tiploc_col(stations_df)  
+
+station_locations_df = stations_df[['Easting', 'Northing', 'tiploc_code']]
 
 # Add easting and northing
 highly_serviced_train_stops_df = (

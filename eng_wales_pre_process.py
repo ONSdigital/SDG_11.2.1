@@ -4,7 +4,6 @@ import os
 # Third party imports
 import pandas as pd
 import yaml
-# import gptables as gpt
 
 # Module imports
 import data_ingest as di
@@ -53,8 +52,6 @@ naptan_df = di.get_stops_file(url=config["naptan_api"],
                               dir=os.path.join(os.getcwd(),
                                                 "data",
                                                 "stops"))
-# Create Tiploc column
-naptan_df = dt.create_tiploc_col(naptan_df)  
 
 # Isolating the tram and metro stops
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
@@ -176,7 +173,7 @@ ew_pop_files = os.listdir(os.path.join(os.getcwd(),
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
 
 # Keep only required columns
-ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD', 'index'], axis=1)
+ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
 
 # Group and reformat age data
 # Get a list of ages from config
