@@ -17,6 +17,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 LOWERBUFFER = config["low_cap_buffer"]
 UPPERBUFFER = config["high_cap_buffer"]
 
+
 def get_polygons_of_loccode(geo_df: gpd.GeoDataFrame,
                             dissolveby='OA11CD',
                             search=None) -> gpd.GeoDataFrame:
@@ -56,9 +57,22 @@ def buffer_points(geo_df: gpd.GeoDataFrame) -> gpd.GeoDataFrame:
     Returns:
         gpd.DataFrame: A dataframe of polygons create from the buffer.
     """
-    geo_df['geometry'] = np.where(geo_df['capacity_type'] == "low",
-                                  geo_df.geometry.buffer(LOWERBUFFER),
-                                  geo_df.geometry.buffer(UPPERBUFFER))
+    # raise an error if high or low not correct capacity type
+    for value in geo_df["capacity_type"]:
+        if value not in ["high", "low"]:
+            raise ValueError(f"""{value} is not a valid capacity type,
+                             should be either high or low""")
+    # conditions
+    conditions = [geo_df['capacity_type'] == "low",
+                  geo_df['capacity_type'] == "high"]
+
+    # values
+    values = [geo_df.geometry.buffer(LOWERBUFFER),
+              geo_df.geometry.buffer(UPPERBUFFER)]
+
+    # apply conditions
+    geo_df['geometry'] = np.select(condlist=conditions,
+                                   choicelist=values)
 
     return geo_df
 
@@ -100,7 +114,7 @@ def points_in_polygons(points: gpd.GeoDataFrame,
 
     A function to carry out a standard points in polygons query
     between a geodataframe of points and a geodataframe of polygons
-    
+
     Args:
         points (gpd.GeoDataFrame): Points to be found in polygons.
         polygons (gpd.GeoDataFrame): Polygons to find points in.
@@ -111,11 +125,11 @@ def points_in_polygons(points: gpd.GeoDataFrame,
     # Extract the polygon geometries, this avoids creating uneeded columns
     # in the joined dataframe
     polygons = gpd.GeoDataFrame(polygons.geometry)
-    
+
     # Carry out points in polygons query using sjoin
     joined_df = gpd.sjoin(points,
                           polygons,
                           how='left',
                           predicate='within')
-    
+
     return joined_df

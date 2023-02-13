@@ -1,9 +1,17 @@
 from typing import List
 import pandas as pd
 from convertbng.util import convert_bng
-import numpy as np
-from datetime import date, datetime
 import data_output as do
+import logging
+import os
+
+
+# Get CWD
+CWD = os.getcwd()
+
+
+# Create logger
+logger = logging.getLogger(__name__)
 
 
 def slice_age_df(df: pd.DataFrame, col_nms: List[str]):
@@ -71,7 +79,8 @@ def bin_pop_ages(age_df, age_bins, col_nms):
             age_df[col] = age_df[col].astype(int)
 
     def _age_bin(age_df, age_bins):
-        "Function sums the counts for corresponding age-bins and assigns them a column in age_df."
+        """Function sums the counts for corresponding age-bins and assigns
+        them a column in age_df."""
         for bin in age_bins:
             age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,
                                                       bin[0]:bin[1]].sum(axis=1)
@@ -185,73 +194,6 @@ def _calc_proprtn_srvd_unsrvd(total_pop,
     return results_dict
 
 
-def highly_serv_stops(region):
-    """Retrieves timetable data from the Traveline National Dataset for
-    any region. Filters stops with that have >1 departure per hour
-    on a weekday (Wed is default) between 6am and 8pm.
-
-    Args:
-        region (str): the name of the region of the UK that the data
-            is needed for.
-    """
-    #  day="Wed"
-    return None
-
-
-def filter_stops(stops_df):
-    """Filters the stops dataframe based on two things:
-
-    | 1) Status column. We want to keep stops which are active, pending or new.
-    | 2) StopType want only to include bus and rail stops.
-
-    Args:
-        stops_df (pd.DataFrame): the dataframe to filter.
-
-    Returns:
-        pd.DataFrame: Filtered_stops which meet the criteria
-            of keeping based on status/stoptype columns.
-    """
-    # stop_types we would like to keep within the dataframe
-    stop_types = ["RSE", "RLY", "RPL", "TMU", "MET", "PLT",
-                  "BCE", "BST", "BCQ", "BCS", "BCT"]
-
-    filtered_stops = stops_df[(stops_df["Status"] == "active") |
-                              (stops_df["Status"] == "pending") |
-                              (stops_df["Status"] is None) |
-                              (stops_df["Status"] == "new")]
-
-    boolean_stops_type = filtered_stops["StopType"].isin(stop_types)
-    filter_stops = filtered_stops[boolean_stops_type]
-
-    return filter_stops
-
-
-def add_stop_capacity_type(stops_df):
-    """Adds capacity_type column.
-    Column is defined with the following dictionary using the StopType
-    Bus stops are low capacity, train stations are high capacity.
-    Args:
-        stops_df (pd.DataFrame): The dataframe to add the column to.
-    Returns:
-        pd.DataFrame: dataframe with new capacity_type column.
-    """
-    dictionary_map = {"RSE": "high",
-                      "RLY": "high",
-                      "RPL": "high",
-                      "TMU": "high",
-                      "MET": "high",
-                      "PLT": "high",
-                      "BCE": "low",
-                      "BST": "low",
-                      "BCQ": "low",
-                      "BCS": "low",
-                      "BCT": "low"}
-
-    stops_df["capacity_type"] = stops_df["StopType"].map(dictionary_map)
-
-    return stops_df
-
-
 def disab_disagg(disability_df, la_pop_df):
     """Calculates number of people in the population that are classified as
         disabled or not disabled and this is merged onto the local authority
@@ -326,28 +268,28 @@ def disab_disagg(disability_df, la_pop_df):
 
 def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
     """Creates the dataframe including those who are and are not served by public transport
-    and places it into a disability dictionary for each local authority of interest for 
+    and places it into a disability dictionary for each local authority of interest for
     the final csv output.
 
     Args:
         la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                     output area codes and population estimates.
-        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside 
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside
                                             the polygon.
         disability_dict (dict): Dictionary to store the disability
                                     dataframe.
         local_auth (str): The local authority of interest.
 
     Returns:
-        disab_df_dict (dict): Dictionary with a disability total dataframe for 
+        disab_df_dict (dict): Dictionary with a disability total dataframe for
                             unserved and served populations for all given local authorities.
     """
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
 
     disab_servd_df = served_proportions_disagg(la_pop_df,
-                                                pop_in_poly_df,
-                                                disab_cols)
+                                               pop_in_poly_df,
+                                               disab_cols)
 
     # Feeding the results to the reshaper
     disab_servd_df_out = do.reshape_for_output(disab_servd_df,
@@ -391,96 +333,71 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
     return disability_dict
 
 
-def filter_timetable_by_day(timetable_df, day):
-    """
-    Extract serviced stops based on specific day of the week.
-
-    The day is selected from the available days in the date range present in
-      timetable data.
-
-    1) identifies which days dates in the entire date range
-    2) counts days of each type to get the maximum position order
-    3) validates user's choice for `day` - provides useful errors
-    4) creates ord value that is half of maximum position order to ensure
-    as many services get included as possible.
-    4) selects a date based on the day and ord parameters
-    5) filters the dataframe to that date
+def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
+    """Creates the dataframe including those who are and are not served by public transport
+    and places it into a disability dictionary for each local authority of interest for
+    the final csv output.
 
     Args:
-        timetable_df (pandas dataframe): df to filter
-        day (str) : day of the week in title case, e.g. "Wednesday"
+        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
+                                    output area codes and population estimates.
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside
+                                            the polygon.
+        disability_dict (dict): Dictionary to store the disability
+                                    dataframe.
+        local_auth (str): The local authority of interest.
 
     Returns:
-        pd.DataFrame: filtered pandas dataframe
+        disab_df_dict (dict): Dictionary with a disability total dataframe for
+                            unserved and served populations for all given local authorities.
     """
-    # Measure the dataframe
-    original_rows = timetable_df.shape[0]
+    # Calculating those served and not served by disability
+    disab_cols = ["number_disabled"]
 
-    # Count the services
-    orig_service_count = timetable_df.service_id.unique().shape[0]
+    disab_servd_df = served_proportions_disagg(la_pop_df,
+                                               pop_in_poly_df,
+                                               disab_cols)
 
-    # Get the minimum date range
-    earliest_start_date = timetable_df.start_date.min()
-    latest_end_date = timetable_df.end_date.max()
+    # Feeding the results to the reshaper
+    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
+                                               id_col=disab_cols[0],
+                                               local_auth=local_auth,
+                                               id_rename="Disability Status")
 
-    # Identify days in the range and count them
-    date_range = pd.date_range(earliest_start_date, latest_end_date)
-    date_day_couplings_df = pd.DataFrame({"date": date_range,
-                                         "day_name": date_range.day_name()})
-    days_counted = date_day_couplings_df.day_name.value_counts()
-    days_counted_dict = days_counted.to_dict()
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    disab_servd_df_out.replace(to_replace="number_disabled",
+                               value="Disabled",
+                               inplace=True)
+    # Calculating non-disabled people served and not served
+    non_disab_cols = ["number_non-disabled"]
 
-    # Validate user choices
-    if day not in days_counted_dict.keys():
-        raise KeyError(
-            """The day chosen in not available.
-            Should be a weekday in title case.""")
-    max_ord = days_counted_dict[day]
-    ord = round(max_ord / 2)
+    non_disab_servd_df = served_proportions_disagg(
+        pop_df=la_pop_df,
+        pop_in_poly_df=pop_in_poly_df,
+        cols_lst=non_disab_cols)
 
-    # filter all the dates down the to the day needed
-    day_filtered_dates = (date_day_couplings_df
-                          [date_day_couplings_df.day_name == day])
+    # Feeding the results to the reshaper
+    non_disab_servd_df_out = do.reshape_for_output(
+        non_disab_servd_df,
+        id_col=disab_cols[0],
+        local_auth=local_auth,
+        id_rename="Disability Status")
 
-    # Get date of the nth (ord) day
-    nth = ord - 1
-    date_of_day_entered = day_filtered_dates.iloc[nth].date
+    # The disability df is unusual. I think all rows correspond to people with
+    # disabilities only. There is no "not-disabled" status here (I think)
+    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
+                                   value="Non-disabled",
+                                   inplace=True)
 
-    # Filter the timetable_df by date range
-    timetable_df = timetable_df[(timetable_df['start_date']
-                                 <= date_of_day_entered) &
-                                (timetable_df['end_date']
-                                 >= date_of_day_entered)]
+    # Concatting non-disabled and disabled dataframes
+    non_disab_disab_servd_df_out = pd.concat(
+        [non_disab_servd_df_out, disab_servd_df_out])
 
-    # Then filter to day of interest
-    timetable_df = timetable_df[timetable_df[day.lower()] == 1]
+    # Output this local auth's disab df to the dict
+    disability_dict[local_auth] = non_disab_disab_servd_df_out
 
-    # Filter the timetable_df by date range
-    timetable_df = timetable_df[(timetable_df['start_date']
-                                 <= date_of_day_entered) &
-                                (timetable_df['end_date']
-                                 >= date_of_day_entered)]
-
-    # Then filter to day of interest
-    timetable_df = timetable_df[timetable_df[day.lower()] == 1]
-
-    # Print date being used (consider logging instead)
-    day_date = date_of_day_entered.date()
-    print(f"The date of {day} number {ord} is {day_date}")
-
-    # Print how many rows have been dropped (consider logging instead)
-    print(
-        f"Selecting only services covering {day_date} reduced records"
-        f"by {original_rows-timetable_df.shape[0]} rows"
-    )
-
-    # Print how many services are in the analysis and how many were dropped
-    service_count = timetable_df.service_id.unique().shape[0]
-    dropped_services = orig_service_count - service_count
-    print(f"There are {service_count} services in the analysis")
-    print(f"Filtering by day has reduced services by {dropped_services}")
-
-    return timetable_df
+    return disability_dict
 
 
 def create_tiploc_col(naptan_df):
@@ -515,10 +432,49 @@ def convert_east_north(df, long, lat):
     Args:
         df (pd.DataFrame): df including the longitude and latitude coordinates
         long(str): The name of the longitude column in df
-        lat (str): The name of the latitude column in df 
+        lat (str): The name of the latitude column in df
     Returns:
         pd.DataFrame: dataframe including easting and northing coordinates.
     """
     df['Easting'], df['Northing'] = convert_bng(df[long], df[lat])
     return df
 
+
+def create_tiploc_col(naptan_df):
+    """Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.
+
+    Args:
+        naptan_df (pd.Dataframe): Naptan dataset
+
+    Returns:
+        pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column added for train stations
+    """
+    # Applying only to train stations, RLY is the stop type for train stations
+    rail_filter = naptan_df.StopType == "RLY"
+
+    # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha characters
+    tiploc_col = (naptan_df.loc[rail_filter]
+                  .ATCOCode
+                  .str.extract(r'([A-Za-z]{1,7})')
+                  )
+    tiploc_col.columns = ["tiploc_code"]
+
+    # Merge the new Tiploc column with the naptan_df
+    naptan_df = naptan_df.merge(
+        tiploc_col, how='left', left_index=True, right_index=True)
+
+    return naptan_df
+
+
+def convert_east_north(df, long, lat):
+    """
+    Converts latitude and longitude coordinates to British National Grid
+    Args:
+        df (pd.DataFrame): df including the longitude and latitude coordinates
+        long(str): The name of the longitude column in df
+        lat (str): The name of the latitude column in df
+    Returns:
+        pd.DataFrame: dataframe including easting and northing coordinates.
+    """
+    df['Easting'], df['Northing'] = convert_bng(df[long], df[lat])
+    return df

@@ -1,15 +1,25 @@
-# core
+# Core modules
 import os
+import sys
 
-# third party
+# Third party modules
 import yaml
 import pandas as pd
 
-# our modules
-import data_ingest as di
-import data_transform as dt
+# # Getting the parent directory of the current file
+# current = os.path.dirname(os.path.realpath(__file__))
+# parent = os.path.dirname(current)
+# # Appending to path so that we can import modules from the src folder
+# sys.path.append(parent)
 
-# get current working directory
+# add the parent directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Our modules
+import src.data_ingest as di
+import src.data_transform as dt
+
+# Get current working directory
 CWD = os.getcwd()
 
 # Load config
@@ -237,8 +247,7 @@ bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
 
 # Drop the hours columns
 bus_highly_serviced_stops = (
-    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']]
-   )
+    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']])
 
 # Save a copy to be ingested by SDG_11.2.1_main
 bus_highly_serviced_stops.to_feather(os.path.join(
