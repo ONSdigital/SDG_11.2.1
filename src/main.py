@@ -168,8 +168,8 @@ if __name__ == "__main__":
                                              "nomis_QS303.csv"),
                                 header=5)
     # drop the column "mnemonic" as it seems to be a duplicate of the OA code
-    # also "All categories: Long-term health problem or disability" is not needed,
-    # nor is "Day-to-day activities not limited"
+    # also "All categories: Long-term health problem or disability" is not,
+    # needed nor is "Day-to-day activities not limited"
     drop_lst = ["mnemonic",
                 "All categories: Long-term health problem or disability"]
     disability_df.drop(drop_lst, axis=1, inplace=True)
@@ -205,8 +205,8 @@ if __name__ == "__main__":
                                ['csv'],
                                URB_RUR_TYPES))
 
-    # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
-    # I could make this more succinct, but leaving here
+    # These are the codes (RUC11CD) mapping to rural and urban descriptions
+    # (RUC11). I could make this more succinct, but leaving here
     # for clarity and maintainability
     urban_dictionary = {'A1': 'Urban major conurbation',
                         'C1': 'Urban city and town',
@@ -287,7 +287,7 @@ if __name__ == "__main__":
             eng_wales_la_pop_df.loc[eng_wales_la_pop_df[lad_col] == local_auth]
         )
 
-        # rename the "All Ages" column to pop_count as it's the population count
+        # rename the "All Ages" column to pop_count
         eng_wales_la_pop_df.rename(
             columns={
                 "All Ages": "pop_count"},
@@ -442,8 +442,8 @@ if __name__ == "__main__":
             local_auth=local_auth,
             id_rename="Disability Status")
 
-        # The disability df is unusual. I think all rows correspond to people with
-        # disabilities only. There is no "not-disabled" status here (I think)
+        # The disability df is unusual. I think all rows correspond to people
+        # with disabilities only. There is no "not-disabled" status here
         disab_servd_df_out.replace(to_replace="number_disabled",
                                    value="Disabled",
                                    inplace=True)
@@ -463,11 +463,13 @@ if __name__ == "__main__":
         urb_col = ["urb_rur_class"]
 
         # Filtering by urban and rural to make 2 dfs
-        urb_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "urban"]
-        rur_df = eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "rural"]
+        urb_df = (
+            eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "urban"])
+        rur_df = (
+            eng_wales_la_pop_df[eng_wales_la_pop_df.urb_rur_class == "rural"])
 
-        # Because these dfs a filtered to fewer rows, the pop_in_poly_df must be
-        # filtered in the same way
+        # Because these dfs a filtered to fewer rows, the pop_in_poly_df must
+        # be filtered in the same way
         urb_pop_in_poly_df = (urb_df.merge(pop_in_poly_df,
                                            on="OA11CD", how="left")
                               .loc[:, ['OA11CD', 'pop_count_y']])
