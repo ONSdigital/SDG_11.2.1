@@ -6,8 +6,8 @@ import pandas as pd
 import yaml
 
 # Module imports
-import data_ingest as di
-import data_transform as dt
+import src.data_ingest as di
+import src.data_transform as dt
 
 # get current working directory
 CWD = os.getcwd()
