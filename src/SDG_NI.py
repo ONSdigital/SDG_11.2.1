@@ -191,7 +191,8 @@ pwc_with_pop_with_la = pd.merge(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-ni_auth = [random_la]
+#ni_auth = [random_la]
+ni_auth = ['Fermanagh and Omagh']
 
 total_df_dict = {}
 disab_df_dict = {}
