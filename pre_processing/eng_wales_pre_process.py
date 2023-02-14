@@ -25,6 +25,7 @@ BUS_IN_DIR = config['bus_in_dir']
 TRAIN_IN_DIR = config['train_in_dir']
 URB_RUR_ZIP_LINK = config["urb_rur_zip_link"]
 URB_RUR_TYPES = config["urb_rur_types"]
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_proprocessed_output"]
 
 # Years
 CALCULATION_YEAR = str(config["calculation_year"])
@@ -50,8 +51,8 @@ highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
 # Get Tram data
 naptan_df = di.get_stops_file(url=config["naptan_api"],
                               dir=os.path.join(os.getcwd(),
-                                                "data",
-                                                "stops"))
+                                               "data",
+                                               "stops"))
 
 # Isolating the tram and metro stops
 tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
@@ -59,8 +60,8 @@ tram_metro_stops = naptan_df[naptan_df.StopType.isin(["PLT", "MET", "TMU"])]
 # Take only active, pending or new stops
 tram_metro_stops = (
     tram_metro_stops[tram_metro_stops['Status'].isin(['active',
-                                                    'pending',
-                                                    'new'])]
+                                                      'pending',
+                                                      'new'])]
 )
 
 # Add a column for transport mode
@@ -77,11 +78,11 @@ highly_serviced_train_stops['capacity_type'] = 'high'
 
 # Standardise dataset columns for union
 column_renamer = {"NaptanCode": "station_code",
-                "Easting": "easting",
-                "Northing": "northing"}
+                  "Easting": "easting",
+                  "Northing": "northing"}
 
 column_filter = ["station_code", "easting", "northing",
-                "transport_mode", "capacity_type"]
+                 "transport_mode", "capacity_type"]
 
 tram_metro_stops.rename(columns=column_renamer, inplace=True)
 tram_metro_stops = tram_metro_stops[column_filter]
@@ -94,17 +95,20 @@ highly_serviced_train_stops = highly_serviced_bus_stops[column_filter]
 
 # Merge into one dataframe
 dfs_to_combine = [highly_serviced_bus_stops,
-                highly_serviced_train_stops,
-                tram_metro_stops]
+                  highly_serviced_train_stops,
+                  tram_metro_stops]
 
 filtered_stops_df = pd.concat(dfs_to_combine)
 
 # Convert to geopandas df
 stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
-                                    geom_x='easting',
-                                    geom_y='northing',
-                                    crs=DEFAULT_CRS))
+                                     geom_x='easting',
+                                     geom_y='northing',
+                                     crs=DEFAULT_CRS))
 
+# Export dataset to geojson
+path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
+stops_geo_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)
 
 # -------------------------------------
 # Load and process local authority data
@@ -116,9 +120,9 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
 
 # Getting path for LA shapefile
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                "data",
-                                                "LA_shp",
-                                                CALCULATION_YEAR))
+                                                  "data",
+                                                  "LA_shp",
+                                                  CALCULATION_YEAR))
 
 # Create geopandas dataframe from the shapefile
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
@@ -133,6 +137,9 @@ ew_la_df = (
 # Keep only required columns
 ew_la_df = ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']]
 
+# Export dataset to geojson
+path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
+ew_la_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)
 
 # ------------------------------------------------------
 # Load and process local authority to output area lookup
@@ -142,8 +149,9 @@ lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 
 ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
     os.path.join(os.getcwd(), "data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
-    
-ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path, usecols=["OA11CD", lad_name_col])
+
+ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
+                                 usecols=["OA11CD", lad_name_col])
 
 
 # ---------------------------------------
@@ -152,7 +160,7 @@ ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path, usecols=["OA11CD", lad_na
 
 ew_oa_boundaries_df = pd.read_csv(
         os.path.join("data",
-                    "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+                     "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
 
 # Restrict to just required columns
 ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
@@ -164,10 +172,9 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 
 # Get list of all pop_estimate files for target year
 ew_pop_files = os.listdir(os.path.join(os.getcwd(),
-                                    "data", "population_estimates",
-                                    POP_YEAR
-                                    )
-                    )
+                                       "data",
+                                       "population_estimates",
+                                       POP_YEAR))
 
 # Get the population data for the whole nation for the specified year
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
@@ -178,13 +185,13 @@ ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
 # Group and reformat age data
 # Get a list of ages from config
 age_lst = config['age_lst']
-    
+
 # Get a datframe limited to the data ages columns only
 ew_age_df = dt.slice_age_df(ew_pop_df, age_lst)
-    
+
 # Create a list of tuples of the start and finish indexes for the age bins
 age_bins = dt.get_col_bins(age_lst)
-    
+
 # get the ages in the age_df binned, and drop the original columns
 ew_age_df = dt.bin_pop_ages(ew_age_df, age_bins, age_lst)
 
@@ -199,11 +206,8 @@ ew_pop_df = pd.merge(ew_pop_df, ew_age_df, left_index=True, right_index=True)
 # Load and process popualation weighted centroids
 # -----------------------------------------------
 
-ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
-                    (os.path.join
-                        (DATA_DIR,
-                        'pop_weighted_centroids',
-                        CENTROID_YEAR)))
+ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
+    os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))
 
 # Keep required columns
 ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
@@ -213,10 +217,8 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 # Load and process disability data
 # --------------------------------
 
-ew_disability_df = pd.read_csv(os.path.join(CWD,
-                                        "data", "disability_status",
-                                        "nomis_QS303.csv"),
-                            header=5)
+ew_disability_df = pd.read_csv(
+    os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"), header=5)
 
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
 # also "All categories: Long-term health problem or disability" is not needed,
@@ -234,15 +236,19 @@ replacements = {"2011 output area": 'OA11CD',
 # renaming the dodgy col names with their replacements
 ew_disability_df.rename(columns=replacements, inplace=True)
 
+# Export dataset to feather file
+path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_disability_df.feather')
+ew_disability_df.to_feather(path)
+
 
 # -------------------------
 # Load and process RUC data
 # -------------------------
 
 ew_urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
-                        URB_RUR_ZIP_LINK,
-                        ['csv'],
-                        URB_RUR_TYPES))
+                              URB_RUR_ZIP_LINK,
+                              ['csv'],
+                              URB_RUR_TYPES))
 
 # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
 # I could make this more succinct, but leaving here
@@ -253,10 +259,10 @@ urban_dictionary = {'A1': 'Urban major conurbation',
                     'C2': 'Urban city and town in a sparse setting'}
 
 # mapping to a simple urban or rural classification
-ew_urb_rur_df["urb_rur_class"] = (ew_urb_rur_df.RUC11CD.map
-                            (lambda x: "urban"
-                                if x in urban_dictionary.keys()
-                                else "rural"))
+ew_urb_rur_df["urb_rur_class"] = (
+    ew_urb_rur_df.RUC11CD.map(lambda x: "urban"
+                              if x in urban_dictionary.keys()
+                              else "rural"))
 
 # filter the df. We only want OA11CD and an urban/rurual classification
 ew_urb_rur_df = ew_urb_rur_df[['OA11CD', 'urb_rur_class']]
@@ -272,10 +278,10 @@ lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
 # 1 output area boundaries
 ew_df = ew_pop_wtd_centr_df.merge(
     ew_oa_boundaries_df, on="OA11CD", how='left')
-    
+
 # 2 Rural urban classification
 ew_df = ew_df.merge(ew_urb_rur_df, on="OA11CD", how='left')
-    
+
 # 3 Population data
 # First join output area lookup onto popualtion data
 ew_pop_df = ew_pop_df.merge(ew_oa_la_lookup_df, on='OA11CD', how='left')
@@ -285,3 +291,7 @@ ew_df = ew_df.join(ew_pop_df.set_index('OA11CD'), on='OA11CD', how='left')
 # 4 local authority boundaries
 ew_df = ew_df.merge(ew_la_df, how='right', left_on=lad_col,
                     right_on=lad_col, suffixes=('_pop', '_la'))
+
+# Export dataset to geojson
+path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
+ew_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)

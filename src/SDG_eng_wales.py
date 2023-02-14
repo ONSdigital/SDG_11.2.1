@@ -12,12 +12,7 @@ import yaml
 import geospatial_mods as gs
 import data_transform as dt
 import data_output as do
-
-# Data imports
-from pre_processing.eng_wales_pre_process import stops_geo_df
-from pre_processing.eng_wales_pre_process import ew_la_df
-from pre_processing.eng_wales_pre_process import ew_disability_df
-from pre_processing.eng_wales_pre_process import ew_df
+import data_ingest as di
 
 
 # Start pipeline
@@ -40,6 +35,29 @@ CALCULATION_YEAR = str(config["calculation_year"])
 OUTPUT_DIR = config["data_output"]
 OUTFILE = config['outfile']
 DEFAULT_CRS = config['default_crs']
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_proprocessed_output"]
+
+
+# Load preprocessed datasets
+# --------------------------
+
+stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
+if di._persistent_exists(stops_geo_df_path):
+    stops_geo_df = gpd.read_file(stops_geo_df_path)
+
+ew_la_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
+if di._persistent_exists(ew_la_df_path):
+    ew_la_df = gpd.read_file(ew_la_df_path)
+
+ew_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
+if di._persistent_exists(ew_df_path):
+    ew_df = gpd.read_file(ew_df_path)
+
+ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
+                                     'ew_disability_df.feather')
+if di._persistent_exists(ew_disability_df_path):
+    ew_disability_df = pd.to_feather(ew_disability_df_path)
+
 
 if __name__ == "__main__":
 
@@ -47,14 +65,14 @@ if __name__ == "__main__":
 
     # Unique list of LA's to iterate through
     list_local_auth = ew_la_df[lad_col].unique()
-    
+
     # selecting random LA for dev purposes
     # eventually will iterate through all LA's
     random_la = random.choice(list_local_auth)
-    
+
     #list_local_auth = [random_la]
     list_local_auth = ['Hastings']
-    
+
     # define output dicts to capture dfs
     total_df_dict = {}
     sex_df_dict = {}
@@ -68,45 +86,44 @@ if __name__ == "__main__":
 
         # Get a polygon of the selected local authority
         la_poly = gs.get_polygons_of_loccode(geo_df=ew_la_df,
-                                            dissolveby=lad_col,
-                                            search=local_auth)
-    
+                                             dissolveby=lad_col,
+                                             search=local_auth)
+
         # Creating a Geo Dataframe of only stops in selected la
         stops_in_la_poly = gs.find_points_in_poly(geo_df=stops_geo_df,
-                                                 polygon_obj=la_poly)
+                                                  polygon_obj=la_poly)
 
         # Create a buffer around the stops
         stops_in_la_poly_buffer = gs.buffer_points(stops_in_la_poly)
-    
+
         # Subset population data to local authority
         ew_df = ew_df.loc[ew_df[lad_col] == local_auth]
-          
+
         # Convert population df into a geodataframe
         ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs=DEFAULT_CRS)
-    
 
         # Diasggregate disability data and join into population df
         # --------------------------------------------------------
         ew_df = dt.disab_disagg(ew_disability_df, ew_df)
-    
+
         # renaming the dodgy col names with their replacements
         replacements = {"males_pop": "male",
                         "fem_pop": "female"}
         ew_df.rename(columns=replacements, inplace=True)
-    
 
         # Extract the population served by public transport
         # -------------------------------------------------
-    
+
         # find all the pop centroids which are in the buffered stops
         pwc_in_stops_buffer_df = (
             gs.find_points_in_poly(ew_df, stops_in_la_poly_buffer)
         )
-    
+
         # Dedupe the df because many OAs are appearing multiple times
         # (i.e. they are served by multiple stops)
-        pwc_in_stops_buffer_df = pwc_in_stops_buffer_df.drop_duplicates(subset="OA11CD")
-    
+        pwc_in_stops_buffer_df = (
+            pwc_in_stops_buffer_df.drop_duplicates(subset="OA11CD"))
+
         # Count the population served by public transport
         served = pwc_in_stops_buffer_df.pop_count.sum()
         full_pop = ew_df.pop_count.sum()
@@ -124,11 +141,12 @@ if __name__ == "__main__":
                                       "Unserved": [not_served],
                                       "Percentage served": [pct_served],
                                       "Percentage unserved": [pct_not_served]})
-    
+
         # Reformat data for output
         # ------------------------
 
-        # Re-orienting the df to what's accepted by the reshaper and renaming col
+        # Re-orienting the df to what's accepted by the reshaper and renaming
+        # col
         la_results_df = la_results_df.T.rename(columns={0: "Total"})
 
         # Feeding the la_results_df to the reshaper
@@ -144,7 +162,7 @@ if __name__ == "__main__":
 
         # Output this iteration's df to the dict
         total_df_dict[local_auth] = la_results_df_out
-    
+
         # Run the disaggregations
         # -----------------------
         # Age
@@ -153,35 +171,35 @@ if __name__ == "__main__":
                             '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
                             '55-59', '60-64', '65-69', '70-74', '75-79',
                             '80-84', '85-89', '90+']
-    
+
         age_servd_df = (
             dt.served_proportions_disagg(pop_df=ew_df,
                                          pop_in_poly_df=pwc_in_stops_buffer_df,
                                          cols_lst=grouped_age_bins)
         )
-    
+
         # Feeding the results to the reshaper
         age_servd_df_out = do.reshape_for_output(age_servd_df,
                                                  id_col="Age",
                                                  local_auth=local_auth)
-    
+
         age_df_dict[local_auth] = age_servd_df_out
-    
+
         # Sex
         # ---
         sex_cols = ['male', 'female']
-    
+
         sex_servd_df = dt.served_proportions_disagg(pop_df=ew_df,
                                                     pop_in_poly_df=pwc_in_stops_buffer_df,
                                                     cols_lst=sex_cols)
-    
+
         # Feeding the results to the reshaper
         sex_servd_df_out = do.reshape_for_output(sex_servd_df,
                                                  id_col="Sex",
                                                  local_auth=local_auth)
-    
+
         sex_df_dict[local_auth] = sex_servd_df_out
-    
+
         # Disabled
         # --------
         disab_cols = ["number_disabled"]
@@ -204,15 +222,15 @@ if __name__ == "__main__":
         disab_servd_df_out.replace(to_replace="number_disabled",
                                    value="Disabled",
                                    inplace=True)
-    
+
         sex_df_dict[local_auth] = sex_servd_df_out
-    
+
         # Not disabled
         # ------------
         # Disability disaggregation - get disability results in disab_df_dict
         disab_df_dict = dt.disab_dict(ew_df,
-                                      pwc_in_stops_buffer_df, 
-                                      disab_df_dict, 
+                                      pwc_in_stops_buffer_df,
+                                      disab_df_dict,
                                       local_auth)
 
         # Urban and rural
@@ -221,9 +239,9 @@ if __name__ == "__main__":
         # Filtering by urban and rural to make 2 dfs
         urb_df = ew_df[ew_df.urb_rur_class == "urban"]
         rur_df = ew_df[ew_df.urb_rur_class == "rural"]
-    
-        # Because these dfs a filtered to fewer rows, the pwc_in_stops_buffer_df
-        # must be filtered in the same way
+
+        # Because these dfs a filtered to fewer rows, the
+        # pwc_in_stops_buffer_df must be filtered in the same way
         urb_pop_in_poly_df = (urb_df.merge(pwc_in_stops_buffer_df,
                                            on="OA11CD", how="left")
                               .loc[:, ['OA11CD', 'pop_count_y']])
@@ -265,9 +283,8 @@ if __name__ == "__main__":
 
         # Combining urban and rural dfs
         urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
-    
+
         urb_rur_df_dict[local_auth] = urb_rur_servd_df_out
-    
 
     # Outputting results to CSV
     # -------------------------
@@ -277,7 +294,7 @@ if __name__ == "__main__":
     urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
     disab_all_la = pd.concat(disab_df_dict.values())
     age_all_la = pd.concat(age_df_dict.values())
-    
+
     output_tabs = {}
 
     # Stacking the dataframes
@@ -289,10 +306,10 @@ if __name__ == "__main__":
         age_all_la]
     final_result = pd.concat(all_results_dfs)
     final_result["Year"] = CALCULATION_YEAR
-    
+
     # Resetting index for gptables
     final_result.reset_index(inplace=True)
-    
+
     # Outputting to CSV
     final_result = do.reorder_final_df(final_result)
     output_path = os.path.join(OUTPUT_DIR, OUTFILE)

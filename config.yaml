@@ -6,6 +6,7 @@ ew_oa_lookup_year: 2019
 data_dir:  "./data"
 data_output: "./data/data_output"
 outfile: "SDG_11.2.1_results.csv"
+eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
 
 # Mapping - geospatial
 default_crs: 'EPSG:27700'
