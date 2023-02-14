@@ -1,9 +1,14 @@
 # Core imports
 import os
+import sys
 
 # Third party imports
 import pandas as pd
+import geopandas as gpd
 import yaml
+
+# add the parent directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Module imports
 import src.data_ingest as di
@@ -25,7 +30,7 @@ BUS_IN_DIR = config['bus_in_dir']
 TRAIN_IN_DIR = config['train_in_dir']
 URB_RUR_ZIP_LINK = config["urb_rur_zip_link"]
 URB_RUR_TYPES = config["urb_rur_types"]
-ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_proprocessed_output"]
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 # Years
 CALCULATION_YEAR = str(config["calculation_year"])
@@ -37,6 +42,7 @@ POP_YEAR = str(config["population_year"])
 # ---------------------------
 # Load and process stops data
 # ---------------------------
+print('Processing stops data')
 
 # Highly serviced bus and train stops created from SDG_bus_timetable
 # and SDG_train_timetable for england, wales and scotland.
@@ -108,11 +114,12 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
-stops_geo_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)
+stops_geo_df.to_file(path, driver='GeoJSON', index=False)
 
 # -------------------------------------
 # Load and process local authority data
 # -------------------------------------
+print('Processing local authority data')
 
 # Local authority shapefile covers the UK so extracting just shapefile
 # for england, wales and scotland.
@@ -139,11 +146,12 @@ ew_la_df = ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']]
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
-ew_la_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)
+ew_la_df.to_file(path, driver='GeoJSON', index=False)
 
 # ------------------------------------------------------
 # Load and process local authority to output area lookup
 # ------------------------------------------------------
+print('Processing local authority to output area lookup')
 
 lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 
@@ -157,6 +165,7 @@ ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
 # ---------------------------------------
 # Load and process output area boundaries
 # ---------------------------------------
+print('Processing output area boundaries')
 
 ew_oa_boundaries_df = pd.read_csv(
         os.path.join("data",
@@ -169,6 +178,7 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 # --------------------------------
 # Load and process population data
 # --------------------------------
+print('Processing population data')
 
 # Get list of all pop_estimate files for target year
 ew_pop_files = os.listdir(os.path.join(os.getcwd(),
@@ -205,6 +215,7 @@ ew_pop_df = pd.merge(ew_pop_df, ew_age_df, left_index=True, right_index=True)
 # -----------------------------------------------
 # Load and process popualation weighted centroids
 # -----------------------------------------------
+print('Processing population weighted centroids')
 
 ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
     os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))
@@ -216,6 +227,7 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 # --------------------------------
 # Load and process disability data
 # --------------------------------
+print('Processing disability data')
 
 ew_disability_df = pd.read_csv(
     os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"), header=5)
@@ -244,6 +256,7 @@ ew_disability_df.to_feather(path)
 # -------------------------
 # Load and process RUC data
 # -------------------------
+print('Processing rural urban classification data')
 
 ew_urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
                               URB_RUR_ZIP_LINK,
@@ -271,6 +284,7 @@ ew_urb_rur_df = ew_urb_rur_df[['OA11CD', 'urb_rur_class']]
 # -----------------------------------
 # Merge relevant datasets in the PWCs
 # -----------------------------------
+print('Creating final preprocessed dataset')
 
 # Merge datasets into PWCs ready for analysis
 lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
@@ -283,15 +297,20 @@ ew_df = ew_pop_wtd_centr_df.merge(
 ew_df = ew_df.merge(ew_urb_rur_df, on="OA11CD", how='left')
 
 # 3 Population data
-# First join output area lookup onto popualtion data
+# First join output area lookup onto population data
 ew_pop_df = ew_pop_df.merge(ew_oa_la_lookup_df, on='OA11CD', how='left')
 # Then add into PWC
 ew_df = ew_df.join(ew_pop_df.set_index('OA11CD'), on='OA11CD', how='left')
 
 # 4 local authority boundaries
+# Drop uneeded geometry
 ew_df = ew_df.merge(ew_la_df, how='right', left_on=lad_col,
                     right_on=lad_col, suffixes=('_pop', '_la'))
+ew_df.drop(labels='geometry_la', axis=1, inplace=True)
+
+# Convert to geopandas df and drop uneeded geometry
+ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs=DEFAULT_CRS)
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
-ew_df.to_file(path, driver='GeoJSON', index=False, crs=DEFAULT_CRS)
+ew_df.to_file(path, driver='GeoJSON', index=False)

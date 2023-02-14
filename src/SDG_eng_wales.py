@@ -35,13 +35,14 @@ CALCULATION_YEAR = str(config["calculation_year"])
 OUTPUT_DIR = config["data_output"]
 OUTFILE = config['outfile']
 DEFAULT_CRS = config['default_crs']
-ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_proprocessed_output"]
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 
 # Load preprocessed datasets
 # --------------------------
 
-stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
+stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
+                                 'stops_geo_df.geojson')
 if di._persistent_exists(stops_geo_df_path):
     stops_geo_df = gpd.read_file(stops_geo_df_path)
 
@@ -56,7 +57,8 @@ if di._persistent_exists(ew_df_path):
 ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                      'ew_disability_df.feather')
 if di._persistent_exists(ew_disability_df_path):
-    ew_disability_df = pd.to_feather(ew_disability_df_path)
+    ew_disability_df = di._feath_to_df('ew_disability_df',
+                                       ew_disability_df_path)
 
 
 if __name__ == "__main__":
@@ -100,7 +102,7 @@ if __name__ == "__main__":
         ew_df = ew_df.loc[ew_df[lad_col] == local_auth]
 
         # Convert population df into a geodataframe
-        ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs=DEFAULT_CRS)
+        ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry', crs=DEFAULT_CRS)
 
         # Diasggregate disability data and join into population df
         # --------------------------------------------------------
