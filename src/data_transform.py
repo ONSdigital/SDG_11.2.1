@@ -1,9 +1,11 @@
 from typing import List
 import pandas as pd
 from convertbng.util import convert_bng
-import data_output as do
 import logging
 import os
+
+# Our modules
+import data_output as do
 
 
 # Get CWD
