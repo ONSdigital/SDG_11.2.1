@@ -160,7 +160,7 @@ pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4"})
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-sc_auth = [random_la]
+sc_auth = ['Fife']
 
 # define output dicts to capture dfs
 total_df_dict = {}
@@ -195,13 +195,15 @@ for local_auth in sc_auth:
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
-    # # find all the pop centroids which are in the la_stops_geo_df
-    # pop_in_poly_df = gs.find_points_in_poly(
-    #     only_la_pwc_with_pop, la_stops_geo_df)
+    # find all the pop centroids which are in the la_stops_geo_df
+    # first remove easting and northing from pop df to avoid function failure
+    only_la_pwc_with_pop = (
+        only_la_pwc_with_pop.drop(['easting', 'northing'], axis=1)
+    )
 
-    # use the new points in polygons function
-    pop_in_poly_df = gs.points_in_polygons(
-        only_la_pwc_with_pop, buffd_la_stops_geo_df)
+    pop_in_poly_df = gs.find_points_in_poly(
+        only_la_pwc_with_pop, la_stops_geo_df)
+
 
     # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
