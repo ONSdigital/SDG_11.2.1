@@ -689,14 +689,14 @@ def read_urb_rur_class_scotland(urb_rur_path):
     """Reads the urb/rural classification for Scotland.
 
     This reads in the file containing all the urban/rural class
-    Then applies a mapping based on if living in a settlement >10,00
+    Then applies a mapping based on if living in a settlement >10,000
     then urban, else rural.
 
     Args:
         path (str): the path where the file exists
 
     Returns:
-        pd.DataFrame the classfication dataframe
+        pd.DataFrame: the classfication dataframe
     """
     urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011", "UR6_2013_2014"])
 
@@ -706,6 +706,27 @@ def read_urb_rur_class_scotland(urb_rur_path):
 
     return urb_rur
 
+def read_urb_rur_ni(urb_rur_path):
+    """
+    Reads small areas as urban or rural for Northern Ireland.
+    Urban is classified as living in a settlement >10,000, and rural is classified
+    as <10,000.
+    Args:
+        path (str): the path where the file exists
+        
+    Returns:
+        pd.DataFrame: the urban rural classification dataframe
+    """
+    urb_rur = pd.read_csv(urb_rur_path, skiprows=3)
+    urb_rur = urb_rur[['SA2011_Code', 'Settlement Classification Band']]
+
+    # split classification bands into urban and rural
+    urb_list = ['A', 'B', 'C', 'D']
+    rural_list = ['E', 'F', 'G', 'H']
+    urb_rur.loc[urb_rur['Settlement Classification Band'].isin(urb_list), 'urb_rur_class'] = 'urban'
+    urb_rur.loc[urb_rur['Settlement Classification Band'].isin(rural_list), 'urb_rur_class'] = 'rural'
+
+    return urb_rur
 
 def best_before(path, number_of_days):
     """

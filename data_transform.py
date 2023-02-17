@@ -339,7 +339,7 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
         local_auth (str): The local authority of interest.
 
     Returns:
-        disab_df_dict (dict): Dictionary with a disability total dataframe for 
+        disability_dict (dict): Dictionary with a disability total dataframe for 
                             unserved and served populations for all given local authorities.
     """
     # Calculating those served and not served by disability
@@ -389,6 +389,65 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
     disability_dict[local_auth] = non_disab_disab_servd_df_out
 
     return disability_dict
+
+def urban_rural_results(la_pop_df, pop_in_poly_df, urb_rur_dict, local_auth):
+    """
+    Creates two dataframes, urban and rural and classifies proportion of people served and 
+    not served by public transport. This is placed into a urban rural dictionary 
+    for each local authority of interest for the final csv output.
+    Args:
+        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
+                                    output area codes and population estimates.
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside 
+                                            the polygon.
+        urb_rur_dict (dict): Dictionary to store the urban rural dataframe.
+        local_auth (str): The local authority of interest.
+
+    Returns:
+        urb_rur_dict (dict): Dictionary with a disability total dataframe for 
+                            unserved and served populations for all given local authorities.
+
+    """
+    # Urban/Rural disaggregation
+    # split into two different dataframes
+    urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
+    rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
+
+    urb_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
+    rur_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
+
+    urb_servd_df = served_proportions_disagg(pop_df=urb_df,
+                                                pop_in_poly_df=urb_df_poly,
+                                                cols_lst=['pop_count'])
+
+    rur_servd_df = served_proportions_disagg(pop_df=rur_df,
+                                                pop_in_poly_df=rur_df_poly,
+                                                cols_lst=['pop_count'])
+
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count": "Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count": "Rural"}, inplace=True)
+
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
+
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
+
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban": "Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural": "Urban/Rural"}, inplace=True)
+
+    # Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
+
+    # Output this iteration's urb and rur df to the dict
+    urb_rur_dict[local_auth] = urb_rur_servd_df_out
+
+    return urb_rur_dict
 
 
 def filter_timetable_by_day(timetable_df, day):
