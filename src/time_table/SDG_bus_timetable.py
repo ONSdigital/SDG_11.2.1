@@ -6,18 +6,12 @@ import sys
 import yaml
 import pandas as pd
 
-# # Getting the parent directory of the current file
-# current = os.path.dirname(os.path.realpath(__file__))
-# parent = os.path.dirname(current)
-# # Appending to path so that we can import modules from the src folder
-# sys.path.append(parent)
-
-# add the parent directory to the path
+# Add the parent directory to the path to allow import of our modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Our modules
-import src.data_ingest as di
-import src.data_transform as dt
+import data_ingest as di  # noqa E402
+import data_transform as dt  # noqa E402
 
 # Get current working directory
 CWD = os.getcwd()

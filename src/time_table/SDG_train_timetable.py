@@ -7,14 +7,12 @@ import sys
 import yaml
 import pandas as pd
 
-# our modules
-import time_table_utils as ttu
-
-# add the parent directory to the path
+# Add the parent directory to the path to allow import of our modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Parent directory imports
-import src.data_transform as dt
+# Our modules
+import time_table_utils as ttu
+import data_transform as dt
 
 
 # get current working directory
