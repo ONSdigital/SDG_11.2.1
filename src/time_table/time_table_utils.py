@@ -70,7 +70,8 @@ def add_stop_capacity_type(stops_df: pd.DataFrame) -> pd.DataFrame:
     return stops_df
 
 
-def filter_timetable_by_day(timetable_df: pd.DataFrame, day: str) -> pd.DataFrame:
+def filter_timetable_by_day(timetable_df: pd.DataFrame,
+                            day: str) -> pd.DataFrame:
     """Extract serviced stops based on specific day of the week.
 
     The day is selected from the available days in the date range present in
@@ -104,7 +105,7 @@ def filter_timetable_by_day(timetable_df: pd.DataFrame, day: str) -> pd.DataFram
     # Identify days in the range and count them
     date_range = pd.date_range(earliest_start_date, latest_end_date)
     date_day_couplings_df = pd.DataFrame({"date": date_range,
-                                         "day_name": date_range.day_name()})
+                                          "day_name": date_range.day_name()})
     days_counted = date_day_couplings_df.day_name.value_counts()
     days_counted_dict = days_counted.to_dict()
 
@@ -255,7 +256,10 @@ def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
             # ID in dataset is not actually unique as same train has several
             # schedules with different dates and calendars. Create ID from
             # these variables.
-                schedule_id = line[3:9] + line[9:15] + line[15:21] + line[21:28]
+                schedule_id = (line[3:9] 
+                               + line[9:15] 
+                               + line[15:21] 
+                               + line[21:28])
 
             # Extract start and end date of service (yymmdd)
                 start_date = line[9:15].strip()
