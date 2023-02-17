@@ -11,8 +11,8 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Our modules
-import time_table_utils as ttu
-import data_transform as dt
+import time_table_utils as ttu # noqa E402
+import data_transform as dt # noqa E402
 
 
 # get current working directory
