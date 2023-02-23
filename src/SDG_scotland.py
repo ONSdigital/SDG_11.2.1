@@ -135,7 +135,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # age variable
-age_scotland_path = os.path.join(CWD,"data","QS103_scotland_age.csv")
+age_scotland_path = os.path.join(CWD, "data", "QS103_scotland_age.csv")
 
 age_scotland_df = di.read_scottish_age(age_scotland_path)
 
@@ -152,10 +152,14 @@ age_bins = dt.get_col_bins(age_lst)
 age_df_bins = dt.bin_pop_ages(age_df, age_bins, age_lst)
 
 # merge ages back onto dataframe
-pwc_with_pop_with_la = pd.merge(pwc_with_pop_with_la, age_df_bins, left_index=True, right_index=True)
+pwc_with_pop_with_la = pd.merge(
+    pwc_with_pop_with_la,
+    age_df_bins,
+    left_index=True,
+    right_index=True)
 
 # change columns names
-pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4':"0-4"})
+pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4': "0-4"})
 
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
@@ -164,7 +168,7 @@ sc_auth = ['Fife']
 
 # define output dicts to capture dfs
 total_df_dict = {}
-sex_df_dict = {} 
+sex_df_dict = {}
 age_df_dict = {}
 disab_df_dict = {}
 urb_rur_df_dict = {}
@@ -191,7 +195,7 @@ for local_auth in sc_auth:
         pwc_with_pop_with_la[pwc_with_pop_with_la["ladnm"] == local_auth])
 
     # Disability disaggregation
-    
+
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
@@ -243,17 +247,17 @@ for local_auth in sc_auth:
 
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
-    
-    ## Age disaggregation
+
+    # Age disaggregation
     age_bins = ['0-4', '5-9', '10-14', '15-19', '20-24',
-                 '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
-                 '55-59', '60-64', '65-69', '70-74', '75-79',
-                 '80-84', '85-89', '90+']
-    
+                '25-29', '30-34', '35-39', '40-44', '45-49', '50-54',
+                '55-59', '60-64', '65-69', '70-74', '75-79',
+                '80-84', '85-89', '90+']
+
     age_servd_df = dt.served_proportions_disagg(pop_df=only_la_pwc_with_pop,
                                                 pop_in_poly_df=pop_in_poly_df,
                                                 cols_lst=age_bins)
-    
+
     # Feeding the results to the reshaper
     age_servd_df_out = do.reshape_for_output(age_servd_df,
                                              id_col="Age",
@@ -291,7 +295,11 @@ for local_auth in sc_auth:
                                             urb_rur_df_dict, local_auth)
 
     # Disability disaggregation - get disability results in disab_df_dict
-    disab_df_dict = dt.disab_dict(only_la_pwc_with_pop, pop_in_poly_df, disab_df_dict, local_auth)
+    disab_df_dict = dt.disab_dict(
+        only_la_pwc_with_pop,
+        pop_in_poly_df,
+        disab_df_dict,
+        local_auth)
 
 # every single LA
 all_la = pd.concat(total_df_dict.values())
@@ -301,7 +309,12 @@ urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
 age_df_all_la = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, sex_all_la, urb_rur_all_la, disab_all_la, age_df_all_la]
+all_results_dfs = [
+    all_la,
+    sex_all_la,
+    urb_rur_all_la,
+    disab_all_la,
+    age_df_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 

@@ -1,15 +1,19 @@
-# core
+# Core modules
 import os
+import sys
 
-# third party
+# Third party modules
 import yaml
 import pandas as pd
 
-# our modules
-import data_ingest as di
-import data_transform as dt
+# Add the parent directory to the path to allow import of our modules
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# get current working directory
+# Our modules
+import data_ingest as di  # noqa E402
+import data_transform as dt  # noqa E402
+
+# Get current working directory
 CWD = os.getcwd()
 
 # Load config
@@ -237,8 +241,8 @@ bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
 
 # Drop the hours columns
 bus_highly_serviced_stops = (
-    bus_highly_serviced_stops['NaptanCode', 'Easting', 'Northing']
-   )
+    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']]
+)
 
 # Save a copy to be ingested by SDG_11.2.1_main
 bus_highly_serviced_stops.to_feather(os.path.join(
