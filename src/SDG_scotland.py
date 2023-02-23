@@ -32,6 +32,8 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Constants
 DEFAULT_CRS = config["default_crs"]
 DATA_DIR = config["data_dir"]
+OUTFILE = config['outfile_sc']
+OUTPUT_DIR = config["data_output"]
 
 pop_year = "2011"
 boundary_year = "2021"
@@ -162,7 +164,6 @@ pwc_with_pop_with_la = pwc_with_pop_with_la.rename(columns={'Under 1-4': "0-4"})
 # Unique list of LA's to iterate through
 list_local_auth = sc_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-#sc_auth = [random_la]
 sc_auth = ['Fife']
 
 # define output dicts to capture dfs
@@ -198,13 +199,15 @@ for local_auth in sc_auth:
     # Calculate prop of disabled in each OA of the LA
     only_la_pwc_with_pop = dt.disab_disagg(disability_df, only_la_pwc_with_pop)
 
-    # # find all the pop centroids which are in the la_stops_geo_df
-    # pop_in_poly_df = gs.find_points_in_poly(
-    #     only_la_pwc_with_pop, la_stops_geo_df)
+    # find all the pop centroids which are in the la_stops_geo_df
+    # first remove easting and northing from pop df to avoid function failure
+    only_la_pwc_with_pop = (
+        only_la_pwc_with_pop.drop(['easting', 'northing'], axis=1)
+    )
 
-    # use the new points in polygons function
-    pop_in_poly_df = gs.points_in_polygons(
-        only_la_pwc_with_pop, buffd_la_stops_geo_df)
+    pop_in_poly_df = gs.find_points_in_poly(
+        only_la_pwc_with_pop, la_stops_geo_df)
+
 
     # Deduplicate the df as OA appear multiple times
     pop_in_poly_df = pop_in_poly_df.drop_duplicates(subset="OA11CD")
@@ -288,43 +291,8 @@ for local_auth in sc_auth:
     total_df_dict[local_auth] = la_results_df_out
 
     # Urban/Rural disaggregation
-    # split into two different dataframes
-    urb_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "urban"]
-    rur_df = only_la_pwc_with_pop[only_la_pwc_with_pop.urb_rur_class == "rural"]
-
-    urb_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
-    rur_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
-
-    urb_servd_df = dt.served_proportions_disagg(pop_df=urb_df,
-                                                pop_in_poly_df=urb_df_poly,
-                                                cols_lst=['pop_count'])
-
-    rur_servd_df = dt.served_proportions_disagg(pop_df=rur_df,
-                                                pop_in_poly_df=rur_df_poly,
-                                                cols_lst=['pop_count'])
-
-    # Renaming pop_count to either urban or rural
-    urb_servd_df.rename(columns={"pop_count": "Urban"}, inplace=True)
-    rur_servd_df.rename(columns={"pop_count": "Rural"}, inplace=True)
-
-    # Sending each to reshaper
-    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
-                                             id_col="Urban",
-                                             local_auth=local_auth)
-
-    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
-                                             id_col="Rural",
-                                             local_auth=local_auth)
-
-    # Renaming their columns to Urban/Rural
-    urb_servd_df_out.rename(columns={"Urban": "Urban/Rural"}, inplace=True)
-    rur_servd_df_out.rename(columns={"Rural": "Urban/Rural"}, inplace=True)
-
-    # Combining urban and rural dfs
-    urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
-
-    # Output this iteration's urb and rur df to the dict
-    urb_rur_df_dict[local_auth] = urb_rur_servd_df_out
+    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df, 
+                                            urb_rur_df_dict, local_auth)
 
     # Disability disaggregation - get disability results in disab_df_dict
     disab_df_dict = dt.disab_dict(
@@ -352,7 +320,8 @@ final_result["Year"] = pop_year
 
 # Outputting to CSV
 final_result = do.reorder_final_df(final_result)
-final_result.to_csv("Scotland_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 end = time.time()
 

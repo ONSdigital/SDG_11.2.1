@@ -1,9 +1,18 @@
 from typing import List
 import pandas as pd
 from convertbng.util import convert_bng
-import data_output as do
 import logging
 import os
+
+# Our modules
+import data_output as do
+
+# Get CWD
+CWD = os.getcwd()
+
+
+# Create logger
+logger = logging.getLogger(__name__)
 
 
 # Get CWD
@@ -82,8 +91,8 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         """Function sums the counts for corresponding age-bins and assigns
         them a column in age_df."""
         for bin in age_bins:
-            age_df[f"{bin[0]}-{bin[1]}"] = age_df.loc[:,
-                                                      bin[0]:bin[1]].sum(axis=1)
+            age_df[f"{bin[0]}-{bin[1]}"] = (
+                age_df.loc[:, bin[0]:bin[1]].sum(axis=1))
         return age_df
 
     # create 90+ column for when there are more columns than 90
@@ -250,7 +259,7 @@ def disab_disagg(disability_df, la_pop_df):
          *
          la_pop_df["proportion_disabled"])
     )
-   # la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
+    # la_pop_df["number_disabled"] = la_pop_df["number_disabled"].astype(int)
 
     # Make the calculation of the number of non-disabled people in the year
     # of the population estimates
@@ -267,22 +276,23 @@ def disab_disagg(disability_df, la_pop_df):
 
 
 def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
-    """Creates the dataframe including those who are and are not served by public transport
-    and places it into a disability dictionary for each local authority of interest for
-    the final csv output.
+    """Creates the dataframe including those who are and are not served by
+    public transport and places it into a disability dictionary for each
+    local authority of interest for the final csv output.
 
     Args:
         la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                     output area codes and population estimates.
-        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside
-                                            the polygon.
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points
+                                            inside the polygon.
         disability_dict (dict): Dictionary to store the disability
                                     dataframe.
         local_auth (str): The local authority of interest.
 
     Returns:
-        disab_df_dict (dict): Dictionary with a disability total dataframe for
-                            unserved and served populations for all given local authorities.
+        disability_dict (dict): Dictionary with a disability total dataframe
+                            for unserved and served populations for all given
+                            local authorities.
     """
     # Calculating those served and not served by disability
     disab_cols = ["number_disabled"]
@@ -302,6 +312,7 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
     disab_servd_df_out.replace(to_replace="number_disabled",
                                value="Disabled",
                                inplace=True)
+
     # Calculating non-disabled people served and not served
     non_disab_cols = ["number_non-disabled"]
 
@@ -333,71 +344,67 @@ def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
     return disability_dict
 
 
-def disab_dict(la_pop_df, pop_in_poly_df, disability_dict, local_auth):
-    """Creates the dataframe including those who are and are not served by public transport
-    and places it into a disability dictionary for each local authority of interest for
-    the final csv output.
+def urban_rural_results(la_pop_df, pop_in_poly_df, urb_rur_dict, local_auth):
+    """
+    Creates two dataframes, urban and rural and classifies proportion
+    of people served and not served by public transport. This is placed into
+    a urban rural dictionary for each local authority of interest for the
+    final csv output.
 
     Args:
         la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
                                     output area codes and population estimates.
-        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points inside
-                                            the polygon.
-        disability_dict (dict): Dictionary to store the disability
-                                    dataframe.
+        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points
+                                            inside the polygon.
+        urb_rur_dict (dict): Dictionary to store the urban rural dataframe.
         local_auth (str): The local authority of interest.
 
     Returns:
-        disab_df_dict (dict): Dictionary with a disability total dataframe for
-                            unserved and served populations for all given local authorities.
+        urb_rur_dict (dict): Dictionary with a disability total dataframe for
+                            unserved and served populations for all given
+                            local authorities.
+
     """
-    # Calculating those served and not served by disability
-    disab_cols = ["number_disabled"]
+    # Urban/Rural disaggregation
+    # split into two different dataframes
+    urb_df = la_pop_df[la_pop_df.urb_rur_class == "urban"]
+    rur_df = la_pop_df[la_pop_df.urb_rur_class == "rural"]
 
-    disab_servd_df = served_proportions_disagg(la_pop_df,
-                                               pop_in_poly_df,
-                                               disab_cols)
+    urb_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "urban"]
+    rur_df_poly = pop_in_poly_df[pop_in_poly_df.urb_rur_class == "rural"]
 
-    # Feeding the results to the reshaper
-    disab_servd_df_out = do.reshape_for_output(disab_servd_df,
-                                               id_col=disab_cols[0],
-                                               local_auth=local_auth,
-                                               id_rename="Disability Status")
+    urb_servd_df = served_proportions_disagg(pop_df=urb_df,
+                                             pop_in_poly_df=urb_df_poly,
+                                             cols_lst=['pop_count'])
 
-    # The disability df is unusual. I think all rows correspond to people with
-    # disabilities only. There is no "not-disabled" status here (I think)
-    disab_servd_df_out.replace(to_replace="number_disabled",
-                               value="Disabled",
-                               inplace=True)
-    # Calculating non-disabled people served and not served
-    non_disab_cols = ["number_non-disabled"]
+    rur_servd_df = served_proportions_disagg(pop_df=rur_df,
+                                             pop_in_poly_df=rur_df_poly,
+                                             cols_lst=['pop_count'])
 
-    non_disab_servd_df = served_proportions_disagg(
-        pop_df=la_pop_df,
-        pop_in_poly_df=pop_in_poly_df,
-        cols_lst=non_disab_cols)
+    # Renaming pop_count to either urban or rural
+    urb_servd_df.rename(columns={"pop_count": "Urban"}, inplace=True)
+    rur_servd_df.rename(columns={"pop_count": "Rural"}, inplace=True)
 
-    # Feeding the results to the reshaper
-    non_disab_servd_df_out = do.reshape_for_output(
-        non_disab_servd_df,
-        id_col=disab_cols[0],
-        local_auth=local_auth,
-        id_rename="Disability Status")
+    # Sending each to reshaper
+    urb_servd_df_out = do.reshape_for_output(urb_servd_df,
+                                             id_col="Urban",
+                                             local_auth=local_auth)
 
-    # The disability df is unusual. I think all rows correspond to people with
-    # disabilities only. There is no "not-disabled" status here (I think)
-    non_disab_servd_df_out.replace(to_replace="number_non-disabled",
-                                   value="Non-disabled",
-                                   inplace=True)
+    rur_servd_df_out = do.reshape_for_output(rur_servd_df,
+                                             id_col="Rural",
+                                             local_auth=local_auth)
 
-    # Concatting non-disabled and disabled dataframes
-    non_disab_disab_servd_df_out = pd.concat(
-        [non_disab_servd_df_out, disab_servd_df_out])
+    # Renaming their columns to Urban/Rural
+    urb_servd_df_out.rename(columns={"Urban": "Urban/Rural"}, inplace=True)
+    rur_servd_df_out.rename(columns={"Rural": "Urban/Rural"}, inplace=True)
 
-    # Output this local auth's disab df to the dict
-    disability_dict[local_auth] = non_disab_disab_servd_df_out
+    # Combining urban and rural dfs
+    urb_rur_servd_df_out = pd.concat([urb_servd_df_out, rur_servd_df_out])
 
-    return disability_dict
+    # Output this iteration's urb and rur df to the dict
+    urb_rur_dict[local_auth] = urb_rur_servd_df_out
+
+    return urb_rur_dict
 
 
 def create_tiploc_col(naptan_df):
@@ -407,52 +414,14 @@ def create_tiploc_col(naptan_df):
         naptan_df (pd.Dataframe): Naptan dataset
 
     Returns:
-        pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column added for train stations
+        pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column
+        added for train stations
     """
     # Applying only to train stations, RLY is the stop type for train stations
     rail_filter = naptan_df.StopType == "RLY"
 
-    # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha characters
-    tiploc_col = (naptan_df.loc[rail_filter]
-                  .ATCOCode
-                  .str.extract(r'([A-Za-z]{1,7})')
-                  )
-    tiploc_col.columns = ["tiploc_code"]
-
-    # Merge the new Tiploc column with the naptan_df
-    naptan_df = naptan_df.merge(
-        tiploc_col, how='left', left_index=True, right_index=True)
-
-    return naptan_df
-
-
-def convert_east_north(df, long, lat):
-    """
-    Converts latitude and longitude coordinates to British National Grid
-    Args:
-        df (pd.DataFrame): df including the longitude and latitude coordinates
-        long(str): The name of the longitude column in df
-        lat (str): The name of the latitude column in df
-    Returns:
-        pd.DataFrame: dataframe including easting and northing coordinates.
-    """
-    df['Easting'], df['Northing'] = convert_bng(df[long], df[lat])
-    return df
-
-
-def create_tiploc_col(naptan_df):
-    """Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.
-
-    Args:
-        naptan_df (pd.Dataframe): Naptan dataset
-
-    Returns:
-        pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column added for train stations
-    """
-    # Applying only to train stations, RLY is the stop type for train stations
-    rail_filter = naptan_df.StopType == "RLY"
-
-    # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha characters
+    # Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha
+    # characters
     tiploc_col = (naptan_df.loc[rail_filter]
                   .ATCOCode
                   .str.extract(r'([A-Za-z]{1,7})')

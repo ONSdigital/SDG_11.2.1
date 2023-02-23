@@ -39,7 +39,7 @@ EW_OA_LOOKUP_YEAR = str(config["ew_oa_lookup_year"])
 POP_YEAR = str(config["population_year"])
 
 
-# ---------------------------
+# ---------
 # Load and process stops data
 # ---------------------------
 print('Processing stops data')

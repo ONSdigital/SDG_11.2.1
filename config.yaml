@@ -3,10 +3,22 @@ calculation_year: 2019
 ew_oa_lookup_year: 2019
 
 # Data
+<<<<<<< HEAD
 data_dir:  "./data"
 data_output: "./data/data_output"
 outfile: "SDG_11.2.1_results.csv"
 eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
+=======
+DATA_DIR :  "./data"
+DATA_OUTPUT: "./data/data_output"
+EXT_ORDER :
+  - feather
+  - csv
+  - zip
+OUTFILE: "SDG_11.2.1_results.csv"
+OUTFILE_NI: "NI_results.csv"
+OUTFILE_SC: "SC_results.csv"
+>>>>>>> master
 
 # Mapping - geospatial
 default_crs: 'EPSG:27700'
