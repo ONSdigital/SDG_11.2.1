@@ -6,7 +6,6 @@ import sys
 import yaml
 import pandas as pd
 
-<<<<<<<< HEAD:time_table/SDG_bus_timetable.py
 # # Getting the parent directory of the current file
 # current = os.path.dirname(os.path.realpath(__file__))
 # parent = os.path.dirname(current)
@@ -17,16 +16,8 @@ import pandas as pd
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Our modules
-import src.data_ingest as di
-import src.data_transform as dt
-========
-# Add the parent directory to the path to allow import of our modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-# Our modules
-import data_ingest as di  # noqa E402
-import data_transform as dt  # noqa E402
->>>>>>>> master:src/time_table/SDG_bus_timetable.py
+import data_ingest as di # noqa E402
+import data_transform as dt # noqa E402
 
 # Get current working directory
 CWD = os.getcwd()
@@ -256,12 +247,7 @@ bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
 
 # Drop the hours columns
 bus_highly_serviced_stops = (
-<<<<<<<< HEAD:time_table/SDG_bus_timetable.py
     bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']])
-========
-    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']]
-)
->>>>>>>> master:src/time_table/SDG_bus_timetable.py
 
 # Save a copy to be ingested by SDG_11.2.1_main
 bus_highly_serviced_stops.to_feather(os.path.join(
