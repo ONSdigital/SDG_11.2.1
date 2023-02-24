@@ -1,5 +1,5 @@
 site_name: SDG 11.2.1 Documentation
-site_url: https://onsdigital.github.io/SDG_11.2.1/
+site_url: https://sdg-11-2-1.github.io/
 repo_url: https://github.com/ONSdigital/SDG_11.2.1/
 repo_name: SDG 11.2.1
 theme: readthedocs
@@ -13,4 +13,4 @@ nav:
   - Developers Guide: 
     - developers_guide.md
     - building_docs.md
-  
+
