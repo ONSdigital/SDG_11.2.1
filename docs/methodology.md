@@ -274,14 +274,14 @@ Our team opted for the Euclidean buffer method for a number of reasons:
 
 We use Geopandas and for all geospatial operations in our analysis and the buffering operation is actually carried out by the Shapely `object.buffer()` function. This operation takes a geospatial point, and uses a radius of a given length to creates a polygon around the point which approximates a circle. The standard buffering of a point yields a polygon with 99.8% of the area of the circular disk it approximates.
 
-[![Buffering geospatial points](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png)](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/buffering_geospatial_point.png)
+[![Buffering geospatial points](img/buffering_geospatial_point.png)
 
 **Figure 1: Illustration of the process of buffering a geospatial Point**
 
 The resulting geospatial polygons are then joined and can be used for further calculations. 
 
 
-[![Combining polygons to make a multi-polygon](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)](https://github.com/ONSdigital/SDG_11.2.1/raw/255-add-methodology/docs/source/img_readme/combining_buffers.png)
+[![Combining polygons to make a multi-polygon](img/combining_buffers.png)](img/combining_buffers.png)
 
 **Figure 2: Process of combining polygons to create the service area**
 
@@ -291,7 +291,7 @@ The resulting geospatial polygons are then joined and can be used for further ca
 A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.
 
 
-[![An example of a network distance calcualtion sourced from the Swedish methodology write up](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png)](https://raw.githubusercontent.com/ONSdigital/SDG_11.2.1/255-add-methodology/docs/source/img_readme/swedish_network_calculation.png)
+[![An example of a network distance calcualtion sourced from the Swedish methodology write up](img/swedish_network_calculation.png)
 
 
 **Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at [https://www.efgs.info/11-2-1-sweden/](https://www.efgs.info/11-2-1-sweden/).** The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown. 
