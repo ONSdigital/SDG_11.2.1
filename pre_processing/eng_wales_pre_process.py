@@ -142,7 +142,8 @@ ew_la_df = (
 )
 
 # Keep only required columns
-ew_la_df = ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']]
+ew_la_df = (
+    ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']])
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
@@ -230,7 +231,8 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 print('Processing disability data')
 
 ew_disability_df = pd.read_csv(
-    os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"), header=5)
+    os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"),
+    header=5)
 
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
 # also "All categories: Long-term health problem or disability" is not needed,
