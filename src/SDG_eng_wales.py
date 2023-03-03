@@ -236,6 +236,7 @@ if __name__ == "__main__":
                                       local_auth)
 
         # Urban and rural
+        # ---------------
         urb_col = ["urb_rur_class"]
 
         # Filtering by urban and rural to make 2 dfs

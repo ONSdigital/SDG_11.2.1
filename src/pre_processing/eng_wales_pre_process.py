@@ -11,8 +11,8 @@ import yaml
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Module imports
-import src.data_ingest as di
-import src.data_transform as dt
+import data_ingest as di
+import data_transform as dt
 
 # get current working directory
 CWD = os.getcwd()
