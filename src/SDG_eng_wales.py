@@ -225,7 +225,7 @@ if __name__ == "__main__":
                                    value="Disabled",
                                    inplace=True)
 
-        sex_df_dict[local_auth] = sex_servd_df_out
+        disab_df_dict[local_auth] = disab_servd_df_out
 
         # Not disabled
         # ------------
