@@ -1,12 +1,6 @@
-# The Public Transport Accessibility Project 
-## Analysis for SDG Indicator 11.2.1
+# About the ONS SDG 11.2.1 project
 
-This project is to build a data pipeline to analyse data for the UN Sustainable Development Goal indicator 11.2.1, which is part of goal 11:
-
-> "Make cities and human settlements inclusive, safe, resilient and sustainable"
-
-By assessing geographical and census data with data on public transport access points (stops and stations), an assessment can be made about the degree of acessability individuals in the population have to public transport. 
-
+This project has been created as side project by James Westwood, Antonio Felton, Paige Hunter and Nathan Shaw, with Musa Chirikeni as a geospatial adviser. All work on the project has been done in our self-development time on a voluntary basis. 
 
 ## Description of Target 11.2
 By 2030, provide access to safe, affordable, accessible and sustainable transport systems for all, improving road safety, notably by expanding public transport, with special attention to the needs of those in vulnerable situations, women, children, persons with disabilities and older persons 
@@ -25,10 +19,6 @@ The aims are:
     * assess the availability of other services across the UK
     * be used to assess the availability of services in other nations
 
-## Process
-
-[![process_diag](img/New_workflow_diagram.png)](img/New_workflow_diagram.png)
-
 
 ## Deliverables of the project
 
@@ -36,8 +26,5 @@ The aims are:
 2. A new dataset with analysis of public transport availability for the UK population
 3. Three additional datasets with analysis of public transport availability disagregated by sex, age and disabilities
 
-## Resources
-
-- [Assessing SDG indicator 11.2.1 in European cities](https://www.efgs.info/wp-content/uploads/2019/11/5a3_HugoPoelman.pdf)
 
 
