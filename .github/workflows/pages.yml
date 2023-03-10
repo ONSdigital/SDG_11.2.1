@@ -1,11 +1,10 @@
 name: Build pages with mkdocs
 
-
 on:
   push:
     branches:
       - 390-sphinx-alternatives 
-      # - main
+      - main
 permissions:
   contents: write
 jobs:
@@ -21,6 +20,5 @@ jobs:
           key: ${{ github.ref }}
           path: .cache
       - run: pip install mkdocs-material 
-
-
+      - run: mkdocs build --clean
       - run: mkdocs gh-deploy --force
