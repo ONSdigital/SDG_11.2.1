@@ -1,24 +1,39 @@
-name: Build pages with mkdocs
-
+name: build
 on:
   push:
     branches:
-      - 390-sphinx-alternatives 
       - main
-permissions:
-  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - uses: actions/cache@v3
-        with:
-          key: ${{ github.ref }}
-          path: .cache
-      - run: pip install mkdocs-material 
-      - run: mkdocs build --clean
-      - run: mkdocs gh-deploy --force
+      - run: pip install mkdocs
+      - run: mkdocs gh-deploy --force --clean --verbose
+# name: Build pages with mkdocs
+
+# on:
+#   push:
+#     branches:
+#       - 390-sphinx-alternatives 
+#       - main
+# permissions:
+#   contents: write
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v3
+#       - uses: actions/setup-python@v4
+#         with:
+#           python-version: 3.x
+#       - uses: actions/cache@v3
+#         with:
+#           key: ${{ github.ref }}
+#           path: .cache
+#       - run: pip install mkdocs-material 
+#       - run: mkdocs build --clean
+#       - run: mkdocs gh-deploy --force
