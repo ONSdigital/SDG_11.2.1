@@ -115,6 +115,9 @@ Each version has a project board, wherein we group the issues describing the wor
 
 ## Calculation process
 
+## Process diagram   
+
+[![process_diag](img/New_workflow_diagram.png)](img/New_workflow_diagram.png)
 
 ### Main method of calculation
 
