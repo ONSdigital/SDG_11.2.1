@@ -5,9 +5,10 @@ repo_name: SDG 11.2.1
 theme: readthedocs
 nav:
   - Home: index.md
+  - About: about.md
   - Data Quality: data_quality.md
   - Data Description: data_description.md
   - Methodology: methodology.md
   - EU and UK Methodology Comparison: comparison_to_EU_method.md
   - Developers Guide: developers_guide.md
-  - About: about.md
+  
