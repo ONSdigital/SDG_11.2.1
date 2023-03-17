@@ -491,7 +491,7 @@ def get_shp_abs_path(dir):
     shp_files = [file for file in files if file.endswith(".shp")]
     # Add warning if there isn't a shp file in the directory
     if len(shp_files) == 0:
-        raise ValueError("No .shp file in directory")
+        raise ValueError(f"No .shp file in directory {dir}")
     shp_file = shp_files[0]
 
     absolute_path = os.path.join(dir, shp_file)
