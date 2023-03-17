@@ -418,7 +418,7 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     national_pop_feather_path = os.path.join(
         DATA_DIR, f"whole_nation_{pop_year}.feather")
     if not os.path.exists(national_pop_feather_path):
-        print("No national_pop_feather found")
+        print(f"No national_pop_feather found for {pop_year}")
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
