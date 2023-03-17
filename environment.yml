@@ -135,4 +135,5 @@ dependencies:
     - xlrd==2.0.1
     - xlsxwriter==3.0.2
     - zipp==3.7.0
+    - convertbng
 prefix: ~/miniconda3/envs/SDG_11.2.1
