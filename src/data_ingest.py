@@ -419,6 +419,7 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         DATA_DIR, f"whole_nation_{pop_year}.feather")
     if not os.path.exists(national_pop_feather_path):
         print(f"No national_pop_feather found for {pop_year}")
+        print(f"Rebuilding population file. This will take a while!")
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
