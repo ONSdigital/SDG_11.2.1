@@ -1,6 +1,7 @@
 name: SDG_11.2.1
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=4.5=1_gnu
