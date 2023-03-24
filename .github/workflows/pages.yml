@@ -1,6 +1,7 @@
 name: build
+# Trigger on pull request to main
 on:
-  pull-request:
+  pull_request:
     branches:
       - main
 jobs:
