@@ -15,7 +15,7 @@ Follow these instructions:
 
 3. After committing your changes, run the following command to rebuild your site:
 
-'mkdocs build'
+`mkdocs build`
 
 4. After running the build command, mkdocs will create a new set of HTML files in the 'site/' directory, replacing the previous version of your site.
 
@@ -30,4 +30,23 @@ Follow these instructions:
 7. After that create a pull request to `main` and the Github Action (controlled by this yaml `.github/workflows/pages.yml`) should trigger the re-building and deployment of the pages. 
 
 
+## Manually deploying pages with `gh-deploy`
 
+You can deploy any changes you have made locally using `mkdocs gh-deploy`.
+
+Look for more guidance in the [mkdocs official documentation](https://www.mkdocs.org/user-guide/deploying-your-docs/)
+
+## Repository "Pages" settings 
+
+You should select the "gh-pages" branch as the source branch in the Pages section of Github's Pages settings.
+
+Here are the steps to follow:
+
+    Go to your Github repository's settings page.
+    Scroll down to the "Pages" section.
+    Under "Source", select "gh-pages" from the dropdown menu.
+    Click "Save".
+
+This tells Github to serve your pages from the "gh-pages" branch of your repository, which is where mkdocs gh-deploy will push your documentation.
+
+Note that it may take a few minutes for your changes to take effect on the Github Pages site.
