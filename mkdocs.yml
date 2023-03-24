@@ -12,5 +12,15 @@ nav:
   - EU and UK Methodology Comparison: comparison_to_EU_method.md
   - Developers Guide: 
     - developers_guide.md
-    - building_docs.md
-
+    - Code Reference:
+      - main.md
+      - data_ingest.md
+      - data_output.md
+      - data_transform.md
+      - geospatial_mods.md
+      - SDG_train_timetable.md
+    - building_docs.md  
+plugins:
+  - search
+  - mkdocstrings
+  
