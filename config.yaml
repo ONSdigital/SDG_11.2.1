@@ -1,34 +1,29 @@
 # General
-calculation_year : 2019
+calculation_year: 2019
+ew_oa_lookup_year: 2019
 
 # Data
-DATA_DIR :  "./data"
-DATA_OUTPUT: "./data/data_output"
-EXT_ORDER :
-  - feather
-  - csv
-  - zip
-OUTFILE: "SDG_11.2.1_results.csv"
-OUTFILE_NI: "NI_results.csv"
-OUTFILE_SC: "SC_results.csv"
+data_dir:  "./data"
+data_output: "./data/data_output"
+outfile: "SDG_11.2.1_results.csv"
+outfile_ni: "NI_results.csv"
+outfile_sc: "SC_results.csv"
+eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
 
 # Mapping - geospatial
-DEFAULT_CRS : 'EPSG:27700'
-
+default_crs: 'EPSG:27700'
 
 # Population data
+population_year: 2019
 centroid_year: 2011 #2001, 2011, or 2021
-Urb_Rur_ZIP_LINK : https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data
-URB_RUR_TYPES:
+urb_rur_zip_link: https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data
+urb_rur_types:
   OA11CD: str
   RUC11CD: category
-uk_LSOA_shp_file: "Lower_Layer_Super_Output_Areas__December_2011__Boundaries_EW_BGC.shp"
-OA_boundaries_csv: 'https://opendata.arcgis.com/datasets/7763a773b61445128ed3251e27be5139_0.csv?outSR=%7B%22latestWkid%22%3A27700%2C%22wkid%22%3A27700%7D'
 
 # Bus and train data
-NAPT_ZIP_LINK : "http://naptan.app.dft.gov.uk/DataRequest/Naptan.ashx?format=csv"
-NAPTAN_API: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
-NAPTAN_TYPES :
+naptan_api: "https://naptan.api.dft.gov.uk/v1/access-nodes?dataFormat=CSV"
+naptan_types:
   ATCOCode: str
   NaptanCode: str
   CommonName: str
@@ -38,7 +33,7 @@ NAPTAN_TYPES :
   Status: category
 NI_bus_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-9942-8d950b3a0ceb/resource/29f3f2fd-d131-4b86-8933-42b5b3763763/download/09-05-2022busstop-list.csv'
 NI_train_stops_data: 'https://www.opendatani.gov.uk/dataset/5f27f171-b8aa-4511-983d-6df6e87bbf20/resource/967e32c3-1cc2-4aee-b485-92121a32eb4d/download/nir-rail-stations.csv'
-ENG_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
+eng_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
 auto_download_bus: true
 early_timetable_hour: 06
 late_timetable_hour: 20

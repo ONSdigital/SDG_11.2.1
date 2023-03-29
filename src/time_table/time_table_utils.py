@@ -256,9 +256,9 @@ def extract_mca(mca_file: str) -> Tuple[List[List], List[List]]:
             # ID in dataset is not actually unique as same train has several
             # schedules with different dates and calendars. Create ID from
             # these variables.
-                schedule_id = (line[3:9] 
-                               + line[9:15] 
-                               + line[15:21] 
+                schedule_id = (line[3:9]
+                               + line[9:15]
+                               + line[15:21]
                                + line[21:28])
 
             # Extract start and end date of service (yymmdd)

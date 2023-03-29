@@ -1,5 +1,4 @@
 # core
-from main import naptan_df
 import os
 import sys
 
@@ -13,7 +12,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Our modules
 import time_table_utils as ttu # noqa E402
 import data_transform as dt # noqa E402
-
+import data_ingest as di # noqa E402
 
 # get current working directory
 CWD = os.getcwd()
@@ -173,14 +172,14 @@ highly_serviced_train_stops_df = (
     train_frequencies_df[(train_frequencies_df > 0).all(axis=1)]
 )
 
-# Read in station location data
-# Attach the coordinates for each train station
-# station_locations_df = pd.read_csv(station_locations,
-#                                    usecols=['station_code',
-#                                             'easting',
-#                                             'northing'])
-# Get the naptan data from main.py
-# limit to only the columns we need
+# Get the naptan data and limit to only the columns we need
+naptan_df = di.get_stops_file(url=config["naptan_api"],
+                              dir=os.path.join(os.getcwd(),
+                                               "data",
+                                               "stops"))
+# Create Tiploc column
+naptan_df = dt.create_tiploc_col(naptan_df)
+
 stations_df = naptan_df[naptan_df['StopType'] == 'RLY']
 station_locations_df = stations_df[['Easting', 'Northing', 'tiploc_code']]
 

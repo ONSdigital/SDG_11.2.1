@@ -28,11 +28,9 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 # Constants
 pop_year = str(config["calculation_year"])
-DATA_DIR = config["DATA_DIR"]
+DATA_DIR = config["data_dir"]
 boundary_year = "2021"
-DEFAULT_CRS = config["DEFAULT_CRS"]
-OUTFILE = config['OUTFILE_NI']
-OUTPUT_DIR = config["DATA_OUTPUT"]
+DEFAULT_CRS = config["default_crs"]
 
 
 # grabs northern ireland bus stops path
@@ -140,18 +138,6 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 right_on="SA2011",
                                 how="left")
 
-# read in urban/rural classification
-urb_rur_path = os.path.join(CWD, "data", "urban_rural", "NI",
-                            "NI_urb_rur_class.csv")
-
-urb_rur = di.read_urb_rur_ni(urb_rur_path)
-
-pwc_with_pop_with_la = pd.merge(left=pwc_with_pop_with_la,
-                                right=urb_rur,
-                                left_on="SA2011",
-                                right_on = 'SA2011_Code',
-                                how='left')
-
 # Rename columns to fit functions below
 pwc_with_pop_with_la.rename(
     columns={
@@ -205,14 +191,13 @@ pwc_with_pop_with_la = pd.merge(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-#ni_auth = [random_la]
+# ni_auth = [random_la]
 ni_auth = ['Fermanagh and Omagh']
 
 total_df_dict = {}
 disab_df_dict = {}
 age_df_dict = {}
 sex_df_dict = {}
-urb_rur_df_dict = {}
 
 for local_auth in ni_auth:
     print(f"Processing: {local_auth}")
@@ -282,10 +267,6 @@ for local_auth in ni_auth:
     # Output this iteration's df to the dict
     total_df_dict[local_auth] = la_results_df_out
 
-    # Urban/Rural disaggregation
-    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df, 
-                                            urb_rur_df_dict, local_auth)
-
     # Disability disaggregation - get disability results in disab_df_dict
     disab_df_dict = dt.disab_dict(
         only_la_pwc_with_pop,
@@ -336,18 +317,15 @@ for local_auth in ni_auth:
 all_la = pd.concat(total_df_dict.values())
 sex_all_la = pd.concat(sex_df_dict.values())
 disab_all_la = pd.concat(disab_df_dict.values())
-all_age_all_la = pd.concat(age_df_dict.values())
-urb_rur_all_la = pd.concat(urb_rur_df_dict.values())
+all_age = pd.concat(age_df_dict.values())
 
 # Stacking the dataframes
-all_results_dfs = [all_la, disab_all_la,all_age_all_la, sex_all_la, urb_rur_all_la]
+all_results_dfs = [all_la, disab_all_la, all_age, sex_all_la]
 final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # output to CSV
-final_result = do.reorder_final_df(final_result)
-output_path = os.path.join(OUTPUT_DIR, OUTFILE)
-final_result.to_csv(output_path, index=False)
+final_result.to_csv("NI_results.csv", index=False)
 
 
 # end time

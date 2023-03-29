@@ -6,12 +6,18 @@ import sys
 import yaml
 import pandas as pd
 
-# Add the parent directory to the path to allow import of our modules
+# # Getting the parent directory of the current file
+# current = os.path.dirname(os.path.realpath(__file__))
+# parent = os.path.dirname(current)
+# # Appending to path so that we can import modules from the src folder
+# sys.path.append(parent)
+
+# add the parent directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Our modules
-import data_ingest as di  # noqa E402
-import data_transform as dt  # noqa E402
+import data_ingest as di # noqa E402
+import data_transform as dt # noqa E402
 
 # Get current working directory
 CWD = os.getcwd()
@@ -23,7 +29,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 
 # Parameters
-bus_timetable_zip_link = config["ENG_bus_timetable_data"]
+bus_timetable_zip_link = config["eng_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
 bus_data_output_dir = os.path.join(CWD, 'data', 'england_bus_timetable')
 zip_path = os.path.join(bus_data_output_dir, bus_dataset_name)
@@ -228,7 +234,7 @@ bus_highly_serviced_stops = bus_frequencies_df[(
     bus_frequencies_df > 0).all(axis=1)]
 
 # Read in naptan data
-stops_df = di.get_stops_file(url=config["NAPTAN_API"],
+stops_df = di.get_stops_file(url=config["naptan_api"],
                              dir=os.path.join(os.getcwd(), "data", "stops"))
 
 # Add easting and northing
@@ -241,8 +247,7 @@ bus_highly_serviced_stops = bus_highly_serviced_stops.dropna(
 
 # Drop the hours columns
 bus_highly_serviced_stops = (
-    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']]
-)
+    bus_highly_serviced_stops[['NaptanCode', 'Easting', 'Northing']])
 
 # Save a copy to be ingested by SDG_11.2.1_main
 bus_highly_serviced_stops.to_feather(os.path.join(

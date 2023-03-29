@@ -26,7 +26,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
-DATA_DIR = config["DATA_DIR"]
+DATA_DIR = config["data_dir"]
 
 
 def any_to_pd(file_nm: str,
@@ -418,7 +418,8 @@ def get_whole_nation_pop_df(pop_files, pop_year):
     national_pop_feather_path = os.path.join(
         DATA_DIR, f"whole_nation_{pop_year}.feather")
     if not os.path.exists(national_pop_feather_path):
-        print("No national_pop_feather found")
+        print(f"No national_pop_feather found for {pop_year}")
+        print(f"Rebuilding population file. This will take a while!")
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
@@ -491,7 +492,7 @@ def get_shp_abs_path(dir):
     shp_files = [file for file in files if file.endswith(".shp")]
     # Add warning if there isn't a shp file in the directory
     if len(shp_files) == 0:
-        raise ValueError("No .shp file in directory")
+        raise ValueError(f"No .shp file in directory {dir}")
     shp_file = shp_files[0]
 
     absolute_path = os.path.join(dir, shp_file)
@@ -576,8 +577,8 @@ def save_latest_stops_as_feather(file_name):
     """
     # read in csv
     file = pd.read_csv(file_name,
-                       usecols=config["NAPTAN_TYPES"].keys(),
-                       dtype=config["NAPTAN_TYPES"])
+                       usecols=config["naptan_types"].keys(),
+                       dtype=config["naptan_types"])
 
     # get output path
     output_path = os.path.join(os.getcwd(),
