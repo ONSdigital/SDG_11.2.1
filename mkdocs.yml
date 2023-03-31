@@ -18,7 +18,12 @@ nav:
       - data_output.md
       - data_transform.md
       - geospatial_mods.md
-      - SDG_train_timetable.md
+      - SDG_NI.md
+      - SDG_scotland.md
+      - Time Table:
+        - SDG_bus_timetable.md
+        - SDG_train_timetable.md
+        - time_table_utils.md
     - building_docs.md  
 plugins:
   - search
