@@ -28,4 +28,6 @@ nav:
 plugins:
   - search
   - mkdocstrings
+markdown_extensions:
+  - footnotes
   
