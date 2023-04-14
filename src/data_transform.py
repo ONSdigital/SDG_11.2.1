@@ -115,7 +115,7 @@ def bin_pop_ages(age_df, age_bins, col_nms):
         # rename the 90+ column
         age_df.rename(columns={'90+-90+': '90+'}, inplace=True)
     # age df has now been binned and cleaned
-    return age_df
+    return round(age_df)
 
 
 def served_proportions_disagg(pop_df: pd.DataFrame,
@@ -447,3 +447,20 @@ def convert_east_north(df, long, lat):
     """
     df['Easting'], df['Northing'] = convert_bng(df[long], df[lat])
     return df
+
+def mid_year_age_estimates(age_df, pop_estimates_df, pop_year):
+    # get all age columns in a list
+    age_cols = [str(y) for y in range(101)]
+    # iterate through each age
+    for age in range(len(age_cols)):
+        # calculates the proportions for each age and each SA code
+        age_df[age_cols[age]] = age_df[age_cols[age]]/age_df['All usual residents']
+    age_df.drop(['SA', 'All usual residents'], axis=1, inplace=True)
+    # merges pop df and proportions together
+    pop_estimates_df = pop_estimates_df.merge(age_df.reset_index(), left_on='Area_Code', right_on='SA Code', how='left')
+    # calculates pop estimates for each age in each small area using proportions
+    for age in range(len(age_cols)):   
+        pop_estimates_df[age_cols[age]] = pop_estimates_df[age_cols[age]]*pop_estimates_df[pop_year]
+    pop_estimates_df.set_index('Area_Code', inplace=True)
+    return pop_estimates_df
+    

@@ -76,7 +76,7 @@ ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
                                                  skiprows=7)
 
 # Filter to small area code and population year columns only
-estimate_pop_NI = ni_mid_year_estimates['Area_Code', pop_year]
+estimate_pop_NI = ni_mid_year_estimates[['Area_Code', pop_year]]
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
@@ -169,11 +169,14 @@ age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
 
+new_df = dt.mid_year_age_estimates(age_df, estimate_pop_NI, pop_year)
+
 # gets northern ireland age list
 age_lst = config['ni_age_lst']
 
 # slices df to just age cols
-age_df_sliced = dt.slice_age_df(age_df, age_lst)
+age_df_sliced = dt.slice_age_df(new_df, age_lst)
+# above may be age df
 
 # Create a list of tuples of the start and finish indexes for the age bins
 age_bins = dt.get_col_bins(age_lst)
