@@ -32,7 +32,6 @@ DATA_DIR = config["data_dir"]
 boundary_year = "2021"
 DEFAULT_CRS = config["default_crs"]
 
-
 # grabs northern ireland bus stops path
 ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
 
@@ -69,14 +68,15 @@ stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
 
 # Read in mid-year population estimates for Northern Ireland
-pop_files = pd.read_csv(os.path.join(CWD,
-                                     "data", "population_estimates",
-                                     "SAPE20-SA-Totals.csv"),
-                        header=7)
+ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
+                                                 'data', 
+                                                 'population_estimates', 
+                                                 'NI',
+                                                 'mid_year_estimates_ni.csv'), 
+                                                 skiprows=7)
 
 # Filter to small area code and population year columns only
-estimate_cols = ["Area_Code", pop_year]
-estimate_pop_NI = pop_files[estimate_cols]
+estimate_pop_NI = ni_mid_year_estimates['Area_Code', pop_year]
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
