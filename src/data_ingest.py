@@ -833,7 +833,10 @@ class GCPBucket:
             )
 
     def generate_signed_url(self, object_name):
-        """ This will generate a signed URL that is valid for 5 minutes."""
+        """ This will generate a signed URL that is valid for 5 minutes.
+        
+        The URL should be able to be used by our data ingest functions 
+            to download any file."""
         expiration = datetime.utcnow() + timedelta(minutes=5)
         url = self.bucket.blob(object_name).generate_signed_url(
             expiration,
@@ -841,3 +844,10 @@ class GCPBucket:
             credentials=self.credentials,
         )
         return url
+
+    def get_file_list(self):
+        """This will return a list of all the files in the bucket."""
+        
+        files = self.bucket.list_blobs()
+                
+        return files
