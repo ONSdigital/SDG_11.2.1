@@ -23,7 +23,9 @@ The EU team and the ONS 11.2.1 project team have approached the challenges of ca
 
 The ONS computation calculates the service accessibility (see [definitions](https://onsdigital.github.io/SDG_11.2.1/html/write_up.html#definitions)) for the whole country - except that currently the script cycles through local authorities and aggregates the data into a single table later. This method of calculating areas and combining up to the whole nation later will possibly be removed when the ONS team optimise the script. 
 
-The ONS pipeline calculates the service accessibility for the whole country by cycling through local authorities and aggregating at the end of the process (for version 1.0 of our pipeline). The type of computation may be changed in future iterations of the project (probably version 1.3) - if [this feature ](https://github.com/ONSdigital/SDG_11.2.1/issues/159)is implemented. The EU team calculates the transport service accessibility for each “area of interest” (e.g. city, region,urban centre, etc.) focusing on the urban area (in line with 11.2.1 methodology) but the ONS team has calculated for rural areas too - output data that is then compared with urban areas to get an idea of comparative transport access. 
+The ONS pipeline calculates the service accessibility for the whole country by cycling through local authorities and aggregating at the end of the process (for version 1.0 of our pipeline). Version 1.0 will only use data for 2011 and 1.1 will make the calculation over multiple years. 
+
+The type of computation may be changed in future iterations of the project to a more vectorised computation (probably in version 1.3) - if [this feature ](https://github.com/ONSdigital/SDG_11.2.1/issues/159)is implemented. The EU team calculates the transport service accessibility for each “area of interest” (e.g. city, region,urban centre, etc.) focusing on the urban area (in line with 11.2.1 methodology) but the ONS team has calculated for rural areas too - output data that is then compared with urban areas to get an idea of comparative transport access. 
 
 
 ## The methodology for the calculation used
