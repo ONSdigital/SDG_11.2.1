@@ -5,7 +5,12 @@ import json
 from functools import lru_cache, reduce
 from time import perf_counter
 import yaml
-from datetime import datetime
+from datetime import datetime, timedelta
+
+# Google Cloud imports for this module
+from google.oauth2 import service_account
+from google.auth.transport.requests import Request
+from google.cloud import storage
 
 # Third party imports for this module
 import geopandas as gpd
@@ -801,3 +806,38 @@ def read_ni_age_df(path):
             age_df.rename(columns={col: number}, inplace=True)
 
     return age_df
+
+
+class GCPBucket:
+    """
+    This class sets up an instance of a GCP storage client with the right credentials.
+    
+    The methods either download a file from the bucket or generate a signed url for a file.
+    """
+    def __init__(self):
+        self.credentials = service_account.Credentials.from_service_account_file('secrets/sdg-11-2-1-a2216e926298.json')
+        self.client = storage.Client(credentials=self.credentials)
+        self.bucket_name = '11-2-1-all-data'
+        self.bucket = self.client.bucket(self.bucket_name)
+        
+
+    def download_file(self, file_name, destination_file_name):
+        """Downloads a blob from the bucket."""
+
+        blob = self.bucket.blob(file_name)
+
+        blob.download_to_filename(destination_file_name)
+
+        print(
+            f"Blob {self.client} downloaded to {destination_file_name}." 
+            )
+
+    def generate_signed_url(self, object_name):
+        """ This will generate a signed URL that is valid for 5 minutes."""
+        expiration = datetime.utcnow() + timedelta(minutes=5)
+        url = self.bucket.blob(object_name).generate_signed_url(
+            expiration,
+            method='GET',
+            credentials=self.credentials,
+        )
+        return url
