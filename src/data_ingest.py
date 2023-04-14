@@ -846,8 +846,21 @@ class GCPBucket:
         return url
 
     def get_file_list(self):
-        """This will return a list of all the files in the bucket."""
+        """This will return a list of all the files in the bucket, as "blobs"."""
         
         files = self.bucket.list_blobs()
                 
         return files
+    
+    def get_file_names(self):
+        """This will print and return a list of all the file names in the bucket."""
+        
+        files = self.bucket.list_blobs()
+        file_names = [file.name for file in files]
+        
+        print(f"Found {len(file_names)} files in the bucket.")
+        
+        for file in file_names:
+            print(file)
+        
+        return file_names
