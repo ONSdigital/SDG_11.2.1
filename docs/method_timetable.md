@@ -27,3 +27,88 @@ By organizing and filtering the data based on these criteria, we were able to cr
 During our data analysis, a mismatch was discovered between the number of stations listed in the external location data file and the number of station codes (CRS codes) obtained from the National Rail database. This mismatch was due to the fact that the external location data file contained stations that were no longer in operation. 
 
 Our method used TIPLOC codes to locate stations geographically; Tiploc means “timing point locations” and are a unique identifier for train stations (and other points). We used them because we found that they were embedded in Atoccode, which was in the Naptan data that we used for all stop and station locations. By extracting [4:] in the Atcocode column, you get the Tiploc code - which was useful for joining back onto train data, so we got (lat, lon) locations. 
+
+
+# Parsing the Bus Timetable Data
+
+# Bus Timetable Data
+
+To complement the train timetable data, we also incorporate bus timetable data into our filtering methodology. The bus timetable data is sourced from the Bus Open Data Service managed by the Department for Transport (DFT). This service provides access to up-to-date information on bus schedules across the country. The dataset is updated daily at approximately 06:00 GMT, and we specifically download the GTFS (General Transit Feed Specification) schedule dataset, which is provided in the form of zipped text files.
+
+It is important to note that the process of downloading the bus timetable data is separate from the main pipeline of our methodology. This means that it is a one-time task and not automatically performed as part of the regular data processing. To download new data, the user needs to:
+
+a) update the filename in the configuration file
+b) set the download flag to true. 
+
+With these changes if the current data is more than seven days old, the latest dataset is automatically downloaded to ensure that the analysis incorporates the most recent bus schedule information.
+
+For comprehensive documentation of the available files and field names, users can refer to the data dictionaries provided by the Bus Open Data Service. These resources offer detailed insights into the structure and meanings of the various files within the GTFS schedule dataset.
+
+The bus timetable data consists of multiple files, each serving a specific purpose within the dataset. An overview of the available files is as follows:
+
+1. `Agency.txt`: This file provides information about the transit agency, including its name, URL, and contact details.
+
+2. `Stops.txt`: Contains a list of all the bus stops, along with their unique identifiers, names, and geographical coordinates.
+
+3. `Routes.txt`: Describes the routes taken by buses, including their unique identifiers, names, and associated agencies.
+
+4. `Trips.txt`: Provides details about individual trips made by buses, including their unique identifiers, routes, and associated service IDs.
+
+5. `Stop Times.txt`: Contains the timetable information for each stop, including the arrival and departure times for buses.
+
+6. `Calendar.txt`: Describes the service availability for each day of the week, specifying the start and end dates for each service.
+
+7. `Calendar Dates.txt`: Provides additional service availability information, including exceptions or changes to the regular schedule.
+
+8. `Fare Attributes.txt`: Contains fare-related information, such as fare identifiers and prices.
+
+9. `Fare Rules.txt`: Specifies the fare rules and their applicability to different routes or trips.
+
+# Bus Timetable Data
+
+To complement the train timetable data, we also incorporate bus timetable data into our filtering methodology. The bus timetable data is sourced from the Bus Open Data Service managed by the Department for Transport (DFT). This service provides access to up-to-date information on bus schedules across the country. The dataset is updated daily at approximately 06:00 GMT, and we specifically download the GTFS (General Transit Feed Specification) schedule dataset, which is provided in the form of zipped text files.
+
+It is important to note that the process of downloading the bus timetable data is separate from the main pipeline of our methodology. This means that it is a one-time task and not automatically performed as part of the regular data processing. To download new data, the user needs to update the filename in the configuration file and set the download flag to true. Additionally, if the current data is more than seven days old, the latest dataset is automatically downloaded to ensure that the analysis incorporates the most recent bus schedule information.
+
+For comprehensive documentation of the available files and field names, users can refer to the data dictionaries provided by the Bus Open Data Service. These resources offer detailed insights into the structure and meanings of the various files within the GTFS schedule dataset.
+
+The bus timetable data consists of multiple files, each serving a specific purpose within the dataset. An overview of the available files is as follows:
+
+1. `Agency.txt`: This file provides information about the transit agency, including its name, URL, and contact details.
+
+2. `Stops.txt`: Contains a list of all the bus stops, along with their unique identifiers, names, and geographical coordinates.
+
+3. `Routes.txt`: Describes the routes taken by buses, including their unique identifiers, names, and associated agencies.
+
+4. `Trips.txt`: Provides details about individual trips made by buses, including their unique identifiers, routes, and associated service IDs.
+
+5. `Stop Times.txt`: Contains the timetable information for each stop, including the arrival and departure times for buses.
+
+6. `Calendar.txt`: Describes the service availability for each day of the week, specifying the start and end dates for each service.
+
+7. `Calendar Dates.txt`: Provides additional service availability information, including exceptions or changes to the regular schedule.
+
+8. `Fare Attributes.txt`: Contains fare-related information, such as fare identifiers and prices.
+
+9. `Fare Rules.txt`: Specifies the fare rules and their applicability to different routes or trips.
+
+Data dictionaries of the available files and field names can be found [here](https://gtfs.org/schedule/reference/).
+
+
+Our analysis and filtering methodology, we focus specifically on three key datasets: calendar.txt, stop_times.txt, and trips.txt. These datasets contain all the necessary information we require to analyze timetable frequency and make informed decisions.
+
+The stop_times.txt dataset is crucial for our analysis as it contains the specific timetable information for each bus stop. It includes details such as the arrival and departure times of buses at each stop. This dataset enables us to extract the timetable frequency and assess the regularity of bus services at each stop.
+
+The trips.txt dataset provides essential information about individual bus trips, including the unique identifiers of the trips, associated routes, and service IDs. This dataset allows us to link the timetable information from stop_times.txt with the corresponding trips and routes. By connecting these datasets, we can accurately map the bus trips to their respective schedules and understand the relationship between stops, trips, and routes.
+
+To extract highly serviced stops (a bus stop that has 1 or more buses use it between 06:00 and 22:00 during the week) we do the following:
+
+The three datasets, calendar.txt, stop_times.txt, and trips.txt, are processed and organized into separate dataframes to facilitate further analysis in our methodology. One of the initial filtering steps involves selecting departure times within specific hours that we have defined as indicative of highly serviced periods (as specified in the configuration file). This filtering process helps remove any spurious data, such as times recorded after 24:00.
+
+To enhance data consistency and compatibility, the departure times are converted into dates. This conversion allows for easier comparison and manipulation of the data based on specific dates rather than individual time points.
+
+The next step involves joining the stop_times, trips, and calendar datasets together, leveraging their interconnectedness. Unnecessary columns that do not contribute to our analysis are dropped from the combined dataset, ensuring a more streamlined and focused dataset for subsequent processing.
+
+To analyse the bus services on a specific day, we apply a filtering mechanism based on a designated day of the week. By default, this filtering is set to Wednesday but can be adjusted by the user according to their requirements. Additionally, a function is implemented to filter services based on a specific date, providing flexibility for future use cases. This function takes as input a desired day of the week and identifies the corresponding date within the middle week between the earliest start date and the latest end date.
+
+For instance, suppose the earliest start date is January 1, 2022, the latest end date is January 31, 2022, and the desired day of the week is Wednesday. In that case, the function would select Wednesday, January 12th as the representative date for the specified day of the week.
