@@ -67,16 +67,24 @@ stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 # Get usual population for Northern Ireland (Census 2011 data)
 census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
 
+pop_files = pd.read_csv(os.path.join(CWD,
+                                     "data", "population_estimates",
+                                     "SAPE20-SA-Totals.csv"),
+                                    header=7)
+
 # Read in mid-year population estimates for Northern Ireland
-ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
-                                                 'data', 
-                                                 'population_estimates', 
-                                                 'NI',
-                                                 'mid_year_estimates_ni.csv'), 
-                                                 skiprows=7)
+# Add in below for v1.1
+# ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
+#                                                  'data', 
+#                                                  'population_estimates', 
+#                                                  'NI',
+#                                                  'mid_year_estimates_ni.csv'), 
+#                                                  skiprows=7)
 
 # Filter to small area code and population year columns only
-estimate_pop_NI = ni_mid_year_estimates[['Area_Code', pop_year]]
+estimate_cols = ["Area_Code", pop_year]
+estimate_pop_NI = pop_files[estimate_cols]
+#estimate_pop_NI = ni_mid_year_estimates[['Area_Code', pop_year]]
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
@@ -169,13 +177,15 @@ age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
 
-new_age_df = dt.mid_year_age_estimates(age_df, estimate_pop_NI, pop_year)
+# below is for v1.1
+# new_age_df = dt.mid_year_age_estimates(age_df, estimate_pop_NI, pop_year)
 
 # gets northern ireland age list
 age_lst = config['ni_age_lst']
 
 # slices df to just age cols
-age_df_sliced = dt.slice_age_df(new_age_df, age_lst)
+# replace with new_age_df in v1.1
+age_df_sliced = dt.slice_age_df(age_df, age_lst)
 
 # Create a list of tuples of the start and finish indexes for the age bins
 age_bins = dt.get_col_bins(age_lst)
