@@ -853,8 +853,12 @@ class GCPBucket:
         return files
     
     def get_file_names(self):
-        """This will print and return a list of all the file names in the bucket."""
-        
+        """Prints and returns a list of all the file names in the bucket.
+
+        Returns:
+            List: List of file names in the bucket.
+        """        
+                
         files = self.bucket.list_blobs()
         file_names = [file.name for file in files]
         
@@ -864,3 +868,4 @@ class GCPBucket:
             print(file)
         
         return file_names
+    
