@@ -20,11 +20,11 @@ The main support for this project on both methodology and finding appropriate da
 
 The statistics calculated for this project are to be used as an indicator of the UK’s progress on target 11.2 of the Sustainable Development Goals (SDGs). The SDGs are a set of 17 Goals which 193 Member states signed up to in order to coordinate efforts on more sustainable and inclusive national development. The goals cover areas such as poverty, hunger, equality and the environment. Goal 11, which the indicator we are calculating for falls under, is concerned with Sustainable Cities. The data our team produces will be available on the [UK data platform for the SDG indicators](https://sdgdata.gov.uk/), specifically on[ this page](https://sdgdata.gov.uk/11-2-1/).
 
-Project history
+### Project history
 
 The project was initiated in late 2019 by James Westwood with some initial help from the UK SDG data team and Michael Hodge from the Data Science Campus, who provided guidance on the tech that would need to be used and a rough step-by-step calculation process. 
 
-Project Versions
+### Project Versions
 
 The project is managed using version control on the Github platform. One feature of the version controlling using Github is that we can make releases. At the time of writing we have not made any releases of the code, but when we feel that all features to calculate the statistics required by the end user have been written into our code, we will release version 1.0. 
 
