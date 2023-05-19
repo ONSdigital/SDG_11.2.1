@@ -1,4 +1,4 @@
-name: build
+name: build mkdocs pages
 # Trigger on pull request to main
 on:
   pull_request:
