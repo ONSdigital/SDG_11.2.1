@@ -449,6 +449,13 @@ def convert_east_north(df, long, lat):
     return df
 
 def mid_year_age_estimates(age_df, pop_estimates_df, pop_year):
+    """
+    Takes mid-year population estimates for each small area in NI and uses proportions
+    to calculate mid-year estimates for each age.
+    Args:
+        age_df (pd.DataFrame): Census 2011 age estimates dataframe
+        pop_estimates_df (pd.DataFrame): population estimates for each small area dataframe
+        pop_year (str): population year """
     # get all age columns in a list
     age_cols = [str(y) for y in range(101)]
     # iterate through each age
