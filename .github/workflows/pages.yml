@@ -13,4 +13,6 @@ jobs:
         with:
           python-version: 3.x
       - run: pip install mkdocs mkdocstrings
+      - run: pip install mkdocstrings-python
+      - run: pip install --upgrade Pygments
       - run: mkdocs gh-deploy --force --clean --verbose
