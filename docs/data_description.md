@@ -1,7 +1,6 @@
 # Data
 
-The Public Transport Availability project looks to assess the proportion of people who live near a public transport stop. Below is a description of the data sources used in order to perform this calculation.
-
+The Public Transport Availability project looks to assess the proportion of people who live near a public transport stop. Below is a description of the data sources used in order to perform this calculation. Most data sources are split into 3 sections: England & Wales, Scotland, and Northern Ireland (NI).
 ## NaPTAN
 
 The National Public Transport Access Nodes (NaPTAN) dataset contains a list of all public transport access points in Great Britain including bus, rail and tram. This is open-source data and is publicly available. As of 3rd May 2022, the dataset includes around 435,000 public transport access points. The following columns are used within our calculations. The full schema for NapTAN can be found[ here](http://naptan.dft.gov.uk/naptan/schema/2.5/doc/NaPTANSchemaGuide-2.5-v0.67.pdf).
@@ -35,24 +34,56 @@ A **geometry** variable is derived which creates a polygon around each public tr
 
 The census takes place every 10 years and aims to obtain information on all households in the UK and statistics are published at various geographic levels. Output area (OA) is a lower level geography which contains on average approximately 300 people. For the purposes of our calculations each OA will be grouped together into one household.
 
+In Northern Ireland, small areas are produced (add more here about what small areas are)
+
 Census data is used to calculate percentages of certain demographics which can then be applied to the annual population estimates. For example the annual population estimates do not include information on disability status. A proportion of people who are disabed can be calculated from the 2011 Census per OA and then applied to the population estimates data.
+
+### England & Wales
 
 The [Population Weighted Centroids](https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids) for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
 
 The [Urban/Rural Classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification) is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.
 
-The QS303UK - Long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a OA basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/). This allows us to produce estimates disaggregated by disability status.
+The [QS303EW](https://www.nomisweb.co.uk/sources/census_2011_qs), a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on an OA basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/) and allows us to produce estimates disaggregated by disability status.
 
+### Scotland
+
+The [population weighted centroids](https://www.nrscotland.gov.uk/statistics-and-data/geography/our-products/census-datasets/2011-census/2011-boundaries) for each OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
+
+The [urban/rural classification](https://www.isdscotland.org/Products-and-Services/GPD-Support/Geography/Urban-Rural-Classification/) is used to classify if an OA is urban or rural. The UR6_2013_2014 column is used to determine if an output area is rural or urban. An OA is classified as 'urban' if they were allocated to a 2013/14 built-up area with a population of 10,000 people or more. All other remaining OAs are classified as 'rural'. This is consistent with the England & Wales definition. 
+
+The [QS303S](https://www.nomisweb.co.uk/sources/census_2011_qsuk), a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on an OA basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/) and allows us to produce estimates disaggregated by disability status.
+
+### Northern Ireland
+
+The [population weighted centroids](https://www.nisra.gov.uk/support/geography/output-areas-census-2001) used in Northern Ireland are based on the 2001 NI census' OAs as no further updates to the data have been given. Since the 2011 census, Northern Ireland use small areas which are slightly different to OAs. There is a 1-1 lookup table which converts each OA to a small area so that we can use the population weighted centroids from the 2001 census. 
+
+The [urban/rural classification](https://www.nisra.gov.uk/publications/settlement-2015-documentation) classifies a NI small area to be urban or rural. We classified an urban area to be where a settlement has a population greater than 10,000. The NISRA classify an urban area as greater than 5,000 population which is inconsistent with our classification. The previous definition was chosen to be consistent between England & Wales.
+
+The [QS303NI](https://www.nisra.gov.uk/publications/2011-census-quick-statistics-tables-health), a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a small area basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/) and allows us to produce estimates disaggregated by disability status.
 
 ## Annual Population Estimates
 
-The ONS produces [population estimates](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates) every year. This contains information on population estimates for OA’s. This also contains splits of age and sex. These are annual so the year used is consistent with the calculation year.
+The ONS produces [population estimates](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates) every year for England & Wales. This contains information on population estimates for each OA. This also contains splits of age and sex for England & Wales **only**. These are annual so the year used is consistent with the calculation year.
+
+We also use NI [population estimates](https://www.nisra.gov.uk/statistics/population/population-estimates-small-areas) from the Northern Ireland Statistics and Research Agency (NISRA) which give mid-year population estimates for small areas. These are not disaggregated by age and sex, so has to be calculated using proportions from 2011 census. This is explained in the calculation process.
+
+Scotland currently has no mid-year population estimates for OA, just LA. 
 
   
 ## Local Authorities (LA) Boundary
 
-The boundaries of each [local authorities](https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc) are used to ensure calculations are aggregated to an LA basis.
+This section discusses the local authority boundaries data used for England & Wales, Scotland, and Northern Ireland.
 
-The[ lookup file ](https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_OA_WD_LAD))between LA and OA is important when aggregating OA estimates to produce the LA figure.
+### England & Wales
+The boundaries of each [local authority](https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc) are used to ensure calculations are aggregated to an LA basis.
+
+This [lookup file](https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=name&tags=all(LUP_OA_WD_LAD)) between LA and OA is used as it is important when aggregating OA estimates to a LA level for England & Wales.
 
 These boundaries and lookup files are annual so the year used is consistent with the calculation year.
+
+### Scotland
+
+The boundaries of each [local authority](https://data.spatialhub.scot/dataset/local_authority_boundaries-is) for Scotland use 2021 boundaries only at the  moment. We are able to access a LA 2011 boundary but there is no lookup table for this so are using LA2021 boundary data and [lookup table](https://geoportal.statistics.gov.uk/datasets/ons::postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2021-lookup-in-the-uk/about). Future work will look to investigating the differences between LA 2011 boundaries and LA 2021 boundaries.
+
+Unfortunately, Scotland boundaries and lookup files are not annual so we cannot access more accurate data for other years.
