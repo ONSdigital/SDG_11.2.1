@@ -68,6 +68,12 @@ stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 # Get usual population for Northern Ireland (Census 2011 data)
 census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
 
+# Remove any commas if they are there
+census_ni_df = census_ni_df.replace(',','', regex=True)
+# Ensure pop columns are integers
+cols = ['All usual residents', 'Males', 'Females']
+census_ni_df[cols] = census_ni_df[cols].apply(pd.to_numeric, errors='coerce', axis=1)
+
 # Read in mid-year population estimates for Northern Ireland
 pop_files = pd.read_csv(os.path.join(CWD,
                                      "data", "population_estimates",
