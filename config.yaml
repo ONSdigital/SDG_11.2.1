@@ -1,6 +1,6 @@
 # General
-calculation_year: 2019
-ew_oa_lookup_year: 2019
+calculation_year: 2011
+ew_oa_lookup_year: 2011
 
 # Data
 data_dir:  "./data"
@@ -14,7 +14,7 @@ eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
 default_crs: 'EPSG:27700'
 
 # Population data
-population_year: 2019
+population_year: 2011
 centroid_year: 2011 #2001, 2011, or 2021
 urb_rur_zip_link: https://www.arcgis.com/sharing/rest/content/items/3ce248e9651f4dc094f84a4c5de18655/data
 urb_rur_types:
