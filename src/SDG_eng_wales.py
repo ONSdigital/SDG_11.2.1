@@ -43,6 +43,11 @@ ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                  'stops_geo_df.geojson')
+
+# Raise error if the file does not exist (should have been created by preprocessing)
+if not os.path.exists(stops_geo_df_path):
+    raise FileNotFoundError(f"The file '{stops_geo_df_path}' does not exist.")
+
 if di._persistent_exists(stops_geo_df_path):
     stops_geo_df = gpd.read_file(stops_geo_df_path)
 
