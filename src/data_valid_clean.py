@@ -6,6 +6,19 @@ def uppercase_column_names(df):
 
 
 def check_required_columns(dataframe, required_columns):
+    """
+    Checks if the required columns are present in the dataframe.
+
+    This function iterates over the required_columns list and checks if each column is present in the dataframe.
+    If any of the required columns are missing, it raises a ValueError with a list of the missing columns.
+
+    Parameters:
+    dataframe (pandas.DataFrame): The dataframe to check.
+    required_columns (list): A list of column names that are required.
+
+    Raises:
+    ValueError: If any of the required columns are missing from the dataframe.
+    """
     missing_columns = []
     for column in required_columns:
         if column not in dataframe.columns:
