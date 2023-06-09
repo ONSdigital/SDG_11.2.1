@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Module imports
 import data_ingest as di
 import data_transform as dt
+import data_valid_clean as dvc
 
 # get current working directory
 CWD = os.getcwd()
@@ -134,16 +135,30 @@ uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
 # Create geopandas dataframe from the shapefile
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
-# Filter for just england and wales
-lad_code_col = f'LAD{CALCULATION_YEAR[-2:]}CD'
+# Uppercase the column names - in 2011 they are lowercase
+ul_la_file = dvc.uppercase_column_names(uk_la_file)
 
+# Create list of needed columns 
+
+def get_year_col_names(calculation_year):
+    lad_code_col = f'LAD{calculation_year[-2:]}CD'
+    lad_name_col = f'LAD{calculation_year[-2:]}NM'
+    return lad_code_col, lad_name_col
+
+lad_code_col, lad_name_col = get_year_col_names(CALCULATION_YEAR)
+required_columns = [lad_code_col, lad_name_col, 'geometry']
+
+
+# check if required columns are in the dataframe
+dvc.check_required_columns(uk_la_file, required_columns)
+
+# Keep only england and wales local authorities
 ew_la_df = (
     uk_la_file[uk_la_file[lad_code_col].str.startswith(('E', 'W'))]
 )
 
 # Keep only required columns
-ew_la_df = (
-    ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']])
+ew_la_df = (ew_la_df[required_columns])
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
