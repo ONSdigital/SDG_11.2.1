@@ -46,7 +46,7 @@ stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
 
 # Raise error if the file does not exist (should have been created by preprocessing)
 if not os.path.exists(stops_geo_df_path):
-    raise FileNotFoundError(f"The file '{stops_geo_df_path}' does not exist.")
+    raise FileNotFoundError(f"The file '{stops_geo_df_path}' does not exist. Run preprocessing first.")
 
 if di._persistent_exists(stops_geo_df_path):
     stops_geo_df = gpd.read_file(stops_geo_df_path)
