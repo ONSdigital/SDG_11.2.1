@@ -45,6 +45,13 @@ stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                  'stops_geo_df.geojson')
 
 # Raise error if the file does not exist (should have been created by preprocessing)
+if not os.path.exists(stops_geo_df_path):
+    raise FileNotFoundError(f"The file '{stops_geo_df_path}' does not exist.")
+
+if di._persistent_exists(stops_geo_df_path):
+    stops_geo_df = gpd.read_file(stops_geo_df_path)
+
+# Raise error if the file does not exist (should have been created by preprocessing)
 
 def read_file_if_exists(file_path, read_func):
     """Checks if a file exists and reads it if it does 
