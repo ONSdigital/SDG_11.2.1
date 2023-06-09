@@ -510,6 +510,10 @@ def get_oa_la_csv_abspath(dir):
     Returns:
         str: Absolute path of the csv file of the Output area.
     """
+    # Add check that the directory exists and is not empty
+    if not os.path.exists(dir) or len(os.listdir(dir)) == 0:
+        raise ValueError(f"Directory {dir} does not exist or is empty")
+    
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(".csv")]
     csv_file = csv_files[0]
