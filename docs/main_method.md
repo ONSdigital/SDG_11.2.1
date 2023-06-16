@@ -4,12 +4,12 @@
 
 [![process_diag](img/New_workflow_diagram.png)](img/New_workflow_diagram.png)
 
-### Main method of calculation
+## Main method of calculation
 
 The key step of calculation is a spatial join between geolocated urban population data and public transport service areas. A discussion of how each component of that join was calculated from their component parts follows. 
 
 
-### Geocoding the population data
+## Geocoding the population data
 
 The questions we are trying to answer in this analysis is “What proportion of people in the UK have access to public transport access points from their home?”. And then the same question for people in each age, sex and disability category. 
 
@@ -27,16 +27,16 @@ In order to calculate the distance from the place any person lives, to a public 
 PWCs are a population-weighted location (x,y point) at which is a geospatial mean of the locations of all residences in that output area. The PWC, while extremely helpful in giving us a geospatial point to define where the population of any output area lives, is an approximation and is only used due to limitations in our data. 
 
 
-#### Joining the data
+### Joining the data
 
 Population weighted centroid (PWC) data is geolocated with x,y coordinates and has a common data column with the output area data (output area code, “OA11CD”) so a table join can be performed on those datasets. Then the entire population of any output area is approximated to live at the centroid.
 
 
-#### Limitations and improvements
+### Limitations and improvements
 
 Our team recognises that PWCs do not accurately represent the location of any individual’s place of residence and we intend to  research methods of making calculations at even more granular levels, such as postcodes or smaller. Currently however we agreed with the our data end user and the geospatial department that the method to be used for version 1.0 will use the described approximation to geolocate the population.
 
-Delimitation of urban areas
+### Delimitation of urban areas
 
 As Target 11 is concerned with sustainable urban environments, we ultimately had to select only urban areas and exclude rural areas from our analysis. Urban areas are defined as Ordnance Survey mapping that have resident populations above 10,000 people (2011 Census) and the methodology is available [here](https://www.ons.gov.uk/file?uri=/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification/ruralurbanclassification2011userguide.zip). The urban/rural lookup data was sourced from [ONS’s Geography Portal ](https://geoportal.statistics.gov.uk/)and it provides a classification of each output area as either urban or rural categories which are further subdivided as follows. 
 
@@ -136,11 +136,11 @@ As Target 11 is concerned with sustainable urban environments, we ultimately had
 In our calculation we group A1, B1, C1 and C2 as urban and any other code as rural. 
 
 
-#### Joining the data
+### Joining the data
 
 The population table for the whole nation was joined onto the table with the urban/rural classification for each output area on the output area code “OA11CD”, hence bringing in the classification into the population data. Every OA and associated PWC is therefore categorised as either urban or rural. Later we use this classification to filter the data, and disaggregate our analysis. For the SDG analysis we remove the OAs classified as rural from our analysis, but we can choose to include them to expose transport availability in rural areas too. 
 
-### Computation of service areas
+## Computation of service areas
 
 As described in the methodology of the UN Metadata for this indicator, public transport service areas had to be calculated.  Two methods to calculate service areas are described in the methodology:
 
@@ -158,11 +158,11 @@ Our team opted for the Euclidean buffer method for a number of reasons:
 * Research shows that the network enquiry requires a complete path network, (as pointed out by [Sweden](https://www.efgs.info/11-2-1-sweden/) in their write up, see section “**Result from the network distance calculations”**)
 
 
-#### Euclidean buffering methodology
+### Euclidean buffering methodology
 
 We use Geopandas and for all geospatial operations in our analysis and the buffering operation is actually carried out by the Shapely `object.buffer()` function. This operation takes a geospatial point, and uses a radius of a given length to creates a polygon around the point which approximates a circle. The standard buffering of a point yields a polygon with 99.8% of the area of the circular disk it approximates.
 
-[![Buffering geospatial points](img/buffering_geospatial_point.png)
+![Buffering geospatial points](img/buffering_geospatial_point.png)
 
 **Figure 1: Illustration of the process of buffering a geospatial Point**
 
@@ -174,17 +174,17 @@ The resulting geospatial polygons are then joined and can be used for further ca
 **Figure 2: Process of combining polygons to create the service area**
 
 
-#### Notes on the network query method
+## Network query method
 
 A network query would be calculated by taking paths of a specified length (500m or 1km) in every direction from a specified point; for this project that point would be a transport stop or station. Following these paths for the specified distance would create many end points. Finally end points are joined to create a perimeter, within which lies the service area.
 
 
-[![An example of a network distance calcualtion sourced from the Swedish methodology write up](img/swedish_network_calculation.png)
+![An example of a network distance calcualtion sourced from the Swedish methodology write up](img/swedish_network_calculation.png)
 
 
 **Figure 3: An example visualisation of a network distance calculation, taken from the Swedish methodology write up at [https://www.efgs.info/11-2-1-sweden/](https://www.efgs.info/11-2-1-sweden/).** The image shows the stops in blue, surrounded by the Euclidean buffer, shaded in green and a 500m limit shown. 
 
-### Calculation of population within service areas
+## Calculation of population within service areas
 
 With the service areas calculated, the population that resides within a service area is calculated by a two stage process:
 
@@ -194,6 +194,11 @@ With the service areas calculated, the population that resides within a service 
 2. The population figure (number of individuals) associated with each PWC is summed, meaning that only the population within the service areas is counted as the population outside of the service areas was filtered out at stage 1.
 3. The proportion of the population inside a service area is calculated as a proportion of the total population. Currently for version 1.0, this is carried out at Local Authority (LA) level.
 
-### Disaggregations
+## Timetable method
+
+### Northern Ireland
+Due to complexity of the work that will need to be undertaken, Northern Ireland timetable data will be included in Version 1.3 - enhanced functions and calculation. Currently, we will be using the stops sourced from NAPTAN. 
+
+## Disaggregations
 
 As required for the SDG indicator we are producing this data for, the output data from this project has been disaggregated by sex, age and disability status. 
