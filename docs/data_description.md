@@ -34,17 +34,20 @@ A **geometry** variable is derived which creates a polygon around each public tr
 
 The census takes place every 10 years and aims to obtain information on all households in the UK and statistics are published at various geographic levels. Output area (OA) is a lower level geography which contains on average approximately 300 people. For the purposes of our calculations each OA will be grouped together into one household.
 
-In Northern Ireland, small areas are produced (add more here about what small areas are)
+In Northern Ireland, [small areas](https://www.nisra.gov.uk/support/output-geography-census-2011/small-areas#:~:text=Small%20Areas%20were%20generally%20created,Electoral%20Wards%20in%20Northern%20Ireland.) are used as opposed to OAs. The use of OAs were replaced after the 2001 NI census and small areas have an approximate population of 400 people.
 
 Census data is used to calculate percentages of certain demographics which can then be applied to the annual population estimates. For example the annual population estimates do not include information on disability status. A proportion of people who are disabed can be calculated from the 2011 Census per OA and then applied to the population estimates data.
 
 ### England & Wales
 
-The [Population Weighted Centroids](https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids) for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
+The [population weighted centroids](https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids) for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.
 
-The [Urban/Rural Classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification) is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.
+The [urban/rural classification](https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification) is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.
 
 The [QS303EW](https://www.nomisweb.co.uk/sources/census_2011_qs), a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on an OA basis. This information is transformed to be consistent with the [GSS harmonized disability data](https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/) and allows us to produce estimates disaggregated by disability status.
+
+The [QS104EW](https://www.nomisweb.co.uk/census/2011/qs104ew) contains sex population estimates for each OA. 
+
 
 ### Scotland
 
@@ -68,10 +71,10 @@ The ONS produces [population estimates](https://www.ons.gov.uk/peoplepopulationa
 
 We also use NI [population estimates](https://www.nisra.gov.uk/statistics/population/population-estimates-small-areas) from the Northern Ireland Statistics and Research Agency (NISRA) which give mid-year population estimates for small areas. These are not disaggregated by age and sex, so has to be calculated using proportions from 2011 census. This is explained in the calculation process.
 
-Scotland currently has no mid-year population estimates for OA, just LA. 
+Scotland currently has no mid-year population estimates for OA, and we can only calculate population for each OA based on LA level.
 
   
-## Local Authorities (LA) Boundary
+## Local Authorities (LA) Boundary Data
 
 This section discusses the local authority boundaries data used for England & Wales, Scotland, and Northern Ireland.
 
@@ -87,3 +90,10 @@ These boundaries and lookup files are annual so the year used is consistent with
 The boundaries of each [local authority](https://data.spatialhub.scot/dataset/local_authority_boundaries-is) for Scotland use 2021 boundaries only at the  moment. We are able to access a LA 2011 boundary but there is no lookup table for this so are using LA2021 boundary data and [lookup table](https://geoportal.statistics.gov.uk/datasets/ons::postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2021-lookup-in-the-uk/about). Future work will look to investigating the differences between LA 2011 boundaries and LA 2021 boundaries.
 
 Unfortunately, Scotland boundaries and lookup files are not annual so we cannot access more accurate data for other years.
+
+### Northern Ireland
+
+The same local authorities boundary file that is used in England & Wales is also used for Northern Ireland. 
+
+We used an OA to SA lookup file, as well as an SA to LA lookup file. This was due to only having population weighted centroids for each OA in 2011, meaning we converted each OA to an SA using a 1:1 lookup table. This meant we could then use an SA to LA lookup table to aggregate the SA estimates to LA level. 
+

@@ -91,7 +91,7 @@ oa_to_sa_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
 
 
 # reads in the OA to SA lookupfile
-sa_to_la = pd.read_csv(oa_to_sa_lookup_path,
+oa_to_la = pd.read_csv(oa_to_sa_lookup_path,
                        usecols=["COA2001_1", "SA2011"])
 
 # getting the coordinates for all LA's
@@ -106,7 +106,7 @@ ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                          "NI",
                          "NI_PWC_BNG.shp")))
 
-pwc_with_lookup = pd.merge(left=sa_to_la,
+pwc_with_lookup = pd.merge(left=oa_to_la,
                            right=ni_pop_wtd_centr_df,
                            left_on=sa_to_la['COA2001_1'],
                            right_on='OA_CODE',
