@@ -4,13 +4,11 @@
 
 import re
 import pathlib as pl
-import pandas as pd
-import sys
 from glob import glob
 import duckdb
 import uuid
 from typing import List
-import os
+
 
 
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
