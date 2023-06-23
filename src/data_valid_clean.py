@@ -1,5 +1,4 @@
 """All functions related to data validation and cleaning."""
-import re
 
 def uppercase_column_names(df):
     df.columns = df.columns.str.upper()
