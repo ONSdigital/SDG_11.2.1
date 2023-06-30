@@ -36,6 +36,10 @@ Population weighted centroid (PWC) data is geolocated with x,y coordinates and h
 
 Our team recognises that PWCs do not accurately represent the location of any individual’s place of residence and we intend to  research methods of making calculations at even more granular levels, such as postcodes or smaller. Currently however we agreed with the our data end user and the geospatial department that the method to be used for version 1.0 will use the described approximation to geolocate the population.
 
+### Disaggregated data
+
+We disaggregate our data into age, sex, and disability. For all years aside from Census years (2011, 2021), we don't have disability data. Thus we calculated the proportions of people classified as disabled and not disabled in all output areas and applied this proportion to population estimates for non-Census years (2011, 2021). Similarly, Scotland and Northern Ireland do not have sex and Age data available for non-Census years. We used a similar method calculating proportions of people for a given age group or sex and applied these proportions to the mid-year population estimates for that output area.
+
 ### Delimitation of urban areas
 
 As Target 11 is concerned with sustainable urban environments, we ultimately had to select only urban areas and exclude rural areas from our analysis. Urban areas are defined as Ordnance Survey mapping that have resident populations above 10,000 people (2011 Census) and the methodology is available [here](https://www.ons.gov.uk/file?uri=/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification/ruralurbanclassification2011userguide.zip). The urban/rural lookup data was sourced from [ONS’s Geography Portal ](https://geoportal.statistics.gov.uk/)and it provides a classification of each output area as either urban or rural categories which are further subdivided as follows. 
@@ -195,6 +199,8 @@ With the service areas calculated, the population that resides within a service 
 3. The proportion of the population inside a service area is calculated as a proportion of the total population. Currently for version 1.0, this is carried out at Local Authority (LA) level.
 
 ## Timetable method
+
+More information on the timetable method can be found under the 'Timetable method' section.
 
 ### Northern Ireland
 Due to complexity of the work that will need to be undertaken, Northern Ireland timetable data will be included in Version 1.3 - enhanced functions and calculation. Currently, we will be using the stops sourced from NAPTAN. 
