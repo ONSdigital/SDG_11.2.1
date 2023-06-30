@@ -1,8 +1,8 @@
 # For Developers
 
-## Requirements 
+## Requirements
 
-A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages. 
+A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.
 
 **Note for ONS staff:** It is unlikely that you will be able to install all the needed dependencies to run this script, therefore it is recommended that your devlopment work is carried out on an off-network computer.
 
@@ -16,13 +16,13 @@ The first step is setting up your SSH key for GitHub. The process will slightly 
 You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your local drive).
 
     $ cd project-directory
-Then activate use the SSH address to clone the repository 
+Then activate use the SSH address to clone the repository
 
     $ git clone SSH_address
 
 You can then open the folder SDG_11.2.1 within VSCode using "Open Folder" in Source Control.
 
-## Create an environment 
+## Create an environment
 
 Virtual environments are extremely useful when working on different projects as they can be set up in a way to only have packages installed in that environment and not globally - it does not affect base Python installation in any way.
 
@@ -34,12 +34,12 @@ Create an environment called "SDG_11.2.1" with the version of Python that this w
 
 ## Activate the environment
 
-This [tutorial](https://code.visualstudio.com/docs/python/environments) under the 'Manually specify an interpreter' section allows you to add in a virtual environment to use. To select an interpreter, use CTRL+SHIFT+P or command+SHIFT+P then write 'Python: Select Interpreter' to which you can add a file path similar to '.venv/Scripts/python.exe'. You can also use the Find button to locate the specific file in your file system. 
+This [tutorial](https://code.visualstudio.com/docs/python/environments) under the 'Manually specify an interpreter' section allows you to add in a virtual environment to use. To select an interpreter, use CTRL+SHIFT+P or command+SHIFT+P then write 'Python: Select Interpreter' to which you can add a file path similar to '.venv/Scripts/python.exe'. You can also use the Find button to locate the specific file in your file system.
 
 After this has been set up, go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:
 
     $ cd C:\Users\name\project-directory
-    
+
 Then activate the environment
 
     $ conda activate SDG_11.2.1
@@ -108,5 +108,22 @@ The script should now be set up to use.
 To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file
 
     git config --global user.email "email"
-    
+
     git config --global user.name "username"
+
+## Pre-commit hooks
+
+In this project, we use pre-commit hooks to stop us from accidentally uploading files to GitHub. We have the `.pre-commit-config.yaml` which has the set up for the pre-commit hooks you will need. However, to ensure that they are active, it is essential to set up pre-commit hooks. The instructions below follows [this guidance](https://pre-commit.com/).
+
+You should have pre-commit installed as it is part of `requirements.txt`. You can check this by writing
+
+    pip freeze
+on the command line which shows all the python packages installed in your virtual environment. If this has not installed, write:
+
+    pip install pre-commit
+
+To set up the git hook scripts from the `.pre-commit-config.yaml`, run:
+
+    pre-commit install
+
+Now this should have the hooks running when you try to commit. You can test this out by creating dummy data and trying to commit this to GitHub.
