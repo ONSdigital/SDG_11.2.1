@@ -108,7 +108,7 @@ ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
 
 pwc_with_lookup = pd.merge(left=oa_to_la,
                            right=ni_pop_wtd_centr_df,
-                           left_on=sa_to_la['COA2001_1'],
+                           left_on=oa_to_la['COA2001_1'],
                            right_on='OA_CODE',
                            how='left')
 
