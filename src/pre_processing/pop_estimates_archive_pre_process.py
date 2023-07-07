@@ -6,11 +6,18 @@ import os
 import pandas as pd
 import glob
 import re
+import sys
 import pickle
 import logging
 from typing import Generator, Tuple
 
 import gptables as gpt
+
+# add the parent directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import data_ingest as di
+
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -53,7 +60,7 @@ def create_region_generator(directory_path):
     return (extract_region(file) for file in file_path_generator)
        
     
-def load_pickle_or_csv(pickle_path: str, csv_path: str) -> Tuple[pd.DataFrame, bool]:
+def load_pickle_or_csv(pickle_path: str, csv_path: str, yr: str) -> Tuple[pd.DataFrame, bool]:
     persistent_exists = os.path.isfile(pickle_path)
     if persistent_exists:
         with open(pickle_path, "rb") as pickle_file:
@@ -61,7 +68,9 @@ def load_pickle_or_csv(pickle_path: str, csv_path: str) -> Tuple[pd.DataFrame, b
             logging.info("Pickle file loaded successfully.")
     else:
         # Read the CSV file into a dataframe
-        df = pd.read_csv(csv_path)
+        year_data_col = f"Population_{yr}"
+        cols_list = ["OA11CD", "Sex", "Age", "LAD11CD", year_data_col]
+        df = pd.read_csv(csv_path, usecols=cols_list)
     return df, persistent_exists
 
 
@@ -78,46 +87,53 @@ def proc_each_region_for_all_years(file_path: str, df_dic: dict, year_gen: Gener
         region = match.group(1)
         logging.info("Processing %s", region)
 
-        
-        # # Load pickle if it exists or CSV if not
-        df, _ = load_pickle_or_csv(pickle_file_path, file_path)
+        region_for_all_years = {}
+      
 
         for year in year_gen:
             logging.info("Processing %s", year)
-            year_data_col = f"Population_{year}"
                 
-            # Subset the dataframe to get the data for the year
-            cols = ["OA11CD", "Sex", "Age", "LAD11CD", year_data_col]
-            year_df = df[cols]
+            # # Load pickle if it exists or CSV if not
+            df, _ = load_pickle_or_csv(pickle_file_path, file_path, year)
             
             # Check if there is a region key in the dict, if not initialize an empty dictionary for the region
             year_key = f"{year}_data"
             
-            if year_key not in df_dic:
-                df_dic.setdefault(year_key, {})
+            region_for_all_years[year] = df
 
-            else:
-                logging.info("%s already in df_dic.", year_key) 
-            # Add the data for the year to the dfs_dict[region] dictionary
-            df_dic[year_key].update({region: year_df})
         
         # we now have all years processed for one region, so save the dictionary to a pickle file
         pickle_file_path = f"data/population_estimates/interim/{region}_data.pickle"
         
         # Save the updated dictionary to the pickle file
         with open(pickle_file_path, "wb") as pickle_file:
-            pickle.dump(df_dic, pickle_file)
+            pickle.dump(region_for_all_years, pickle_file)
+        
+        # Delete dict of dfs to free up mem
+        del region_for_all_years
 
 def concat_all_regions_same_year(dfs_dict, regions, yr):
     regions = list(regions)
     logging.info("Concatenating %s for these regions %s", yr, ', '.join(regions))
+    # Create a list of dataframes with dfs for each region for one year (yr)
     all_regions_in_year = [dfs_dict[f"{yr}_data"][region] for region in regions]
+    # Concatenate that list to bring together all the regions for that year (yr)
     concated_df = pd.concat(all_regions_in_year)
-    return concated_df
+    
+    # we now have all years processed for one region, so save the dictionary to a pickle file
+    feath_file_path = f"data/population_estimates/interim/EW_{yr}_data.feather"
+    # TODO: Change "EW" to an arugment in the function, so can take "NI" etc
+    
+    # Save the updated dictionary to the pickle file
+    di._pd_to_feather(concated_df, feath_file_path)
+    
+    # Delete df to save on memory
+    del concated_df
 
 
 def age_pop_one_year(df, sex_num, year):
-    """Gets the population for each age in every OA in a region for one year.capitalize
+    """Gets the population for each age in every OA in a region for one year.
+        Makes the data go from long-narrow format to wide.
     
     Supply sex_num, 1 for male and 2 for female, None for both."""
     
@@ -135,6 +151,7 @@ def age_pop_one_year(df, sex_num, year):
 
 
 def all_regions_by_year_split_sex(all_regions_by_year, age_pop_one_year):
+    """Creates the sex-disaggregated tables"""
     for year, year_df in all_regions_by_year():
         both_sexes_df = age_pop_one_year(df=year_df, sex_num=None, year=year)
         male_df = age_pop_one_year(df=year_df, sex_num=1, year=year)
@@ -181,6 +198,7 @@ if __name__ == "__main__":
     
     # Call proc_all_regions_by_year for each file in the directory
     for file_path in file_path_generator:
+        """Each file contains data for one region for all sexes, all ages and all years"""
         proc_each_region_for_all_years(file_path=file_path,
                                 df_dic=dfs_dict,
                                 year_gen=years_generator(),
@@ -190,14 +208,13 @@ if __name__ == "__main__":
     # Now concatenate all the regions for a given year. Each year will be a separate dataframe
     # but all regions' data will be stacked into the df 
     for year in years_generator():
-        
         regs_gen = create_region_generator(directory_path)
-        all_regions_by_year[year] = concat_all_regions_same_year(dfs_dict, regions=regs_gen, yr=year)
+        concat_all_regions_same_year(dfs_dict, regions=regs_gen, yr=year)
 
     # Delete the dfs_dict to free up memory
     del dfs_dict
     
-    # Get a dataframe for each sex for all regions by each year 
+    # Get a dataframe for each sex for all regions by each year in wide format
     all_regions_by_year_dict = all_regions_by_year_split_sex(all_regions_by_year, age_pop_one_year)
 
     # Write the dataframes to a tabbed excel file
