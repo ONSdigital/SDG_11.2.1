@@ -205,7 +205,7 @@ def write_table_to_csv(con, *args, output_folder: pl.Path, year: int):
     return None
 
 def main():
-
+    """This is executed when run from the command line."""
     # Create connection
     con = create_connection(db_file_path)
 
