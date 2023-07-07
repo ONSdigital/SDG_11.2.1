@@ -191,9 +191,6 @@ if __name__ == "__main__":
     # but all regions' data will be stacked into the df 
     for year in years_generator():
         
-        
-        
-        
         regs_gen = create_region_generator(directory_path)
         all_regions_by_year[year] = concat_all_regions_same_year(dfs_dict, regions=regs_gen, yr=year)
 
