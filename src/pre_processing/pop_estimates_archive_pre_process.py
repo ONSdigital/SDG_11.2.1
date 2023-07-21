@@ -194,7 +194,7 @@ def create_output_folder(year: int) -> pl.Path:
     return output_folder
 
 
-def write_table_to_csv(con, *args, output_folder: pl.Path, year: int):
+def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Path, year: int) -> None:
 
     for table_name in args:
         query = f"""
