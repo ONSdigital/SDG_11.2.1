@@ -8,6 +8,7 @@ from glob import glob
 import duckdb
 import uuid
 from typing import List
+from duckdb import DuckDBPyConnection
 
 
 
@@ -45,7 +46,7 @@ column_types = {
 }
 
 
-def create_connection(database_path):
+def create_connection(database_path: str) -> DuckDBPyConnection:
     """Creates a connection to a DuckDB database and returns the connection object."""
     con = duckdb.connect(database_path)
     return con
