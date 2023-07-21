@@ -54,7 +54,37 @@ def age_pop_one_year(combined_sexes_df, year):
 
     return both_sexes_df, male_df, female_df
 
-if __name__ == "__main__":
+def load_region_data(input_folder, year_col):
+    
+    region_data = {}
+    
+    input_folder = pl.Path(input_folder)
+    
+    for file_path in glob(f"{input_folder}/*.csv"):
+        if file_path.endswith(".csv"):
+            single_region_df = pd.read_csv(file_path, usecols=["OA11CD",
+                                                               "LAD11CD",
+                                                               "Age",
+                                                               "Sex",
+                                                               year_col])
+            region_code = extract_region(file_path)
+            region_data[region_code] = single_region_df
+    return region_data
+
+
+def create_output_folder(year: int) -> pl.Path:
+    """Create the output folder for a given year if it doesn't exist."""
+    output_folder = pl.Path(f"data/population_estimates/{year}")
+    if not output_folder.exists():
+        output_folder.mkdir(parents=True)
+    return output_folder
+
+
+def stringify_column_names(df):
+    """Stringify the column names of a DataFrame."""
+    df.rename(columns={col: str(col) for col in df.columns}, inplace=True)
+
+def main():
 
     # Define the input and output file paths
     input_folder = "data/population_estimates/2002-2012"
@@ -68,28 +98,15 @@ if __name__ == "__main__":
     # Loop through each year and process the data for all regions
     for year in years:
 
+        # Define the column name for the year
         year_col = f"Population_{year}"
-
+        
         # Define an empty dictionary to store the data for each region
-        region_data = {}
-
-        # Loop through each file in the input folder
-        for filename in glob(input_folder):
-            if filename.endswith(".csv"):
-                # Load the CSV file into a dataframe
-                single_region_df = pd.read_csv(pl.Path.joinpath(input_folder, filename),
-                                               usecols=["OA11CD", "LAD11CD", "Age", "Sex", year_col])
-
-                # Extract the region code from the filename
-                region_code = extract_region(filename)
-
-                # Extract the data for the specified year and store it in the region_data dictionary
-                region_data[region_code] = single_region_df
+        region_data = load_region_data(input_folder, year_col)
 
         # Concatenate the data for all regions into a single dataframe
         sex_in_one_year_df = pd.concat(region_data.values())
-        del region_data
-        
+                
         # Get the three sex disaggregated dataframes
         # Call the function to get the dataframes
         both_sexes_df, male_df, female_df = age_pop_one_year(sex_in_one_year_df, year)
@@ -102,18 +119,15 @@ if __name__ == "__main__":
 
         # Create a dictionary with the dataframes
         data_by_sex = {"both_sexes_df": both_sexes_df,
-                       "male_df": male_df, "female_df": female_df}
+                       "male_df": male_df,
+                       "female_df": female_df}
 
-        # Create the output folder if it doesn't exist
-        output_folder = pl.Path(f"data/population_estimates/{year}")
-        if not output_folder.exists:
-            output_folder.mkdir(parents=True)
-
+        output_folder= create_output_folder(year)
+        
         # Write year_df to a feather file
         for name, sex_in_one_year_df in data_by_sex.items():
             # Stringify the column names (because feather doesn't like ints as column names)
-            sex_in_one_year_df.rename(columns={col: str(col)
-                           for col in sex_in_one_year_df.columns}, inplace=True)
+            stringify_column_names(sex_in_one_year_df)
             
             # Write the dataframe to a feather file
             file_path = make_feather_path(year, output_folder, name)
@@ -123,5 +137,6 @@ if __name__ == "__main__":
             except ValueError or FileNotFoundError as e:
                 print(e)
                 sys.exit(1)
-                
-        del data_by_sex
+
+if __name__ == "__main__":
+    main()
