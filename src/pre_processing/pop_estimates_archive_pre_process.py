@@ -82,7 +82,7 @@ def query_database(con, query):
     # Return the name of the temporary table
     return table_name
 
-def query_database_as_view(con, query, view_name):
+def query_database_as_view(con: DuckDBPyConnection, query: str, view_name: str) -> None:
     """Queries a DuckDB database and creates or updates a view with the results.
 
     This function takes a DuckDB connection object, a SQL query, and a view name as input,
