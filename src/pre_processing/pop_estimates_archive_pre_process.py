@@ -7,6 +7,10 @@ import pathlib as pl
 import pandas as pd
 import sys
 from glob import glob
+import duckdb
+
+# %%
+db_output = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 
 
 def extract_region(file_name):
@@ -54,22 +58,25 @@ def age_pop_one_year(combined_sexes_df, year):
 
     return both_sexes_df, male_df, female_df
 
-def load_region_data(input_folder, year_col):
+def load_region_data(file_path, year_cols):
+    """Load the data for a single region and return a dataframe."""
+        
+    # load all years for one region
+    single_region_df = pd.read_csv(file_path, usecols=["OA11CD",
+                                                        "LAD11CD",
+                                                        "Age",
+                                                        "Sex",
+                                                        *year_cols])
+    region_code = extract_region(file_path)
     
-    region_data = {}
+    # Create a column called region
+    single_region_df["region"] = region_code
     
-    input_folder = pl.Path(input_folder)
+    # Reorder the columns
+    ordered_cols = ["OA11CD", "LAD11CD", "Age", "Sex", "region"]+year_cols
+    single_region_df = single_region_df[ordered_cols]
     
-    for file_path in glob(f"{input_folder}/*.csv"):
-        if file_path.endswith(".csv"):
-            single_region_df = pd.read_csv(file_path, usecols=["OA11CD",
-                                                               "LAD11CD",
-                                                               "Age",
-                                                               "Sex",
-                                                               year_col])
-            region_code = extract_region(file_path)
-            region_data[region_code] = single_region_df
-    return region_data
+    return single_region_df
 
 
 def create_output_folder(year: int) -> pl.Path:
@@ -84,6 +91,7 @@ def stringify_column_names(df):
     """Stringify the column names of a DataFrame."""
     df.rename(columns={col: str(col) for col in df.columns}, inplace=True)
 
+# %%
 def main():
 
     # Define the input and output file paths
@@ -96,20 +104,67 @@ def main():
     year_data = {}
 
     # Loop through each year and process the data for all regions
-    for year in years:
 
-        # Define the column name for the year
+
+    # Define the column name for the year
+    year_cols = [f"Population_{year}" for year in years]
+    
+    column_types = {
+    "OA11CD": "TEXT",
+    "LAD11CD": "TEXT",
+    "Age": "TEXT",
+    "Sex": "TEXT",
+    "Population_2002": "INTEGER",
+    "Population_2003": "INTEGER",
+    "Population_2004": "INTEGER",
+    "Population_2005": "INTEGER",
+    "Population_2006": "INTEGER",
+    "Population_2007": "INTEGER",
+    "Population_2008": "INTEGER",
+    "Population_2009": "INTEGER",
+    "Population_2010": "INTEGER",
+    "Population_2011": "INTEGER",
+    "Population_2012": "INTEGER"
+}
+    
+    # Create a connection to the database
+    con = duckdb.connect(db_output)
+
+    # Create a query to load all the csv data in one go
+    query = f"""
+    CREATE TABLE IF NOT EXISTS all_csvs
+    AS SELECT * 
+    FROM read_csv_auto('data/population_estimates/2002-2012/*.csv',
+    header=true,
+    columns={column_types})"""
+    
+    # Run query to load all the csv data in one go and create the table
+    con.execute(query)
+    
+
+
+
+
+    # Get the data for all regions for one year using year_cols[0]
+    # Single year_data cols
+    for year in years:
+        
         year_col = f"Population_{year}"
         
-        # Define an empty dictionary to store the data for each region
-        region_data = load_region_data(input_folder, year_col)
-
-        # Concatenate the data for all regions into a single dataframe
-        sex_in_one_year_df = pd.concat(region_data.values())
+        single_yr_cols = ["OA11CD", "LAD11CD", "Age", "Sex", year_col]
+        columns = ", ".join(single_yr_cols)
+        all_data_for_one_year = con.execute(f"SELECT {columns} FROM all_csvs LIMIT 10").df()
+        
+        ##### THIS IS WHERE I GOT TO #####
+        
+        # TODO: create a duckdb version of the following functions including filtering by sex
+        # and pivoting the data to a wide format
+        # and writing to a feather file
+        
                 
         # Get the three sex disaggregated dataframes
         # Call the function to get the dataframes
-        both_sexes_df, male_df, female_df = age_pop_one_year(sex_in_one_year_df, year)
+        both_sexes_df, male_df, female_df = age_pop_one_year(all_data_for_one_year, year)
 
         # Pivot the dataframe to a wide format
         # grouped_df = df.groupby(["OA11CD", "Age"]).sum().pivot_table(index="OA11CD", columns="Age", values="Population_2002")
@@ -119,24 +174,24 @@ def main():
 
         # Create a dictionary with the dataframes
         data_by_sex = {"both_sexes_df": both_sexes_df,
-                       "male_df": male_df,
-                       "female_df": female_df}
+                        "male_df": male_df,
+                        "female_df": female_df}
 
         output_folder= create_output_folder(year)
+    
+    # Write year_df to a feather file
+    for name, sex_in_one_year_df in data_by_sex.items():
+        # Stringify the column names (because feather doesn't like ints as column names)
+        stringify_column_names(sex_in_one_year_df)
         
-        # Write year_df to a feather file
-        for name, sex_in_one_year_df in data_by_sex.items():
-            # Stringify the column names (because feather doesn't like ints as column names)
-            stringify_column_names(sex_in_one_year_df)
-            
-            # Write the dataframe to a feather file
-            file_path = make_feather_path(year, output_folder, name)
-            
-            try:
-                sex_in_one_year_df.reset_index().to_feather(file_path)
-            except ValueError or FileNotFoundError as e:
-                print(e)
-                sys.exit(1)
+        # Write the dataframe to a feather file
+        file_path = make_feather_path(year, output_folder, name)
+        
+        try:
+            sex_in_one_year_df.reset_index().to_feather(file_path)
+        except ValueError or FileNotFoundError as e:
+            print(e)
+            sys.exit(1)
 
 if __name__ == "__main__":
     main()
