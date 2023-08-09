@@ -28,7 +28,7 @@ Virtual environments are extremely useful when working on different projects as 
 
 Create an environment called "SDG_11.2.1" with the version of Python that this was developed in
 
-    conda create --name SDG_11.2.1 python=3.8
+    conda create --name SDG_11.2.1 python=3.10
 
 **Troubleshooting:** When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following [these steps](https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686) should resolve the issue.
 
