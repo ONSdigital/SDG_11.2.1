@@ -31,6 +31,8 @@ pop_year = str(config["calculation_year"])
 DATA_DIR = config["data_dir"]
 boundary_year = "2021"
 DEFAULT_CRS = config["default_crs"]
+OUTFILE = config['outfile_ni']
+OUTPUT_DIR = config["data_output"]
 
 
 # grabs northern ireland bus stops path
@@ -188,8 +190,7 @@ pwc_with_pop_with_la = pd.merge(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-# ni_auth = [random_la]
-ni_auth = ['Fermanagh and Omagh']
+ni_auth = [random_la]
 
 total_df_dict = {}
 disab_df_dict = {}
@@ -322,7 +323,8 @@ final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # output to CSV
-final_result.to_csv("NI_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 
 # end time

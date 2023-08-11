@@ -258,10 +258,8 @@ ew_disability_df.to_feather(path)
 # -------------------------
 print('Processing rural urban classification data')
 
-ew_urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
-                              URB_RUR_ZIP_LINK,
-                              ['csv'],
-                              URB_RUR_TYPES))
+ew_urb_rur_df = pd.read_csv(os.path.join('data', 'RUC11_OA11_EW.csv'), 
+                            dtype={'OA11CD':'str', 'RU11CD':'category'})
 
 # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
 # I could make this more succinct, but leaving here

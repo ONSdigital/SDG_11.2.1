@@ -126,7 +126,7 @@ def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
         feather_path = os.path.join(feather_path, f"{file_nm}.feather")
     # Time the read
     tic = perf_counter()
-    pd_df = pd.read_feather(path_or_url(feather_path))
+    pd_df = pd.read_feather(feather_path)
     toc = perf_counter()
     print(f"""Time taken for {file_nm}.feather
           reading is {toc - tic:.2f} seconds""")
@@ -626,7 +626,7 @@ def get_stops_file(url, dir):
     else:  # does exist
         latest_date = _get_latest_stop_file_date(dir)
         if today - latest_date < 28:
-            stops_df = pd.read_feather(path_or_url(feather_path))
+            stops_df = pd.read_feather(feather_path)
         else:
             stops_df = dl_stops_make_df(today, url)
 
