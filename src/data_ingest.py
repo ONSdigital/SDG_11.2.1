@@ -33,89 +33,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     print(f"Config loaded in {module}")
 DATA_DIR = config["data_dir"]
 
-
-def any_to_pd(file_nm: str,
-              zip_link: str,
-              ext_order: List,
-              dtypes: Optional[Dict],
-              data_dir=DATA_DIR) -> pd.DataFrame:
-    """A function which ties together many other data ingest related functions
-    to import data.
-
-    Currently this function can handle the remote or local import of data
-    from zip (containing csv files), and csv files.
-
-    The main purpose is to check for locally stored persistent data
-    files and get that data into a dataframe for further processing.
-
-    Each time the function checks for download/extracted data so it
-    doesn't have to go through the process again.
-
-    Firstly the function checks for a feather file and loads that if
-    available.
-
-    If the feather is not available the function checks for a csv file,
-    then loads that if available.
-
-    If no csv file is available it checks for a zip file, from which to
-    extract the csv from.
-
-    If a zip file is not available locally it falls back to downloading
-    the zip file (which could contains other un-needed datasets)
-    then extracts the specified/needed data set (csv) and deletes the
-    now un-needed zip file.
-
-    This function should be used in place of pd.read_csv for example.
-
-    Parameters:
-        file_nm (str): The name of the file without extension.
-        zip_link (str): URL containing zipped data.
-        ext_order (list): The order in which to try extraction methods.
-        dtypes (Optional[Dict]): Datatypes of columns in the csv.
-
-    Returns:
-        pd.DataFrame: A dataframe of the data that has been imported.
-    """
-    # Change directory into project root
-    os.chdir(CWD)
-
-    # Make the load order (lists are ordered) to prioritise
-    load_order = [f"{file_nm}.{ext}" for ext in ext_order]
-    # make a list of functions that apply to these files
-    load_funcs = {"feather": _feath_to_df,
-                  "csv": _csv_to_df,
-                  "zip": _import_extract_delete_zip}
-    # create a dictionary ready to dispatch functions
-    # load_func_dict = {f"{file_name}": load_func
-
-    # Iterate through files that might exist
-    for i in range(len(load_order)):
-        # Indexing with i because the list loading in the wrong order
-        data_file_nm = load_order[i]
-        data_file_path = _make_data_path(data_dir, data_file_nm)
-        if _persistent_exists(data_file_path):
-            # Check if each persistent file exists
-            # load the persistent file by dispatching the correct function
-            if dtypes and ext_order[i] == "csv":
-                pd_df = load_funcs[ext_order[i]](file_nm,
-                                                 data_file_path,
-                                                 dtypes=dtypes)
-            else:
-                pd_df = load_funcs[ext_order[i]](file_nm,
-                                                 data_file_path)
-            return pd_df
-        continue  # None of the persistent files has been found.
-    # Continue onto the next file type
-    # A zip must be downloaded, extracted, and turned into pd_df
-    pd_df = load_funcs[ext_order[i]](file_nm,
-                                     data_file_path,
-                                     persistent_exists=False,
-                                     zip_url=zip_link,
-                                     dtypes=dtypes)
-    return pd_df
-
-
-def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
+def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     """Feather reading function used by the any_to_pd function.
 
     Args:
@@ -139,7 +57,7 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(
+def csv_to_df(
         file_nm: str,
         csv_path: PathLike,
         dtypes: Optional[Dict],
@@ -176,11 +94,11 @@ def _csv_to_df(
         pd_df = pd.read_csv(csv_path)
     # Calling the pd_to_feather function to make a persistent feather file
     # for faster retrieval
-    _pd_to_feather(pd_df, csv_path)
+    pd_to_feather(pd_df, csv_path)
     return pd_df
 
 
-def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
+def import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                persistent_exists=True,
                                zip_url=None,
                                *cols,
@@ -202,17 +120,17 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
     """
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
-        _grab_zip(file_nm, zip_url, zip_path)
+        grab_zip(file_nm, zip_url, zip_path)
 
     csv_nm = file_nm + ".csv"
     csv_path = _make_data_path("data", csv_nm)
-    _extract_zip(file_nm, csv_nm, zip_path, csv_path)
-    _delete_junk(file_nm, zip_path)
-    pd_df = _csv_to_df(file_nm, csv_path, dtypes)
+    extract_zip(file_nm, csv_nm, zip_path, csv_path)
+    delete_junk(file_nm, zip_path)
+    pd_df = csv_to_df(file_nm, csv_path, dtypes)
     return pd_df
 
 
-def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
+def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
     a zip file from the URI specified in the the zip_link
     parameter.
@@ -230,7 +148,7 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         output_file.write(r.content)
 
 
-def _extract_zip(
+def extract_zip(
         file_nm: str,
         csv_nm: str,
         zip_path: PathLike,
@@ -255,7 +173,7 @@ def _extract_zip(
             csv_nm
 
 
-def _delete_junk(file_nm: str, zip_path: PathLike):
+def delete_junk(file_nm: str, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to delete the
     zip file after it was downloaded and the needed data extracted
     it.
@@ -290,7 +208,7 @@ def _make_data_path(*data_dir_files: str) -> PathLike:
 
 
 @lru_cache
-def _persistent_exists(persistent_path):
+def persistent_exists(persistent_path):
     """Checks if a persistent file or directory already exists or not.
 
     Args:
@@ -310,7 +228,7 @@ def _persistent_exists(persistent_path):
         return False
 
 
-def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
+def pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
     """Used by the any_to_pd function to writes a Pandas dataframe
     to feather for quick reading and retrieval later.
 
@@ -646,7 +564,7 @@ def get_stops_file(url, dir):
                                 "stops",
                                 "Stops.feather")
     # Check that the feather exists
-    if not _persistent_exists(feather_path):
+    if not persistent_exists(feather_path):
         stops_df = _dl_stops_make_df(today, url)
     else:  # does exist
         latest_date = _get_latest_stop_file_date(dir)

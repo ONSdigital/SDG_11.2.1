@@ -49,9 +49,9 @@ print('Processing stops data')
 # Metros and trains added from NAPTAN as we dont have timetable
 # data for these stops. Hence, they wont be highly serviced.
 
-highly_serviced_bus_stops = di._feath_to_df('bus_highly_serviced_stops',
+highly_serviced_bus_stops = di.feath_to_df('bus_highly_serviced_stops',
                                             BUS_IN_DIR)
-highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
+highly_serviced_train_stops = di.feath_to_df('train_highly_serviced_stops',
                                               TRAIN_IN_DIR)
 
 # Get Tram data

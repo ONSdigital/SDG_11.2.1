@@ -43,21 +43,21 @@ ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                  'stops_geo_df.geojson')
-if di._persistent_exists(stops_geo_df_path):
+if di.persistent_exists(stops_geo_df_path):
     stops_geo_df = gpd.read_file(stops_geo_df_path)
 
 ew_la_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
-if di._persistent_exists(ew_la_df_path):
+if di.persistent_exists(ew_la_df_path):
     ew_la_df = gpd.read_file(ew_la_df_path)
 
 ew_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
-if di._persistent_exists(ew_df_path):
+if di.persistent_exists(ew_df_path):
     ew_df = gpd.read_file(ew_df_path)
 
 ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                      'ew_disability_df.feather')
-if di._persistent_exists(ew_disability_df_path):
-    ew_disability_df = di._feath_to_df('ew_disability_df',
+if di.persistent_exists(ew_disability_df_path):
+    ew_disability_df = di.feath_to_df('ew_disability_df',
                                        ew_disability_df_path)
 
 

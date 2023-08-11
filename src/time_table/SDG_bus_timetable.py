@@ -47,7 +47,7 @@ late_timetable_hour = config["late_timetable_hour"]
 files_to_check = [f"{file}.txt" for file in required_files]
 paths_to_check = [os.path.join(bus_data_output_dir, file)
                   for file in files_to_check]
-each_file_checked = [di._persistent_exists(path) for path in paths_to_check]
+each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
 
 if not all(each_file_checked):
     try:
@@ -101,7 +101,7 @@ if download_bus_timetable and auto_download_bus:
 # Stop times
 feath_ = os.path.join(bus_data_output_dir, "stop_times.feather")
 if os.path.exists(feath_):
-    stop_times_df = di._feath_to_df("stop_times", feath_)
+    stop_times_df = di.feath_to_df("stop_times", feath_)
 else:
     stop_times_types = {'trip_id': 'category',
                         'departure_time': 'object', 'stop_id': 'category'}
@@ -114,7 +114,7 @@ else:
 # trips
 feath_ = os.path.join(bus_data_output_dir, "trips.feather")
 if os.path.exists(feath_):
-    trips_df = di._feath_to_df("trips", feath_)
+    trips_df = di.feath_to_df("trips", feath_)
 else:
     trips_types = {'route_id': 'category',
                    'service_id': 'category', 'trip_id': 'category'}
@@ -131,7 +131,7 @@ else:
 # we are only interested in weekday trips for highly serviced stops
 feath_ = os.path.join(bus_data_output_dir, "calendar.feather")
 if os.path.exists(feath_):
-    calendar_df = di._feath_to_df("calendar", feath_)
+    calendar_df = di.feath_to_df("calendar", feath_)
 else:
     calendar_types = {
         'service_id': 'category',
