@@ -10,6 +10,9 @@ outfile_ni: "NI_results.csv"
 outfile_sc: "SC_results.csv"
 eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
 
+# Switch
+cloud_local: "cloud"
+
 # Mapping - geospatial
 default_crs: 'EPSG:27700'
 
@@ -47,7 +50,7 @@ station_locations: 'station_locations.csv'
 bus_in_dir : 'data/england_bus_timetable/'
 train_in_dir : 'data/england_train_timetable/'
 
-# Ages 
+# Ages
 age_lst:
 - '0'
 - '1'

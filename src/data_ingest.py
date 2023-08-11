@@ -6,6 +6,8 @@ from functools import lru_cache, reduce
 from time import perf_counter
 import yaml
 from datetime import datetime, timedelta
+import logging
+import glob
 
 # Google Cloud imports for this module
 from google.oauth2 import service_account
@@ -21,9 +23,11 @@ from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union
 import numpy as np
+from pathlib import Path
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
+MainLogger = logging.getLogger(__name__)
 
 # Config
 CWD = os.getcwd()
@@ -32,6 +36,81 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
 DATA_DIR = config["data_dir"]
+CLOUD_LOCAL = config["cloud_local"]
+
+class GCPBucket:
+    """
+    This class sets up an instance of a GCP storage client with the right credentials.
+
+    The methods either download a file from the bucket or generate a signed url for a file.
+    """
+    def __init__(self):
+        self.credentials = service_account.Credentials.from_service_account_file(glob.glob('secrets/*.json')[0])
+        self.client = storage.Client(credentials=self.credentials)
+        self.bucket_name = '11-2-1-all-data'
+        self.bucket = self.client.bucket(self.bucket_name)
+
+
+    def download_file(self, file_name, destination_file_name):
+        """Downloads a blob from the bucket."""
+
+        blob = self.bucket.blob(file_name)
+
+        blob.download_to_filename(destination_file_name)
+
+        print(
+            f"Blob {self.client} downloaded to {destination_file_name}."
+            )
+
+    def generate_signed_url(self, object_name):
+        """ This will generate a signed URL that is valid for 5 minutes.
+
+        The URL should be able to be used by our data ingest functions
+            to download any file."""
+        expiration = datetime.utcnow() + timedelta(minutes=5)
+        url = self.bucket.blob(object_name).generate_signed_url(
+            expiration,
+            method='GET',
+            credentials=self.credentials,
+        )
+        return url
+
+    def get_file_list(self):
+        """This will return a list of all the files in the bucket, as "blobs"."""
+
+        files = self.bucket.list_blobs()
+
+        return files
+
+    def get_file_names(self):
+        """Prints and returns a list of all the file names in the bucket.
+
+        Returns:
+            List: List of file names in the bucket.
+        """
+
+        files = self.bucket.list_blobs()
+        file_names = [file.name for file in files]
+
+        print(f"Found {len(file_names)} files in the bucket.")
+
+        for file in file_names:
+            print(file)
+
+        return file_names
+
+bucket = GCPBucket()
+
+def path_or_url(file_path):
+    if CLOUD_LOCAL == "cloud":
+        file_name = Path(file_path).name
+        url = bucket.generate_signed_url(file_name)
+        return url
+    elif CLOUD_LOCAL == "local":
+        return file_path
+    else:
+        MainLogger.error("Cloud or local configuration is incorrect")
+        raise ImportError
 
 def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     """Feather reading function used by the any_to_pd function.
@@ -619,7 +698,7 @@ def read_urb_rur_ni(urb_rur_path):
     as <10,000.
     Args:
         path (str): the path where the file exists
-        
+
     Returns:
         pd.DataFrame: the urban rural classification dataframe
     """
@@ -707,64 +786,4 @@ def read_ni_age_df(path):
     return age_df
 
 
-class GCPBucket:
-    """
-    This class sets up an instance of a GCP storage client with the right credentials.
-    
-    The methods either download a file from the bucket or generate a signed url for a file.
-    """
-    def __init__(self):
-        self.credentials = service_account.Credentials.from_service_account_file('secrets/sdg-11-2-1-a2216e926298.json')
-        self.client = storage.Client(credentials=self.credentials)
-        self.bucket_name = '11-2-1-all-data'
-        self.bucket = self.client.bucket(self.bucket_name)
-        
 
-    def download_file(self, file_name, destination_file_name):
-        """Downloads a blob from the bucket."""
-
-        blob = self.bucket.blob(file_name)
-
-        blob.download_to_filename(destination_file_name)
-
-        print(
-            f"Blob {self.client} downloaded to {destination_file_name}." 
-            )
-
-    def generate_signed_url(self, object_name):
-        """ This will generate a signed URL that is valid for 5 minutes.
-        
-        The URL should be able to be used by our data ingest functions 
-            to download any file."""
-        expiration = datetime.utcnow() + timedelta(minutes=5)
-        url = self.bucket.blob(object_name).generate_signed_url(
-            expiration,
-            method='GET',
-            credentials=self.credentials,
-        )
-        return url
-
-    def get_file_list(self):
-        """This will return a list of all the files in the bucket, as "blobs"."""
-        
-        files = self.bucket.list_blobs()
-                
-        return files
-    
-    def get_file_names(self):
-        """Prints and returns a list of all the file names in the bucket.
-
-        Returns:
-            List: List of file names in the bucket.
-        """        
-                
-        files = self.bucket.list_blobs()
-        file_names = [file.name for file in files]
-        
-        print(f"Found {len(file_names)} files in the bucket.")
-        
-        for file in file_names:
-            print(file)
-        
-        return file_names
-    
