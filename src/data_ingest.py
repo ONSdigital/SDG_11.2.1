@@ -680,7 +680,7 @@ def read_urb_rur_class_scotland(urb_rur_path):
     Returns:
         pd.DataFrame: the classfication dataframe
     """
-    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011", "UR6_2013_2014"])
+    urb_rur = pd.read_csv(path_or_url(urb_rur_path), usecols=["OA2011", "UR6_2013_2014"])
 
     urb_rur["urb_rur_class"] = np.where(
         (urb_rur["UR6_2013_2014"] == 1) | (
@@ -699,7 +699,7 @@ def read_urb_rur_ni(urb_rur_path):
     Returns:
         pd.DataFrame: the urban rural classification dataframe
     """
-    urb_rur = pd.read_csv(urb_rur_path, skiprows=3)
+    urb_rur = pd.read_csv(path_or_url(urb_rur_path), skiprows=3)
     urb_rur = urb_rur[['SA2011_Code', 'Settlement Classification Band']]
 
     # split classification bands into urban and rural
@@ -749,7 +749,7 @@ def read_scottish_age(path):
 
     """
     # read in scottish file
-    age_scotland_df = pd.read_csv(path, skiprows=4)
+    age_scotland_df = pd.read_csv(path_or_url(path), skiprows=4)
 
     # dropping first row as this is the whole of scotland
     age_scotland_df = age_scotland_df.iloc[1:-4, :]
@@ -769,7 +769,7 @@ def read_ni_age_df(path):
         pd.DataFrame the age_df dataframe
     """
     # read in age df
-    age_df = pd.read_excel(path,
+    age_df = pd.read_excel(path_or_url(path),
                            sheet_name="SA",
                            header=5,
                            index_col="SA Code")
@@ -781,6 +781,3 @@ def read_ni_age_df(path):
             age_df.rename(columns={col: number}, inplace=True)
 
     return age_df
-
-
-

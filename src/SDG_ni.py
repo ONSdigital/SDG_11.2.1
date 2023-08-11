@@ -47,7 +47,7 @@ ni_bus_stops['capacity_type'] = 'low'
 ni_train_stops_path = os.path.join("data", "stops", "NI", "train_stops_ni.csv")
 
 # reads in the NI train stop data as pandas df
-ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
+ni_train_stops = pd.read_csv(di.path_or_url(ni_train_stops_path), index_col=0)
 
 # assigns capacity type for train stops as high
 ni_train_stops['capacity_type'] = 'high'
@@ -66,7 +66,7 @@ stops_geo_df = gs.geo_df_from_pd_df(pd_df=stops_df,
 stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 
 # Get usual population for Northern Ireland (Census 2011 data)
-census_ni_df = pd.read_csv(os.path.join("data", "KS101NI.csv"))
+census_ni_df = pd.read_csv(di.path_or_url(os.path.join("data", "KS101NI.csv")))
 
 # Read in mid-year population estimates for Northern Ireland
 pop_files = pd.read_csv(di.path_or_url(os.path.join("data", "population_estimates",
@@ -127,7 +127,7 @@ sa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "11DC_Lookup_1_0.csv")
 
 # reads in the OA to LA lookupfile
-sa_to_la = pd.read_csv(sa_to_la_lookup_path)
+sa_to_la = pd.read_csv(di.path_or_url(sa_to_la_lookup_path))
 
 # merges the pwc with it's corresponding LA
 pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
@@ -144,8 +144,8 @@ pwc_with_pop_with_la.rename(
     inplace=True)
 
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join("data", "disability_status",
-                                         "qs303_ni.csv"), skiprows=5)
+disability_df = pd.read_csv(di.path_or_url(os.path.join("data", "disability_status",
+                                         "qs303_ni.csv")), skiprows=5)
 
 # Remove the first column because it's a repeat of SA code
 disability_df.drop(['SA'], axis=1, inplace=True)
