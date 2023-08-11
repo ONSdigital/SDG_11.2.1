@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # Module imports
 import data_ingest as di
 import data_transform as dt
+import geospatial_mods as gs
 
 # get current working directory
 CWD = os.getcwd()
@@ -107,7 +108,7 @@ dfs_to_combine = [highly_serviced_bus_stops,
 filtered_stops_df = pd.concat(dfs_to_combine)
 
 # Convert to geopandas df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
+stops_geo_df = (gs.geo_df_from_pd_df(pd_df=filtered_stops_df,
                                      geom_x='easting',
                                      geom_y='northing',
                                      crs=DEFAULT_CRS))

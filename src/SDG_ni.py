@@ -57,7 +57,7 @@ ni_train_stops['capacity_type'] = 'high'
 stops_df = ni_bus_stops.merge(
     ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
 
-stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
+stops_geo_df = gs.geo_df_from_pd_df(pd_df=stops_df,
                                     geom_x='Longitude',
                                     geom_y='Latitude',
                                     crs='EPSG:4326')

@@ -106,3 +106,21 @@ def find_points_in_poly(geo_df: gpd.GeoDataFrame, polygon_obj):
                     ['index_right'].notna()])
     filtered_df = filtered_df[wanted_cols]
     return filtered_df
+
+def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
+    """Function to create a Geo-dataframe from a Pandas DataFrame.
+
+    Arguments:
+        pd_df (pd.DataFrame): a pandas dataframe object to be converted.
+        geom_x (str):name of the column that contains the longitude data.
+        geom_y (str):name of the column that contains the latitude data.
+        crs (str): the coordinate reference system required.
+
+    Returns:
+        Geopandas Dataframe
+    """
+    geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
+    geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
+    geo_df.crs = crs
+    geo_df.to_crs('EPSG:27700', inplace=True)
+    return geo_df
