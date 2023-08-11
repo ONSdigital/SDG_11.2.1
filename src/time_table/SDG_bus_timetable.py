@@ -106,7 +106,7 @@ else:
     stop_times_types = {'trip_id': 'category',
                         'departure_time': 'object', 'stop_id': 'category'}
 
-    stop_times_df = di._csv_to_df(file_nm='stop_times',
+    stop_times_df = di.csv_to_df(file_nm='stop_times',
                                   csv_path=os.path.join(
                                       bus_data_output_dir, 'stop_times.txt'),
                                   dtypes=stop_times_types)
@@ -119,7 +119,7 @@ else:
     trips_types = {'route_id': 'category',
                    'service_id': 'category', 'trip_id': 'category'}
 
-    trips_df = di._csv_to_df(
+    trips_df = di.csv_to_df(
         file_nm='trips',
         csv_path=os.path.join(
             bus_data_output_dir,
@@ -143,7 +143,7 @@ else:
         'start_date': 'object',
         'end_date': 'object'}
 
-    calendar_df = di._csv_to_df(file_nm='calendar',
+    calendar_df = di.csv_to_df(file_nm='calendar',
                                 csv_path=os.path.join(
                                     bus_data_output_dir, 'calendar.txt'),
                                 dtypes=calendar_types)

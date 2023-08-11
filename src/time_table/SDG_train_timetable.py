@@ -50,7 +50,7 @@ msn_df = msn_df.drop_duplicates(subset=['crs_code'])
 # Attach the coordinates for each train station
 station_locations = os.path.join(trn_data_output_dir, 'station_locations.csv')
 station_locations_df = pd.read_csv(
-    station_locations, usecols=[
+    di.path_or_url(station_locations), usecols=[
         'station_code', 'latitude', 'longitude'])
 
 # Join coordinates onto msn data

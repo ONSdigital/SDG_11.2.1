@@ -126,7 +126,7 @@ def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
         feather_path = os.path.join(feather_path, f"{file_nm}.feather")
     # Time the read
     tic = perf_counter()
-    pd_df = pd.read_feather(feather_path)
+    pd_df = pd.read_feather(path_or_url(feather_path))
     toc = perf_counter()
     print(f"""Time taken for {file_nm}.feather
           reading is {toc - tic:.2f} seconds""")
@@ -571,7 +571,7 @@ def save_latest_stops_as_feather(file_name):
     return output_path
 
 
-def _dl_stops_make_df(today, url):
+def dl_stops_make_df(today, url):
     """Downloads the latest data from api, saves as csv & feather, returns df
 
     Args:
@@ -590,7 +590,7 @@ def _dl_stops_make_df(today, url):
     # Save as feather
     feather_path = save_latest_stops_as_feather(csv_path)
     # Load feather as pd df
-    stops_df = pd.read_feather(feather_path)
+    stops_df = pd.read_feather(path_or_url(feather_path))
     return stops_df
 
 
@@ -622,13 +622,13 @@ def get_stops_file(url, dir):
                                 "Stops.feather")
     # Check that the feather exists
     if not persistent_exists(feather_path):
-        stops_df = _dl_stops_make_df(today, url)
+        stops_df = dl_stops_make_df(today, url)
     else:  # does exist
         latest_date = _get_latest_stop_file_date(dir)
         if today - latest_date < 28:
-            stops_df = pd.read_feather(feather_path)
+            stops_df = pd.read_feather(path_or_url(feather_path))
         else:
-            stops_df = _dl_stops_make_df(today, url)
+            stops_df = dl_stops_make_df(today, url)
 
     return stops_df
 

@@ -158,7 +158,7 @@ lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
     os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
 
-ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
+ew_oa_la_lookup_df = pd.read_csv(di.path_or_url(ew_oa_la_lookup_path),
                                  usecols=["OA11CD", lad_name_col])
 
 
@@ -168,8 +168,8 @@ ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
 print('Processing output area boundaries')
 
 ew_oa_boundaries_df = pd.read_csv(
-        os.path.join("data",
-                     "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+        di.path_or_url(os.path.join("data",
+                     "Output_Areas__December_2011__Boundaries_EW_BGC.csv")))
 
 # Restrict to just required columns
 ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
@@ -228,8 +228,8 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 # --------------------------------
 print('Processing disability data')
 
-ew_disability_df = pd.read_csv(
-    os.path.join("data", "disability_status", "nomis_QS303.csv"),
+ew_disability_df = pd.read_csv(di.path_or_url(
+    os.path.join("data", "disability_status", "nomis_QS303.csv")),
     header=5)
 
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code

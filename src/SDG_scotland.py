@@ -79,7 +79,7 @@ oa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "PCD_OA_LSOA_MSOA_LAD_NOV21_UK_LU.csv")
 
 # reads in the OA to LA lookupfile
-oa_to_la = pd.read_csv(oa_to_la_lookup_path, encoding="ISO-8859-1",
+oa_to_la = pd.read_csv(di.path_or_url(oa_to_la_lookup_path), encoding="ISO-8859-1",
                        usecols=["oa11cd", "ladnm"])
 
 # dedeup OA to LA as original data includes postcodes etc..
@@ -112,8 +112,8 @@ pwc_with_pop_with_la.rename(
     inplace=True)
 
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join("data", "disability_status",
-                                         "QS303_scotland.csv"))
+disability_df = pd.read_csv(di.path_or_url(os.path.join("data", "disability_status",
+                                         "QS303_scotland.csv")))
 # drop the column "geography code" as it seems to be a duplicate of "geography"
 # also "All categories: Long-term health problem or disability" is not needed,
 # nor is "date" as we know estimates are for 2011.
