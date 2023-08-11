@@ -37,7 +37,8 @@ DEFAULT_CRS = config["default_crs"]
 ni_bus_stops_path = os.path.join("data", "stops", "NI", "bus_stops_ni.csv")
 
 # reads in NI bus stop data as pandas df
-ni_bus_stops = pd.read_csv(di.path_or_url(ni_bus_stops_path), index_col=0)
+ni_bus_stops = pd.read_csv(di.path_or_url(ni_bus_stops_path),
+                           index_col=0)
 
 # assigns capacity type for bus stops as low
 ni_bus_stops['capacity_type'] = 'low'
@@ -68,8 +69,8 @@ stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 census_ni_df = pd.read_csv(os.path.join("data", "KS101NI.csv"))
 
 # Read in mid-year population estimates for Northern Ireland
-pop_files = pd.read_csv(os.path.join("data", "population_estimates",
-                                     "SAPE20-SA-Totals.csv"),
+pop_files = pd.read_csv(di.path_or_url(os.path.join("data", "population_estimates",
+                                     "SAPE20-SA-Totals.csv")),
                         header=7)
 
 # Filter to small area code and population year columns only
@@ -88,7 +89,7 @@ oa_to_sa_lookup_path = os.path.join("data", "oa_la_mapping",
 
 
 # reads in the OA to SA lookupfile
-sa_to_la = pd.read_csv(oa_to_sa_lookup_path,
+sa_to_la = pd.read_csv(di.path_or_url(oa_to_sa_lookup_path),
                        usecols=["COA2001_1", "SA2011"])
 
 # getting the coordinates for all LA's

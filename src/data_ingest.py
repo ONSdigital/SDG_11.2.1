@@ -18,7 +18,6 @@ from google.cloud import storage
 import geopandas as gpd
 import pandas as pd
 import requests
-from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union

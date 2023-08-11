@@ -3,6 +3,7 @@ import geopandas as gpd
 import numpy as np
 import os
 import yaml
+from shapely.geometry import Point
 
 # get current working directory
 CWD = os.getcwd()
