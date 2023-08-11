@@ -57,8 +57,7 @@ highly_serviced_train_stops = di.feath_to_df('train_highly_serviced_stops',
 
 # Get Tram data
 naptan_df = di.get_stops_file(url=config["naptan_api"],
-                              dir=os.path.join(os.getcwd(),
-                                               "data",
+                              dir=os.path.join("data",
                                                "stops"))
 
 # Isolating the tram and metro stops
@@ -127,8 +126,7 @@ print('Processing local authority data')
 # Note that local authorities in scotland are commonly knows as councils.
 
 # Getting path for LA shapefile
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   CALCULATION_YEAR))
 
@@ -158,7 +156,7 @@ print('Processing local authority to output area lookup')
 lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 
 ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
-    os.path.join(os.getcwd(), "data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
+    os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
 
 ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
                                  usecols=["OA11CD", lad_name_col])
@@ -183,8 +181,7 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 print('Processing population data')
 
 # Get list of all pop_estimate files for target year
-ew_pop_files = os.listdir(os.path.join(os.getcwd(),
-                                       "data",
+ew_pop_files = os.listdir(os.path.join("data",
                                        "population_estimates",
                                        POP_YEAR))
 
@@ -232,7 +229,7 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 print('Processing disability data')
 
 ew_disability_df = pd.read_csv(
-    os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"),
+    os.path.join("data", "disability_status", "nomis_QS303.csv"),
     header=5)
 
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code

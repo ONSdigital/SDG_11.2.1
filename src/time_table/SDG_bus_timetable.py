@@ -31,7 +31,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 bus_timetable_zip_link = config["eng_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-bus_data_output_dir = os.path.join(CWD, 'data', 'england_bus_timetable')
+bus_data_output_dir = os.path.join('data', 'england_bus_timetable')
 zip_path = os.path.join(bus_data_output_dir, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
@@ -235,7 +235,7 @@ bus_highly_serviced_stops = bus_frequencies_df[(
 
 # Read in naptan data
 stops_df = di.get_stops_file(url=config["naptan_api"],
-                             dir=os.path.join(os.getcwd(), "data", "stops"))
+                             dir=os.path.join("data", "stops"))
 
 # Add easting and northing
 bus_highly_serviced_stops = bus_highly_serviced_stops.merge(

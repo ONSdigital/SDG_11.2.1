@@ -23,7 +23,6 @@ from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union
 import numpy as np
-from pathlib import Path
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
@@ -103,8 +102,7 @@ bucket = GCPBucket()
 
 def path_or_url(file_path):
     if CLOUD_LOCAL == "cloud":
-        file_name = Path(file_path).name
-        url = bucket.generate_signed_url(file_name)
+        url = bucket.generate_signed_url(file_path)
         return url
     elif CLOUD_LOCAL == "local":
         return file_path
@@ -165,12 +163,12 @@ def csv_to_df(
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
-        pd_df = pd.read_csv(csv_path, usecols=cols,
+        pd_df = pd.read_csv(path_or_url(csv_path), usecols=cols,
                             dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
         print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
-        pd_df = pd.read_csv(csv_path)
+        pd_df = pd.read_csv(path_or_url(csv_path))
     # Calling the pd_to_feather function to make a persistent feather file
     # for faster retrieval
     pd_to_feather(pd_df, csv_path)
@@ -559,7 +557,7 @@ def save_latest_stops_as_feather(file_name):
         file_name (str): file path for latest stop file.
     """
     # read in csv
-    file = pd.read_csv(file_name,
+    file = pd.read_csv(path_or_url(file_name),
                        usecols=config["naptan_types"].keys(),
                        dtype=config["naptan_types"])
 
@@ -650,7 +648,7 @@ def read_usual_pop_scotland(path: str):
         pd.DataFrame the usual population dataframe
     """
     # reads in data and crops of header and footer
-    df = pd.read_csv(path,
+    df = pd.read_csv(path_or_url(path),
                      header=4,
                      index_col=0,
                      skipfooter=4)

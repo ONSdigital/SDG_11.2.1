@@ -34,17 +34,16 @@ DEFAULT_CRS = config["default_crs"]
 
 
 # grabs northern ireland bus stops path
-ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
+ni_bus_stops_path = os.path.join("data", "stops", "NI", "bus_stops_ni.csv")
 
 # reads in NI bus stop data as pandas df
-ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
+ni_bus_stops = pd.read_csv(di.path_or_url(ni_bus_stops_path), index_col=0)
 
 # assigns capacity type for bus stops as low
 ni_bus_stops['capacity_type'] = 'low'
 
 # gets the northern ireland train stops data path
-ni_train_stops_path = os.path.join(
-    CWD, "data", "stops", "NI", "train_stops_ni.csv")
+ni_train_stops_path = os.path.join("data", "stops", "NI", "train_stops_ni.csv")
 
 # reads in the NI train stop data as pandas df
 ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
@@ -66,11 +65,10 @@ stops_geo_df = gs.geo_df_from_pd_df(pd_df=stops_df,
 stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 
 # Get usual population for Northern Ireland (Census 2011 data)
-census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
+census_ni_df = pd.read_csv(os.path.join("data", "KS101NI.csv"))
 
 # Read in mid-year population estimates for Northern Ireland
-pop_files = pd.read_csv(os.path.join(CWD,
-                                     "data", "population_estimates",
+pop_files = pd.read_csv(os.path.join("data", "population_estimates",
                                      "SAPE20-SA-Totals.csv"),
                         header=7)
 
@@ -79,13 +77,12 @@ estimate_cols = ["Area_Code", pop_year]
 estimate_pop_NI = pop_files[estimate_cols]
 
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   boundary_year))
 
 # Need OA to SA lookup so we can map to SA for pop weighted centroids
-oa_to_sa_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+oa_to_sa_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "NI",
                                     "OA_to_SA.csv")
 
@@ -124,7 +121,7 @@ pwc_with_pop = pd.merge(left=census_ni_df,
 pwc_with_pop.drop(["SA Code", "OA_CODE", "COA2001_1"], axis=1, inplace=True)
 
 # SA to LA lookup
-sa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+sa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "NI",
                                     "11DC_Lookup_1_0.csv")
 
@@ -146,8 +143,7 @@ pwc_with_pop_with_la.rename(
     inplace=True)
 
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join(CWD,
-                                         "data", "disability_status",
+disability_df = pd.read_csv(os.path.join("data", "disability_status",
                                          "qs303_ni.csv"), skiprows=5)
 
 # Remove the first column because it's a repeat of SA code
@@ -164,7 +160,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # defining age data path
-age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
+age_path = os.path.join("data", "census-2011-qs103ni.xlsx")
 
 # reading in age data
 age_df = di.read_ni_age_df(age_path)

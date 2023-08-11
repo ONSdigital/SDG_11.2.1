@@ -21,7 +21,6 @@ from main import stops_geo_df
 start = time.time()
 # get current working directory
 CWD = os.getcwd()
-# TODO: find out best practice on CWD
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
@@ -46,12 +45,11 @@ boundary_year = "2021"
 # stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # get usual population for scotland
-usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
+usual_pop_path = os.path.join("data", "KS101SC.csv")
 sc_usual_pop = di.read_usual_pop_scotland(usual_pop_path)
 
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   boundary_year))
 
@@ -76,7 +74,7 @@ pwc_with_pop = pd.merge(left=sc_usual_pop,
                         how="left")
 
 # OA to LA lookup
-oa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+oa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "scotland", boundary_year,
                                     "PCD_OA_LSOA_MSOA_LAD_NOV21_UK_LU.csv")
 
@@ -95,7 +93,7 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 how="left")
 
 # read in urban/rural classification
-urb_rur_path = os.path.join(CWD, "data", "urban_rural", "scotland",
+urb_rur_path = os.path.join("data", "urban_rural", "scotland",
                             "oa2011_urban_rural_2013_2014.csv")
 
 urb_rur = di.read_urb_rur_class_scotland(urb_rur_path)
@@ -114,8 +112,7 @@ pwc_with_pop_with_la.rename(
     inplace=True)
 
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join(CWD,
-                                         "data", "disability_status",
+disability_df = pd.read_csv(os.path.join("data", "disability_status",
                                          "QS303_scotland.csv"))
 # drop the column "geography code" as it seems to be a duplicate of "geography"
 # also "All categories: Long-term health problem or disability" is not needed,
@@ -135,7 +132,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # age variable
-age_scotland_path = os.path.join(CWD, "data", "QS103_scotland_age.csv")
+age_scotland_path = os.path.join("data", "QS103_scotland_age.csv")
 
 age_scotland_df = di.read_scottish_age(age_scotland_path)
 

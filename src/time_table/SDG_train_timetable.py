@@ -25,7 +25,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 
 # Parameters
-trn_data_output_dir = os.path.join(CWD, 'data', 'england_train_timetable')
+trn_data_output_dir = os.path.join('data', 'england_train_timetable')
 station_locations = os.path.join(trn_data_output_dir,
                                  config['station_locations'])
 msn_file = os.path.join(trn_data_output_dir, config["train_msn_filename"])
@@ -174,8 +174,7 @@ highly_serviced_train_stops_df = (
 
 # Get the naptan data and limit to only the columns we need
 naptan_df = di.get_stops_file(url=config["naptan_api"],
-                              dir=os.path.join(os.getcwd(),
-                                               "data",
+                              dir=os.path.join("data",
                                                "stops"))
 # Create Tiploc column
 naptan_df = dt.create_tiploc_col(naptan_df)
