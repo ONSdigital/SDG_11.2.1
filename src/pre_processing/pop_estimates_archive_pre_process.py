@@ -11,6 +11,7 @@ import duckdb
 import uuid
 from typing import List
 
+
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 
 # Define the input and output file paths
@@ -25,23 +26,23 @@ year_data = {}
 # Define the column name for the year
 year_cols = [f"Population_{year}" for year in years]
 
-column_types = {
-    "OA11CD": "TEXT",
-    "LAD11CD": "TEXT",
-    "Age": "TEXT",
-    "Sex": "TEXT",
-    "Population_2002": "INTEGER",
-    "Population_2003": "INTEGER",
-    "Population_2004": "INTEGER",
-    "Population_2005": "INTEGER",
-    "Population_2006": "INTEGER",
-    "Population_2007": "INTEGER",
-    "Population_2008": "INTEGER",
-    "Population_2009": "INTEGER",
-    "Population_2010": "INTEGER",
-    "Population_2011": "INTEGER",
-    "Population_2012": "INTEGER"
-}
+# column_types = {
+#     "OA11CD": "TEXT",
+#     "Age": "INTEGER",
+#     "Sex": "INTEGER",
+#     "LAD11CD": "TEXT",    
+#     "Population_2002": "INTEGER",
+#     "Population_2003": "INTEGER",
+#     "Population_2004": "INTEGER",
+#     "Population_2005": "INTEGER",
+#     "Population_2006": "INTEGER",
+#     "Population_2007": "INTEGER",
+#     "Population_2008": "INTEGER",
+#     "Population_2009": "INTEGER",
+#     "Population_2010": "INTEGER",
+#     "Population_2011": "INTEGER",
+#     "Population_2012": "INTEGER"
+# }
 
 
 def create_connection(database_path):
@@ -52,13 +53,14 @@ def create_connection(database_path):
 
 def load_all_csvs(con, csv_folder, output_table_name):
     """Loads all the population csv files in a folder into a DuckDB database."""
-    
-    load_csv_query = """
+
+    load_csv_query = f"""
     CREATE TABLE IF NOT EXISTS {output_table_name}
     AS SELECT *
-    FROM read_csv_auto('{csv_folder}/*', header=true, columns={column_types});
+    FROM read_csv_auto('{csv_folder}/*.csv', header=true, delim=',');
     """
-    
+    # columns={column_types},
+    # 
     con.execute(load_csv_query)
     
     return output_table_name
@@ -157,13 +159,13 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     male_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
-        WHERE sex = 1;"""
+        WHERE Sex = 1;"""
 
     # Construct the SQL query for the female sex group
     female_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
-        WHERE sex = 2;"""
+        WHERE Sex = 2;"""
         
     # Construct the SQL query for both sex groups
     both_query = """
@@ -208,7 +210,7 @@ def main():
     con = create_connection(db_file_path)
     
     # Run query to load all the csv data in one go and create the table
-    table_name = load_all_csvs(con, input_folder)
+    table_name = load_all_csvs(con, input_folder, "all_pop_estimates")
 
 
     # For each of those years, load the data for all regions into a temp table
