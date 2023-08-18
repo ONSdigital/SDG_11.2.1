@@ -15,7 +15,7 @@ import data_transform as dt
 import data_output as do
 
 # Data object import
-from main import stops_geo_df
+# from main import stops_geo_df
 
 # timings
 start = time.time()
@@ -33,6 +33,7 @@ DEFAULT_CRS = config["default_crs"]
 DATA_DIR = config["data_dir"]
 OUTFILE = config['outfile_sc']
 OUTPUT_DIR = config["data_output"]
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 pop_year = "2011"
 boundary_year = "2021"
@@ -110,6 +111,13 @@ pwc_with_pop_with_la.rename(
         'oa11cd': 'OA11CD',
         "All people": "pop_count"},
     inplace=True)
+
+# read stops_geo_df
+
+stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
+                                 'stops_geo_df.geojson')
+if di.persistent_exists(stops_geo_df_path):
+    stops_geo_df = gpd.read_file(stops_geo_df_path)
 
 # Read disability data for disaggregations later
 disability_df = pd.read_csv(di.path_or_url(os.path.join("data", "disability_status",
@@ -288,7 +296,7 @@ for local_auth in sc_auth:
     total_df_dict[local_auth] = la_results_df_out
 
     # Urban/Rural disaggregation
-    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df, 
+    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df,
                                             urb_rur_df_dict, local_auth)
 
     # Disability disaggregation - get disability results in disab_df_dict
