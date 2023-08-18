@@ -14,6 +14,7 @@ from duckdb import DuckDBPyConnection
 # Define the input and output file paths
 input_folder = "data/population_estimates/2002-2012"
 
+
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 
 # Define the input and output file paths
@@ -189,7 +190,6 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
         WHERE Sex = 2;"""
-
     # Construct the SQL query for both sex groups
     both_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_2002
