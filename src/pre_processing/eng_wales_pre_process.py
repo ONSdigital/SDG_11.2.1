@@ -125,6 +125,10 @@ print('Processing local authority data')
 # for england, wales and scotland.
 # Note that local authorities in scotland are commonly knows as councils.
 
+# download shapefiles if switch set to cloud
+file_path_to_get = os.path.join("data", "LA_shp", CALCULATION_YEAR)
+di.download_data(file_path_to_get)
+
 # Getting path for LA shapefile
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
@@ -215,6 +219,11 @@ ew_pop_df = pd.merge(ew_pop_df, ew_age_df, left_index=True, right_index=True)
 # Load and process popualation weighted centroids
 # -----------------------------------------------
 print('Processing population weighted centroids')
+
+file_path_to_get = os.path.join("data",
+                                'pop_weighted_centroids',
+                                CENTROID_YEAR)
+di.download_data(file_path_to_get)
 
 ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
     os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))

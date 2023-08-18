@@ -92,14 +92,22 @@ class GCPBucket:
 
         print(f"Found {len(file_names)} files in the bucket.")
 
-        for file in file_names:
-            print(file)
+        #for file in file_names:
+            #print(file)
 
         return file_names
 
 bucket = GCPBucket()
 
 def path_or_url(file_path):
+    """Function to read data depending on config if cloud or local.
+
+    Args:
+        file_path (str): File path you want to read
+    
+    Returns:
+        file_path or url depending if cloud or local
+    """
     if CLOUD_LOCAL == "cloud":
         url = bucket.generate_signed_url(file_path)
         return url
@@ -108,6 +116,23 @@ def path_or_url(file_path):
     else:
         MainLogger.error("Cloud or local configuration is incorrect")
         raise ImportError
+    
+def download_data(file_path_to_get):
+    """This function downloads data from the cloud so we can process shapefiles.
+
+    Args:
+        file_path_to_get (str): the filepath/folder we want to download data from
+    
+    Returns:
+        None, it will download the data locally. 
+    """
+    if CLOUD_LOCAL=="cloud":
+        lst = bucket.get_file_names()
+        file_paths = [x for x in lst if file_path_to_get in x]
+        for file in file_paths:
+            bucket.download_file(file, os.path.join(file))
+    else:
+        pass
 
 def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     """Feather reading function used by the any_to_pd function.

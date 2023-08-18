@@ -33,6 +33,7 @@ boundary_year = "2021"
 DEFAULT_CRS = config["default_crs"]
 OUTFILE = config['outfile_ni']
 OUTPUT_DIR = config["data_output"]
+CLOUD_LOCAL = config["cloud_local"]
 
 
 # grabs northern ireland bus stops path
@@ -79,6 +80,10 @@ pop_files = pd.read_csv(di.path_or_url(os.path.join("data", "population_estimate
 estimate_cols = ["Area_Code", pop_year]
 estimate_pop_NI = pop_files[estimate_cols]
 
+# download shapefiles if switch set to cloud
+file_path_to_get = os.path.join("data", "LA_shp", boundary_year)
+di.download_data(file_path_to_get)
+
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
@@ -97,6 +102,12 @@ sa_to_la = pd.read_csv(di.path_or_url(oa_to_sa_lookup_path),
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 ni_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['N'])]
+
+# download population weighted centroids dataframe
+file_path_to_get = os.path.join("data",
+                                'pop_weighted_centroids',
+                                "NI")
+di.download_data(file_path_to_get)
 
 # Get population weighted centroids into a dataframe
 ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
