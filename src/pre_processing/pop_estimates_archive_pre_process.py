@@ -11,6 +11,8 @@ from typing import List
 from duckdb import DuckDBPyConnection
 
 
+# Define the input and output file paths
+input_folder = "data/population_estimates/2002-2012"
 
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 
@@ -100,11 +102,29 @@ def extract_region(file_name):
     region_pattern = r"unformatted-(.*?)-mid2002"
     match = re.search(region_pattern, file_name)
 
-    if match:
-        region = match.group(1)
+# Define an empty dictionary to store the dataframes for each year
+year_data = {}
 
-    return region
+# Define the column name for the year
+year_cols = [f"Population_{year}" for year in years]
 
+column_types = {
+    "OA11CD": "TEXT",
+    "LAD11CD": "TEXT",
+    "Age": "TEXT",
+    "Sex": "TEXT",
+    "Population_2002": "INTEGER",
+    "Population_2003": "INTEGER",
+    "Population_2004": "INTEGER",
+    "Population_2005": "INTEGER",
+    "Population_2006": "INTEGER",
+    "Population_2007": "INTEGER",
+    "Population_2008": "INTEGER",
+    "Population_2009": "INTEGER",
+    "Population_2010": "INTEGER",
+    "Population_2011": "INTEGER",
+    "Population_2012": "INTEGER"
+}
 
 def pivot_sex_tables(con, male_table: str, female_table: str, both_table: str, year_col: str):
     """Pivots the sex-specific tables using SQL.
@@ -155,6 +175,8 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         year: An integer representing the year to query.
         sex_num:
     """
+    # Generate a unique name for the temporary table
+    table_name = f"temp_{uuid.uuid4().hex}"
 
     # Construct the SQL query for the male sex group
     male_query = f"""
@@ -185,7 +207,13 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     return male_table, female_table, both_table
 
 
+    # Get combined sexes dataframe
+    both_table = query_database(con, both_query)
+    
+    return male_table, female_table, both_table
 
+  
+    
 def create_output_folder(year: int) -> pl.Path:
     """Create the output folder for a given year if it doesn't exist."""
     output_folder = pl.Path(f"data/population_estimates/{year}")
@@ -220,7 +248,6 @@ def main():
     for year in years:
 
         year_col=f"Population_{year}"
-
 
         # Get the three sex disaggregated tables
         both_sexes_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
