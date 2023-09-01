@@ -114,6 +114,9 @@ stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
+# checking if the directory/path exist, if not present then create it.
+if not os.path.isdir(path):
+    os.makedirs(path)
 stops_geo_df.to_file(path, driver='GeoJSON', index=False)
 
 # -------------------------------------
