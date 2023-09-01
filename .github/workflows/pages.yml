@@ -1,9 +1,11 @@
 name: build mkdocs pages
-# Trigger on pull request to main
+
+# Trigger on push to the master branch
 on:
-  pull_request:
+  push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
