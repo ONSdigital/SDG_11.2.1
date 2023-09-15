@@ -1,9 +1,14 @@
 name: build mkdocs pages
-# Trigger on pull request to main
+# Trigger on pull request to master
 on:
   pull_request:
     branches:
       - master
+# Trigger on push to master
+  push:
+    branches:
+      - master
+      
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -16,3 +21,5 @@ jobs:
       - run: pip install mkdocstrings-python
       - run: pip install --upgrade Pygments
       - run: mkdocs gh-deploy --force --clean --verbose
+
+
