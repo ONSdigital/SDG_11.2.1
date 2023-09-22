@@ -10,6 +10,7 @@ from glob import glob
 import duckdb
 import uuid
 from typing import List
+import os
 
 
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
@@ -26,23 +27,24 @@ year_data = {}
 # Define the column name for the year
 year_cols = [f"Population_{year}" for year in years]
 
-# column_types = {
-#     "OA11CD": "TEXT",
-#     "Age": "INTEGER",
-#     "Sex": "INTEGER",
-#     "LAD11CD": "TEXT",    
-#     "Population_2002": "INTEGER",
-#     "Population_2003": "INTEGER",
-#     "Population_2004": "INTEGER",
-#     "Population_2005": "INTEGER",
-#     "Population_2006": "INTEGER",
-#     "Population_2007": "INTEGER",
-#     "Population_2008": "INTEGER",
-#     "Population_2009": "INTEGER",
-#     "Population_2010": "INTEGER",
-#     "Population_2011": "INTEGER",
-#     "Population_2012": "INTEGER"
-# }
+
+column_types = {
+    "OA11CD": "TEXT",
+    "Age": "INTEGER",
+    "Sex": "INTEGER",
+    "LAD11CD": "TEXT",    
+    "Population_2002": "INTEGER",
+    "Population_2003": "INTEGER",
+    "Population_2004": "INTEGER",
+    "Population_2005": "INTEGER",
+    "Population_2006": "INTEGER",
+    "Population_2007": "INTEGER",
+    "Population_2008": "INTEGER",
+    "Population_2009": "INTEGER",
+    "Population_2010": "INTEGER",
+    "Population_2011": "INTEGER",
+    "Population_2012": "INTEGER"
+}
 
 
 def create_connection(database_path):
@@ -57,9 +59,9 @@ def load_all_csvs(con, csv_folder, output_table_name):
     load_csv_query = f"""
     CREATE TABLE IF NOT EXISTS {output_table_name}
     AS SELECT *
-    FROM read_csv_auto('{csv_folder}/*.csv', header=true, delim=',');
+    FROM read_csv_auto('{csv_folder}/*.csv', header=true, columns={column_types}, delim=',', auto_detect=false);
     """
-    # columns={column_types},
+    # 
     # 
     con.execute(load_csv_query)
     
@@ -76,7 +78,7 @@ def query_database(con, query):
     table_name = f"temp_{uuid.uuid4().hex}"
 
     # Create the temporary table and insert the query results
-    con.execute(f"CREATE TEMPORARY TABLE {table_name} AS {query};")
+    con.execute(f"CREATE TEMPORARY TABLE {table_name} AS {query}")
 
     # Return the name of the temporary table
     return table_name
@@ -168,7 +170,7 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         WHERE Sex = 2;"""
         
     # Construct the SQL query for both sex groups
-    both_query = """
+    both_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_2002
         FROM {table_name};"""
     
@@ -196,9 +198,9 @@ def create_output_folder(year: int) -> pl.Path:
 def write_table_to_csv(con, *args, output_folder: pl.Path, year: int):
     
     for table_name in args:
-        query=f"""
-        SELECT * FROM {table_name}
-        COPY TO '{output_folder}/{table_name}_{year}.csv' (HEADER TRUE, DELIMITER ',');"""
+        query = f"""
+            COPY {table_name}
+            TO 'data/population_estimates/{year}/{table_name}_{year}.csv';"""
         
         query_database(con, query)
     
