@@ -212,8 +212,8 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     
     return male_table, female_table, both_table
 
-  
-    
+
+
 def create_output_folder(year: int) -> pl.Path:
     """Create the output folder for a given year if it doesn't exist."""
     output_folder = pl.Path(f"data/population_estimates/{year}")
