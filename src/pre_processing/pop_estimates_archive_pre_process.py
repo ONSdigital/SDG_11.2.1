@@ -32,7 +32,7 @@ column_types = {
     "OA11CD": "TEXT",
     "Age": "INTEGER",
     "Sex": "INTEGER",
-    "LAD11CD": "TEXT",    
+    "LAD11CD": "TEXT",
     "Population_2002": "INTEGER",
     "Population_2003": "INTEGER",
     "Population_2004": "INTEGER",
@@ -61,15 +61,15 @@ def load_all_csvs(con, csv_folder, output_table_name):
     AS SELECT *
     FROM read_csv_auto('{csv_folder}/*.csv', header=true, columns={column_types}, delim=',', auto_detect=false);
     """
-    # 
-    # 
+    #
+    #
     con.execute(load_csv_query)
-    
+
     return output_table_name
 
 def query_database(con, query):
     """Queries a DuckDB database and returns the name of a temporary table.
-    
+
     This function takes a DuckDB connection object and a SQL query as input,
     and creates a temporary tcable with the results of the query. The function
     returns the *name* of the temporary table, which can be passed to the next function.
@@ -85,7 +85,7 @@ def query_database(con, query):
 
 def query_database_as_view(con, query, view_name):
     """Queries a DuckDB database and creates or updates a view with the results.
-    
+
     This function takes a DuckDB connection object, a SQL query, and a view name as input,
     and creates or updates a view with the results of the query. The function returns the view object,
     which can be used in subsequent queries.
@@ -109,54 +109,54 @@ def extract_region(file_name):
 
 def pivot_sex_tables(con, male_table: str, female_table: str, both_table: str, year_col: str):
     """Pivots the sex-specific tables using SQL.
-    
+
     Args:
         con: A DuckDB connection object.
         male_table: A string representing the name of the male sex-specific table.
         female_table: A string representing the name of the female sex-specific table.
         both_table: A string representing the name of the both sex-specific table.
         year_col: A string representing the name of the column containing the population data.
-        
+
     Returns:
         Three dataframes representing the pivoted male, female, and both sex-specific tables.
     """
-    
+
     # Construct the SQL query to pivot the male sex-specific table
     male_query = f"""
         SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
         FROM {male_table}
         GROUP BY OA11CD, LAD11CD;"""
-    
+
     # Construct the SQL query to pivot the female sex-specific table
     female_query = f"""
         SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
         FROM {female_table}
         GROUP BY OA11CD, LAD11CD;"""
-    
+
     # Construct the SQL query to pivot the both sex-specific table
     both_query = f"""
         SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
         FROM {both_table}
         GROUP BY OA11CD, LAD11CD;"""
-    
+
     # Execute the SQL queries and get dataframes for each sex-specific table
     male_df = query_database(con, male_query)
     female_df = query_database(con, female_query)
     both_df = query_database(con, both_query)
-    
+
     return male_df, female_df, both_df
 
 
 def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     """"Uses SQL to get the data for three sex groups and drops the sex column.
-    
+
     Args:
         con: A DuckDB connection object.
         table_name: The name of the table which corresponds to one year of data
         year: An integer representing the year to query.
-        sex_num: 
+        sex_num:
     """
-    
+
     # Construct the SQL query for the male sex group
     male_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
@@ -168,25 +168,25 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
         WHERE Sex = 2;"""
-        
+
     # Construct the SQL query for both sex groups
     both_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_2002
         FROM {table_name};"""
-    
+
     # Get a dataframe for sex == 1
     male_table = query_database(con, male_query)
-    
+
     # Get a dataframe for sex == 2, Female
     female_table = query_database(con, female_query)
 
     # Get combined sexes dataframe
     both_table = query_database(con, both_query)
-    
+
     return male_table, female_table, both_table
 
-  
-    
+
+
 def create_output_folder(year: int) -> pl.Path:
     """Create the output folder for a given year if it doesn't exist."""
     output_folder = pl.Path(f"data/population_estimates/{year}")
@@ -196,21 +196,21 @@ def create_output_folder(year: int) -> pl.Path:
 
 
 def write_table_to_csv(con, *args, output_folder: pl.Path, year: int):
-    
+
     for table_name in args:
         query = f"""
             COPY {table_name}
-            TO 'data/population_estimates/{year}/{table_name}_{year}.csv';"""
-        
-        query_database(con, query)
-    
+            TO '{output_folder}/{table_name}_{year}.csv';"""
+
+        con.execute(query)
+
     return None
-    
+
 def main():
 
-    # Create connection 
+    # Create connection
     con = create_connection(db_file_path)
-    
+
     # Run query to load all the csv data in one go and create the table
     table_name = load_all_csvs(con, input_folder, "all_pop_estimates")
 
@@ -219,29 +219,29 @@ def main():
     # and return the name of the temp table
     temp_table_names = []
     for year in years:
-        
+
         year_col=f"Population_{year}"
-           
-        
+
+
         # Get the three sex disaggregated tables
         both_sexes_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
 
         # Pack the three names as a tuple
         all_three_tables = both_sexes_table, male_table, female_table
-        
+
         # Pivot the dataframe to a wide format
         all_three_tables = pivot_sex_tables(con, *all_three_tables, year_col)
-        
+
         # Create the folder for the year, and return its path
         output_folder = create_output_folder(year)
-        
+
         # Write out the pivoted tables as CSV files
         write_table_to_csv(con, *all_three_tables,
                            output_folder=output_folder,
                            year=year)
-    
+
     # Close the connection
     con.close()
-        
+
 if __name__ == "__main__":
     main()
