@@ -63,7 +63,7 @@ def load_all_csvs(con, csv_folder, output_table_name):
     AS SELECT *
     FROM read_csv_auto('{csv_folder}/*.csv', header=true, columns={column_types}, delim=',', auto_detect=false);
     """
-    #
+    # This code currently gives an empty dataframe
     #
     con.execute(load_csv_query)
 
@@ -281,7 +281,10 @@ def main():
         write_table_to_csv(con, *all_three_tables,
                            output_folder=output_folder,
                            year=year)
-
+        
+    
+    # drop the all pop estimates table so it can be run again
+    con.execute(f"""DROP TABLE all_pop_estimates;""")
     # Close the connection
     con.close()
 
