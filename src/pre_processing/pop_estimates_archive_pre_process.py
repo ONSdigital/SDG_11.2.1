@@ -192,7 +192,7 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         WHERE Sex = 2;"""
     # Construct the SQL query for both sex groups
     both_query = f"""
-        SELECT OA11CD, Age, LAD11CD, Population_2002
+        SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name};"""
 
     # Get a dataframe for sex == 1
@@ -281,10 +281,9 @@ def main():
         write_table_to_csv(con, *all_three_tables,
                            output_folder=output_folder,
                            year=year)
-        
-    
     # drop the all pop estimates table so it can be run again
     con.execute(f"""DROP TABLE all_pop_estimates;""")
+
     # Close the connection
     con.close()
 
