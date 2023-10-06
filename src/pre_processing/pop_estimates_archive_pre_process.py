@@ -38,8 +38,8 @@ year_cols = [f"Population_{year}" for year in years]
 
 column_types = {
     "OA11CD": "TEXT",
-    "Age": "INTEGER",
     "Sex": "INTEGER",
+    "Age": "INTEGER",
     "LAD11CD": "TEXT",
     "Population_2002": "INTEGER",
     "Population_2003": "INTEGER",
@@ -261,7 +261,8 @@ def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Pa
     for table_name in args:
         query = f"""
             COPY {tables_dict[table_name]}
-            TO '{output_folder}/pop_estimate_{table_name}_{year}.csv';"""
+            TO '{output_folder}/pop_estimate_{table_name}_{year}.csv'
+            (FORMAT CSV, DELIMITER ',', HEADER);"""
         
         query_database(con, query)
     
