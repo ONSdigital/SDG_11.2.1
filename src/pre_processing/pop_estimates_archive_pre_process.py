@@ -200,10 +200,10 @@ def write_table_to_csv(con, *args, output_folder: pl.Path, year: int):
     for table_name in args:
         query = f"""
             COPY {table_name}
-            TO '{output_folder}/{table_name}_{year}.csv';"""
-
-        con.execute(query)
-
+            TO 'data/population_estimates/{year}/pop_estimate_{year}.csv';"""
+        
+        query_database(con, query)
+    
     return None
 
 def main():
