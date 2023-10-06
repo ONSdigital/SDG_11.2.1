@@ -1,5 +1,6 @@
 beautifulsoup4
 descartes
+duckdb
 Fiona
 flake8
 geopandas 
