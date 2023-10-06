@@ -139,7 +139,7 @@ column_types = {
     "Population_2012": "INTEGER"
 }
 
-def pivot_sex_tables(con, male_table: str, female_table: str, both_table: str, year: str):
+def pivot_sex_tables(con, tables_dict: Dict[str, str], year: str):
     """Pivots the sex-specific tables using SQL.
 
     Args:
@@ -158,32 +158,26 @@ def pivot_sex_tables(con, male_table: str, female_table: str, both_table: str, y
     logger.info(f"Starting the pivot process. Year column is: {year_col}")
      
     # Construct the SQL query to pivot the male sex-specific table
-    male_query = f"""
-        SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
-        FROM {male_table}
-        GROUP BY OA11CD, LAD11CD;"""
-
+    male_query = f"""PIVOT {tables_dict['male']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    """
+ 
     # Construct the SQL query to pivot the female sex-specific table
-    female_query = f"""
-        SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
-        FROM {female_table}
-        GROUP BY OA11CD, LAD11CD;"""
+    female_query = f"""PIVOT {tables_dict['female']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    """
 
     # Construct the SQL query to pivot the both sex-specific table
-    both_query = f"""
-        SELECT OA11CD, LAD11CD, {', '.join([f"SUM(CASE WHEN Age = {i} THEN {year_col} ELSE 0 END) AS Age_{i}" for i in range(0, 101)])}
-        FROM {both_table}
-        GROUP BY OA11CD, LAD11CD;"""
+    both_query = f"""PIVOT {tables_dict['both']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    """
 
     # Execute the SQL queries and get dataframes for each sex-specific table
     logger.info("Executing SQL queries to pivot male table")
-    male_df = query_database(con, male_query, year)
+    male_table = query_database(con, male_query, year)
     logger.info("Executing SQL queries to pivot female table")
-    female_df = query_database(con, female_query, year)
+    female_table = query_database(con, female_query, year)
     logger.info("Executing SQL query to pivot table for both sexes")
-    both_df = query_database(con, both_query, year)
-
-    return male_df, female_df, both_df
+    both_sexes_table = query_database(con, both_query, year)
+            
+    return {"both": both_sexes_table, "male": male_table, "female": female_table}
 
 
 def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
@@ -266,8 +260,8 @@ def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Pa
     """
     for table_name in args:
         query = f"""
-            COPY {table_name}
-            TO 'data/population_estimates/{year}/pop_estimate_{year}.csv';"""
+            COPY {tables_dict[table_name]}
+            TO '{output_folder}/pop_estimate_{table_name}_{year}.csv';"""
         
         query_database(con, query)
     
@@ -295,16 +289,16 @@ def main():
         both_sexes_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
 
         # Pack the three names as a tuple
-        all_three_tables = both_sexes_table, male_table, female_table
+        all_three_tables = {"both": both_sexes_table, "male": male_table, "female": female_table}
 
         # Pivot the dataframe to a wide format
-        all_three_tables = pivot_sex_tables(con, *all_three_tables, year)
+        all_three_tables = pivot_sex_tables(con, all_three_tables, year)
 
         # Create the folder for the year, and return its path
         output_folder = create_output_folder(year)
 
         # Write out the pivoted tables as CSV files
-        write_table_to_csv(con, *all_three_tables,
+        write_table_to_csv(con, all_three_tables,
                            output_folder=output_folder,
                            year=year)
     # drop the all pop estimates table so it can be run again
