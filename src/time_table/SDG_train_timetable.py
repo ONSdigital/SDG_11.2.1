@@ -34,6 +34,42 @@ day_filter_type = config["day_filter"]
 timetable_day = config["timetable_day"]
 early_timetable_hour = config["early_timetable_hour"]
 late_timetable_hour = config["late_timetable_hour"]
+required_files = ['stop_times', 'trips', 'calendar']
+auto_download_train = config["auto_download_train"]
+
+# Calculate if train timetable needs to be downloaded.
+# If current folder doesnt exist, or hasnt been modified then
+# flag to be downloaded
+
+paths_to_check = [msn_file, mca_file]
+each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
+
+if not all(each_file_checked):
+    try:
+        os.makedirs(trn_data_output_dir)
+    except FileExistsError:
+        print(f"Directory {trn_data_output_dir} already exists")
+    download_train_timetable = True
+else:
+    # Find when the last download occured
+    # If > 7 days ago, download the data again
+    download_train_timetable = di.best_before(path=trn_data_output_dir,
+                                            number_of_days=7)
+
+# ---------------------------
+# Download train timetable data
+# ---------------------------
+
+# Note downloads if flag above, and flag in config, set as True.
+# Using individual data ingest functions (rather than
+# import_extract_delete_zip) as files are .txt not .csv.
+if download_train_timetable and auto_download_train:
+    files_to_download = [file for file, boolean
+                          in zip(paths_to_check, each_file_checked)
+                            if not boolean]
+    for file in files_to_download:
+        di.download_data(file)
+
 
 # Extract msn data
 msn_data = ttu.extract_msn_data(msn_file)
