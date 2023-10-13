@@ -187,12 +187,13 @@ def csv_to_df(
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
-        pd_df = pd.read_csv(path_or_url(csv_path), usecols=cols,
+        
+        pd_df = pd.read_csv(csv_path, usecols=cols,
                             dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
         print(f"Time taken for csv reading is {toc - tic:.2f} seconds")
     else:
-        pd_df = pd.read_csv(path_or_url(csv_path))
+        pd_df = pd.read_csv(csv_path)
     # Calling the pd_to_feather function to make a persistent feather file
     # for faster retrieval
     pd_to_feather(pd_df, csv_path)
@@ -517,11 +518,21 @@ def get_oa_la_csv_abspath(dir):
     """
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(".csv")]
-    csv_file = csv_files[0]
+    if csv_files:
+        csv_file = csv_files[0]
+        absolute_path = os.path.join(dir, csv_file)
+        return absolute_path
+    else:
+        blob_list = list(bucket.bucket.list_blobs(prefix=dir))
+        csv_files = [file for file in blob_list if file.name.endswith('.csv')]
+        csv_file = csv_files[0].name
+        absolute_path = path_or_url(csv_file)
+        return absolute_path
+       
 
-    absolute_path = os.path.join(dir, csv_file)
+  
 
-    return absolute_path
+    
 
 
 def _get_stops_from_api(url, file_name):
@@ -581,7 +592,7 @@ def save_latest_stops_as_feather(file_name):
         file_name (str): file path for latest stop file.
     """
     # read in csv
-    file = pd.read_csv(path_or_url(file_name),
+    file = pd.read_csv(file_name,
                        usecols=config["naptan_types"].keys(),
                        dtype=config["naptan_types"])
 
@@ -615,7 +626,7 @@ def dl_stops_make_df(today, url):
     # Save as feather
     feather_path = save_latest_stops_as_feather(csv_path)
     # Load feather as pd df
-    stops_df = pd.read_feather(path_or_url(feather_path))
+    stops_df = pd.read_feather(feather_path)
     return stops_df
 
 
