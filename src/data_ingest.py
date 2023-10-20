@@ -502,15 +502,20 @@ def get_shp_abs_path(dir):
     return absolute_path
 
 
-def get_oa_la_csv_abspath(dir, list_or_abs, extension):
+def get_abspath_or_list_files(dir, list_or_abs, extension):
     """Takes a directory as str and returns the absolute path of
     output area csv file.
 
     Args:
         dir (str): Path created with os.path.join.
+        list_or_abs (str): either "list" or "abs" to return either
+            a list of paths/urls or a single path/url
+        extension (str): a file extension, e.g. "csv" to search for
+            files of that type in the specified directory
 
     Returns:
-        str: Absolute path of the csv file of the Output area.
+        Union [str, List]: Absolute path or list of the paths of file of the
+            the given extension in the directory provided.
     """
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(f".{extension}")]
