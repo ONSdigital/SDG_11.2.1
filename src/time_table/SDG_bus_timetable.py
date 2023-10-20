@@ -69,7 +69,7 @@ else:
 # Using individual data ingest functions (rather than
 # import_extract_delete_zip) as files are .txt not .csv.
 if download_bus_timetable and auto_download_bus:
-    di._grab_zip(file_nm=bus_dataset_name,
+    di.grab_zip(file_nm=bus_dataset_name,
                  zip_link=bus_timetable_zip_link,
                  zip_path=zip_path)
 
@@ -77,13 +77,13 @@ if download_bus_timetable and auto_download_bus:
     for file in required_files:
         file_extension_name = f"{file}.txt"
 
-        di._extract_zip(file_nm=bus_dataset_name,
+        di.extract_zip(file_nm=bus_dataset_name,
                         csv_nm=file_extension_name,
                         zip_path=zip_path,
                         csv_path=bus_data_output_dir)
 
     # Remove zip file
-    di._delete_junk(file_nm=bus_dataset_name,
+    di.delete_junk(file_nm=bus_dataset_name,
                     zip_path=zip_path)
 
 # ------------------------------------------
