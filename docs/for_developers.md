@@ -102,3 +102,27 @@ To be able to contribute to the project via Git, you will need to add the email 
     git config --global user.email "email"
     
     git config --global user.name "username"
+
+## Order to run the script
+In order to generate the output data, run the scripts in the order given below from the main directory of the repository.
+
+**time_table** directory
+
+    SDG_bus_timetable.py
+    
+    SDG_train_timetable.py
+
+**pre_processing** directory
+
+    eng_wales_pre_process.py
+   
+    
+After running the scripts above, we can finally run the main scripts given below (can be found in main directory of the repository)
+
+    SDG_eng_wales.py
+   
+    SDG_scotland.py
+   
+    SDG_ni.py
+     
+
