@@ -65,7 +65,7 @@ class GCPBucket:
 
         The URL should be able to be used by our data ingest functions
             to download any file."""
-        expiration = datetime.utcnow() + timedelta(minutes=5)
+        expiration = datetime.utcnow() + timedelta(hours=1)
         url = self.bucket.blob(object_name).generate_signed_url(
             expiration,
             method='GET',
@@ -429,11 +429,7 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
-            xls_path = os.path.join(
-                DATA_DIR,
-                "population_estimates",
-                str(pop_year),
-                region_dict[region])
+            xls_path = region_dict[region]
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
@@ -506,7 +502,7 @@ def get_shp_abs_path(dir):
     return absolute_path
 
 
-def get_oa_la_csv_abspath(dir):
+def get_oa_la_csv_abspath(dir, list_or_abs, extension):
     """Takes a directory as str and returns the absolute path of
     output area csv file.
 
@@ -517,17 +513,26 @@ def get_oa_la_csv_abspath(dir):
         str: Absolute path of the csv file of the Output area.
     """
     files = os.listdir(dir)
-    csv_files = [file for file in files if file.endswith(".csv")]
+    csv_files = [file for file in files if file.endswith(f".{extension}")]
     if csv_files:
-        csv_file = csv_files[0]
-        absolute_path = os.path.join(dir, csv_file)
-        return absolute_path
+        if list_or_abs == "list":
+            list_of_paths = [os.path.join(dir, csv_file)
+                             for csv_file in csv_files]
+            return list_of_paths
+        elif list_or_abs == "abs":
+            csv_file = csv_files[0]
+            absolute_path = os.path.join(dir, csv_file)
+            return absolute_path
     else:
         blob_list = list(bucket.bucket.list_blobs(prefix=dir))
-        csv_files = [file for file in blob_list if file.name.endswith('.csv')]
-        csv_file = csv_files[0].name
-        absolute_path = path_or_url(csv_file)
-        return absolute_path
+        csv_files = [file for file in blob_list if file.name.endswith(f".{extension}")]
+        if list_or_abs == "list":
+            list_of_urls = [path_or_url(csv_file.name) for csv_file in csv_files]
+            return list_of_urls
+        elif list_or_abs == "abs":
+            csv_file = csv_files[0].name
+            absolute_path = path_or_url(csv_file)
+            return absolute_path
        
 
   
@@ -658,6 +663,7 @@ def get_stops_file(url, dir):
                                 "Stops.feather")
     # Check that the feather exists
     if not persistent_exists(feather_path):
+        print(f"Downloading stops file from {url}")
         stops_df = dl_stops_make_df(today, url)
     else:  # does exist
         latest_date = _get_latest_stop_file_date(dir)
