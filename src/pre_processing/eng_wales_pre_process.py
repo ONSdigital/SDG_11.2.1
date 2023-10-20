@@ -162,7 +162,7 @@ lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
     os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
 
-ew_oa_la_lookup_df = pd.read_csv(di.path_or_url(ew_oa_la_lookup_path),
+ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
                                  usecols=["OA11CD", lad_name_col])
 
 
