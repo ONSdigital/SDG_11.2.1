@@ -159,8 +159,9 @@ print('Processing local authority to output area lookup')
 
 lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 
-ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
-    os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
+ew_oa_la_lookup_path = di.get_abspath_or_list_files(
+    os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR), "abs",
+    "csv")
 
 ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
                                  usecols=["OA11CD", lad_name_col])
@@ -185,9 +186,9 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 print('Processing population data')
 
 # Get list of all pop_estimate files for target year
-ew_pop_files = os.listdir(os.path.join("data",
-                                       "population_estimates",
-                                       POP_YEAR))
+ew_dir = os.path.join("data", "population_estimates", POP_YEAR)
+
+ew_pop_files = di.get_abspath_or_list_files(ew_dir, "list", "xlsx")
 
 # Get the population data for the whole nation for the specified year
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
