@@ -7,7 +7,7 @@ import pathlib as pl
 from glob import glob
 import duckdb
 import uuid
-from typing import List
+from typing import List, Dict
 from duckdb import DuckDBPyConnection
 import logging
 
@@ -191,7 +191,7 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         sex_num:
     """
     # Generate a unique name for the temporary table
-    table_name = f"temp_{uuid.uuid4().hex}"
+    # table_name = f"temp_{uuid.uuid4().hex}"
 
     # Construct the SQL query for the male sex group
     male_query = f"""
@@ -261,7 +261,7 @@ def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Pa
     """
     for table_name in args:
         query = f"""
-            COPY {tables_dict[table_name]}
+            COPY {args[table_name]}
             TO '{output_folder}/pop_estimate_{table_name}_{year}.csv'
             (FORMAT CSV, DELIMITER ',', HEADER);"""
         
