@@ -361,4 +361,4 @@ final_result.to_csv(output_path, index=False)
 # end time
 end = time.time()
 
-print(f"This took {(end-start)} seconds to run")
+print(f"This took {round(end-start), 2} seconds to run")
