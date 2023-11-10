@@ -9,6 +9,7 @@ import duckdb
 import uuid
 from typing import List
 from duckdb import DuckDBPyConnection
+import logging
 
 
 # Define the input and output file paths
@@ -280,9 +281,9 @@ def main():
     # For each of those years, load the data for all regions into a temp table
     # and return the name of the temp table
     temp_table_names = []
-    logging.info("Starting to load data for each year into a temp table")
+    logger.info("Starting to load data for each year into a temp table")
     for year in years:
-        logging.info(f"Extracting data for year {year}")
+        logger.info(f"Extracting data for year {year}")
 
         year_col=f"Population_{year}"
 
