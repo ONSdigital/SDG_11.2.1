@@ -241,7 +241,7 @@ def create_output_folder(year: int) -> pl.Path:
     return output_folder
 
 
-def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Path, year: int) -> None:
+def write_table_to_csv(con: DuckDBPyConnection, args: Dict, output_folder: pl.Path, year: int) -> None:
     """
     Writes the specified tables in a DuckDB database to CSV files.
 
@@ -265,7 +265,7 @@ def write_table_to_csv(con: DuckDBPyConnection, *args: str, output_folder: pl.Pa
             TO '{output_folder}/pop_estimate_{table_name}_{year}.csv'
             (FORMAT CSV, DELIMITER ',', HEADER);"""
         
-        query_database(con, query)
+        con.execute(query)
     
     return None
 
