@@ -49,10 +49,14 @@ if di.persistent_exists(stops_geo_df_path):
 ew_la_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
 if di.persistent_exists(ew_la_df_path):
     ew_la_df = gpd.read_file(ew_la_df_path)
+else:
+    raise FileNotFoundError("No ew_la_df.geojson found. Please run eng_wales_pre_process.py")
 
 ew_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
 if di.persistent_exists(ew_df_path):
     ew_df = gpd.read_file(ew_df_path)
+else:
+    raise FileNotFoundError("No ew_df.geojson found. Please run eng_wales_pre_process.py")
 
 ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
                                      'ew_disability_df.feather')
