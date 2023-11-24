@@ -1,18 +1,31 @@
 # core
 import os
 import sys
+import logging
+import pathlib as pl
 
 # third party
 import yaml
 import pandas as pd
 
 # Add the parent directory to the path to allow import of our modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Our modules
 import time_table_utils as ttu # noqa E402
 import data_transform as dt # noqa E402
 import data_ingest as di # noqa E402
+
+# Create logger
+TrainLogger = logging.getLogger(__name__)
+TrainLogger.setLevel(logging.INFO)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Add the console handler to the logger
+TrainLogger.addHandler(console_handler)
 
 # get current working directory
 CWD = os.getcwd()
@@ -41,12 +54,12 @@ auto_download_train = config["auto_download_train"]
 # If current folder doesnt exist, or hasnt been modified then
 # flag to be downloaded
 
-paths_to_check = [msn_file, mca_file]
+paths_to_check = [pl.Path(msn_file), pl.Path(mca_file)]
 each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
 
 if not all(each_file_checked):
     try:
-        os.makedirs(trn_data_output_dir)
+        di.make_non_existent_folder(trn_data_output_dir)
     except FileExistsError:
         print(f"Directory {trn_data_output_dir} already exists")
     download_train_timetable = True
@@ -244,3 +257,5 @@ highly_serviced_train_stops_df.to_feather(
 highly_serviced_train_stops_df.to_csv(
     os.path.join(trn_data_output_dir,
                  'train_highly_serviced_stops.csv'), index=False)
+
+TrainLogger.info("Train timetable pipeline complete")
