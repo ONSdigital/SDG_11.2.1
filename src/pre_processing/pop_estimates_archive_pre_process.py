@@ -4,7 +4,6 @@
 
 import re
 import pathlib as pl
-from glob import glob
 import duckdb
 import uuid
 from typing import List, Dict
@@ -55,15 +54,31 @@ column_types = {
     "Population_2012": "INTEGER"
 }
 
+def make_non_existent_folder(folder_path: pl.Path) -> None:
+    """Creates a folder if it doesn't exist."""
+    if not folder_path.exists():
+        logger.info(f"Folder {folder_path} does not exist. Creating it now.")
+        folder_path.mkdir(parents=True)
+        # Add a .gitkeep file to the folder so it gets pushed to GitHub
+        (folder_path / ".gitkeep").touch()
+    return None
 
 def create_connection(database_path: str) -> DuckDBPyConnection:
     """Creates a connection to a DuckDB database and returns the connection object."""
+    
+    # Check if the folder for the database exists, and create it if it doesn't
+    make_non_existent_folder(pl.Path(database_path).parent)
+    
     con = duckdb.connect(database_path)
     return con
 
 
 def load_all_csvs(con, csv_folder, output_table_name):
     """Loads all the population csv files in a folder into a DuckDB database."""
+
+    # Check that csv folder exists
+    if not pl.Path(csv_folder).exists():
+        raise ValueError(f"Folder {csv_folder} does not exist.")
 
     logger.info(f"Loading all csv files")
     
@@ -111,10 +126,10 @@ def query_database_as_view(con: DuckDBPyConnection, query: str, view_name: str) 
     # Return the updated view object
     return con.view(view_name)
 
-def extract_region(file_name):
-    # Extact the region name from the file name
-    region_pattern = r"unformatted-(.*?)-mid2002"
-    match = re.search(region_pattern, file_name)
+# def extract_region(file_name):
+#     # Extact the region name from the file name
+#     region_pattern = r"unformatted-(.*?)-mid2002"
+#     match = re.search(region_pattern, file_name)
 
 # Define an empty dictionary to store the dataframes for each year
 year_data = {}
@@ -188,7 +203,6 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         con: A DuckDB connection object.
         table_name: The name of the table which corresponds to one year of data
         year: An integer representing the year to query.
-        sex_num:
     """
     # Generate a unique name for the temporary table
     # table_name = f"temp_{uuid.uuid4().hex}"
@@ -241,18 +255,23 @@ def create_output_folder(year: int) -> pl.Path:
     return output_folder
 
 
-def write_table_to_csv(con: DuckDBPyConnection, args: Dict, output_folder: pl.Path, year: int) -> None:
+def write_table_to_csv(con: DuckDBPyConnection, 
+                       args: Dict,
+                       output_folder: pl.Path,
+                       year: int) -> None:
     """
     Writes the specified tables in a DuckDB database to CSV files.
 
-    This function takes a DuckDB connection object, a variable number of table names, an output folder path, 
-    and a year as input. For each table name, it executes a COPY command to write the table to a CSV file 
-    in the specified output folder. The CSV file is named 'pop_estimate_{year}.csv', where {year} is the 
+    This function takes a DuckDB connection object, a dictionary containing the tables, 
+    an output folder path, and a year as input. For each table name, it executes a COPY 
+    command to write the table to a CSV file in the specified output folder. 
+    
+    The CSV file is named 'pop_estimate_{year}.csv', where {year} is the 
     specified year. The function does not return a value.
 
     Parameters:
     con (DuckDBPyConnection): The DuckDB connection object.
-    *args (str): The table names to write to CSV files.
+    *args (dictionary): A dictionary containing the table names as keys and the table names as values.
     output_folder (Path): The path to the output folder.
     year (int): The year to include in the CSV file names.
 
