@@ -361,4 +361,7 @@ final_result.to_csv(output_path, index=False)
 # end time
 end = time.time()
 
-print(f"This took {round(end-start), 2} seconds to run")
+elapsed_time = end - start
+minutes, seconds = divmod(elapsed_time, 60)
+
+print(f"This took {int(minutes)} minutes and {round(seconds, 2)} seconds to run")
