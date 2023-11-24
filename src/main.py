@@ -21,7 +21,7 @@ if run_timetables:
     runpy.run_module('time_table.SDG_bus_timetable', run_name='__main__')
     
     logger.info('Running rail timetable pipeline')
-    runpy.run_module('time_table.SDG_rail_timetable', run_name='__main__')
+    runpy.run_module('time_table.SDG_train_timetable', run_name='__main__')
 
 if pre_processing:
     logger.info('Running pre-processing pipeline')
