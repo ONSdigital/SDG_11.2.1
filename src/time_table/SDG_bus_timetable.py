@@ -1,19 +1,18 @@
 # Core modules
 import os
 import sys
+import logging
 
 # Third party modules
 import yaml
 import pandas as pd
 
-# # Getting the parent directory of the current file
-# current = os.path.dirname(os.path.realpath(__file__))
-# parent = os.path.dirname(current)
-# # Appending to path so that we can import modules from the src folder
-# sys.path.append(parent)
 
-# add the parent directory to the path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# # Getting the parent directory of the current file
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+# Appending to path so that we can import modules from the src folder
+sys.path.append(parent)
 
 # Our modules
 import data_ingest as di # noqa E402
@@ -21,6 +20,18 @@ import data_transform as dt # noqa E402
 
 # Get current working directory
 CWD = os.getcwd()
+
+# Create logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Add the console handler to the logger
+logger.addHandler(console_handler)
+
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
@@ -51,7 +62,7 @@ each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
 
 if not all(each_file_checked):
     try:
-        os.makedirs(bus_data_output_dir)
+        di.make_non_existent_folder(bus_data_output_dir)
     except FileExistsError:
         print(f"Directory {bus_data_output_dir} already exists")
     download_bus_timetable = True
@@ -257,3 +268,7 @@ bus_highly_serviced_stops.to_csv(
         bus_data_output_dir,
         'bus_highly_serviced_stops.csv'),
     index=False)
+
+# Log finish of pipeline
+# 
+logger.info("Bus timetable pipeline complete")
