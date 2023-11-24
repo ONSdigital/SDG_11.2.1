@@ -1,5 +1,6 @@
 # Core imports for this module
 import os
+import pathlib as pl
 import re
 import json
 from functools import lru_cache, reduce
@@ -133,6 +134,15 @@ def download_data(file_path_to_get):
             bucket.download_file(file, os.path.join(file))
     else:
         pass
+
+def make_non_existent_folder(folder_path: pl.Path) -> None:
+    """Creates a folder if it doesn't exist."""
+    if not folder_path.exists():
+        MainLogger.info(f"Folder {folder_path} does not exist. Creating it now.")
+        folder_path.mkdir(parents=True)
+        # Add a .gitkeep file to the folder so it gets pushed to GitHub
+        (folder_path / ".gitkeep").touch()
+    return None
 
 def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     """Feather reading function used by the any_to_pd function.
@@ -560,6 +570,13 @@ def _get_stops_from_api(url, file_name):
 
     # gets content and then writes to csv
     url_content = r.content
+    
+    # if the folder doesn't exist create it
+    folder_path = os.path.dirname(file_name)
+    if not persistent_exists(folder_path):
+        make_non_existent_folder(folder_path)
+    
+    # write out the file
     csv_file = open(file_name, 'wb')
     csv_file.write(url_content)
     csv_file.close()
