@@ -55,6 +55,10 @@ class GCPBucket:
 
         blob = self.bucket.blob(file_name)
 
+        # Create the folder (if it doesn't exist)
+        folder_path = os.path.dirname(destination_file_name)
+        make_non_existent_folder(folder_path)
+
         blob.download_to_filename(destination_file_name)
 
         print(
@@ -129,7 +133,7 @@ def download_data(file_path_to_get):
     """
     if CLOUD_LOCAL=="cloud":
         lst = bucket.get_file_names()
-        file_paths = [x for x in lst if file_path_to_get in x]
+        file_paths = [x for x in lst if str(file_path_to_get) in x]
         for file in file_paths:
             bucket.download_file(file, os.path.join(file))
     else:
@@ -137,6 +141,10 @@ def download_data(file_path_to_get):
 
 def make_non_existent_folder(folder_path: pl.Path) -> None:
     """Creates a folder if it doesn't exist."""
+    # Check if folder_path is str
+    if isinstance(folder_path, str):
+        folder_path = pl.Path(folder_path)
+    
     if not folder_path.exists():
         MainLogger.info(f"Folder {folder_path} does not exist. Creating it now.")
         folder_path.mkdir(parents=True)
@@ -527,6 +535,7 @@ def get_abspath_or_list_files(dir, list_or_abs, extension):
         Union [str, List]: Absolute path or list of the paths of file of the
             the given extension in the directory provided.
     """
+    make_non_existent_folder(dir)
     files = os.listdir(dir)
     csv_files = [file for file in files if file.endswith(f".{extension}")]
     if csv_files:
