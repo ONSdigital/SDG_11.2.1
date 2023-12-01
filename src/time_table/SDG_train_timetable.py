@@ -8,8 +8,11 @@ import pathlib as pl
 import yaml
 import pandas as pd
 
-# Add the parent directory to the path to allow import of our modules
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# # Getting the parent directory of the current file
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+# Appending to path so that we can import modules from the src folder
+sys.path.append(parent)
 
 # Our modules
 import time_table_utils as ttu # noqa E402
