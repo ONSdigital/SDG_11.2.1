@@ -10,9 +10,9 @@ import pandas as pd
 
 # # Getting the parent directory of the current file
 current = os.path.dirname(os.path.realpath(__file__))
-parent = os.path.dirname(current)
+#parent = os.path.dirname(current)
 # Appending to path so that we can import modules from the src folder
-sys.path.append(parent)
+sys.path.append(current)
 
 # Our modules
 import time_table_utils as ttu # noqa E402
