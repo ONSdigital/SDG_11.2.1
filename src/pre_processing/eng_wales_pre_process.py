@@ -1,6 +1,7 @@
 # Core imports
 import os
 import sys
+import logging
 
 # Third party imports
 import pandas as pd
@@ -10,9 +11,17 @@ import yaml
 # add the parent directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# set up logging
+PreProcessLogger = logging.getLogger(__name__)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
 # Module imports
 import data_ingest as di
 import data_transform as dt
+import geospatial_mods as gs
 
 # get current working directory
 CWD = os.getcwd()
@@ -21,7 +30,7 @@ CWD = os.getcwd()
 with open(os.path.join(CWD, "config.yaml"), encoding="utf-8") as yamlfile:
     config = yaml.load(yamlfile, Loader=yaml.FullLoader)
     module = os.path.basename(__file__)
-    print(f"Config loaded in {module}")
+    PreProcessLogger.info(f"Config loaded in {module}")
 
 # Constants
 DEFAULT_CRS = config["default_crs"]
@@ -42,22 +51,21 @@ POP_YEAR = str(config["population_year"])
 # ---------
 # Load and process stops data
 # ---------------------------
-print('Processing stops data')
+PreProcessLogger.info('Processing stops data')
 
 # Highly serviced bus and train stops created from SDG_bus_timetable
 # and SDG_train_timetable for england, wales and scotland.
 # Metros and trains added from NAPTAN as we dont have timetable
 # data for these stops. Hence, they wont be highly serviced.
 
-highly_serviced_bus_stops = di._feath_to_df('bus_highly_serviced_stops',
+highly_serviced_bus_stops = di.feath_to_df('bus_highly_serviced_stops',
                                             BUS_IN_DIR)
-highly_serviced_train_stops = di._feath_to_df('train_highly_serviced_stops',
+highly_serviced_train_stops = di.feath_to_df('train_highly_serviced_stops',
                                               TRAIN_IN_DIR)
 
 # Get Tram data
 naptan_df = di.get_stops_file(url=config["naptan_api"],
-                              dir=os.path.join(os.getcwd(),
-                                               "data",
+                              dir=os.path.join("data",
                                                "stops"))
 
 # Isolating the tram and metro stops
@@ -107,27 +115,31 @@ dfs_to_combine = [highly_serviced_bus_stops,
 filtered_stops_df = pd.concat(dfs_to_combine)
 
 # Convert to geopandas df
-stops_geo_df = (di.geo_df_from_pd_df(pd_df=filtered_stops_df,
+stops_geo_df = (gs.geo_df_from_pd_df(pd_df=filtered_stops_df,
                                      geom_x='easting',
                                      geom_y='northing',
                                      crs=DEFAULT_CRS))
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
+di.make_non_existent_folder(ENG_WALES_PREPROCESSED_OUTPUT)
 stops_geo_df.to_file(path, driver='GeoJSON', index=False)
 
 # -------------------------------------
 # Load and process local authority data
 # -------------------------------------
-print('Processing local authority data')
+PreProcessLogger.info('Processing local authority data')
 
 # Local authority shapefile covers the UK so extracting just shapefile
 # for england, wales and scotland.
 # Note that local authorities in scotland are commonly knows as councils.
 
+# download shapefiles if switch set to cloud
+file_path_to_get = os.path.join("data", "LA_shp", CALCULATION_YEAR)
+di.download_data(file_path_to_get)
+
 # Getting path for LA shapefile
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   CALCULATION_YEAR))
 
@@ -152,12 +164,13 @@ ew_la_df.to_file(path, driver='GeoJSON', index=False)
 # ------------------------------------------------------
 # Load and process local authority to output area lookup
 # ------------------------------------------------------
-print('Processing local authority to output area lookup')
+PreProcessLogger.info('Processing local authority to output area lookup')
 
 lad_name_col = f'LAD{EW_OA_LOOKUP_YEAR[-2:]}NM'
 
-ew_oa_la_lookup_path = di.get_oa_la_csv_abspath(
-    os.path.join(os.getcwd(), "data", "oa_la_mapping", EW_OA_LOOKUP_YEAR))
+ew_oa_la_lookup_path = di.get_abspath_or_list_files(
+    os.path.join("data", "oa_la_mapping", EW_OA_LOOKUP_YEAR), "abs",
+    "csv")
 
 ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
                                  usecols=["OA11CD", lad_name_col])
@@ -166,11 +179,11 @@ ew_oa_la_lookup_df = pd.read_csv(ew_oa_la_lookup_path,
 # ---------------------------------------
 # Load and process output area boundaries
 # ---------------------------------------
-print('Processing output area boundaries')
+PreProcessLogger.info('Processing output area boundaries')
 
 ew_oa_boundaries_df = pd.read_csv(
-        os.path.join("data",
-                     "Output_Areas__December_2011__Boundaries_EW_BGC.csv"))
+        di.path_or_url(os.path.join("data",
+                     "Output_Areas__December_2011__Boundaries_EW_BGC.csv")))
 
 # Restrict to just required columns
 ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
@@ -179,13 +192,12 @@ ew_oa_boundaries_df = ew_oa_boundaries_df[['OA11CD', 'LAD11CD']]
 # --------------------------------
 # Load and process population data
 # --------------------------------
-print('Processing population data')
+PreProcessLogger.info('Processing population data')
 
 # Get list of all pop_estimate files for target year
-ew_pop_files = os.listdir(os.path.join(os.getcwd(),
-                                       "data",
-                                       "population_estimates",
-                                       POP_YEAR))
+ew_dir = os.path.join("data", "population_estimates", POP_YEAR)
+
+ew_pop_files = di.get_abspath_or_list_files(ew_dir, "list", "xlsx")
 
 # Get the population data for the whole nation for the specified year
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
@@ -216,7 +228,12 @@ ew_pop_df = pd.merge(ew_pop_df, ew_age_df, left_index=True, right_index=True)
 # -----------------------------------------------
 # Load and process popualation weighted centroids
 # -----------------------------------------------
-print('Processing population weighted centroids')
+PreProcessLogger.info('Processing population weighted centroids')
+
+file_path_to_get = (os.path.join('data',
+                                'pop_weighted_centroids',
+                                CENTROID_YEAR))
+di.download_data(file_path_to_get)
 
 ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
     os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))
@@ -228,10 +245,10 @@ ew_pop_wtd_centr_df = ew_pop_wtd_centr_df[['OA11CD', 'geometry']]
 # --------------------------------
 # Load and process disability data
 # --------------------------------
-print('Processing disability data')
+PreProcessLogger.info('Processing disability data')
 
-ew_disability_df = pd.read_csv(
-    os.path.join(CWD, "data", "disability_status", "nomis_QS303.csv"),
+ew_disability_df = pd.read_csv(di.path_or_url(
+    os.path.join("data", "disability_status", "nomis_QS303.csv")),
     header=5)
 
 # drop the column "mnemonic" as it seems to be a duplicate of the OA code
@@ -258,12 +275,10 @@ ew_disability_df.to_feather(path)
 # -------------------------
 # Load and process RUC data
 # -------------------------
-print('Processing rural urban classification data')
+PreProcessLogger.info('Processing rural urban classification data')
 
-ew_urb_rur_df = (di.any_to_pd("RUC11_OA11_EW",
-                              URB_RUR_ZIP_LINK,
-                              ['csv'],
-                              URB_RUR_TYPES))
+ew_urb_rur_df = pd.read_csv(di.path_or_url(os.path.join('data', 'RUC11_OA11_EW.csv')), 
+                            dtype={'OA11CD':'str', 'RU11CD':'category'})
 
 # These are the codes (RUC11CD) mapping to rural and urban descriptions (RUC11)
 # I could make this more succinct, but leaving here
@@ -286,7 +301,7 @@ ew_urb_rur_df = ew_urb_rur_df[['OA11CD', 'urb_rur_class']]
 # -----------------------------------
 # Merge relevant datasets in the PWCs
 # -----------------------------------
-print('Creating final preprocessed dataset')
+PreProcessLogger.info('Creating final preprocessed dataset')
 
 # Merge datasets into PWCs ready for analysis
 lad_col = f'LAD{CALCULATION_YEAR[-2:]}NM'
@@ -316,3 +331,5 @@ ew_df = gpd.GeoDataFrame(ew_df, geometry='geometry_pop', crs=DEFAULT_CRS)
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
 ew_df.to_file(path, driver='GeoJSON', index=False)
+
+PreProcessLogger.info('Preprocessing complete')

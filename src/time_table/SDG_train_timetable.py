@@ -1,18 +1,34 @@
 # core
 import os
 import sys
+import logging
+import pathlib as pl
 
 # third party
 import yaml
 import pandas as pd
 
-# Add the parent directory to the path to allow import of our modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# # Getting the parent directory of the current file
+current = os.path.dirname(os.path.realpath(__file__))
+#parent = os.path.dirname(current)
+# Appending to path so that we can import modules from the src folder
+sys.path.append(current)
 
 # Our modules
 import time_table_utils as ttu # noqa E402
 import data_transform as dt # noqa E402
 import data_ingest as di # noqa E402
+
+# Create logger
+TrainLogger = logging.getLogger(__name__)
+TrainLogger.setLevel(logging.INFO)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Add the console handler to the logger
+TrainLogger.addHandler(console_handler)
 
 # get current working directory
 CWD = os.getcwd()
@@ -25,7 +41,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 
 
 # Parameters
-trn_data_output_dir = os.path.join(CWD, 'data', 'england_train_timetable')
+trn_data_output_dir = os.path.join('data', 'england_train_timetable')
 station_locations = os.path.join(trn_data_output_dir,
                                  config['station_locations'])
 msn_file = os.path.join(trn_data_output_dir, config["train_msn_filename"])
@@ -34,6 +50,42 @@ day_filter_type = config["day_filter"]
 timetable_day = config["timetable_day"]
 early_timetable_hour = config["early_timetable_hour"]
 late_timetable_hour = config["late_timetable_hour"]
+required_files = ['stop_times', 'trips', 'calendar']
+auto_download_train = config["auto_download_train"]
+
+# Calculate if train timetable needs to be downloaded.
+# If current folder doesnt exist, or hasnt been modified then
+# flag to be downloaded
+
+paths_to_check = [pl.Path(msn_file), pl.Path(mca_file)]
+each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
+
+if not all(each_file_checked):
+    try:
+        di.make_non_existent_folder(trn_data_output_dir)
+    except FileExistsError:
+        print(f"Directory {trn_data_output_dir} already exists")
+    download_train_timetable = True
+else:
+    # Find when the last download occured
+    # If > 7 days ago, download the data again
+    download_train_timetable = di.best_before(path=trn_data_output_dir,
+                                            number_of_days=7)
+
+# ---------------------------
+# Download train timetable data
+# ---------------------------
+
+# Note downloads if flag above, and flag in config, set as True.
+# Using individual data ingest functions (rather than
+# import_extract_delete_zip) as files are .txt not .csv.
+if download_train_timetable and auto_download_train:
+    files_to_download = [file for file, boolean
+                          in zip(paths_to_check, each_file_checked)
+                            if not boolean]
+    for file in files_to_download:
+        di.download_data(file)
+
 
 # Extract msn data
 msn_data = ttu.extract_msn_data(msn_file)
@@ -50,7 +102,7 @@ msn_df = msn_df.drop_duplicates(subset=['crs_code'])
 # Attach the coordinates for each train station
 station_locations = os.path.join(trn_data_output_dir, 'station_locations.csv')
 station_locations_df = pd.read_csv(
-    station_locations, usecols=[
+    di.path_or_url(station_locations), usecols=[
         'station_code', 'latitude', 'longitude'])
 
 # Join coordinates onto msn data
@@ -174,8 +226,7 @@ highly_serviced_train_stops_df = (
 
 # Get the naptan data and limit to only the columns we need
 naptan_df = di.get_stops_file(url=config["naptan_api"],
-                              dir=os.path.join(os.getcwd(),
-                                               "data",
+                              dir=os.path.join("data",
                                                "stops"))
 # Create Tiploc column
 naptan_df = dt.create_tiploc_col(naptan_df)
@@ -209,3 +260,5 @@ highly_serviced_train_stops_df.to_feather(
 highly_serviced_train_stops_df.to_csv(
     os.path.join(trn_data_output_dir,
                  'train_highly_serviced_stops.csv'), index=False)
+
+TrainLogger.info("Train timetable pipeline complete")
