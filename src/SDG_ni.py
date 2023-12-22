@@ -32,6 +32,7 @@ DATA_DIR = config["data_dir"]
 boundary_year = "2021"
 DEFAULT_CRS = config["default_crs"]
 
+
 # grabs northern ireland bus stops path
 ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
 
@@ -67,31 +68,15 @@ stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 # Get usual population for Northern Ireland (Census 2011 data)
 census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
 
-# Remove any commas if they are there
-census_ni_df = census_ni_df.replace(',','', regex=True)
-# Ensure pop columns are integers
-cols = ['All usual residents', 'Males', 'Females']
-census_ni_df[cols] = census_ni_df[cols].apply(pd.to_numeric, errors='coerce', axis=1)
-
 # Read in mid-year population estimates for Northern Ireland
 pop_files = pd.read_csv(os.path.join(CWD,
                                      "data", "population_estimates",
                                      "SAPE20-SA-Totals.csv"),
-                                    header=7)
-
-# Read in mid-year population estimates for Northern Ireland
-# Add in below for v1.1
-# ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
-#                                                  'data', 
-#                                                  'population_estimates', 
-#                                                  'NI',
-#                                                  'mid_year_estimates_ni.csv'), 
-#                                                  skiprows=7)
+                        header=7)
 
 # Filter to small area code and population year columns only
 estimate_cols = ["Area_Code", pop_year]
 estimate_pop_NI = pop_files[estimate_cols]
-#estimate_pop_NI = ni_mid_year_estimates[['Area_Code', pop_year]]
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
@@ -106,7 +91,7 @@ oa_to_sa_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
 
 
 # reads in the OA to SA lookupfile
-oa_to_la = pd.read_csv(oa_to_sa_lookup_path,
+sa_to_la = pd.read_csv(oa_to_sa_lookup_path,
                        usecols=["COA2001_1", "SA2011"])
 
 # getting the coordinates for all LA's
@@ -121,9 +106,9 @@ ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
                          "NI",
                          "NI_PWC_BNG.shp")))
 
-pwc_with_lookup = pd.merge(left=oa_to_la,
+pwc_with_lookup = pd.merge(left=sa_to_la,
                            right=ni_pop_wtd_centr_df,
-                           left_on=oa_to_la['COA2001_1'],
+                           left_on=sa_to_la['COA2001_1'],
                            right_on='OA_CODE',
                            how='left')
 
@@ -184,14 +169,10 @@ age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
 
-# below is for v1.1
-# new_age_df = dt.mid_year_age_estimates(age_df, estimate_pop_NI, pop_year)
-
 # gets northern ireland age list
 age_lst = config['ni_age_lst']
 
 # slices df to just age cols
-# replace with new_age_df in v1.1
 age_df_sliced = dt.slice_age_df(age_df, age_lst)
 
 # Create a list of tuples of the start and finish indexes for the age bins
