@@ -84,10 +84,10 @@ pop_files = pd.read_csv(di.path_or_url(os.path.join("data", "population_estimate
 # Read in mid-year population estimates for Northern Ireland
 # Add in below for v1.1
 # ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
-#                                                  'data', 
-#                                                  'population_estimates', 
+#                                                  'data',
+#                                                  'population_estimates',
 #                                                  'NI',
-#                                                  'mid_year_estimates_ni.csv'), 
+#                                                  'mid_year_estimates_ni.csv'),
 #                                                  skiprows=7)
 
 
