@@ -57,13 +57,13 @@ ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_disabili
 stops_geo_df = di.read_file_if_exists(stops_geo_df_path, gpd.read_file)
 ew_la_df = di.read_file_if_exists(ew_la_df_path, gpd.read_file)
 ew_df = di.read_file_if_exists(ew_df_path, gpd.read_file)
-ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
+ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di.feath_to_df('ew_disability_df', path))
 
 
 stops_geo_df = di.read_file_if_exists(stops_geo_df_path, gpd.read_file)
 ew_la_df = di.read_file_if_exists(ew_la_df_path, gpd.read_file)
 ew_df = di.read_file_if_exists(ew_df_path, gpd.read_file)
-ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
+ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di.feath_to_df('ew_disability_df', path))
 
 
 
