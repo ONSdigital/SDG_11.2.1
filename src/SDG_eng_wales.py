@@ -46,24 +46,6 @@ stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
 
 # Raise error if the file does not exist (should have been created by preprocessing)
 
-def read_file_if_exists(file_path, read_func):
-    """Checks if a file exists and reads it if it does 
-        using a function supplied. 
-        
-    Args:
-        file_path (str): A path to a file created by os.path.join
-        read_func (func): A function to read the file.
-
-    Raises:
-        FileNotFoundError: _description_
-
-    Returns:
-        _type_: _description_
-    """
-    if di._persistent_exists(file_path):
-        return read_func(file_path)
-    else:
-        raise FileNotFoundError(f"File not found: {file_path}. Run preprocessing first.")
 
 # Define paths to preprocessed data
 stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'stops_geo_df.geojson')
@@ -72,16 +54,16 @@ ew_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_df.geojson')
 ew_disability_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_disability_df.feather')
 
 # Create the dataframes
-stops_geo_df = read_file_if_exists(stops_geo_df_path, gpd.read_file)
-ew_la_df = read_file_if_exists(ew_la_df_path, gpd.read_file)
-ew_df = read_file_if_exists(ew_df_path, gpd.read_file)
-ew_disability_df = read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
+stops_geo_df = di.read_file_if_exists(stops_geo_df_path, gpd.read_file)
+ew_la_df = di.read_file_if_exists(ew_la_df_path, gpd.read_file)
+ew_df = di.read_file_if_exists(ew_df_path, gpd.read_file)
+ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
 
 
-stops_geo_df = read_file_if_exists(stops_geo_df_path, gpd.read_file)
-ew_la_df = read_file_if_exists(ew_la_df_path, gpd.read_file)
-ew_df = read_file_if_exists(ew_df_path, gpd.read_file)
-ew_disability_df = read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
+stops_geo_df = di.read_file_if_exists(stops_geo_df_path, gpd.read_file)
+ew_la_df = di.read_file_if_exists(ew_la_df_path, gpd.read_file)
+ew_df = di.read_file_if_exists(ew_df_path, gpd.read_file)
+ew_disability_df = di.read_file_if_exists(ew_disability_df_path, lambda path: di._feath_to_df('ew_disability_df', path))
 
 
 

@@ -854,3 +854,22 @@ def read_ni_age_df(path):
             age_df.rename(columns={col: number}, inplace=True)
 
     return age_df
+
+def read_file_if_exists(file_path, read_func):
+    """Checks if a file exists and reads it if it does 
+        using a function supplied. 
+        
+    Args:
+        file_path (str): A path to a file created by os.path.join
+        read_func (func): A function to read the file.
+
+    Raises:
+        FileNotFoundError: _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if persistent_exists(file_path):
+        return read_func(file_path)
+    else:
+        raise FileNotFoundError(f"File not found: {file_path}. Run preprocessing first.")
