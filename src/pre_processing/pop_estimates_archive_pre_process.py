@@ -9,7 +9,11 @@ from typing import List, Dict
 from duckdb import DuckDBPyConnection
 import logging
 import pandas as pd
+import yaml
 
+# load config
+with open("config.yaml") as yamlfile:
+    config = yaml.load(yamlfile, Loader=yaml.FullLoader)
 
 # Define the input and output file paths
 input_folder = "data/population_estimates/2002-2012"
@@ -168,6 +172,27 @@ def pivot_sex_tables(con, tables_dict: Dict[str, str], year: str):
             
     return {"persons": persons_sexes_table, "males": male_table, "females": female_table}
 
+def create_all_ages_col(con: DuckDBPyConnection, table_name: str, year: int, config: dict) -> None:
+    ages_col_str = [f'"{str(age)}"' for age in config["age_lst"]]
+    ages_col_str = "+".join(ages_col_str)
+
+    # SQL query to add a new column "All Ages"
+    add_column_query = f"ALTER TABLE {table_name} ADD COLUMN \"All Ages\" INTEGER"
+
+    # Execute the query
+    con.execute(add_column_query)
+    
+    # SQL query to update the "All Ages" column with the sum of the other columns
+    update_query = f"UPDATE {table_name} SET \"All Ages\" = {ages_col_str}"
+    
+    # Execute the query to update the "All Ages" column
+    con.execute(update_query)
+
+def rename_table_column(con, table_name, old_col_name, new_col_name):
+    
+    query = f"ALTER TABLE {table_name} RENAME COLUMN \"{old_col_name}\" TO \"{new_col_name}\";"
+    
+    con.execute(query)
 
 def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     """"Uses SQL to get the data for three sex groups and drops the sex column.
@@ -308,7 +333,22 @@ def main():
 
         # Pivot the dataframe to a wide format
         all_three_tables = pivot_sex_tables(con, all_three_tables, year)
-
+        
+        
+        for name in all_three_tables.keys():
+        
+            # Rename the 90+ col and get rid of leading zeros
+            rename_table_column(con, all_three_tables[name], "90", "90+")
+                        
+            for i in range(10):
+                old_column_name = f"{i:02d}"  # This will be '00', '01', '02', ..., '09'
+                new_column_name = str(i)  # This will be '0', '1', '2', ..., '9'
+                rename_table_column(con, all_three_tables[name], old_column_name, new_column_name)
+                          
+            create_all_ages_col(con, all_three_tables[name], year, config)
+        
+            
+            
         # Create the folder for the year, and return its path
         output_folder = create_output_folder(year)
 
