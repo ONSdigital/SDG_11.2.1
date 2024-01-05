@@ -98,7 +98,7 @@ estimate_pop_NI = pop_files[estimate_cols]
 
 # download shapefiles if switch set to cloud
 file_path_to_get = os.path.join("data", "LA_shp", boundary_year)
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
@@ -123,7 +123,7 @@ ni_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['N'])]
 file_path_to_get = os.path.join("data",
                                 'pop_weighted_centroids',
                                 "NI")
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # Get population weighted centroids into a dataframe
 ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile

@@ -137,7 +137,7 @@ PreProcessLogger.info('Processing local authority data')
 
 # download shapefiles if switch set to cloud
 file_path_to_get = os.path.join("data", "LA_shp", CALCULATION_YEAR)
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # Getting path for LA shapefile
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
@@ -248,7 +248,7 @@ PreProcessLogger.info('Processing population weighted centroids')
 file_path_to_get = (os.path.join('data',
                                 'pop_weighted_centroids',
                                 CENTROID_YEAR))
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
     os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))
