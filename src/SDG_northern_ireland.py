@@ -31,22 +31,25 @@ pop_year = str(config["calculation_year"])
 DATA_DIR = config["data_dir"]
 boundary_year = "2021"
 DEFAULT_CRS = config["default_crs"]
+OUTFILE = config['outfile_ni']
+OUTPUT_DIR = config["data_output"]
+CLOUD_LOCAL = config["cloud_local"]
 
 # grabs northern ireland bus stops path
-ni_bus_stops_path = os.path.join(CWD, "data", "stops", "NI", "bus_stops_ni.csv")
+ni_bus_stops_path = os.path.join("data", "stops", "NI", "bus_stops_ni.csv")
 
 # reads in NI bus stop data as pandas df
-ni_bus_stops = pd.read_csv(ni_bus_stops_path, index_col=0)
+ni_bus_stops = pd.read_csv(di.path_or_url(ni_bus_stops_path),
+                           index_col=0)
 
 # assigns capacity type for bus stops as low
 ni_bus_stops['capacity_type'] = 'low'
 
 # gets the northern ireland train stops data path
-ni_train_stops_path = os.path.join(
-    CWD, "data", "stops", "NI", "train_stops_ni.csv")
+ni_train_stops_path = os.path.join("data", "stops", "NI", "train_stops_ni.csv")
 
 # reads in the NI train stop data as pandas df
-ni_train_stops = pd.read_csv(ni_train_stops_path, index_col=0)
+ni_train_stops = pd.read_csv(di.path_or_url(ni_train_stops_path), index_col=0)
 
 # assigns capacity type for train stops as high
 ni_train_stops['capacity_type'] = 'high'
@@ -56,7 +59,7 @@ ni_train_stops['capacity_type'] = 'high'
 stops_df = ni_bus_stops.merge(
     ni_train_stops, on=['capacity_type', 'Latitude', 'Longitude'], how='outer')
 
-stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
+stops_geo_df = gs.geo_df_from_pd_df(pd_df=stops_df,
                                     geom_x='Longitude',
                                     geom_y='Latitude',
                                     crs='EPSG:4326')
@@ -65,7 +68,7 @@ stops_geo_df = di.geo_df_from_pd_df(pd_df=stops_df,
 stops_geo_df = dt.convert_east_north(stops_geo_df, 'Longitude', 'Latitude')
 
 # Get usual population for Northern Ireland (Census 2011 data)
-census_ni_df = pd.read_csv(os.path.join(CWD, "data", "KS101NI.csv"))
+census_ni_df = pd.read_csv(di.path_or_url(os.path.join("data", "KS101NI.csv")))
 
 # Remove any commas if they are there
 census_ni_df = census_ni_df.replace(',','', regex=True)
@@ -74,44 +77,53 @@ cols = ['All usual residents', 'Males', 'Females']
 census_ni_df[cols] = census_ni_df[cols].apply(pd.to_numeric, errors='coerce', axis=1)
 
 # Read in mid-year population estimates for Northern Ireland
-pop_files = pd.read_csv(os.path.join(CWD,
-                                     "data", "population_estimates",
-                                     "SAPE20-SA-Totals.csv"),
-                                    header=7)
+pop_files = pd.read_csv(di.path_or_url(os.path.join("data", "population_estimates",
+                                     "SAPE20-SA-Totals.csv")),
+                        header=7)
 
 # Read in mid-year population estimates for Northern Ireland
 # Add in below for v1.1
 # ni_mid_year_estimates = pd.read_csv(os.path.join(CWD,
-#                                                  'data', 
-#                                                  'population_estimates', 
+#                                                  'data',
+#                                                  'population_estimates',
 #                                                  'NI',
-#                                                  'mid_year_estimates_ni.csv'), 
+#                                                  'mid_year_estimates_ni.csv'),
 #                                                  skiprows=7)
+
 
 # Filter to small area code and population year columns only
 estimate_cols = ["Area_Code", pop_year]
 estimate_pop_NI = pop_files[estimate_cols]
 #estimate_pop_NI = ni_mid_year_estimates[['Area_Code', pop_year]]
 
+# download shapefiles if switch set to cloud
+file_path_to_get = os.path.join("data", "LA_shp", boundary_year)
+di.download_data(file_path_to_get)
+
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   boundary_year))
 
 # Need OA to SA lookup so we can map to SA for pop weighted centroids
-oa_to_sa_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+oa_to_sa_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "NI",
                                     "OA_to_SA.csv")
 
 
 # reads in the OA to SA lookupfile
-sa_to_la = pd.read_csv(oa_to_sa_lookup_path,
+sa_to_la = pd.read_csv(di.path_or_url(oa_to_sa_lookup_path),
                        usecols=["COA2001_1", "SA2011"])
 
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 ni_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['N'])]
+
+# download population weighted centroids dataframe
+file_path_to_get = os.path.join("data",
+                                'pop_weighted_centroids',
+                                "NI")
+di.download_data(file_path_to_get)
 
 # Get population weighted centroids into a dataframe
 ni_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
@@ -139,12 +151,12 @@ pwc_with_pop = pd.merge(left=census_ni_df,
 pwc_with_pop.drop(["SA Code", "OA_CODE", "COA2001_1"], axis=1, inplace=True)
 
 # SA to LA lookup
-sa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+sa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "NI",
                                     "11DC_Lookup_1_0.csv")
 
 # reads in the OA to LA lookupfile
-sa_to_la = pd.read_csv(sa_to_la_lookup_path)
+sa_to_la = pd.read_csv(di.path_or_url(sa_to_la_lookup_path))
 
 # merges the pwc with it's corresponding LA
 pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
@@ -161,9 +173,8 @@ pwc_with_pop_with_la.rename(
     inplace=True)
 
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join(CWD,
-                                         "data", "disability_status",
-                                         "qs303_ni.csv"), skiprows=5)
+disability_df = pd.read_csv(di.path_or_url(os.path.join("data", "disability_status",
+                                         "qs303_ni.csv")), skiprows=5)
 
 # Remove the first column because it's a repeat of SA code
 disability_df.drop(['SA'], axis=1, inplace=True)
@@ -179,7 +190,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # defining age data path
-age_path = os.path.join(CWD, "data", "census-2011-qs103ni.xlsx")
+age_path = os.path.join("data", "census-2011-qs103ni.xlsx")
 
 # reading in age data
 age_df = di.read_ni_age_df(age_path)
@@ -210,8 +221,7 @@ pwc_with_pop_with_la = pd.merge(
 # Unique list of LA's to iterate through
 list_local_auth = ni_la_file["LAD21NM"].unique()
 random_la = random.choice(list_local_auth)
-# ni_auth = [random_la]
-ni_auth = ['Fermanagh and Omagh']
+ni_auth = [random_la]
 
 total_df_dict = {}
 disab_df_dict = {}
@@ -344,10 +354,14 @@ final_result = pd.concat(all_results_dfs)
 final_result["Year"] = pop_year
 
 # output to CSV
-final_result.to_csv("NI_results.csv", index=False)
+output_path = os.path.join(OUTPUT_DIR, OUTFILE)
+final_result.to_csv(output_path, index=False)
 
 
 # end time
 end = time.time()
 
-print(f"This took {(end-start)} seconds to run")
+elapsed_time = end - start
+minutes, seconds = divmod(elapsed_time, 60)
+
+print(f"This took {int(minutes)} minutes and {round(seconds, 2)} seconds to run")

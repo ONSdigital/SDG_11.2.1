@@ -1,17 +1,24 @@
 # Core imports for this module
 import os
+import pathlib as pl
 import re
 import json
 from functools import lru_cache, reduce
 from time import perf_counter
 import yaml
-from datetime import datetime
+from datetime import datetime, timedelta
+import logging
+import glob
+
+# Google Cloud imports for this module
+from google.oauth2 import service_account
+from google.auth.transport.requests import Request
+from google.cloud import storage
 
 # Third party imports for this module
 import geopandas as gpd
 import pandas as pd
 import requests
-from shapely.geometry import Point
 from zipfile import ZipFile
 import pyarrow.feather as feather
 from typing import List, Dict, Optional, Union
@@ -19,6 +26,7 @@ import numpy as np
 
 # Defining Custom Types
 PathLike = Union[str, bytes, os.PathLike]
+MainLogger = logging.getLogger(__name__)
 
 # Config
 CWD = os.getcwd()
@@ -27,90 +35,124 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
     module = os.path.basename(__file__)
     print(f"Config loaded in {module}")
 DATA_DIR = config["data_dir"]
+CLOUD_LOCAL = config["cloud_local"]
 
-
-def any_to_pd(file_nm: str,
-              zip_link: str,
-              ext_order: List,
-              dtypes: Optional[Dict],
-              data_dir=DATA_DIR) -> pd.DataFrame:
-    """A function which ties together many other data ingest related functions
-    to import data.
-
-    Currently this function can handle the remote or local import of data
-    from zip (containing csv files), and csv files.
-
-    The main purpose is to check for locally stored persistent data
-    files and get that data into a dataframe for further processing.
-
-    Each time the function checks for download/extracted data so it
-    doesn't have to go through the process again.
-
-    Firstly the function checks for a feather file and loads that if
-    available.
-
-    If the feather is not available the function checks for a csv file,
-    then loads that if available.
-
-    If no csv file is available it checks for a zip file, from which to
-    extract the csv from.
-
-    If a zip file is not available locally it falls back to downloading
-    the zip file (which could contains other un-needed datasets)
-    then extracts the specified/needed data set (csv) and deletes the
-    now un-needed zip file.
-
-    This function should be used in place of pd.read_csv for example.
-
-    Parameters:
-        file_nm (str): The name of the file without extension.
-        zip_link (str): URL containing zipped data.
-        ext_order (list): The order in which to try extraction methods.
-        dtypes (Optional[Dict]): Datatypes of columns in the csv.
-
-    Returns:
-        pd.DataFrame: A dataframe of the data that has been imported.
+class GCPBucket:
     """
-    # Change directory into project root
-    os.chdir(CWD)
+    This class sets up an instance of a GCP storage client with the right credentials.
 
-    # Make the load order (lists are ordered) to prioritise
-    load_order = [f"{file_nm}.{ext}" for ext in ext_order]
-    # make a list of functions that apply to these files
-    load_funcs = {"feather": _feath_to_df,
-                  "csv": _csv_to_df,
-                  "zip": _import_extract_delete_zip}
-    # create a dictionary ready to dispatch functions
-    # load_func_dict = {f"{file_name}": load_func
-
-    # Iterate through files that might exist
-    for i in range(len(load_order)):
-        # Indexing with i because the list loading in the wrong order
-        data_file_nm = load_order[i]
-        data_file_path = _make_data_path(data_dir, data_file_nm)
-        if _persistent_exists(data_file_path):
-            # Check if each persistent file exists
-            # load the persistent file by dispatching the correct function
-            if dtypes and ext_order[i] == "csv":
-                pd_df = load_funcs[ext_order[i]](file_nm,
-                                                 data_file_path,
-                                                 dtypes=dtypes)
-            else:
-                pd_df = load_funcs[ext_order[i]](file_nm,
-                                                 data_file_path)
-            return pd_df
-        continue  # None of the persistent files has been found.
-    # Continue onto the next file type
-    # A zip must be downloaded, extracted, and turned into pd_df
-    pd_df = load_funcs[ext_order[i]](file_nm,
-                                     data_file_path,
-                                     persistent_exists=False,
-                                     zip_url=zip_link,
-                                     dtypes=dtypes)
-    return pd_df
+    The methods either download a file from the bucket or generate a signed url for a file.
+    """
+    def __init__(self):
+        self.credentials = service_account.Credentials.from_service_account_file(glob.glob('secrets/*.json')[0])
+        self.client = storage.Client(credentials=self.credentials)
+        self.bucket_name = '11-2-1-all-data'
+        self.bucket = self.client.bucket(self.bucket_name)
 
 
-def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
+    def download_file(self, file_name, destination_file_name):
+        """Downloads a blob from the bucket."""
+
+        blob = self.bucket.blob(file_name)
+
+        # Create the folder (if it doesn't exist)
+        folder_path = os.path.dirname(destination_file_name)
+        make_non_existent_folder(folder_path)
+
+        blob.download_to_filename(destination_file_name)
+
+        print(
+            f"Blob {self.client} downloaded to {destination_file_name}."
+            )
+
+    def generate_signed_url(self, object_name):
+        """ This will generate a signed URL that is valid for 5 minutes.
+
+        The URL should be able to be used by our data ingest functions
+            to download any file."""
+        expiration = datetime.utcnow() + timedelta(hours=1)
+        url = self.bucket.blob(object_name).generate_signed_url(
+            expiration,
+            method='GET',
+            credentials=self.credentials,
+        )
+        return url
+
+    def get_file_list(self):
+        """This will return a list of all the files in the bucket, as "blobs"."""
+
+        files = self.bucket.list_blobs()
+
+        return files
+
+    def get_file_names(self):
+        """Prints and returns a list of all the file names in the bucket.
+
+        Returns:
+            List: List of file names in the bucket.
+        """
+
+        files = self.bucket.list_blobs()
+        file_names = [file.name for file in files]
+
+        print(f"Found {len(file_names)} files in the bucket.")
+
+        #for file in file_names:
+            #print(file)
+
+        return file_names
+
+bucket = GCPBucket()
+
+def path_or_url(file_path):
+    """Function to read data depending on config if cloud or local.
+
+    Args:
+        file_path (str): File path you want to read
+    
+    Returns:
+        file_path or url depending if cloud or local
+    """
+    if CLOUD_LOCAL == "cloud":
+        url = bucket.generate_signed_url(file_path)
+        return url
+    elif CLOUD_LOCAL == "local":
+        return file_path
+    else:
+        MainLogger.error("Cloud or local configuration is incorrect")
+        raise ImportError
+    
+def download_data(file_path_to_get):
+    """This function downloads data from the cloud so we can process shapefiles.
+
+    Args:
+        file_path_to_get (str): the filepath/folder we want to download data from
+    
+    Returns:
+        None, it will download the data locally. 
+    """
+    if CLOUD_LOCAL=="cloud":
+        lst = bucket.get_file_names()
+        file_paths = [x for x in lst if str(file_path_to_get) in x]
+        for file in file_paths:
+            bucket.download_file(file, os.path.join(file))
+    else:
+        pass
+
+def make_non_existent_folder(folder_path: pl.Path) -> None:
+    """Creates a folder if it doesn't exist."""
+    # Check if folder_path is str
+    if isinstance(folder_path, str):
+        folder_path = pl.Path(folder_path)
+    
+    if not folder_path.exists():
+        MainLogger.info(f"Folder {folder_path} does not exist. Creating it now.")
+        folder_path.mkdir(parents=True)
+        # Add a .gitkeep file to the folder so it gets pushed to GitHub
+        (folder_path / ".gitkeep").touch()
+    return None
+
+def feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     """Feather reading function used by the any_to_pd function.
 
     Args:
@@ -134,7 +176,7 @@ def _feath_to_df(file_nm: str, feather_path: PathLike) -> pd.DataFrame:
     return pd_df
 
 
-def _csv_to_df(
+def csv_to_df(
         file_nm: str,
         csv_path: PathLike,
         dtypes: Optional[Dict],
@@ -163,6 +205,7 @@ def _csv_to_df(
     if dtypes:
         cols = list(dtypes.keys())
         tic = perf_counter()
+        
         pd_df = pd.read_csv(csv_path, usecols=cols,
                             dtype=dtypes, encoding_errors="ignore")
         toc = perf_counter()
@@ -171,11 +214,11 @@ def _csv_to_df(
         pd_df = pd.read_csv(csv_path)
     # Calling the pd_to_feather function to make a persistent feather file
     # for faster retrieval
-    _pd_to_feather(pd_df, csv_path)
+    pd_to_feather(pd_df, csv_path)
     return pd_df
 
 
-def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
+def import_extract_delete_zip(file_nm: str, zip_path: PathLike,
                                persistent_exists=True,
                                zip_url=None,
                                *cols,
@@ -197,17 +240,17 @@ def _import_extract_delete_zip(file_nm: str, zip_path: PathLike,
     """
     if not persistent_exists:
         # checking if a persistent zip exists to save downloading
-        _grab_zip(file_nm, zip_url, zip_path)
+        grab_zip(file_nm, zip_url, zip_path)
 
     csv_nm = file_nm + ".csv"
     csv_path = _make_data_path("data", csv_nm)
-    _extract_zip(file_nm, csv_nm, zip_path, csv_path)
-    _delete_junk(file_nm, zip_path)
-    pd_df = _csv_to_df(file_nm, csv_path, dtypes)
+    extract_zip(file_nm, csv_nm, zip_path, csv_path)
+    delete_junk(file_nm, zip_path)
+    pd_df = csv_to_df(file_nm, csv_path, dtypes)
     return pd_df
 
 
-def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
+def grab_zip(file_nm: str, zip_link, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to download
     a zip file from the URI specified in the the zip_link
     parameter.
@@ -225,7 +268,7 @@ def _grab_zip(file_nm: str, zip_link, zip_path: PathLike):
         output_file.write(r.content)
 
 
-def _extract_zip(
+def extract_zip(
         file_nm: str,
         csv_nm: str,
         zip_path: PathLike,
@@ -250,7 +293,7 @@ def _extract_zip(
             csv_nm
 
 
-def _delete_junk(file_nm: str, zip_path: PathLike):
+def delete_junk(file_nm: str, zip_path: PathLike):
     """Used by _import_extract_delete_zip function to delete the
     zip file after it was downloaded and the needed data extracted
     it.
@@ -285,7 +328,7 @@ def _make_data_path(*data_dir_files: str) -> PathLike:
 
 
 @lru_cache
-def _persistent_exists(persistent_path):
+def persistent_exists(persistent_path):
     """Checks if a persistent file or directory already exists or not.
 
     Args:
@@ -305,7 +348,7 @@ def _persistent_exists(persistent_path):
         return False
 
 
-def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
+def pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
     """Used by the any_to_pd function to writes a Pandas dataframe
     to feather for quick reading and retrieval later.
 
@@ -323,25 +366,6 @@ def _pd_to_feather(pd_df: pd.DataFrame, current_file_path: PathLike):
         print(f"Writing Pandas dataframe to feather at {feather_path}")
         feather.write_feather(pd_df, feather_path)
     print("Feather already exists")
-
-
-def geo_df_from_pd_df(pd_df, geom_x, geom_y, crs):
-    """Function to create a Geo-dataframe from a Pandas DataFrame.
-
-    Arguments:
-        pd_df (pd.DataFrame): a pandas dataframe object to be converted.
-        geom_x (str):name of the column that contains the longitude data.
-        geom_y (str):name of the column that contains the latitude data.
-        crs (str): the coordinate reference system required.
-
-    Returns:
-        Geopandas Dataframe
-    """
-    geometry = [Point(xy) for xy in zip(pd_df[geom_x], pd_df[geom_y])]
-    geo_df = gpd.GeoDataFrame(pd_df, geometry=geometry)
-    geo_df.crs = crs
-    geo_df.to_crs('EPSG:27700', inplace=True)
-    return geo_df
 
 
 def get_and_save_geo_dataset(url, localpath, filename):
@@ -423,11 +447,7 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         region_dfs_dict = {}
         for region in region_dict:
             print(f"Reading {region} Excel file")
-            xls_path = os.path.join(
-                DATA_DIR,
-                "population_estimates",
-                str(pop_year),
-                region_dict[region])
+            xls_path = region_dict[region]
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
@@ -500,27 +520,48 @@ def get_shp_abs_path(dir):
     return absolute_path
 
 
-def get_oa_la_csv_abspath(dir):
+def get_abspath_or_list_files(dir, list_or_abs, extension):
     """Takes a directory as str and returns the absolute path of
     output area csv file.
 
     Args:
         dir (str): Path created with os.path.join.
+        list_or_abs (str): either "list" or "abs" to return either
+            a list of paths/urls or a single path/url
+        extension (str): a file extension, e.g. "csv" to search for
+            files of that type in the specified directory
 
     Returns:
-        str: Absolute path of the csv file of the Output area.
+        Union [str, List]: Absolute path or list of the paths of file of the
+            the given extension in the directory provided.
     """
-    # Add check that the directory exists and is not empty
-    if not os.path.exists(dir) or len(os.listdir(dir)) == 0:
-        raise ValueError(f"Directory {dir} does not exist or is empty")
-    
+    make_non_existent_folder(dir)
     files = os.listdir(dir)
-    csv_files = [file for file in files if file.endswith(".csv")]
-    csv_file = csv_files[0]
+    csv_files = [file for file in files if file.endswith(f".{extension}")]
+    if csv_files:
+        if list_or_abs == "list":
+            list_of_paths = [os.path.join(dir, csv_file)
+                             for csv_file in csv_files]
+            return list_of_paths
+        elif list_or_abs == "abs":
+            csv_file = csv_files[0]
+            absolute_path = os.path.join(dir, csv_file)
+            return absolute_path
+    else:
+        blob_list = list(bucket.bucket.list_blobs(prefix=dir))
+        csv_files = [file for file in blob_list if file.name.endswith(f".{extension}")]
+        if list_or_abs == "list":
+            list_of_urls = [path_or_url(csv_file.name) for csv_file in csv_files]
+            return list_of_urls
+        elif list_or_abs == "abs":
+            csv_file = csv_files[0].name
+            absolute_path = path_or_url(csv_file)
+            return absolute_path
+       
 
-    absolute_path = os.path.join(dir, csv_file)
+  
 
-    return absolute_path
+    
 
 
 def _get_stops_from_api(url, file_name):
@@ -538,6 +579,13 @@ def _get_stops_from_api(url, file_name):
 
     # gets content and then writes to csv
     url_content = r.content
+    
+    # if the folder doesn't exist create it
+    folder_path = os.path.dirname(file_name)
+    if not persistent_exists(folder_path):
+        make_non_existent_folder(folder_path)
+    
+    # write out the file
     csv_file = open(file_name, 'wb')
     csv_file.write(url_content)
     csv_file.close()
@@ -595,7 +643,7 @@ def save_latest_stops_as_feather(file_name):
     return output_path
 
 
-def _dl_stops_make_df(today, url):
+def dl_stops_make_df(today, url):
     """Downloads the latest data from api, saves as csv & feather, returns df
 
     Args:
@@ -645,14 +693,15 @@ def get_stops_file(url, dir):
                                 "stops",
                                 "Stops.feather")
     # Check that the feather exists
-    if not _persistent_exists(feather_path):
-        stops_df = _dl_stops_make_df(today, url)
+    if not persistent_exists(feather_path):
+        print(f"Downloading stops file from {url}")
+        stops_df = dl_stops_make_df(today, url)
     else:  # does exist
         latest_date = _get_latest_stop_file_date(dir)
         if today - latest_date < 28:
             stops_df = pd.read_feather(feather_path)
         else:
-            stops_df = _dl_stops_make_df(today, url)
+            stops_df = dl_stops_make_df(today, url)
 
     return stops_df
 
@@ -671,7 +720,7 @@ def read_usual_pop_scotland(path: str):
         pd.DataFrame the usual population dataframe
     """
     # reads in data and crops of header and footer
-    df = pd.read_csv(path,
+    df = pd.read_csv(path_or_url(path),
                      header=4,
                      index_col=0,
                      skipfooter=4)
@@ -704,7 +753,7 @@ def read_urb_rur_class_scotland(urb_rur_path):
     Returns:
         pd.DataFrame: the classfication dataframe
     """
-    urb_rur = pd.read_csv(urb_rur_path, usecols=["OA2011", "UR6_2013_2014"])
+    urb_rur = pd.read_csv(path_or_url(urb_rur_path), usecols=["OA2011", "UR6_2013_2014"])
 
     urb_rur["urb_rur_class"] = np.where(
         (urb_rur["UR6_2013_2014"] == 1) | (
@@ -719,11 +768,11 @@ def read_urb_rur_ni(urb_rur_path):
     as <10,000.
     Args:
         path (str): the path where the file exists
-        
+
     Returns:
         pd.DataFrame: the urban rural classification dataframe
     """
-    urb_rur = pd.read_csv(urb_rur_path, skiprows=3)
+    urb_rur = pd.read_csv(path_or_url(urb_rur_path), skiprows=3)
     urb_rur = urb_rur[['SA2011_Code', 'Settlement Classification Band']]
 
     # split classification bands into urban and rural
@@ -773,7 +822,7 @@ def read_scottish_age(path):
 
     """
     # read in scottish file
-    age_scotland_df = pd.read_csv(path, skiprows=4)
+    age_scotland_df = pd.read_csv(path_or_url(path), skiprows=4)
 
     # dropping first row as this is the whole of scotland
     age_scotland_df = age_scotland_df.iloc[1:-4, :]
@@ -793,7 +842,7 @@ def read_ni_age_df(path):
         pd.DataFrame the age_df dataframe
     """
     # read in age df
-    age_df = pd.read_excel(path,
+    age_df = pd.read_excel(path_or_url(path),
                            sheet_name="SA",
                            header=5,
                            index_col="SA Code")

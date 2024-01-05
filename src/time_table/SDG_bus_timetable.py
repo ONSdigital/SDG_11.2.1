@@ -1,19 +1,18 @@
 # Core modules
 import os
 import sys
+import logging
 
 # Third party modules
 import yaml
 import pandas as pd
 
-# # Getting the parent directory of the current file
-# current = os.path.dirname(os.path.realpath(__file__))
-# parent = os.path.dirname(current)
-# # Appending to path so that we can import modules from the src folder
-# sys.path.append(parent)
 
-# add the parent directory to the path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# # Getting the parent directory of the current file
+current = os.path.dirname(os.path.realpath(__file__))
+parent = os.path.dirname(current)
+# Appending to path so that we can import modules from the src folder
+sys.path.append(parent)
 
 # Our modules
 import data_ingest as di # noqa E402
@@ -21,6 +20,18 @@ import data_transform as dt # noqa E402
 
 # Get current working directory
 CWD = os.getcwd()
+
+# Create logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create a console handler
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Add the console handler to the logger
+logger.addHandler(console_handler)
+
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
@@ -31,7 +42,7 @@ with open(os.path.join(CWD, "config.yaml")) as yamlfile:
 # Parameters
 bus_timetable_zip_link = config["eng_bus_timetable_data"]
 bus_dataset_name = 'itm_all_gtfs'
-bus_data_output_dir = os.path.join(CWD, 'data', 'england_bus_timetable')
+bus_data_output_dir = os.path.join('data', 'england_bus_timetable')
 zip_path = os.path.join(bus_data_output_dir, bus_dataset_name)
 required_files = ['stop_times', 'trips', 'calendar']
 auto_download_bus = config["auto_download_bus"]
@@ -47,11 +58,11 @@ late_timetable_hour = config["late_timetable_hour"]
 files_to_check = [f"{file}.txt" for file in required_files]
 paths_to_check = [os.path.join(bus_data_output_dir, file)
                   for file in files_to_check]
-each_file_checked = [di._persistent_exists(path) for path in paths_to_check]
+each_file_checked = [di.persistent_exists(path) for path in paths_to_check]
 
 if not all(each_file_checked):
     try:
-        os.makedirs(bus_data_output_dir)
+        di.make_non_existent_folder(bus_data_output_dir)
     except FileExistsError:
         print(f"Directory {bus_data_output_dir} already exists")
     download_bus_timetable = True
@@ -69,7 +80,7 @@ else:
 # Using individual data ingest functions (rather than
 # import_extract_delete_zip) as files are .txt not .csv.
 if download_bus_timetable and auto_download_bus:
-    di._grab_zip(file_nm=bus_dataset_name,
+    di.grab_zip(file_nm=bus_dataset_name,
                  zip_link=bus_timetable_zip_link,
                  zip_path=zip_path)
 
@@ -77,13 +88,13 @@ if download_bus_timetable and auto_download_bus:
     for file in required_files:
         file_extension_name = f"{file}.txt"
 
-        di._extract_zip(file_nm=bus_dataset_name,
+        di.extract_zip(file_nm=bus_dataset_name,
                         csv_nm=file_extension_name,
                         zip_path=zip_path,
                         csv_path=bus_data_output_dir)
 
     # Remove zip file
-    di._delete_junk(file_nm=bus_dataset_name,
+    di.delete_junk(file_nm=bus_dataset_name,
                     zip_path=zip_path)
 
 # ------------------------------------------
@@ -101,12 +112,12 @@ if download_bus_timetable and auto_download_bus:
 # Stop times
 feath_ = os.path.join(bus_data_output_dir, "stop_times.feather")
 if os.path.exists(feath_):
-    stop_times_df = di._feath_to_df("stop_times", feath_)
+    stop_times_df = di.feath_to_df("stop_times", feath_)
 else:
     stop_times_types = {'trip_id': 'category',
                         'departure_time': 'object', 'stop_id': 'category'}
 
-    stop_times_df = di._csv_to_df(file_nm='stop_times',
+    stop_times_df = di.csv_to_df(file_nm='stop_times',
                                   csv_path=os.path.join(
                                       bus_data_output_dir, 'stop_times.txt'),
                                   dtypes=stop_times_types)
@@ -114,12 +125,12 @@ else:
 # trips
 feath_ = os.path.join(bus_data_output_dir, "trips.feather")
 if os.path.exists(feath_):
-    trips_df = di._feath_to_df("trips", feath_)
+    trips_df = di.feath_to_df("trips", feath_)
 else:
     trips_types = {'route_id': 'category',
                    'service_id': 'category', 'trip_id': 'category'}
 
-    trips_df = di._csv_to_df(
+    trips_df = di.csv_to_df(
         file_nm='trips',
         csv_path=os.path.join(
             bus_data_output_dir,
@@ -131,7 +142,7 @@ else:
 # we are only interested in weekday trips for highly serviced stops
 feath_ = os.path.join(bus_data_output_dir, "calendar.feather")
 if os.path.exists(feath_):
-    calendar_df = di._feath_to_df("calendar", feath_)
+    calendar_df = di.feath_to_df("calendar", feath_)
 else:
     calendar_types = {
         'service_id': 'category',
@@ -143,7 +154,7 @@ else:
         'start_date': 'object',
         'end_date': 'object'}
 
-    calendar_df = di._csv_to_df(file_nm='calendar',
+    calendar_df = di.csv_to_df(file_nm='calendar',
                                 csv_path=os.path.join(
                                     bus_data_output_dir, 'calendar.txt'),
                                 dtypes=calendar_types)
@@ -235,7 +246,7 @@ bus_highly_serviced_stops = bus_frequencies_df[(
 
 # Read in naptan data
 stops_df = di.get_stops_file(url=config["naptan_api"],
-                             dir=os.path.join(os.getcwd(), "data", "stops"))
+                             dir=os.path.join("data", "stops"))
 
 # Add easting and northing
 bus_highly_serviced_stops = bus_highly_serviced_stops.merge(
@@ -257,3 +268,7 @@ bus_highly_serviced_stops.to_csv(
         bus_data_output_dir,
         'bus_highly_serviced_stops.csv'),
     index=False)
+
+# Log finish of pipeline
+# 
+logger.info("Bus timetable pipeline complete")

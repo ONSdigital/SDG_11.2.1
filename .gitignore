@@ -159,6 +159,10 @@ data/**
 !data/**/.gitkeep
 .SDG_11.2.1
 
+# Secrets folder
+secrets/*
+!secrets/.gitkeep
+
 # VS Code stuff
 workspace.code-workspace
 sdg-11-2-1.code-workspace

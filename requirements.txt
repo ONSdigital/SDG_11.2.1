@@ -20,4 +20,6 @@ openpyxl
 sphinx_rtd_theme
 convertbng
 pre-commit
+google-cloud-storage
+google-auth
 mkdocs

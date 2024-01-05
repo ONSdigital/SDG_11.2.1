@@ -15,13 +15,12 @@ import data_transform as dt
 import data_output as do
 
 # Data object import
-from main import stops_geo_df
+# from main import stops_geo_df
 
 # timings
 start = time.time()
 # get current working directory
 CWD = os.getcwd()
-# TODO: find out best practice on CWD
 
 # Load config
 with open(os.path.join(CWD, "config.yaml")) as yamlfile:
@@ -34,6 +33,7 @@ DEFAULT_CRS = config["default_crs"]
 DATA_DIR = config["data_dir"]
 OUTFILE = config['outfile_sc']
 OUTPUT_DIR = config["data_output"]
+ENG_WALES_PREPROCESSED_OUTPUT = config["eng_wales_preprocessed_output"]
 
 pop_year = "2011"
 boundary_year = "2021"
@@ -46,18 +46,28 @@ boundary_year = "2021"
 # stops_geo_df = dt.add_stop_capacity_type(stops_df=stops_geo_df)
 
 # get usual population for scotland
-usual_pop_path = os.path.join(CWD, "data", "KS101SC.csv")
+usual_pop_path = os.path.join("data", "KS101SC.csv")
 sc_usual_pop = di.read_usual_pop_scotland(usual_pop_path)
 
+# download shapefiles if switch set to cloud
+file_path_to_get = os.path.join("data", "LA_shp", boundary_year)
+di.download_data(file_path_to_get)
+
 # getting path for .shp file for LA's
-uk_la_path = di.get_shp_abs_path(dir=os.path.join(os.getcwd(),
-                                                  "data",
+uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
                                                   "LA_shp",
                                                   boundary_year))
 
 # getting the coordinates for all LA's
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 sc_la_file = uk_la_file[uk_la_file["LAD21CD"].str[0].isin(['S'])]
+
+# download population weighted centroids dataframe
+file_path_to_get = os.path.join("data",
+                                'pop_weighted_centroids',
+                                "scotland",
+                                pop_year)
+di.download_data(file_path_to_get)
 
 # Get population weighted centroids into a dataframe
 sc_pop_wtd_centr_df = (di.geo_df_from_geospatialfile
@@ -76,12 +86,12 @@ pwc_with_pop = pd.merge(left=sc_usual_pop,
                         how="left")
 
 # OA to LA lookup
-oa_to_la_lookup_path = os.path.join(CWD, "data", "oa_la_mapping",
+oa_to_la_lookup_path = os.path.join("data", "oa_la_mapping",
                                     "scotland", boundary_year,
                                     "PCD_OA_LSOA_MSOA_LAD_NOV21_UK_LU.csv")
 
 # reads in the OA to LA lookupfile
-oa_to_la = pd.read_csv(oa_to_la_lookup_path, encoding="ISO-8859-1",
+oa_to_la = pd.read_csv(di.path_or_url(oa_to_la_lookup_path), encoding="ISO-8859-1",
                        usecols=["oa11cd", "ladnm"])
 
 # dedeup OA to LA as original data includes postcodes etc..
@@ -95,7 +105,7 @@ pwc_with_pop_with_la = pd.merge(left=pwc_with_pop,
                                 how="left")
 
 # read in urban/rural classification
-urb_rur_path = os.path.join(CWD, "data", "urban_rural", "scotland",
+urb_rur_path = os.path.join("data", "urban_rural", "scotland",
                             "oa2011_urban_rural_2013_2014.csv")
 
 urb_rur = di.read_urb_rur_class_scotland(urb_rur_path)
@@ -113,10 +123,16 @@ pwc_with_pop_with_la.rename(
         "All people": "pop_count"},
     inplace=True)
 
+# read stops_geo_df
+
+stops_geo_df_path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT,
+                                 'stops_geo_df.geojson')
+if di.persistent_exists(stops_geo_df_path):
+    stops_geo_df = gpd.read_file(stops_geo_df_path)
+
 # Read disability data for disaggregations later
-disability_df = pd.read_csv(os.path.join(CWD,
-                                         "data", "disability_status",
-                                         "QS303_scotland.csv"))
+disability_df = pd.read_csv(di.path_or_url(os.path.join("data", "disability_status",
+                                         "QS303_scotland.csv")))
 # drop the column "geography code" as it seems to be a duplicate of "geography"
 # also "All categories: Long-term health problem or disability" is not needed,
 # nor is "date" as we know estimates are for 2011.
@@ -135,7 +151,7 @@ replacements = {
 disability_df.rename(columns=replacements, inplace=True)
 
 # age variable
-age_scotland_path = os.path.join(CWD, "data", "QS103_scotland_age.csv")
+age_scotland_path = os.path.join("data", "QS103_scotland_age.csv")
 
 age_scotland_df = di.read_scottish_age(age_scotland_path)
 
@@ -291,7 +307,7 @@ for local_auth in sc_auth:
     total_df_dict[local_auth] = la_results_df_out
 
     # Urban/Rural disaggregation
-    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df, 
+    urb_rur_df_dict = dt.urban_rural_results(only_la_pwc_with_pop, pop_in_poly_df,
                                             urb_rur_df_dict, local_auth)
 
     # Disability disaggregation - get disability results in disab_df_dict

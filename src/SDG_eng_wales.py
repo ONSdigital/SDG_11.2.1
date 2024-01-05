@@ -96,8 +96,8 @@ if __name__ == "__main__":
     # eventually will iterate through all LA's
     random_la = random.choice(list_local_auth)
 
-    #list_local_auth = [random_la]
-    list_local_auth = ['Hastings']
+    list_local_auth = [random_la]
+
 
     # define output dicts to capture dfs
     total_df_dict = {}

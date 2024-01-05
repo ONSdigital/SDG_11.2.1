@@ -10,6 +10,9 @@ outfile_ni: "NI_results.csv"
 outfile_sc: "SC_results.csv"
 eng_wales_preprocessed_output: "./data/eng_wales_preprocessed"
 
+# Switch
+cloud_local: "cloud"
+
 # Mapping - geospatial
 default_crs: 'EPSG:27700'
 
@@ -35,6 +38,7 @@ NI_bus_stops_data: 'https://www.opendatani.gov.uk/dataset/495c6964-e8d2-4bf1-994
 NI_train_stops_data: 'https://www.opendatani.gov.uk/dataset/5f27f171-b8aa-4511-983d-6df6e87bbf20/resource/967e32c3-1cc2-4aee-b485-92121a32eb4d/download/nir-rail-stations.csv'
 eng_bus_timetable_data: 'https://data.bus-data.dft.gov.uk/timetable/download/gtfs-file/all/'
 auto_download_bus: true
+auto_download_train: true
 early_timetable_hour: 06
 late_timetable_hour: 20
 high_cap_buffer: 1000
@@ -47,7 +51,7 @@ station_locations: 'station_locations.csv'
 bus_in_dir : 'data/england_bus_timetable/'
 train_in_dir : 'data/england_train_timetable/'
 
-# Ages 
+# Ages
 age_lst:
 - '0'
 - '1'
