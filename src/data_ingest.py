@@ -431,15 +431,16 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
+            total_cols = ["OA11CD",
+                    "All Ages"].append(config["age_lst"])
             total_pop = pd.read_excel(
-                xlFile, f"Mid-{pop_year} Persons", header=4)
+                xlFile, f"Mid-{pop_year} Persons", header=4, usecols=total_cols)
             males_pop = pd.read_excel(
                 xlFile,
                 f"Mid-{pop_year} Males",
                 header=4,
                 usecols=[
                     "OA11CD",
-                    "LSOA11CD",
                     "All Ages"])
             fem_pop = pd.read_excel(
                 xlFile,
@@ -447,7 +448,6 @@ def get_whole_nation_pop_df(pop_files, pop_year):
                 header=4,
                 usecols=[
                     "OA11CD",
-                    "LSOA11CD",
                     "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
             total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)

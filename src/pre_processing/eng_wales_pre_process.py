@@ -206,7 +206,7 @@ ew_pop_files = os.listdir(os.path.join(os.getcwd(),
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
 
 # Keep only required columns
-ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
+# ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
 
 # Group and reformat age data
 # Get a list of ages from config
