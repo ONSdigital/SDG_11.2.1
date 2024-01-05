@@ -279,7 +279,7 @@ def write_table_to_xlsx(con: DuckDBPyConnection,
         for t_name, table in table_dict.items():
             tab_name = f"Mid-{year} {t_name.title()}"
             df = con.execute(f"SELECT * FROM {table}").fetch_df()
-            df.to_excel(writer, sheet_name=tab_name)
+            df.to_excel(writer, sheet_name=tab_name, index=False, startrow=4)
     
 
 def main():
@@ -295,7 +295,7 @@ def main():
     # and return the name of the temp table
     temp_table_names = []
     duckdbLogger.info("Starting to load data for each year into a temp table")
-    for year in years:
+    for year in years[:1]:
         duckdbLogger.info(f"Extracting data for year {year}")
 
         year_col=f"Population_{year}"
