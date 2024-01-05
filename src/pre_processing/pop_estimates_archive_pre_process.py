@@ -2,13 +2,13 @@
 # The archived data is in a different format than the current data. It has many years's data in one file for each region.
 # Also the data is a long format, so it needs to be pivoted to a wide format."""
 
-import re
 import pathlib as pl
 import duckdb
 import uuid
 from typing import List, Dict
 from duckdb import DuckDBPyConnection
 import logging
+import pandas as pd
 
 
 # Define the input and output file paths
@@ -19,7 +19,7 @@ input_folder = "data/population_estimates/2002-2012"
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelname)s %(message)s")
 
 # Create logger
-logger = logging.getLogger(__name__)
+duckdbLogger = logging.getLogger(__name__)
 
 db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 
@@ -54,10 +54,11 @@ column_types = {
     "Population_2012": "INTEGER"
 }
 
+
 def make_non_existent_folder(folder_path: pl.Path) -> None:
     """Creates a folder if it doesn't exist."""
     if not folder_path.exists():
-        logger.info(f"Folder {folder_path} does not exist. Creating it now.")
+        duckdbLogger.info(f"Folder {folder_path} does not exist. Creating it now.")
         folder_path.mkdir(parents=True)
         # Add a .gitkeep file to the folder so it gets pushed to GitHub
         (folder_path / ".gitkeep").touch()
@@ -80,7 +81,7 @@ def load_all_csvs(con, csv_folder, output_table_name):
     if not pl.Path(csv_folder).exists():
         raise ValueError(f"Folder {csv_folder} does not exist.")
 
-    logger.info(f"Loading all csv files")
+    duckdbLogger.info(f"Loading all csv files")
     
     load_csv_query = f"""
     CREATE TABLE IF NOT EXISTS {output_table_name}
@@ -91,7 +92,7 @@ def load_all_csvs(con, csv_folder, output_table_name):
     #
     con.execute(load_csv_query)
 
-    logger.info(f"Finished loading all csv files in {csv_folder} into {output_table_name}")
+    duckdbLogger.info(f"Finished loading all csv files in {csv_folder} into {output_table_name}")
     
     return output_table_name
 
@@ -108,7 +109,7 @@ def query_database(con, query, year=None):
     # Create the temporary table and insert the query results
     con.execute(f"CREATE TEMPORARY TABLE {table_name} AS {query}")
 
-    logger.info(f"Created temporary table. Returning table name as {table_name}")
+    duckdbLogger.info(f"Created temporary table. Returning table name as {table_name}")
     
     # Return the name of the temporary table
     return table_name
@@ -126,74 +127,46 @@ def query_database_as_view(con: DuckDBPyConnection, query: str, view_name: str) 
     # Return the updated view object
     return con.view(view_name)
 
-# def extract_region(file_name):
-#     # Extact the region name from the file name
-#     region_pattern = r"unformatted-(.*?)-mid2002"
-#     match = re.search(region_pattern, file_name)
-
-# Define an empty dictionary to store the dataframes for each year
-year_data = {}
-
-# Define the column name for the year
-year_cols = [f"Population_{year}" for year in years]
-
-column_types = {
-    "OA11CD": "TEXT",
-    "LAD11CD": "TEXT",
-    "Age": "TEXT",
-    "Sex": "TEXT",
-    "Population_2002": "INTEGER",
-    "Population_2003": "INTEGER",
-    "Population_2004": "INTEGER",
-    "Population_2005": "INTEGER",
-    "Population_2006": "INTEGER",
-    "Population_2007": "INTEGER",
-    "Population_2008": "INTEGER",
-    "Population_2009": "INTEGER",
-    "Population_2010": "INTEGER",
-    "Population_2011": "INTEGER",
-    "Population_2012": "INTEGER"
-}
 
 def pivot_sex_tables(con, tables_dict: Dict[str, str], year: str):
     """Pivots the sex-specific tables using SQL.
 
     Args:
         con: A DuckDB connection object.
-        male_table: A string representing the name of the male sex-specific table.
-        female_table: A string representing the name of the female sex-specific table.
-        both_table: A string representing the name of the both sex-specific table.
+        male_table: A string representing the name of the males sex-specific table.
+        female_table: A string representing the name of the females sex-specific table.
+        persons_table: A string representing the name of the both sex-specific table.
         year_col: A string representing the name of the column containing the population data.
 
     Returns:
-        Three dataframes representing the pivoted male, female, and both sex-specific tables.
+        Three dataframes representing the pivoted males, females, and both sex-specific tables.
     """
     
     year_col=f"Population_{year}"
     
-    logger.info(f"Starting the pivot process. Year column is: {year_col}")
+    duckdbLogger.info(f"Starting the pivot process. Year column is: {year_col}")
      
-    # Construct the SQL query to pivot the male sex-specific table
-    male_query = f"""PIVOT {tables_dict['male']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    # Construct the SQL query to pivot the males sex-specific table
+    male_query = f"""PIVOT {tables_dict['males']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
     """
  
-    # Construct the SQL query to pivot the female sex-specific table
-    female_query = f"""PIVOT {tables_dict['female']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    # Construct the SQL query to pivot the females sex-specific table
+    female_query = f"""PIVOT {tables_dict['females']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
     """
 
     # Construct the SQL query to pivot the both sex-specific table
-    both_query = f"""PIVOT {tables_dict['both']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
+    persons_query = f"""PIVOT {tables_dict['persons']} ON Age USING SUM({year_col}) GROUP BY OA11CD;
     """
 
     # Execute the SQL queries and get dataframes for each sex-specific table
-    logger.info("Executing SQL queries to pivot male table")
+    duckdbLogger.info("Executing SQL queries to pivot males table")
     male_table = query_database(con, male_query, year)
-    logger.info("Executing SQL queries to pivot female table")
+    duckdbLogger.info("Executing SQL queries to pivot females table")
     female_table = query_database(con, female_query, year)
-    logger.info("Executing SQL query to pivot table for both sexes")
-    both_sexes_table = query_database(con, both_query, year)
+    duckdbLogger.info("Executing SQL query to pivot table for both sexes")
+    persons_sexes_table = query_database(con, persons_query, year)
             
-    return {"both": both_sexes_table, "male": male_table, "female": female_table}
+    return {"persons": persons_sexes_table, "males": male_table, "females": female_table}
 
 
 def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
@@ -207,42 +180,42 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     # Generate a unique name for the temporary table
     # table_name = f"temp_{uuid.uuid4().hex}"
 
-    # Construct the SQL query for the male sex group
+    # Construct the SQL query for the males sex group
     male_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
         WHERE Sex = 1;"""
 
-    # Construct the SQL query for the female sex group
+    # Construct the SQL query for the females sex group
     female_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name}
         WHERE Sex = 2;"""
     # Construct the SQL query for both sex groups
-    both_query = f"""
+    persons_query = f"""
         SELECT OA11CD, Age, LAD11CD, Population_{year}
         FROM {table_name};"""
 
     # Get a dataframe for sex == 1
-    logger.info("Executing query for male table")
+    duckdbLogger.info("Executing query for males table")
     male_table = query_database(con, male_query, year)
 
-    # Get a dataframe for sex == 2, Female
-    logger.info("Executing query for female table")
+    # Get a dataframe for sex == 2, females
+    duckdbLogger.info("Executing query for females table")
     female_table = query_database(con, female_query, year)
 
     # Get combined sexes dataframe
-    logger.info("Executing query for table for both sexes")
-    both_table = query_database(con, both_query, year)
+    duckdbLogger.info("Executing query for table for both sexes")
+    persons_table = query_database(con, persons_query, year)
 
-    logger.info("Finished executing queries. Returning three tables")
-    return male_table, female_table, both_table
+    duckdbLogger.info("Finished executing queries. Returning three tables")
+    return male_table, female_table, persons_table
 
 
     # Get combined sexes dataframe
-    both_table = query_database(con, both_query)
+    persons_table = query_database(con, persons_query)
     
-    return male_table, female_table, both_table
+    return male_table, female_table, persons_table
 
 
 
@@ -250,7 +223,7 @@ def create_output_folder(year: int) -> pl.Path:
     """Create the output folder for a given year if it doesn't exist."""
     output_folder = pl.Path(f"data/population_estimates/{year}")
     if not output_folder.exists():
-        logger.info(f"Folder {output_folder} does not exist. Creating it now.")
+        duckdbLogger.info(f"Folder {output_folder} does not exist. Creating it now.")
         output_folder.mkdir(parents=True)
     return output_folder
 
@@ -288,6 +261,27 @@ def write_table_to_csv(con: DuckDBPyConnection,
     
     return None
 
+def write_table_to_xlsx(con: DuckDBPyConnection,
+                        table_dict: Dict[str, duckdb.table],
+                        output_folder: pl.Path,
+                        year: int) -> None:
+    """Writes a list of tables in a DuckDB database to an Excel file,
+        writing each table to a different tab in the sheet.
+
+    Args:
+        con (DuckDBPyConnection): Connection to the DuckDB database.
+        table_dict: Dict[str, duckdb.table]: A dictionary containing the name references as keys and the table names as values.
+        output_folder (pl.Path): The path to the output folder.
+        year (int): The year which is being processed. Will form part of the path, filename and tab name. 
+    """
+    with pd.ExcelWriter(output_folder / f"pop_estimate_{year}.xlsx") as writer:
+        duckdbLogger.info(f"Writing tables to Excel file for year {year}")
+        for t_name, table in table_dict.items():
+            tab_name = f"Mid-{year} {t_name.title()}"
+            df = con.execute(f"SELECT * FROM {table}").fetch_df()
+            df.to_excel(writer, sheet_name=tab_name)
+    
+
 def main():
     """This is executed when run from the command line."""
     # Create connection
@@ -300,17 +294,17 @@ def main():
     # For each of those years, load the data for all regions into a temp table
     # and return the name of the temp table
     temp_table_names = []
-    logger.info("Starting to load data for each year into a temp table")
+    duckdbLogger.info("Starting to load data for each year into a temp table")
     for year in years:
-        logger.info(f"Extracting data for year {year}")
+        duckdbLogger.info(f"Extracting data for year {year}")
 
         year_col=f"Population_{year}"
 
         # Get the three sex disaggregated tables
-        both_sexes_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
+        persons_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
 
-        # Pack the three names as a tuple
-        all_three_tables = {"both": both_sexes_table, "male": male_table, "female": female_table}
+        # Pack names and tables into a dictionary
+        all_three_tables = {"persons": persons_table, "males": male_table, "females": female_table}
 
         # Pivot the dataframe to a wide format
         all_three_tables = pivot_sex_tables(con, all_three_tables, year)
@@ -319,9 +313,15 @@ def main():
         output_folder = create_output_folder(year)
 
         # Write out the pivoted tables as CSV files
-        write_table_to_csv(con, all_three_tables,
-                           output_folder=output_folder,
-                           year=year)
+        # write_table_to_csv(con, all_three_tables,
+        #                    output_folder=output_folder,
+        #                    year=year)
+        
+        write_table_to_xlsx(con = con,
+                        table_dict = all_three_tables,
+                        output_folder = output_folder,
+                        year=year)
+    
     # drop the all pop estimates table so it can be run again
     con.execute(f"""DROP TABLE all_pop_estimates;""")
 
