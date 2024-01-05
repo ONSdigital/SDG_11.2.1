@@ -122,7 +122,7 @@ def path_or_url(file_path):
         MainLogger.error("Cloud or local configuration is incorrect")
         raise ImportError
     
-def download_data(file_path_to_get):
+def download_shp_data(file_path_to_get):
     """This function downloads data from the cloud so we can process shapefiles.
 
     Args:
