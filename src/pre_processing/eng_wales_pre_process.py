@@ -21,6 +21,7 @@ console_handler.setLevel(logging.INFO)
 # Module imports
 import data_ingest as di
 import data_transform as dt
+import data_valid_clean as dvc
 import geospatial_mods as gs
 
 # get current working directory
@@ -136,7 +137,7 @@ PreProcessLogger.info('Processing local authority data')
 
 # download shapefiles if switch set to cloud
 file_path_to_get = os.path.join("data", "LA_shp", CALCULATION_YEAR)
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # Getting path for LA shapefile
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
@@ -146,16 +147,30 @@ uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
 # Create geopandas dataframe from the shapefile
 uk_la_file = di.geo_df_from_geospatialfile(path_to_file=uk_la_path)
 
-# Filter for just england and wales
-lad_code_col = f'LAD{CALCULATION_YEAR[-2:]}CD'
+# Uppercase the column names - in 2011 they are lowercase
+ul_la_file = dvc.uppercase_column_names(uk_la_file)
 
+# Create list of needed columns 
+
+def get_year_col_names(calculation_year):
+    lad_code_col = f'LAD{calculation_year[-2:]}CD'
+    lad_name_col = f'LAD{calculation_year[-2:]}NM'
+    return lad_code_col, lad_name_col
+
+lad_code_col, lad_name_col = get_year_col_names(CALCULATION_YEAR)
+required_columns = [lad_code_col, lad_name_col, 'geometry']
+
+
+# check if required columns are in the dataframe
+dvc.check_required_columns(uk_la_file, required_columns)
+
+# Keep only england and wales local authorities
 ew_la_df = (
     uk_la_file[uk_la_file[lad_code_col].str.startswith(('E', 'W'))]
 )
 
 # Keep only required columns
-ew_la_df = (
-    ew_la_df[[lad_code_col, f'LAD{CALCULATION_YEAR[-2:]}NM', 'geometry']])
+ew_la_df = (ew_la_df[required_columns])
 
 # Export dataset to geojson
 path = os.path.join(ENG_WALES_PREPROCESSED_OUTPUT, 'ew_la_df.geojson')
@@ -203,7 +218,7 @@ ew_pop_files = di.get_abspath_or_list_files(ew_dir, "list", "xlsx")
 ew_pop_df = di.get_whole_nation_pop_df(ew_pop_files, POP_YEAR)
 
 # Keep only required columns
-ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
+# ew_pop_df = ew_pop_df.drop(['LSOA11CD_x', 'LSOA11CD_y', 'LSOA11CD'], axis=1)
 
 # Group and reformat age data
 # Get a list of ages from config
@@ -233,7 +248,7 @@ PreProcessLogger.info('Processing population weighted centroids')
 file_path_to_get = (os.path.join('data',
                                 'pop_weighted_centroids',
                                 CENTROID_YEAR))
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 ew_pop_wtd_centr_df = (di.geo_df_from_geospatialfile(
     os.path.join(DATA_DIR, 'pop_weighted_centroids', CENTROID_YEAR)))

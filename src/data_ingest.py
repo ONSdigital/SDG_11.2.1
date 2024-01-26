@@ -122,7 +122,7 @@ def path_or_url(file_path):
         MainLogger.error("Cloud or local configuration is incorrect")
         raise ImportError
     
-def download_data(file_path_to_get):
+def download_shp_data(file_path_to_get):
     """This function downloads data from the cloud so we can process shapefiles.
 
     Args:
@@ -451,15 +451,16 @@ def get_whole_nation_pop_df(pop_files, pop_year):
         # Read Excel file as object
             xlFile = pd.ExcelFile(xls_path)
         # Access sheets in Excel file
+            total_cols = ["OA11CD",
+                    "All Ages"].append(config["age_lst"])
             total_pop = pd.read_excel(
-                xlFile, f"Mid-{pop_year} Persons", header=4)
+                xlFile, f"Mid-{pop_year} Persons", header=4, usecols=total_cols)
             males_pop = pd.read_excel(
                 xlFile,
                 f"Mid-{pop_year} Males",
                 header=4,
                 usecols=[
                     "OA11CD",
-                    "LSOA11CD",
                     "All Ages"])
             fem_pop = pd.read_excel(
                 xlFile,
@@ -467,7 +468,6 @@ def get_whole_nation_pop_df(pop_files, pop_year):
                 header=4,
                 usecols=[
                     "OA11CD",
-                    "LSOA11CD",
                     "All Ages"])
         # Rename the "All Ages" columns appropriately before concating
             total_pop.rename(columns={"All Ages": "pop_count"}, inplace=True)
@@ -854,3 +854,22 @@ def read_ni_age_df(path):
             age_df.rename(columns={col: number}, inplace=True)
 
     return age_df
+
+def read_file_if_exists(file_path, read_func):
+    """Checks if a file exists and reads it if it does 
+        using a function supplied. 
+        
+    Args:
+        file_path (str): A path to a file created by os.path.join
+        read_func (func): A function to read the file.
+
+    Raises:
+        FileNotFoundError: _description_
+
+    Returns:
+        _type_: _description_
+    """
+    if persistent_exists(file_path):
+        return read_func(file_path)
+    else:
+        raise FileNotFoundError(f"File not found: {file_path}. Run preprocessing first.")

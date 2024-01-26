@@ -51,7 +51,7 @@ sc_usual_pop = di.read_usual_pop_scotland(usual_pop_path)
 
 # download shapefiles if switch set to cloud
 file_path_to_get = os.path.join("data", "LA_shp", boundary_year)
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # getting path for .shp file for LA's
 uk_la_path = di.get_shp_abs_path(dir=os.path.join("data",
@@ -67,7 +67,7 @@ file_path_to_get = os.path.join("data",
                                 'pop_weighted_centroids',
                                 "scotland",
                                 pop_year)
-di.download_data(file_path_to_get)
+di.download_shp_data(file_path_to_get)
 
 # Get population weighted centroids into a dataframe
 sc_pop_wtd_centr_df = (di.geo_df_from_geospatialfile

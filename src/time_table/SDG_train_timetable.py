@@ -84,7 +84,7 @@ if download_train_timetable and auto_download_train:
                           in zip(paths_to_check, each_file_checked)
                             if not boolean]
     for file in files_to_download:
-        di.download_data(file)
+        di.download_shp_data(file)
 
 
 # Extract msn data
