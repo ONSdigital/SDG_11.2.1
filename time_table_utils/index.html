@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/time_table_utils/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Time table utils - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Time table utils";
+        var mkdocs_page_input_path = "time_table_utils.md";
+        var mkdocs_page_url = "/time_table_utils/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Code Reference</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">Time Table</a>
+    <ul class="current">
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3 current"><a class="reference internal current" href="./">Time table utils</a>
+    <ul class="current">
+    </ul>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers Guide</li>
+          <li class="breadcrumb-item">Code Reference</li>
+          <li class="breadcrumb-item">Time Table</li>
+      <li class="breadcrumb-item active">Time table utils</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/time_table_utils.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>Technical documentation for the time_table_utils module. Any docstrings in this file are automatically copied to this page.</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.time_table.time_table_utils"></a>
+  <div class="doc doc-contents first">
+  
+      <p>All functions realted to the bus and train timetable data.</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.time_table.time_table_utils.add_stop_capacity_type" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">add_stop_capacity_type</span><span class="p">(</span><span class="n">stops_df</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Adds capacity_type column.</p>
+<p>Column is defined with the following dictionary using the StopType
+Bus stops are low capacity, train stations are high capacity.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>stops_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The dataframe to add the column to.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: dataframe with new capacity_type column.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/time_table/time_table_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_stop_capacity_type</span><span class="p">(</span><span class="n">stops_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adds capacity_type column.</span>
+
+<span class="sd">    Column is defined with the following dictionary using the StopType</span>
+<span class="sd">    Bus stops are low capacity, train stations are high capacity.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stops_df (pd.DataFrame): The dataframe to add the column to.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: dataframe with new capacity_type column.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a dictionary to map the StopType to capacity level</span>
+    <span class="n">capacity_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;RSE&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;RLY&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;RPL&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;TMU&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;MET&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;PLT&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;BCE&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;BST&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;BCQ&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;BCS&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;BCT&quot;</span><span class="p">:</span> <span class="s2">&quot;low&quot;</span><span class="p">}</span>
+
+    <span class="c1"># Add the capacity_type column to the stops dataframe</span>
+    <span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;capacity_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;StopType&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">capacity_map</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stops_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.time_table.time_table_utils.extract_mca" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">extract_mca</span><span class="p">(</span><span class="n">mca_file</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Extract data from the mca file.</p>
+
+<details class="the-logic-for-this-extraction-is-as-follows" open>
+  <summary>The logic for this extraction is as follows</summary>
+  <p>Each new journey starts with "BS". Within this journey we have
+* multiple stops
+* LO is origin
+* LI are inbetween stops
+* LT is terminating stop
+* Then a new journey starts with BS again
+Within each journey are a few more lines that we can ignore e.g.
+* BX = extra details of the journey
+* CR = changes en route. Doesnt contain any arrival / departure times.</p>
+</details>      <p>Process:
+* Starts by finding all the schedules within the file.
+* Extract relevant information into the journey dataframe, and then copy
+unique_id
+* onto all trips within that journey.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>mca_file</code></b>
+                  (<code>_type_</code>)
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>schedules</code></b>(                <code>list</code>
+)            –
+            <div class="doc-md-description">
+              <p>list of lists containing schedule information
+ready for dataframe</p>
+            </div>
+          </li>
+          <li>
+<b><code>stops</code></b>(                <code>list</code>
+)            –
+            <div class="doc-md-description">
+              <p>list of lists containing stop information
+ready for dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/time_table/time_table_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_mca</span><span class="p">(</span><span class="n">mca_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract data from the mca file.</span>
+
+<span class="sd">    The logic for this extraction is as follows:</span>
+<span class="sd">        Each new journey starts with &quot;BS&quot;. Within this journey we have</span>
+<span class="sd">        * multiple stops</span>
+<span class="sd">        * LO is origin</span>
+<span class="sd">        * LI are inbetween stops</span>
+<span class="sd">        * LT is terminating stop</span>
+<span class="sd">        * Then a new journey starts with BS again</span>
+<span class="sd">        Within each journey are a few more lines that we can ignore e.g.</span>
+<span class="sd">        * BX = extra details of the journey</span>
+<span class="sd">        * CR = changes en route. Doesnt contain any arrival / departure times.</span>
+
+<span class="sd">    Process:</span>
+<span class="sd">    * Starts by finding all the schedules within the file.</span>
+<span class="sd">    * Extract relevant information into the journey dataframe, and then copy</span>
+<span class="sd">    unique_id</span>
+<span class="sd">    * onto all trips within that journey.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        mca_file (_type_): _description_</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        schedules (list): list of lists containing schedule information</span>
+<span class="sd">            ready for dataframe</span>
+<span class="sd">        stops (list): list of lists containing stop information</span>
+<span class="sd">            ready for dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a flag that specifies when we have found a new journey</span>
+    <span class="n">journey</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># Store schedule information</span>
+    <span class="n">schedules</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Store stop information</span>
+    <span class="n">stops</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">mca_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">mca_data</span><span class="p">:</span>
+        <span class="c1"># Skip the header</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">mca_data</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">mca_data</span><span class="p">:</span>
+            <span class="c1"># A schedule is started by a record beginning with BS.</span>
+            <span class="c1"># Other entries exist but are not needed for our purpose.</span>
+            <span class="c1"># Schedules are then further broken down by transaction type</span>
+            <span class="c1"># (N - new, R - revised, D - delete)</span>
+            <span class="c1"># Ignore any that are transaction type delete.</span>
+            <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;BSN&#39;</span> <span class="ow">or</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;BSR&#39;</span><span class="p">:</span>
+                <span class="c1"># Switch flag on as we have found a journey</span>
+                <span class="n">journey</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Get unique ID for schedule</span>
+            <span class="c1"># ID in dataset is not actually unique as same train has several</span>
+            <span class="c1"># schedules with different dates and calendars. Create ID from</span>
+            <span class="c1"># these variables.</span>
+                <span class="n">schedule_id</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+                               <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span>
+                               <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="mi">15</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span>
+                               <span class="o">+</span> <span class="n">line</span><span class="p">[</span><span class="mi">21</span><span class="p">:</span><span class="mi">28</span><span class="p">])</span>
+
+            <span class="c1"># Extract start and end date of service (yymmdd)</span>
+                <span class="n">start_date</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">9</span><span class="p">:</span><span class="mi">15</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">end_date</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">15</span><span class="p">:</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+            <span class="c1"># Extract the calender information for this journey</span>
+            <span class="c1"># i.e. what days of the week it runs</span>
+            <span class="c1"># Only interested in weekdays for the timebeing.</span>
+                <span class="n">monday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">21</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">tuesday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">22</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">wednesday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">23</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">thursday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">24</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="n">friday</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">25</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+            <span class="c1"># Store data to be added to the dataframe</span>
+                <span class="n">schedules</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">schedule_id</span><span class="p">,</span>
+                                  <span class="n">start_date</span><span class="p">,</span>
+                                  <span class="n">end_date</span><span class="p">,</span>
+                                  <span class="n">monday</span><span class="p">,</span>
+                                  <span class="n">tuesday</span><span class="p">,</span>
+                                  <span class="n">wednesday</span><span class="p">,</span>
+                                  <span class="n">thursday</span><span class="p">,</span>
+                                  <span class="n">friday</span><span class="p">])</span>
+
+            <span class="c1"># Skip as this is all we need to do for an entry starting</span>
+            <span class="c1"># with BS</span>
+                <span class="k">continue</span>
+
+        <span class="c1"># If we have found a new journey, go through the lines that are</span>
+        <span class="c1"># part of this jounrey and give them the schedule id.</span>
+
+        <span class="c1"># Journeys split into origin (LO), stops (LI) and terminus (LT)</span>
+        <span class="c1"># CR (changes en route) and BX (extra schedule details) can be</span>
+        <span class="c1"># ignored as not relevant to our purpose.</span>
+
+        <span class="c1"># If station has a departure time extract time, tiploc_code and</span>
+        <span class="c1"># activity type.</span>
+
+        <span class="c1"># NB times can end on a H sometimes which indicates a half minute</span>
+        <span class="c1"># Rather than rounding up and down, just ignoring this for the moment</span>
+        <span class="c1"># and taking only first four characters (hh:mm)</span>
+
+            <span class="k">if</span> <span class="n">journey</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LO&#39;</span><span class="p">:</span>
+                    <span class="n">departure_time</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">14</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">tiploc_code</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">activity_type</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">29</span><span class="p">:</span><span class="mi">41</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LI&#39;</span><span class="p">:</span>
+                    <span class="n">departure_time</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">15</span><span class="p">:</span><span class="mi">19</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">tiploc_code</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">activity_type</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">42</span><span class="p">:</span><span class="mi">54</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LT&#39;</span><span class="p">:</span>
+                    <span class="n">departure_time</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">15</span><span class="p">:</span><span class="mi">19</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">tiploc_code</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">activity_type</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">25</span><span class="p">:</span><span class="mi">37</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="c1"># As we know that LT signifies the last stop in a journey</span>
+                <span class="c1"># and we have extracted everything we need we now switch the</span>
+                <span class="c1"># flag off</span>
+                    <span class="n">journey</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Skipping BR and CX</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Store data to be added to dataframe</span>
+                <span class="n">stops</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">schedule_id</span><span class="p">,</span>
+                              <span class="n">departure_time</span><span class="p">,</span>
+                              <span class="n">tiploc_code</span><span class="p">,</span>
+                              <span class="n">activity_type</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">schedules</span><span class="p">,</span> <span class="n">stops</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.time_table.time_table_utils.extract_msn_data" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">extract_msn_data</span><span class="p">(</span><span class="n">msn_file</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Extract data from the msn file.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>msn_file</code></b>
+                  (<code>msn</code>)
+              –
+              <div class="doc-md-description">
+                <p>A text file containing the msn data.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>list</code></b>(                <code><span title="typing.List">List</span>[<span title="typing.List">List</span>]</code>
+)            –
+            <div class="doc-md-description">
+              <p>A list of lists containing the msn data.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/time_table/time_table_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_msn_data</span><span class="p">(</span><span class="n">msn_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract data from the msn file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        msn_file (msn): A text file containing the msn data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: A list of lists containing the msn data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Store msn data</span>
+    <span class="n">msn_data_lst</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">msn_file</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">msn_data</span><span class="p">:</span>
+        <span class="c1"># Skip header</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">msn_data</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">msn_data</span><span class="p">:</span>
+            <span class="c1"># Only interested in rows starting with A.</span>
+            <span class="c1"># Rows starting with L display aliases of station names</span>
+            <span class="c1"># Stripping the values because some are padded out with blank</span>
+            <span class="c1"># spaces as part of the file format.</span>
+            <span class="c1"># Coordinate data provided is actually the grid reference</span>
+            <span class="c1"># but without the 100km square (two letters at the start) so</span>
+            <span class="c1"># very difficult to extract coordinates. Hence, will add in</span>
+            <span class="c1"># coordinate data from an external source.</span>
+            <span class="c1"># NB tiploc_code is unique, but crs_code isnt.</span>
+            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">):</span>
+                <span class="n">station_name</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">31</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">tiploc_code</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">36</span><span class="p">:</span><span class="mi">43</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">crs_code</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">49</span><span class="p">:</span><span class="mi">52</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="n">msn_data_lst</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">station_name</span><span class="p">,</span>
+                                     <span class="n">tiploc_code</span><span class="p">,</span>
+                                     <span class="n">crs_code</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">msn_data_lst</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.time_table.time_table_utils.filter_stops" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">filter_stops</span><span class="p">(</span><span class="n">stops_df</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filters the stops dataframe based on two things:</p>
+<p>| 1) Status column. We want to keep stops which are active, pending or new.
+| 2) StopType want only to include bus and rail stops.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>stops_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>the dataframe to filter.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Filtered_stops which meet the criteria
+of keeping based on status/stoptype columns.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/time_table/time_table_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">filter_stops</span><span class="p">(</span><span class="n">stops_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filters the stops dataframe based on two things:</span>
+
+<span class="sd">    | 1) Status column. We want to keep stops which are active, pending or new.</span>
+<span class="sd">    | 2) StopType want only to include bus and rail stops.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        stops_df (pd.DataFrame): the dataframe to filter.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Filtered_stops which meet the criteria</span>
+<span class="sd">            of keeping based on status/stoptype columns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># stop_types we would like to keep within the dataframe</span>
+    <span class="n">stop_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;RSE&quot;</span><span class="p">,</span> <span class="s2">&quot;RLY&quot;</span><span class="p">,</span> <span class="s2">&quot;RPL&quot;</span><span class="p">,</span> <span class="s2">&quot;TMU&quot;</span><span class="p">,</span> <span class="s2">&quot;MET&quot;</span><span class="p">,</span> <span class="s2">&quot;PLT&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;BCE&quot;</span><span class="p">,</span> <span class="s2">&quot;BST&quot;</span><span class="p">,</span> <span class="s2">&quot;BCQ&quot;</span><span class="p">,</span> <span class="s2">&quot;BCS&quot;</span><span class="p">,</span> <span class="s2">&quot;BCT&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Filter the stops based on the status column (active, pending, new and</span>
+    <span class="c1"># None)</span>
+    <span class="n">filtered_stops</span> <span class="o">=</span> <span class="n">stops_df</span><span class="p">[(</span><span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;active&quot;</span><span class="p">)</span> <span class="o">|</span>
+                              <span class="p">(</span><span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;pending&quot;</span><span class="p">)</span> <span class="o">|</span>
+                              <span class="p">(</span><span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="o">|</span>
+                              <span class="p">(</span><span class="n">stops_df</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;new&quot;</span><span class="p">)]</span>
+
+    <span class="c1"># Filter the stops based on the stop types (bus and rail)</span>
+    <span class="n">boolean_stops_type</span> <span class="o">=</span> <span class="n">filtered_stops</span><span class="p">[</span><span class="s2">&quot;StopType&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">stop_types</span><span class="p">)</span>
+    <span class="n">filter_stops</span> <span class="o">=</span> <span class="n">filtered_stops</span><span class="p">[</span><span class="n">boolean_stops_type</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">filter_stops</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.time_table.time_table_utils.filter_timetable_by_day" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">filter_timetable_by_day</span><span class="p">(</span><span class="n">timetable_df</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Extract serviced stops based on specific day of the week.</p>
+<p>The day is selected from the available days in the date range present in
+  timetable data.</p>
+<p>1) identifies which days dates in the entire date range
+2) counts days of each type to get the maximum position order
+3) validates user's choice for <code>day</code> - provides useful errors
+4) creates ord value that is half of maximum position order to ensure
+as many services get included as possible.
+4) selects a date based on the day and ord parameters
+5) filters the dataframe to that date</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>timetable_df</code></b>
+                  (<code>pandas dataframe</code>)
+              –
+              <div class="doc-md-description">
+                <p>df to filter</p>
+              </div>
+            </li>
+            <li>
+              <b><code>day</code></b>
+                  (<code>str) </code>)
+              –
+              <div class="doc-md-description">
+                <p>day of the week in title case, e.g. "Wednesday"</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: filtered pandas dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/time_table/time_table_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">filter_timetable_by_day</span><span class="p">(</span><span class="n">timetable_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                            <span class="n">day</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract serviced stops based on specific day of the week.</span>
+
+<span class="sd">    The day is selected from the available days in the date range present in</span>
+<span class="sd">      timetable data.</span>
+
+<span class="sd">    1) identifies which days dates in the entire date range</span>
+<span class="sd">    2) counts days of each type to get the maximum position order</span>
+<span class="sd">    3) validates user&#39;s choice for `day` - provides useful errors</span>
+<span class="sd">    4) creates ord value that is half of maximum position order to ensure</span>
+<span class="sd">    as many services get included as possible.</span>
+<span class="sd">    4) selects a date based on the day and ord parameters</span>
+<span class="sd">    5) filters the dataframe to that date</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        timetable_df (pandas dataframe): df to filter</span>
+<span class="sd">        day (str) : day of the week in title case, e.g. &quot;Wednesday&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: filtered pandas dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Measure the dataframe</span>
+    <span class="n">original_rows</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Count the services</span>
+    <span class="n">orig_service_count</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="o">.</span><span class="n">service_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Get the minimum date range</span>
+    <span class="n">earliest_start_date</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">latest_end_date</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="o">.</span><span class="n">end_date</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+
+    <span class="c1"># Identify days in the range and count them</span>
+    <span class="n">date_range</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">earliest_start_date</span><span class="p">,</span> <span class="n">latest_end_date</span><span class="p">)</span>
+    <span class="n">date_day_couplings_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;date&quot;</span><span class="p">:</span> <span class="n">date_range</span><span class="p">,</span>
+                                          <span class="s2">&quot;day_name&quot;</span><span class="p">:</span> <span class="n">date_range</span><span class="o">.</span><span class="n">day_name</span><span class="p">()})</span>
+    <span class="n">days_counted</span> <span class="o">=</span> <span class="n">date_day_couplings_df</span><span class="o">.</span><span class="n">day_name</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+    <span class="n">days_counted_dict</span> <span class="o">=</span> <span class="n">days_counted</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+
+    <span class="c1"># Validate user choices</span>
+    <span class="k">if</span> <span class="n">day</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">days_counted_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;The day chosen in not available.</span>
+<span class="sd">            Should be a weekday in title case.&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="c1"># Get the maximum position order (ordinal)</span>
+    <span class="n">max_ord</span> <span class="o">=</span> <span class="n">days_counted_dict</span><span class="p">[</span><span class="n">day</span><span class="p">]</span>
+    <span class="nb">ord</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">max_ord</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Filter all the dates down the to the day needed</span>
+    <span class="n">day_filtered_dates</span> <span class="o">=</span> <span class="p">(</span><span class="n">date_day_couplings_df</span>
+                          <span class="p">[</span><span class="n">date_day_couplings_df</span><span class="o">.</span><span class="n">day_name</span> <span class="o">==</span> <span class="n">day</span><span class="p">])</span>
+
+    <span class="c1"># Get date of the nth (ord) day</span>
+    <span class="n">nth</span> <span class="o">=</span> <span class="nb">ord</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">date_of_day_entered</span> <span class="o">=</span> <span class="n">day_filtered_dates</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">nth</span><span class="p">]</span><span class="o">.</span><span class="n">date</span>
+
+    <span class="c1"># Filter the timetable_df by date range</span>
+    <span class="n">timetable_df</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="p">[(</span><span class="n">timetable_df</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">]</span>
+                                 <span class="o">&lt;=</span> <span class="n">date_of_day_entered</span><span class="p">)</span> <span class="o">&amp;</span>
+                                <span class="p">(</span><span class="n">timetable_df</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
+                                 <span class="o">&gt;=</span> <span class="n">date_of_day_entered</span><span class="p">)]</span>
+
+    <span class="c1"># Then filter to day of interest</span>
+    <span class="n">timetable_df</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="p">[</span><span class="n">timetable_df</span><span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Filter the timetable_df by date range</span>
+    <span class="n">timetable_df</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="p">[(</span><span class="n">timetable_df</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">]</span>
+                                 <span class="o">&lt;=</span> <span class="n">date_of_day_entered</span><span class="p">)</span> <span class="o">&amp;</span>
+                                <span class="p">(</span><span class="n">timetable_df</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span>
+                                 <span class="o">&gt;=</span> <span class="n">date_of_day_entered</span><span class="p">)]</span>
+
+    <span class="c1"># Then filter to day of interest</span>
+    <span class="n">timetable_df</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="p">[</span><span class="n">timetable_df</span><span class="p">[</span><span class="n">day</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Print date being used (consider logging instead)</span>
+    <span class="n">day_date</span> <span class="o">=</span> <span class="n">date_of_day_entered</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+    <span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The date of </span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2"> number </span><span class="si">{</span><span class="nb">ord</span><span class="si">}</span><span class="s2"> is </span><span class="si">{</span><span class="n">day_date</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Print how many rows have been dropped (consider logging instead)</span>
+    <span class="n">logger</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Selecting only services covering </span><span class="si">{</span><span class="n">day_date</span><span class="si">}</span><span class="s2"> reduced records&quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;by </span><span class="si">{</span><span class="n">original_rows</span><span class="o">-</span><span class="n">timetable_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> rows&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Print how many services are in the analysis and how many were dropped</span>
+    <span class="n">service_count</span> <span class="o">=</span> <span class="n">timetable_df</span><span class="o">.</span><span class="n">service_id</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dropped_services</span> <span class="o">=</span> <span class="n">orig_service_count</span> <span class="o">-</span> <span class="n">service_count</span>
+    <span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="n">service_count</span><span class="si">}</span><span class="s2"> services in the analysis&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filtering by day has reduced services by </span><span class="si">{</span><span class="n">dropped_services</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">timetable_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../SDG_train_timetable/" class="btn btn-neutral float-left" title="SDG train timetable"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../building_docs/" class="btn btn-neutral float-right" title="Using mkdocs to edit these pages">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../SDG_train_timetable/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../building_docs/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

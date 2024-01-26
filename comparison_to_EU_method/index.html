@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/comparison_to_EU_method/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>EU and UK Methodology Comparison - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "EU and UK Methodology Comparison";
+        var mkdocs_page_input_path = "comparison_to_EU_method.md";
+        var mkdocs_page_url = "/comparison_to_EU_method/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">EU and UK Methodology Comparison</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#differences-and-similarities-between-our-method-and-that-of-the-eu">Differences and similarities between our method and that of the EU</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#technology-used">Technology used</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#open-source-development">Open source development</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#software">Software</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#computation-method">Computation method</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#the-methodology-for-the-calculation-used">The methodology for the calculation used</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#transport-access-points">Transport access points</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#public-transport-service-areas">Public transport service areas</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#calculation-of-served-vs-unserved-population">Calculation of served vs. unserved population</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#differentiating-high-and-low-capacity-stops">Differentiating high and low capacity stops</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#similarities-and-differences-in-our-data">Similarities and differences in our data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#spatial-granularity-of-data">Spatial granularity of data</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#urban-and-rural-definitions">Urban and rural definitions</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#disaggregations">Disaggregations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="#">Code Reference</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">EU and UK Methodology Comparison</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/comparison_to_EU_method.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="calculation-of-statistics-for-sdg-1121-the-uk-method-compared-to-the-eu-method">Calculation of Statistics for SDG 11.2.1: The UK Method Compared to the EU Method</h1>
+<h2 id="differences-and-similarities-between-our-method-and-that-of-the-eu">Differences and similarities between our method and that of the EU</h2>
+<p>The following is a comparison of the method employed to calculate public transport accessibility by a team researching for the EU Commission and a UK team, working on behalf of the Sustainable Development Goals team in the Office for National Statistics (ONS). The two teams will be referred to as the “ONS team” and the “EU team” going forward. </p>
+<h2 id="technology-used">Technology used</h2>
+<h3 id="open-source-development">Open source development</h3>
+<p>The SDG team at ONS signed up to the Inclusive Data Charter<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. In line with its principles, those of the SDGs and <a href="https://link.springer.com/article/10.1007/s10668-012-9337-9">OSAT</a> we have worked as transparently as possible, making all code open source and conversations around method and development decisions published on our Github repository, and used free and open source tools and technology throughout the development process. The EU team have made their code available (see annexes <a href="https://ec.europa.eu/regional_policy/en/information/publications/working-papers/2020/low-carbon-urban-accessibility">here</a>) as well as a <a href="https://ec.europa.eu/regional_policy/sources/docgener/work/012020_low_carbon_urban.pdf">write up</a> about their chosen method and results, though an open development process was not found, though it may exist. </p>
+<h3 id="software">Software</h3>
+<p>The EU team and the ONS 11.2.1 project team have approached the challenges of calculating transport accessibility similarly, both in the methodology and the technology involved. Both teams have made use of Python as a means to ingest and process data. However the main processing of the data is done using different technologies, namely that the EU team has used the ArcPy library to interact with ArcGIS, a program which is not open source or free. The ONS team, by comparison, carries out the data processing in <a href="https://pandas.pydata.org">Pandas</a> and the Geospatial analysis in <a href="https://geopandas.org/en/stable/">GeoPandas</a>, all of which are open source and free. </p>
+<h3 id="computation-method">Computation method</h3>
+<p>The ONS computation calculates the service accessibility (see <a href="https://onsdigital.github.io/SDG_11.2.1/html/write_up.html#definitions">definitions</a>) for the whole country - except that currently the script cycles through local authorities and aggregates the data into a single table later. This method of calculating areas and combining up to the whole nation later will possibly be removed when the ONS team optimise the script. </p>
+<p>The ONS pipeline calculates the service accessibility for the whole country by cycling through local authorities and aggregating at the end of the process (for version 1.0 of our pipeline). Version 1.0 will only use data for 2011 and 1.1 will make the calculation over multiple years. </p>
+<p>The type of computation may be changed in future iterations of the project to a more vectorised computation (probably in version 1.3) - if <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/159">this feature </a>is implemented. The EU team calculates the transport service accessibility for each “area of interest” (e.g. city, region,urban centre, etc.) focusing on the urban area (in line with 11.2.1 methodology) but the ONS team has calculated for rural areas too - output data that is then compared with urban areas to get an idea of comparative transport access. </p>
+<h2 id="the-methodology-for-the-calculation-used">The methodology for the calculation used</h2>
+<p>The method used for the calculation is also very similar, but there are some important differences. </p>
+<h3 id="transport-access-points">Transport access points</h3>
+<p>The data on the location of the transport nodes (stops and stations) is required for this calculation. The ONS team sourced the data from the <a href="https://beta-naptan.dft.gov.uk/">National Public Transport Access Nodes (NaPTAN)</a> data set. It is not clear where the EU team sourced their data from. </p>
+<p>The EU team cluster stops together if they are within 50 metres of each other. The cluster is then represented by a single point, mid distance between the stops that have been clustered. On the other hand, the ONS team treats every stop in the country as individual stops, each of which is treated as an individual point. To establish the effect on the results this would have, our team would have to update our code to cluster stops in the same way, <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/217">a step the ONS team will consider</a> for future iterations of the project. </p>
+<h3 id="public-transport-service-areas">Public transport service areas</h3>
+<p>When it comes to calculating the service area, both teams use the same distance as a buffer. The difference is how the distance from the central node (station/stop/cluster) is calculated. In the EU team’s method, a service area (catchment areas) of 500 metres or 1000m (according to capacity) is created. This is made using a pedestrian path and road network. The ONS team use a simple Euclidean buffer to create a circle (techinically a  polygon) around each stop. The polygons are then combined to create the entire service area. Our team has considered the network/path method, and it has not been ruled out, however the ONS team note that computationally this will be more intensive and accurate results rely on a very accurate pedestrian path network. If the network is incomplete, or maps paths on to pedestrian unfriendly roads (such as fast roads with no pavements) the results will be unreliable.</p>
+<p>Examining the EU method, by using the road network, based on the shape_length parameter (which is probably the path line) and the walking speed, an isochrone of the service area is created. This is almost certainly how the above-mentioned service area polygons are created. The current ONS method makes no use of isochrones or irregular polygons in the calculation of service areas. </p>
+<h3 id="calculation-of-served-vs-unserved-population">Calculation of served vs. unserved population</h3>
+<p>Seemingly the method of counting the population inside and outside of the service areas is the same on both teams, though the method of establishing the population in each area is different. </p>
+<p>Both the ONS team and the EU team count the population inside and outside of the service areas. The ONS team use sum method in Pandas dataframe, after running a points in polygons query (a kind of spatial join) to only include population centres that are within the population centre. </p>
+<h3 id="differentiating-high-and-low-capacity-stops">Differentiating high and low capacity stops</h3>
+<p>The ONS team have differentiated high and low capacity stops using the StopType field in the NaPTAN dataset, the feasibility and methodology of which was discussed <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/177">here</a> and <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/207">here</a>; and the implementation of these features are discussed <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/196">here</a> and <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/176">here</a>.</p>
+<p>The EU team imports two datasets of high and low capacity stops. However it is unclear how those datasets are generated. </p>
+<p>The ONS team group underground service (in London) at the same level as Trams (e.g in Manchester), however this may change based on further discussion before the release of version 1.0.  </p>
+<h2 id="similarities-and-differences-in-our-data">Similarities and differences in our data</h2>
+<h3 id="spatial-granularity-of-data">Spatial granularity of data</h3>
+<p>The ONS team have used population data at <a href="https://www.ons.gov.uk/methodology/geography/ukgeographies/censusgeography#output-area-oa">output area</a> level, which is the most granular level available. The Government Statistical Service states that the 2011 Census, England was divided into 171,372 Output Areas (OAs) which on average have a resident population of 309 people. </p>
+<p>According to their publication the EU team population estimate figures at the building-block level and combine that data at the best available spatial resolution with data on land cover, land use, and data on the location, function and height of buildings to obtain estimates of a useful quality.</p>
+<h3 id="urban-and-rural-definitions">Urban and rural definitions</h3>
+<p>The ONS definition of "Urban" and "Rural" is defined by their population density in each output area. According to Government Statistical Service, <strong>urban</strong> areas are the connected built up areas identified by Ordnance Survey mapping that have resident populations \
+ above 10,000 people (2011 Census). On the other hand <strong>rural</strong> areas are those areas that are not urban, i.e. consisting of settlements below 10,000 people or are open countryside.</p>
+<p>The EU team have used the EU definition of urban, which states that urban centres have a population density of more than 1 500 inhabitants/km².” (Poelman et al., pg. 30). Additionally they use the <a href="https://www.oecd.org/cfe/regionaldevelopment/functional-urban-areas.htm">EU-OECD “Functional Urban Area” definition</a> for urban centres, for which is the conglomerate they calculate.</p>
+<h2 id="disaggregations">Disaggregations</h2>
+<p>Age and sex</p>
+<p>The ONS team disaggregates on age and sex. Having used the UK census population data which is detailed all ages and sex of population at output level up to 90+. The population data was then “binned” into 5 year groups based on a discussion with the SDG data team <strong><a href="https://github.com/ONSdigital/SDG_11.2.1/issues/7#issuecomment-734258025">noted here</a></strong> (Nov, 2020). The binning can be changed as it is defined in the config file; though this will be improved and fully tested in a <a href="https://github.com/ONSdigital/SDG_11.2.1/issues/216">future iteration</a>. </p>
+<p>The EU team intends to use the European population grid for 2021 for disaggregated breakdowns, but in the <a href="https://ec.europa.eu/regional_policy/sources/docgener/work/012020_low_carbon_urban.pdf">most recent publication</a>, they did not carry out disaggregated analysis by age, nor sex. </p>
+<p>Disability status</p>
+<p>NOMIS is a research database and analytical tool that provides data on labour markets, demographics, and the economy. NOMIS stands for "New Opportunities for Migrants' Integration and Success" and is funded by the Economic and Social Research Council (ESRC) in the United Kingdom. Via <a href="https://www.nomisweb.co.uk/">NOMIS</a>, data on disability status output from the UK census data is available for the year of the census. For years later than the census, the population estimate for each area was multiplied by the proportion of each disability category, calculated from the census year (see the <a href="https://onsdigital.github.io/SDG_11.2.1/html/write_up.html#disability-status">methodology writeup on disability</a>). </p>
+<p>Again, the EU team did not carry out disaggregated analysis on disability across the EU due to a lack of data.</p>
+<!-- Footnotes themselves at the bottom. -->
+<h2 id="notes">Notes</h2>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p><a href="https://www.ons.gov.uk/economy/environmentalaccounts/methodologies/inclusivedatacharteractionplanfortheglobalsustainabledevelopmentgoals">Inclusive data charter action plan for the global Sustainable Development Goals</a>&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data_description/" class="btn btn-neutral float-left" title="Data Description"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../for_developers/" class="btn btn-neutral float-right" title="For Developers">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data_description/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../for_developers/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

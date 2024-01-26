@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/data_output/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Data output - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Data output";
+        var mkdocs_page_input_path = "data_output.md";
+        var mkdocs_page_url = "/data_output/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Code Reference</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Data output</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers Guide</li>
+          <li class="breadcrumb-item">Code Reference</li>
+      <li class="breadcrumb-item active">Data output</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/data_output.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="src.data_output"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_output.reorder_final_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">reorder_final_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reorders the processed dataframe before writing to csv.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Dataframe to reorder.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Reordered dataframe.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_output.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reorder_final_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorders the processed dataframe before writing to csv.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): Dataframe to reorder.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Reordered dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Sex&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Age&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Disability Status&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Local Authority&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Urban/Rural&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Series&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Observation Status&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Unit Multiplier&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Unit Measure&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Value&quot;</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_output.reshape_for_output" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">reshape_for_output</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">id_col</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">,</span> <span class="n">id_rename</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reshapes the output of served_proportions_disagg to data team requirements.</p>
+<p>The steps the function goes through are as follows.</p>
+<p>| 1) Transpose the df
+| 2) Reset the index
+| 3) Rename column from index to Age or other id column
+| 4) melt df with Age as ID vars, all the rest value vars
+| 5) Replace word "Total" with blanks, "variable" with "Series"
+| 6) Create "Unit Multiplier" map across from variable (percent or individual)
+| 7) Create "Unit Measure" and "Observation Status" columns
+| 7) Create the local auth col with this iteration's LA
+| 8) Rename column header of ID var
+| 9) re-order columns to match required output</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Dataframe to reshape.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>id_col</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Name of the column that index will get renamed to.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>local_auth</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The local authority of interest.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>id_rename</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Name if renaming ID column. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Reshaped dataframe.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_output.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reshape_for_output</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">id_col</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">,</span> <span class="n">id_rename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Reshapes the output of served_proportions_disagg to data team requirements.</span>
+
+<span class="sd">    The steps the function goes through are as follows.</span>
+
+<span class="sd">    | 1) Transpose the df</span>
+<span class="sd">    | 2) Reset the index</span>
+<span class="sd">    | 3) Rename column from index to Age or other id column</span>
+<span class="sd">    | 4) melt df with Age as ID vars, all the rest value vars</span>
+<span class="sd">    | 5) Replace word &quot;Total&quot; with blanks, &quot;variable&quot; with &quot;Series&quot;</span>
+<span class="sd">    | 6) Create &quot;Unit Multiplier&quot; map across from variable (percent or individual)</span>
+<span class="sd">    | 7) Create &quot;Unit Measure&quot; and &quot;Observation Status&quot; columns</span>
+<span class="sd">    | 7) Create the local auth col with this iteration&#39;s LA</span>
+<span class="sd">    | 8) Rename column header of ID var</span>
+<span class="sd">    | 9) re-order columns to match required output</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): Dataframe to reshape.</span>
+<span class="sd">        id_col (str): Name of the column that index will get renamed to.</span>
+<span class="sd">        local_auth (str): The local authority of interest.</span>
+<span class="sd">        id_rename (str, optional): Name if renaming ID column. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Reshaped dataframe.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Transpose the df</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">T</span>
+    <span class="c1"># Reset the index</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="c1"># Rename column from index to id_column, e.g &quot;Age&quot;</span>
+    <span class="n">df_renamed</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">id_col</span><span class="p">})</span>
+    <span class="c1"># Melt df with Age as ID vars, all the rest value vars</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span>
+        <span class="n">df_renamed</span><span class="p">,</span>
+        <span class="n">id_vars</span><span class="o">=</span><span class="n">id_col</span><span class="p">,</span>
+        <span class="n">value_vars</span><span class="o">=</span><span class="p">[</span>
+            <span class="s2">&quot;Total&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Served&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Unserved&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Percentage served&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Percentage unserved&quot;</span><span class="p">])</span>
+    <span class="c1"># add in total population for la when id_col = total</span>
+    <span class="k">if</span> <span class="n">id_col</span> <span class="o">==</span> <span class="s2">&quot;Total&quot;</span><span class="p">:</span>
+        <span class="n">extra_row</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;Total&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Total&quot;</span><span class="p">],</span> <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span>
+                                 <span class="s2">&quot;&quot;</span><span class="p">],</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df_renamed</span><span class="p">[</span><span class="s2">&quot;All_pop&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]})</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">extra_row</span><span class="p">,</span> <span class="n">df</span><span class="p">])</span>
+    <span class="c1"># Replace word &quot;Total&quot; with blanks</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s2">&quot;Total&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">})</span>
+    <span class="c1"># Create &quot;Unit Multiplier&quot; map across from variable (percent or individual)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Unit Measure&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">variable</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;Percentage&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;percent&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;individual&quot;</span><span class="p">)</span>
+    <span class="c1"># Create &quot;Unit Measure&quot; and &quot;Observation Status&quot; columns</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Unit Multiplier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Units&quot;</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Observation Status&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Undefined&quot;</span>
+    <span class="c1"># Rename the variables in the &quot;variable&quot; column</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="n">to_replace</span><span class="o">=</span><span class="s2">&quot;Percentage served&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Served&quot;</span><span class="p">,</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;variable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+        <span class="n">to_replace</span><span class="o">=</span><span class="s2">&quot;Percentage unserved&quot;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Unserved&quot;</span><span class="p">,</span>
+        <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Rename the &quot;variable&quot; col to &quot;Series&quot;</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="s2">&quot;Series&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Rename &quot;value&quot; to &quot;Value&quot; as required</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Value&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Add and populate the &quot;Local Authority&quot; column</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Local Authority&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">local_auth</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">id_col</span><span class="p">,</span>
+             <span class="s2">&quot;Local Authority&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Series&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Observation Status&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Unit Multiplier&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Unit Measure&quot;</span><span class="p">,</span>
+             <span class="s2">&quot;Value&quot;</span><span class="p">]]</span>
+    <span class="c1">#  Rename column header of ID var</span>
+    <span class="k">if</span> <span class="n">id_rename</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">id_col</span><span class="p">:</span> <span class="n">id_rename</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data_ingest/" class="btn btn-neutral float-left" title="Data ingest"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../data_transform/" class="btn btn-neutral float-right" title="Data transform">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data_ingest/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../data_transform/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

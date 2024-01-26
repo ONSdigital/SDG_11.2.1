@@ -1,0 +1,3852 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/data_ingest/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Data ingest - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Data ingest";
+        var mkdocs_page_input_path = "data_ingest.md";
+        var mkdocs_page_url = "/data_ingest/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Code Reference</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Data ingest</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers Guide</li>
+          <li class="breadcrumb-item">Code Reference</li>
+      <li class="breadcrumb-item active">Data ingest</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/data_ingest.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>All functions and classes related to ingesting data into the pipeline</p>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+<a id="src.data_ingest"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="src.data_ingest.GCPBucket" class="doc doc-heading">
+          <code>GCPBucket</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>This class sets up an instance of a GCP storage client with the right credentials.</p>
+<p>The methods either download a file from the bucket or generate a signed url for a file.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>src/data_ingest.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 40</span>
+<span class="normal"> 41</span>
+<span class="normal"> 42</span>
+<span class="normal"> 43</span>
+<span class="normal"> 44</span>
+<span class="normal"> 45</span>
+<span class="normal"> 46</span>
+<span class="normal"> 47</span>
+<span class="normal"> 48</span>
+<span class="normal"> 49</span>
+<span class="normal"> 50</span>
+<span class="normal"> 51</span>
+<span class="normal"> 52</span>
+<span class="normal"> 53</span>
+<span class="normal"> 54</span>
+<span class="normal"> 55</span>
+<span class="normal"> 56</span>
+<span class="normal"> 57</span>
+<span class="normal"> 58</span>
+<span class="normal"> 59</span>
+<span class="normal"> 60</span>
+<span class="normal"> 61</span>
+<span class="normal"> 62</span>
+<span class="normal"> 63</span>
+<span class="normal"> 64</span>
+<span class="normal"> 65</span>
+<span class="normal"> 66</span>
+<span class="normal"> 67</span>
+<span class="normal"> 68</span>
+<span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">GCPBucket</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class sets up an instance of a GCP storage client with the right credentials.</span>
+
+<span class="sd">    The methods either download a file from the bucket or generate a signed url for a file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">credentials</span> <span class="o">=</span> <span class="n">service_account</span><span class="o">.</span><span class="n">Credentials</span><span class="o">.</span><span class="n">from_service_account_file</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;secrets/*.json&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="s1">&#39;11-2-1-all-data&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">bucket</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">destination_file_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Downloads a blob from the bucket.&quot;&quot;&quot;</span>
+
+        <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="c1"># Create the folder (if it doesn&#39;t exist)</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">destination_file_name</span><span class="p">)</span>
+        <span class="n">make_non_existent_folder</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+
+        <span class="n">blob</span><span class="o">.</span><span class="n">download_to_filename</span><span class="p">(</span><span class="n">destination_file_name</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Blob </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2"> downloaded to </span><span class="si">{</span><span class="n">destination_file_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">generate_signed_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This will generate a signed URL that is valid for 5 minutes.</span>
+
+<span class="sd">        The URL should be able to be used by our data ingest functions</span>
+<span class="sd">            to download any file.&quot;&quot;&quot;</span>
+        <span class="n">expiration</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">object_name</span><span class="p">)</span><span class="o">.</span><span class="n">generate_signed_url</span><span class="p">(</span>
+            <span class="n">expiration</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+            <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">url</span>
+
+    <span class="k">def</span> <span class="nf">get_file_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This will return a list of all the files in the bucket, as &quot;blobs&quot;.&quot;&quot;&quot;</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">files</span>
+
+    <span class="k">def</span> <span class="nf">get_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prints and returns a list of all the file names in the bucket.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: List of file names in the bucket.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">()</span>
+        <span class="n">file_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> files in the bucket.&quot;</span><span class="p">)</span>
+
+        <span class="c1">#for file in file_names:</span>
+            <span class="c1">#print(file)</span>
+
+        <span class="k">return</span> <span class="n">file_names</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.data_ingest.GCPBucket.download_file" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">download_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">destination_file_name</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads a blob from the bucket.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">destination_file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads a blob from the bucket.&quot;&quot;&quot;</span>
+
+    <span class="n">blob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+
+    <span class="c1"># Create the folder (if it doesn&#39;t exist)</span>
+    <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">destination_file_name</span><span class="p">)</span>
+    <span class="n">make_non_existent_folder</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+
+    <span class="n">blob</span><span class="o">.</span><span class="n">download_to_filename</span><span class="p">(</span><span class="n">destination_file_name</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;Blob </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="si">}</span><span class="s2"> downloaded to </span><span class="si">{</span><span class="n">destination_file_name</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.data_ingest.GCPBucket.generate_signed_url" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">generate_signed_url</span><span class="p">(</span><span class="n">object_name</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will generate a signed URL that is valid for 5 minutes.</p>
+<p>The URL should be able to be used by our data ingest functions
+    to download any file.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate_signed_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; This will generate a signed URL that is valid for 5 minutes.</span>
+
+<span class="sd">    The URL should be able to be used by our data ingest functions</span>
+<span class="sd">        to download any file.&quot;&quot;&quot;</span>
+    <span class="n">expiration</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span> <span class="o">+</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">blob</span><span class="p">(</span><span class="n">object_name</span><span class="p">)</span><span class="o">.</span><span class="n">generate_signed_url</span><span class="p">(</span>
+        <span class="n">expiration</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+        <span class="n">credentials</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">credentials</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">url</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.data_ingest.GCPBucket.get_file_list" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_file_list</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This will return a list of all the files in the bucket, as "blobs".</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_file_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This will return a list of all the files in the bucket, as &quot;blobs&quot;.&quot;&quot;&quot;</span>
+
+    <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">files</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.data_ingest.GCPBucket.get_file_names" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_file_names</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Prints and returns a list of all the file names in the bucket.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>List</code></b>            –
+            <div class="doc-md-description">
+              <p>List of file names in the bucket.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints and returns a list of all the file names in the bucket.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List: List of file names in the bucket.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">()</span>
+    <span class="n">file_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">file_names</span><span class="p">)</span><span class="si">}</span><span class="s2"> files in the bucket.&quot;</span><span class="p">)</span>
+
+    <span class="c1">#for file in file_names:</span>
+        <span class="c1">#print(file)</span>
+
+    <span class="k">return</span> <span class="n">file_names</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.best_before" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">best_before</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">number_of_days</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Checks whether a path has been modified within a period of days.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the path to check</p>
+              </div>
+            </li>
+            <li>
+              <b><code>number_of_days</code></b>
+                  (<code>int</code>)
+              –
+              <div class="doc-md-description">
+                <p>number of days previous to check for
+modifications</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>Bool</code></b>            –
+            <div class="doc-md-description">
+              <p>True if path has not been modified within the number of days
+specified</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">best_before</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">number_of_days</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks whether a path has been modified within a period of days.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path to check</span>
+<span class="sd">        number_of_days (int): number of days previous to check for</span>
+<span class="sd">            modifications</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Bool: True if path has not been modified within the number of days</span>
+<span class="sd">            specified</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">todays_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+    <span class="n">last_modified_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="n">days_since_last_modification</span> <span class="o">=</span> <span class="p">(</span><span class="n">todays_date</span> <span class="o">-</span> <span class="n">last_modified_date</span><span class="p">)</span><span class="o">.</span><span class="n">days</span>
+
+    <span class="k">if</span> <span class="n">days_since_last_modification</span> <span class="o">&gt;</span> <span class="n">number_of_days</span><span class="p">:</span>
+        <span class="n">expired</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">expired</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">expired</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.capture_region" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">capture_region</span><span class="p">(</span><span class="n">file_nm</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Extracts the region name from the ONS population estimate excel files.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Full name of the regional population Excel file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>str</code></b>            –
+            <div class="doc-md-description">
+              <p>The name of the region that the file covers</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">capture_region</span><span class="p">(</span><span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extracts the region name from the ONS population estimate excel files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): Full name of the regional population Excel file.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The name of the region that the file covers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">patt</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s2">&quot;^(.*estimates[-]?)(?P&lt;region&gt;.*)(\.xls)&quot;</span><span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">patt</span><span class="p">,</span> <span class="n">file_nm</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">&quot;region&quot;</span><span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">region</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">region</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.csv_to_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">csv_to_df</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">,</span> <span class="n">persistent_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zip_url</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates pandas DataFrame from csv; optionally using datatypes &amp;
+selected columns.</p>
+<p>Sub func of both any_to_pd and _import_extract_delete_zip.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the source csv without the extension.
+e.g. "stops", not "stops.csv".</p>
+              </div>
+            </li>
+            <li>
+              <b><code>csv_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path/to/csv_file on local machine.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dtypes</code></b>
+                  (<code><span title="typing.Optional">Optional</span>[<span title="typing.Dict">Dict</span>]</code>)
+              –
+              <div class="doc-md-description">
+                <p>Datatypes of columns in the csv.
+Helps optimise import.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>persistent_exists</code></b>
+                  (<code>bool</code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Boolean supplied by the
+_persistent_exists function. Defaults to True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_url</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>URL for the zip resource if it is to be
+downloaded. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">csv_to_df</span><span class="p">(</span>
+        <span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">csv_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+        <span class="n">dtypes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span>
+        <span class="n">persistent_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">zip_url</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates pandas DataFrame from csv; optionally using datatypes &amp;</span>
+<span class="sd">    selected columns.</span>
+
+<span class="sd">    Sub func of both any_to_pd and _import_extract_delete_zip.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): The name of the source csv without the extension.</span>
+<span class="sd">            e.g. &quot;stops&quot;, not &quot;stops.csv&quot;.</span>
+<span class="sd">        csv_path (PathLike): The path/to/csv_file on local machine.</span>
+<span class="sd">        dtypes (Optional[Dict]): Datatypes of columns in the csv.</span>
+<span class="sd">            Helps optimise import.</span>
+<span class="sd">        persistent_exists (bool, optional): Boolean supplied by the</span>
+<span class="sd">            _persistent_exists function. Defaults to True.</span>
+<span class="sd">        zip_url (str, optional): URL for the zip resource if it is to be</span>
+<span class="sd">            downloaded. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2">.csv from </span><span class="si">{</span><span class="n">csv_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dtypes</span><span class="p">:</span>
+        <span class="n">cols</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dtypes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">tic</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+
+        <span class="n">pd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span>
+                            <span class="n">dtype</span><span class="o">=</span><span class="n">dtypes</span><span class="p">,</span> <span class="n">encoding_errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+        <span class="n">toc</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Time taken for csv reading is </span><span class="si">{</span><span class="n">toc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+    <span class="c1"># Calling the pd_to_feather function to make a persistent feather file</span>
+    <span class="c1"># for faster retrieval</span>
+    <span class="n">pd_to_feather</span><span class="p">(</span><span class="n">pd_df</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.delete_junk" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">delete_junk</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Used by _import_extract_delete_zip function to delete the
+zip file after it was downloaded and the needed data extracted
+it.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of the file without extension.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>path/to/local/zip/file.zip that is to deleted.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">delete_junk</span><span class="p">(</span><span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used by _import_extract_delete_zip function to delete the</span>
+<span class="sd">    zip file after it was downloaded and the needed data extracted</span>
+<span class="sd">    it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): the name of the file without extension.</span>
+<span class="sd">        zip_path (PathLike): path/to/local/zip/file.zip that is to deleted.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Delete the zipfile as it&#39;s uneeded now</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">zip_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">zip_path</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.dl_stops_make_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">dl_stops_make_df</span><span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads the latest data from api, saves as csv &amp; feather, returns df</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>today</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>todays date</p>
+              </div>
+            </li>
+            <li>
+              <b><code>url</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>API URL</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: df of latest stops data</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span>
+<span class="normal">659</span>
+<span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">dl_stops_make_df</span><span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads the latest data from api, saves as csv &amp; feather, returns df</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        today (str): todays date</span>
+<span class="sd">        url (str): API URL</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: df of latest stops data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">csv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
+                            <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;stops&quot;</span><span class="p">,</span>
+                            <span class="sa">f</span><span class="s2">&quot;stops_</span><span class="si">{</span><span class="n">today</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="c1"># Save latest data as csv</span>
+    <span class="n">_get_stops_from_api</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
+    <span class="c1"># Save as feather</span>
+    <span class="n">feather_path</span> <span class="o">=</span> <span class="n">save_latest_stops_as_feather</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
+    <span class="c1"># Load feather as pd df</span>
+    <span class="n">stops_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_feather</span><span class="p">(</span><span class="n">feather_path</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">stops_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.download_shp_data" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">download_shp_data</span><span class="p">(</span><span class="n">file_path_to_get</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>This function downloads data from the cloud so we can process shapefiles.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_path_to_get</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the filepath/folder we want to download data from</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>None, it will download the data locally.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">download_shp_data</span><span class="p">(</span><span class="n">file_path_to_get</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function downloads data from the cloud so we can process shapefiles.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path_to_get (str): the filepath/folder we want to download data from</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None, it will download the data locally. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">CLOUD_LOCAL</span><span class="o">==</span><span class="s2">&quot;cloud&quot;</span><span class="p">:</span>
+        <span class="n">lst</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">get_file_names</span><span class="p">()</span>
+        <span class="n">file_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">file_path_to_get</span><span class="p">)</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">:</span>
+            <span class="n">bucket</span><span class="o">.</span><span class="n">download_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.extract_zip" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">extract_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">csv_nm</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Used by _import_extract_delete_zip function to extract
+the needed csv dataset from the locally stored zip file.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of the file without extension.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>csv_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of the csv file that is
+expected inside the zip file.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>path/to/local/zip/file.zip.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>csv_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path where the csv should be
+written to, e.g. /data/.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">extract_zip</span><span class="p">(</span>
+        <span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">csv_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">zip_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+        <span class="n">csv_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used by _import_extract_delete_zip function to extract</span>
+<span class="sd">    the needed csv dataset from the locally stored zip file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): the name of the file without extension.</span>
+<span class="sd">        csv_nm (str): the name of the csv file that is</span>
+<span class="sd">            expected inside the zip file.</span>
+<span class="sd">        zip_path (PathLike): path/to/local/zip/file.zip.</span>
+<span class="sd">        csv_path (PathLike): The path where the csv should be</span>
+<span class="sd">            written to, e.g. /data/.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Open the zip file and extract</span>
+    <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="nb">zip</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Extracting </span><span class="si">{</span><span class="n">csv_nm</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">zip_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="nb">zip</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">csv_nm</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">BaseException</span><span class="p">:</span>
+            <span class="n">csv_nm</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.feath_to_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">feath_to_df</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">feather_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Feather reading function used by the any_to_pd function.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of the file without extension.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>feather_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>the path/to/the/featherfile.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Pandas dataframe read from the persistent feather file.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">feath_to_df</span><span class="p">(</span><span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">feather_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Feather reading function used by the any_to_pd function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): the name of the file without extension.</span>
+<span class="sd">        feather_path (PathLike): the path/to/the/featherfile.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Pandas dataframe read from the persistent feather file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2">.feather from </span><span class="si">{</span><span class="n">feather_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="c1"># check if supplied path is a directory or a file</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">feather_path</span><span class="p">):</span>
+        <span class="c1"># if directory then append the file name</span>
+        <span class="n">feather_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feather_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2">.feather&quot;</span><span class="p">)</span>
+    <span class="c1"># Time the read</span>
+    <span class="n">tic</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">pd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_feather</span><span class="p">(</span><span class="n">feather_path</span><span class="p">)</span>
+    <span class="n">toc</span> <span class="o">=</span> <span class="n">perf_counter</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;Time taken for </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2">.feather</span>
+<span class="s2">          reading is </span><span class="si">{</span><span class="n">toc</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">tic</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> seconds&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.geo_df_from_geospatialfile" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">geo_df_from_geospatialfile</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;epsg:27700&#39;</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Function to create a Geo-dataframe from a geospatial
+(geojson, shp) file. The process goes via Pandas.s</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path_to_file</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>path to the geojson, shp and other
+geospatial data files.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>Geopandas Dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">geo_df_from_geospatialfile</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;epsg:27700&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to create a Geo-dataframe from a geospatial</span>
+<span class="sd">    (geojson, shp) file. The process goes via Pandas.s</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path_to_file (str): path to the geojson, shp and other</span>
+<span class="sd">            geospatial data files.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Geopandas Dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">geo_df</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">path_to_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">geo_df</span><span class="o">.</span><span class="n">crs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">geo_df</span><span class="o">.</span><span class="n">crs</span> <span class="o">=</span> <span class="s1">&#39;epsg:27700&#39;</span>
+    <span class="k">elif</span> <span class="n">geo_df</span><span class="o">.</span><span class="n">crs</span> <span class="o">!=</span> <span class="n">crs</span><span class="p">:</span>
+        <span class="n">geo_df</span> <span class="o">=</span> <span class="n">geo_df</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="s1">&#39;epsg:27700&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">geo_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.get_abspath_or_list_files" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_abspath_or_list_files</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">list_or_abs</span><span class="p">,</span> <span class="n">extension</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Takes a directory as str and returns the absolute path of
+output area csv file.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dir</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>Path created with os.path.join.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>list_or_abs</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>either "list" or "abs" to return either
+a list of paths/urls or a single path/url</p>
+              </div>
+            </li>
+            <li>
+              <b><code>extension</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>a file extension, e.g. "csv" to search for
+files of that type in the specified directory</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>Union [str, List]: Absolute path or list of the paths of file of the
+the given extension in the directory provided.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">523</span>
+<span class="normal">524</span>
+<span class="normal">525</span>
+<span class="normal">526</span>
+<span class="normal">527</span>
+<span class="normal">528</span>
+<span class="normal">529</span>
+<span class="normal">530</span>
+<span class="normal">531</span>
+<span class="normal">532</span>
+<span class="normal">533</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span>
+<span class="normal">537</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span>
+<span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span>
+<span class="normal">557</span>
+<span class="normal">558</span>
+<span class="normal">559</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_abspath_or_list_files</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">list_or_abs</span><span class="p">,</span> <span class="n">extension</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Takes a directory as str and returns the absolute path of</span>
+<span class="sd">    output area csv file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dir (str): Path created with os.path.join.</span>
+<span class="sd">        list_or_abs (str): either &quot;list&quot; or &quot;abs&quot; to return either</span>
+<span class="sd">            a list of paths/urls or a single path/url</span>
+<span class="sd">        extension (str): a file extension, e.g. &quot;csv&quot; to search for</span>
+<span class="sd">            files of that type in the specified directory</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Union [str, List]: Absolute path or list of the paths of file of the</span>
+<span class="sd">            the given extension in the directory provided.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">make_non_existent_folder</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="n">csv_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="n">csv_files</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">list_or_abs</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
+            <span class="n">list_of_paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">)</span>
+                             <span class="k">for</span> <span class="n">csv_file</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">list_of_paths</span>
+        <span class="k">elif</span> <span class="n">list_or_abs</span> <span class="o">==</span> <span class="s2">&quot;abs&quot;</span><span class="p">:</span>
+            <span class="n">csv_file</span> <span class="o">=</span> <span class="n">csv_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">absolute_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">absolute_path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">blob_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">bucket</span><span class="o">.</span><span class="n">bucket</span><span class="o">.</span><span class="n">list_blobs</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="nb">dir</span><span class="p">))</span>
+        <span class="n">csv_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">blob_list</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="n">extension</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">list_or_abs</span> <span class="o">==</span> <span class="s2">&quot;list&quot;</span><span class="p">:</span>
+            <span class="n">list_of_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">csv_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">csv_file</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">list_of_urls</span>
+        <span class="k">elif</span> <span class="n">list_or_abs</span> <span class="o">==</span> <span class="s2">&quot;abs&quot;</span><span class="p">:</span>
+            <span class="n">csv_file</span> <span class="o">=</span> <span class="n">csv_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">absolute_path</span> <span class="o">=</span> <span class="n">path_or_url</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">absolute_path</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.get_and_save_geo_dataset" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_and_save_geo_dataset</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">localpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Fetches a geodataset in json format from a web resource and
+saves it to the local data/ directory and returns the json
+as a dict into memory.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>filename</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of file as it should be saved locally.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>url</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>URL of the web resource where json file is hosted.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>localpath</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>path to folder where json is to be saved locally.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>dict</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_and_save_geo_dataset</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">localpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetches a geodataset in json format from a web resource and</span>
+<span class="sd">    saves it to the local data/ directory and returns the json</span>
+<span class="sd">    as a dict into memory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (str): the name of file as it should be saved locally.</span>
+<span class="sd">        url (str): URL of the web resource where json file is hosted.</span>
+<span class="sd">        localpath (str): path to folder where json is to be saved locally.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">localpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">full_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">dset</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">dset</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">file</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.get_shp_abs_path" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_shp_abs_path</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Passed a directory into the function and returns the absolute path
+of where the shp file is within that directory.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>dir</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>/path/to/directory/of/shape_files.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>str</code></b>            –
+            <div class="doc-md-description">
+              <p>the absolute path of the .shp file within a directory.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">501</span>
+<span class="normal">502</span>
+<span class="normal">503</span>
+<span class="normal">504</span>
+<span class="normal">505</span>
+<span class="normal">506</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span>
+<span class="normal">510</span>
+<span class="normal">511</span>
+<span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shp_abs_path</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Passed a directory into the function and returns the absolute path</span>
+<span class="sd">    of where the shp file is within that directory.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dir (PathLike): /path/to/directory/of/shape_files.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: the absolute path of the .shp file within a directory.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    <span class="n">shp_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.shp&quot;</span><span class="p">)]</span>
+    <span class="c1"># Add warning if there isn&#39;t a shp file in the directory</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shp_files</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No .shp file in directory </span><span class="si">{</span><span class="nb">dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">shp_file</span> <span class="o">=</span> <span class="n">shp_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">absolute_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">shp_file</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">absolute_path</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.get_stops_file" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_stops_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">dir</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Gets the latest stop dataset.</p>
+<p>If the latest stop df from the api is older then 28 days
+then function grabs a new version of file from API and
+saves this as a feather file.</p>
+<p>If the latest stop df from the api is less then 28 days old
+then just grabs the feather file.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>url</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>NAPTAN API url.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>dir</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>directory where the stop data is stored.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span>
+<span class="normal">677</span>
+<span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span>
+<span class="normal">706</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_stops_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the latest stop dataset.</span>
+
+<span class="sd">    If the latest stop df from the api is older then 28 days</span>
+<span class="sd">    then function grabs a new version of file from API and</span>
+<span class="sd">    saves this as a feather file.</span>
+
+<span class="sd">    If the latest stop df from the api is less then 28 days old</span>
+<span class="sd">    then just grabs the feather file.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        url (str): NAPTAN API url.</span>
+<span class="sd">        dir (str): directory where the stop data is stored.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># gets todays date and latest date of stops df</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">))</span>
+
+    <span class="c1"># gets feather stop path</span>
+    <span class="n">feather_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
+                                <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;stops&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;Stops.feather&quot;</span><span class="p">)</span>
+    <span class="c1"># Check that the feather exists</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">persistent_exists</span><span class="p">(</span><span class="n">feather_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Downloading stops file from </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">stops_df</span> <span class="o">=</span> <span class="n">dl_stops_make_df</span><span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># does exist</span>
+        <span class="n">latest_date</span> <span class="o">=</span> <span class="n">_get_latest_stop_file_date</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">today</span> <span class="o">-</span> <span class="n">latest_date</span> <span class="o">&lt;</span> <span class="mi">28</span><span class="p">:</span>
+            <span class="n">stops_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_feather</span><span class="p">(</span><span class="n">feather_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stops_df</span> <span class="o">=</span> <span class="n">dl_stops_make_df</span><span class="p">(</span><span class="n">today</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stops_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.get_whole_nation_pop_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_whole_nation_pop_df</span><span class="p">(</span><span class="n">pop_files</span><span class="p">,</span> <span class="n">pop_year</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Gets the population data for all regions in the country and
+puts them into one dataframe.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pop_files</code></b>
+                  (<code>list</code>)
+              –
+              <div class="doc-md-description">
+                <p>Population data to be unioned.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pop_year</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The year of population estimation data to process.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Dataframe of population data for all regions
+in the country</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span>
+<span class="normal">473</span>
+<span class="normal">474</span>
+<span class="normal">475</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span>
+<span class="normal">479</span>
+<span class="normal">480</span>
+<span class="normal">481</span>
+<span class="normal">482</span>
+<span class="normal">483</span>
+<span class="normal">484</span>
+<span class="normal">485</span>
+<span class="normal">486</span>
+<span class="normal">487</span>
+<span class="normal">488</span>
+<span class="normal">489</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_whole_nation_pop_df</span><span class="p">(</span><span class="n">pop_files</span><span class="p">,</span> <span class="n">pop_year</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the population data for all regions in the country and</span>
+<span class="sd">    puts them into one dataframe.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pop_files (list): Population data to be unioned.</span>
+<span class="sd">        pop_year (str): The year of population estimation data to process.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Dataframe of population data for all regions</span>
+<span class="sd">            in the country</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Remove gitkeep file from list of pop files</span>
+    <span class="n">pop_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">pop_files</span> <span class="k">if</span> <span class="n">f</span> <span class="o">!=</span> <span class="s1">&#39;.gitkeep&#39;</span><span class="p">]</span>
+    <span class="c1"># Dict of region:file_name. Capture the region name from the filename</span>
+    <span class="n">region_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">capture_region</span><span class="p">(</span><span class="n">file</span><span class="p">):</span> <span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">pop_files</span><span class="p">}</span>
+    <span class="c1"># make a df of each region then concat</span>
+    <span class="n">national_pop_feather_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="n">DATA_DIR</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;whole_nation_</span><span class="si">{</span><span class="n">pop_year</span><span class="si">}</span><span class="s2">.feather&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">national_pop_feather_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No national_pop_feather found for </span><span class="si">{</span><span class="n">pop_year</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rebuilding population file. This will take a while!&quot;</span><span class="p">)</span>
+        <span class="n">region_dfs_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">region_dict</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading </span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2"> Excel file&quot;</span><span class="p">)</span>
+            <span class="n">xls_path</span> <span class="o">=</span> <span class="n">region_dict</span><span class="p">[</span><span class="n">region</span><span class="p">]</span>
+        <span class="c1"># Read Excel file as object</span>
+            <span class="n">xlFile</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="n">xls_path</span><span class="p">)</span>
+        <span class="c1"># Access sheets in Excel file</span>
+            <span class="n">total_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;OA11CD&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;All Ages&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;age_lst&quot;</span><span class="p">])</span>
+            <span class="n">total_pop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                <span class="n">xlFile</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Mid-</span><span class="si">{</span><span class="n">pop_year</span><span class="si">}</span><span class="s2"> Persons&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">total_cols</span><span class="p">)</span>
+            <span class="n">males_pop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                <span class="n">xlFile</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Mid-</span><span class="si">{</span><span class="n">pop_year</span><span class="si">}</span><span class="s2"> Males&quot;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">usecols</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;OA11CD&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;All Ages&quot;</span><span class="p">])</span>
+            <span class="n">fem_pop</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span>
+                <span class="n">xlFile</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Mid-</span><span class="si">{</span><span class="n">pop_year</span><span class="si">}</span><span class="s2"> Females&quot;</span><span class="p">,</span>
+                <span class="n">header</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                <span class="n">usecols</span><span class="o">=</span><span class="p">[</span>
+                    <span class="s2">&quot;OA11CD&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;All Ages&quot;</span><span class="p">])</span>
+        <span class="c1"># Rename the &quot;All Ages&quot; columns appropriately before concating</span>
+            <span class="n">total_pop</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;All Ages&quot;</span><span class="p">:</span> <span class="s2">&quot;pop_count&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">males_pop</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;All Ages&quot;</span><span class="p">:</span> <span class="s2">&quot;males_pop&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">fem_pop</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;All Ages&quot;</span><span class="p">:</span> <span class="s2">&quot;fem_pop&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Merge the data from different sheets</span>
+            <span class="n">dfs_to_merge</span> <span class="o">=</span> <span class="p">[</span><span class="n">total_pop</span><span class="p">,</span> <span class="n">males_pop</span><span class="p">,</span> <span class="n">fem_pop</span><span class="p">]</span>
+            <span class="n">df_final</span> <span class="o">=</span> <span class="n">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;OA11CD&#39;</span><span class="p">),</span> <span class="n">dfs_to_merge</span><span class="p">)</span>
+        <span class="c1"># Store merged df in dict under region name</span>
+            <span class="n">region_dfs_dict</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_final</span>
+    <span class="c1"># Concat all regions into national pop df</span>
+        <span class="n">whole_nation_pop_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">region_dfs_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="c1"># Create the pop_year column to show which year the data is from</span>
+        <span class="n">whole_nation_pop_df</span><span class="p">[</span><span class="s2">&quot;pop_year&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_year</span>
+    <span class="c1"># Change all column names to str</span>
+        <span class="n">whole_nation_pop_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">whole_nation_pop_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="c1"># Write df out to feather for quicker reading</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Writing whole_nation_pop_df.feather&quot;</span><span class="p">)</span>
+        <span class="n">whole_nation_pop_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">to_feather</span><span class="p">(</span><span class="n">national_pop_feather_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># if it exists, read from a feather for quicker data retreval</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reading whole_nation_pop_df from </span><span class="si">{</span><span class="n">national_pop_feather_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">whole_nation_pop_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_feather</span><span class="p">(</span><span class="n">national_pop_feather_path</span><span class="p">)</span>
+    <span class="c1"># Temporary TODO: remove this line</span>
+        <span class="n">whole_nation_pop_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;total_pop&quot;</span><span class="p">:</span> <span class="s2">&quot;pop_count&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">whole_nation_pop_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.grab_zip" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">grab_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">zip_link</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Used by _import_extract_delete_zip function to download
+a zip file from the URI specified in the the zip_link
+parameter.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the name of the file without extension.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_link</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>URI to the zip to be downloaded.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>path/to/the/write/directory, e.g. '/data/'.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">grab_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">zip_link</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used by _import_extract_delete_zip function to download</span>
+<span class="sd">    a zip file from the URI specified in the the zip_link</span>
+<span class="sd">    parameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): the name of the file without extension.</span>
+<span class="sd">        zip_link (str): URI to the zip to be downloaded.</span>
+<span class="sd">        zip_path (PathLike): path/to/the/write/directory, e.g. &#39;/data/&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Grab the zipfile from URI</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Downloading </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">zip_link</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">zip_link</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">output_file</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving </span><span class="si">{</span><span class="n">file_nm</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">zip_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">output_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.import_extract_delete_zip" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">import_extract_delete_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">,</span> <span class="n">persistent_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">zip_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">cols</span><span class="p">,</span> <span class="o">**</span><span class="n">dtypes</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Downloads and opens zip file, extracts contents, deletes zip.</p>
+<p>Subfunc of any_to_pd.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_nm</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The name of the target csv within the zip.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>the path/to/zip_file on local machine</p>
+              </div>
+            </li>
+            <li>
+              <b><code>persistent_exists</code></b>
+                  (<code>bool</code>, default:
+                      <code>True</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>Boolean supplied by the
+_persistent_exists function. Defaults to True.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>zip_url</code></b>
+                  (<code>str</code>, default:
+                      <code>None</code>
+)
+              –
+              <div class="doc-md-description">
+                <p>URL for the zip resource if it is to be
+downloaded. Defaults to None.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+                <code><span title="pandas.DataFrame">DataFrame</span></code>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: dataframe of the data from the CSV</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">import_extract_delete_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+                               <span class="n">persistent_exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                               <span class="n">zip_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="o">*</span><span class="n">cols</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">dtypes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Downloads and opens zip file, extracts contents, deletes zip.</span>
+
+<span class="sd">    Subfunc of any_to_pd.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_nm (str): The name of the target csv within the zip.</span>
+<span class="sd">        zip_path (PathLike): the path/to/zip_file on local machine</span>
+<span class="sd">        persistent_exists (bool, optional): Boolean supplied by the</span>
+<span class="sd">            _persistent_exists function. Defaults to True.</span>
+<span class="sd">        zip_url (str, optional): URL for the zip resource if it is to be</span>
+<span class="sd">            downloaded. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: dataframe of the data from the CSV</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">persistent_exists</span><span class="p">:</span>
+        <span class="c1"># checking if a persistent zip exists to save downloading</span>
+        <span class="n">grab_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">zip_url</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">)</span>
+
+    <span class="n">csv_nm</span> <span class="o">=</span> <span class="n">file_nm</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+    <span class="n">csv_path</span> <span class="o">=</span> <span class="n">_make_data_path</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="n">csv_nm</span><span class="p">)</span>
+    <span class="n">extract_zip</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">csv_nm</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
+    <span class="n">delete_junk</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">zip_path</span><span class="p">)</span>
+    <span class="n">pd_df</span> <span class="o">=</span> <span class="n">csv_to_df</span><span class="p">(</span><span class="n">file_nm</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">,</span> <span class="n">dtypes</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.make_non_existent_folder" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">make_non_existent_folder</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a folder if it doesn't exist.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">make_non_existent_folder</span><span class="p">(</span><span class="n">folder_path</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a folder if it doesn&#39;t exist.&quot;&quot;&quot;</span>
+    <span class="c1"># Check if folder_path is str</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">folder_path</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">folder_path</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">folder_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">folder_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">MainLogger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Folder </span><span class="si">{</span><span class="n">folder_path</span><span class="si">}</span><span class="s2"> does not exist. Creating it now.&quot;</span><span class="p">)</span>
+        <span class="n">folder_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Add a .gitkeep file to the folder so it gets pushed to GitHub</span>
+        <span class="p">(</span><span class="n">folder_path</span> <span class="o">/</span> <span class="s2">&quot;.gitkeep&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.path_or_url" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">path_or_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Function to read data depending on config if cloud or local.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>File path you want to read</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>file_path or url depending if cloud or local</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">path_or_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to read data depending on config if cloud or local.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): File path you want to read</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        file_path or url depending if cloud or local</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">CLOUD_LOCAL</span> <span class="o">==</span> <span class="s2">&quot;cloud&quot;</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">bucket</span><span class="o">.</span><span class="n">generate_signed_url</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">url</span>
+    <span class="k">elif</span> <span class="n">CLOUD_LOCAL</span> <span class="o">==</span> <span class="s2">&quot;local&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">file_path</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">MainLogger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Cloud or local configuration is incorrect&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ImportError</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.pd_to_feather" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">pd_to_feather</span><span class="p">(</span><span class="n">pd_df</span><span class="p">,</span> <span class="n">current_file_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Used by the any_to_pd function to writes a Pandas dataframe
+to feather for quick reading and retrieval later.</p>
+<p>This function returns nothing because it simply writes to disk.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pd_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>a pandas dataframe to be converted</p>
+              </div>
+            </li>
+            <li>
+              <b><code>current_file_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>The path/to/current_file
+on local machine.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">pd_to_feather</span><span class="p">(</span><span class="n">pd_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">current_file_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used by the any_to_pd function to writes a Pandas dataframe</span>
+<span class="sd">    to feather for quick reading and retrieval later.</span>
+
+<span class="sd">    This function returns nothing because it simply writes to disk.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pd_df (pd.DataFrame): a pandas dataframe to be converted</span>
+<span class="sd">        current_file_path (PathLike): The path/to/current_file</span>
+<span class="sd">            on local machine.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">feather_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">current_file_path</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.feather&#39;</span>
+
+    <span class="c1"># TODO: this function should make use of _persistent_existsD</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">feather_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing Pandas dataframe to feather at </span><span class="si">{</span><span class="n">feather_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">feather</span><span class="o">.</span><span class="n">write_feather</span><span class="p">(</span><span class="n">pd_df</span><span class="p">,</span> <span class="n">feather_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Feather already exists&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.persistent_exists" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">persistent_exists</span><span class="p">(</span><span class="n">persistent_path</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-cached"><code>cached</code></small>
+  </span>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Checks if a persistent file or directory already exists or not.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>persistent_path</code></b>
+                  (<code><span title="src.data_ingest.PathLike">PathLike</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>path to check.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>bool</code></b>            –
+            <div class="doc-md-description">
+              <p>True if a persistent file or directory already exists.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@lru_cache</span>
+<span class="k">def</span> <span class="nf">persistent_exists</span><span class="p">(</span><span class="n">persistent_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if a persistent file or directory already exists or not.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        persistent_path (PathLike): path to check.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if a persistent file or directory already exists.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Change directory into project root</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">CWD</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">persistent_path</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">persistent_path</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">persistent_path</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_file_if_exists" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_file_if_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">read_func</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Checks if a file exists and reads it if it does 
+    using a function supplied. </p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>A path to a file created by os.path.join</p>
+              </div>
+            </li>
+            <li>
+              <b><code>read_func</code></b>
+                  (<code>func</code>)
+              –
+              <div class="doc-md-description">
+                <p>A function to read the file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Raises:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+                  <code>FileNotFoundError</code>
+              –
+              <div class="doc-md-description">
+                <p><em>description</em></p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>_type_</code></b>            –
+            <div class="doc-md-description">
+              <p><em>description</em></p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">858</span>
+<span class="normal">859</span>
+<span class="normal">860</span>
+<span class="normal">861</span>
+<span class="normal">862</span>
+<span class="normal">863</span>
+<span class="normal">864</span>
+<span class="normal">865</span>
+<span class="normal">866</span>
+<span class="normal">867</span>
+<span class="normal">868</span>
+<span class="normal">869</span>
+<span class="normal">870</span>
+<span class="normal">871</span>
+<span class="normal">872</span>
+<span class="normal">873</span>
+<span class="normal">874</span>
+<span class="normal">875</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_file_if_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">read_func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks if a file exists and reads it if it does </span>
+<span class="sd">        using a function supplied. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_path (str): A path to a file created by os.path.join</span>
+<span class="sd">        read_func (func): A function to read the file.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: _description_</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">persistent_exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">read_func</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File not found: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">. Run preprocessing first.&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_ni_age_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_ni_age_df</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reads in the nothern ireland age information</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the path of the file</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame the age_df dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span>
+<span class="normal">847</span>
+<span class="normal">848</span>
+<span class="normal">849</span>
+<span class="normal">850</span>
+<span class="normal">851</span>
+<span class="normal">852</span>
+<span class="normal">853</span>
+<span class="normal">854</span>
+<span class="normal">855</span>
+<span class="normal">856</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_ni_age_df</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads in the nothern ireland age information</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path of the file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame the age_df dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># read in age df</span>
+    <span class="n">age_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+                           <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;SA&quot;</span><span class="p">,</span>
+                           <span class="n">header</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                           <span class="n">index_col</span><span class="o">=</span><span class="s2">&quot;SA Code&quot;</span><span class="p">)</span>
+    <span class="c1"># replace col names from string e.g &quot;Age 82&quot;</span>
+    <span class="c1"># to just the number 82</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">age_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\d&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">)):</span>
+            <span class="n">number</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[0-9]{1,3}&quot;</span><span class="p">,</span> <span class="n">col</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">age_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">col</span><span class="p">:</span> <span class="n">number</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">age_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_scottish_age" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_scottish_age</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reads in the scottish age information</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the path of the file</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>Bool</code></b>            –
+            <div class="doc-md-description">
+              <p>True if path has not been modified within the number of days
+specified</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span>
+<span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_scottish_age</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads in the scottish age information</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path of the file</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Bool: True if path has not been modified within the number of days</span>
+<span class="sd">            specified</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># read in scottish file</span>
+    <span class="n">age_scotland_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># dropping first row as this is the whole of scotland</span>
+    <span class="n">age_scotland_df</span> <span class="o">=</span> <span class="n">age_scotland_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">age_scotland_df</span> <span class="o">=</span> <span class="n">age_scotland_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">age_scotland_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_urb_rur_class_scotland" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_urb_rur_class_scotland</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reads the urb/rural classification for Scotland.</p>
+<p>This reads in the file containing all the urban/rural class
+Then applies a mapping based on if living in a settlement &gt;10,000
+then urban, else rural.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the path where the file exists</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: the classfication dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span>
+<span class="normal">754</span>
+<span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_urb_rur_class_scotland</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads the urb/rural classification for Scotland.</span>
+
+<span class="sd">    This reads in the file containing all the urban/rural class</span>
+<span class="sd">    Then applies a mapping based on if living in a settlement &gt;10,000</span>
+<span class="sd">    then urban, else rural.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path where the file exists</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: the classfication dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">urb_rur</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">),</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OA2011&quot;</span><span class="p">,</span> <span class="s2">&quot;UR6_2013_2014&quot;</span><span class="p">])</span>
+
+    <span class="n">urb_rur</span><span class="p">[</span><span class="s2">&quot;urb_rur_class&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">urb_rur</span><span class="p">[</span><span class="s2">&quot;UR6_2013_2014&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span>
+            <span class="n">urb_rur</span><span class="p">[</span><span class="s2">&quot;UR6_2013_2014&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">&quot;urban&quot;</span><span class="p">,</span> <span class="s2">&quot;rural&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">urb_rur</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_urb_rur_ni" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_urb_rur_ni</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reads small areas as urban or rural for Northern Ireland.
+Urban is classified as living in a settlement &gt;10,000, and rural is classified
+as &lt;10,000.
+Args:
+    path (str): the path where the file exists</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: the urban rural classification dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_urb_rur_ni</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads small areas as urban or rural for Northern Ireland.</span>
+<span class="sd">    Urban is classified as living in a settlement &gt;10,000, and rural is classified</span>
+<span class="sd">    as &lt;10,000.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path where the file exists</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: the urban rural classification dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">urb_rur</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">urb_rur_path</span><span class="p">),</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">urb_rur</span> <span class="o">=</span> <span class="n">urb_rur</span><span class="p">[[</span><span class="s1">&#39;SA2011_Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Settlement Classification Band&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># split classification bands into urban and rural</span>
+    <span class="n">urb_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]</span>
+    <span class="n">rural_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">]</span>
+    <span class="n">urb_rur</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">urb_rur</span><span class="p">[</span><span class="s1">&#39;Settlement Classification Band&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">urb_list</span><span class="p">),</span> <span class="s1">&#39;urb_rur_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;urban&#39;</span>
+    <span class="n">urb_rur</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">urb_rur</span><span class="p">[</span><span class="s1">&#39;Settlement Classification Band&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">rural_list</span><span class="p">),</span> <span class="s1">&#39;urb_rur_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rural&#39;</span>
+
+    <span class="k">return</span> <span class="n">urb_rur</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.read_usual_pop_scotland" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">read_usual_pop_scotland</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reads the usual population Scotland.</p>
+<p>This reads in the file containing all the
+output areas in scotland with their corresponding
+population number.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>path</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>the path where the file exists</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame the usual population dataframe</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_usual_pop_scotland</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads the usual population Scotland.</span>
+
+<span class="sd">    This reads in the file containing all the</span>
+<span class="sd">    output areas in scotland with their corresponding</span>
+<span class="sd">    population number.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): the path where the file exists</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame the usual population dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># reads in data and crops of header and footer</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path_or_url</span><span class="p">(</span><span class="n">path</span><span class="p">),</span>
+                     <span class="n">header</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                     <span class="n">skipfooter</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="c1"># only want OA so drop Scotland</span>
+    <span class="n">df_oa_only</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Scotland&#39;</span><span class="p">])</span>
+
+    <span class="c1"># only use columns that we need</span>
+    <span class="n">essential_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;All people&quot;</span><span class="p">,</span> <span class="s2">&quot;Males&quot;</span><span class="p">,</span> <span class="s2">&quot;Females&quot;</span><span class="p">]</span>
+    <span class="n">df_essential_cols</span> <span class="o">=</span> <span class="n">df_oa_only</span><span class="p">[</span><span class="n">essential_cols</span><span class="p">]</span>
+
+    <span class="c1"># ensure no commas in the dataset so no errors with dtypes</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">essential_cols</span><span class="p">:</span>
+        <span class="n">df_essential_cols</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_essential_cols</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">df_essential_cols</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_essential_cols</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_essential_cols</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_ingest.save_latest_stops_as_feather" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">save_latest_stops_as_feather</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Saves the latest stop file as a feather file into
+the data folder.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>file_name</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>file path for latest stop file.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_ingest.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span>
+<span class="normal">634</span>
+<span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_latest_stops_as_feather</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves the latest stop file as a feather file into</span>
+<span class="sd">    the data folder.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        file_name (str): file path for latest stop file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># read in csv</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span>
+                       <span class="n">usecols</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;naptan_types&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
+                       <span class="n">dtype</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;naptan_types&quot;</span><span class="p">])</span>
+
+    <span class="c1"># get output path</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
+                               <span class="s2">&quot;data&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;stops&quot;</span><span class="p">,</span>
+                               <span class="s2">&quot;Stops.feather&quot;</span><span class="p">)</span>
+    <span class="c1"># output to feather</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">to_feather</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">output_path</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../main/" class="btn btn-neutral float-left" title="Main"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../data_output/" class="btn btn-neutral float-right" title="Data output">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../main/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../data_output/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

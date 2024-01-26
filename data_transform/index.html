@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/data_transform/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Data transform - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Data transform";
+        var mkdocs_page_input_path = "data_transform.md";
+        var mkdocs_page_url = "/data_transform/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Code Reference</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="./">Data transform</a>
+    <ul class="current">
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers Guide</li>
+          <li class="breadcrumb-item">Code Reference</li>
+      <li class="breadcrumb-item active">Data transform</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/data_transform.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+
+<a id="src.data_transform"></a>
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.bin_pop_ages" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">bin_pop_ages</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">age_bins</span><span class="p">,</span> <span class="n">col_nms</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Bins the ages in the age_df in 5 year spans from 0 to 90+,
+sums the counts in those bins
+and drops the original age columns.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A dataframe of population data
+containing only the age columns.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: Returns the age_df with bins.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 69</span>
+<span class="normal"> 70</span>
+<span class="normal"> 71</span>
+<span class="normal"> 72</span>
+<span class="normal"> 73</span>
+<span class="normal"> 74</span>
+<span class="normal"> 75</span>
+<span class="normal"> 76</span>
+<span class="normal"> 77</span>
+<span class="normal"> 78</span>
+<span class="normal"> 79</span>
+<span class="normal"> 80</span>
+<span class="normal"> 81</span>
+<span class="normal"> 82</span>
+<span class="normal"> 83</span>
+<span class="normal"> 84</span>
+<span class="normal"> 85</span>
+<span class="normal"> 86</span>
+<span class="normal"> 87</span>
+<span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">bin_pop_ages</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">age_bins</span><span class="p">,</span> <span class="n">col_nms</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Bins the ages in the age_df in 5 year spans from 0 to 90+,</span>
+<span class="sd">    sums the counts in those bins</span>
+<span class="sd">    and drops the original age columns.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): A dataframe of population data</span>
+<span class="sd">            containing only the age columns.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: Returns the age_df with bins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Grouping ages in 5 year brackets</span>
+
+    <span class="c1"># cleaning scottish data and changing dtype to float</span>
+    <span class="n">original_columns</span> <span class="o">=</span> <span class="n">age_df</span><span class="o">.</span><span class="n">columns</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">original_columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">age_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">dtypes</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+            <span class="n">age_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">age_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;0&#39;</span><span class="p">)</span>
+            <span class="n">age_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">age_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_age_bin</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">age_bins</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Function sums the counts for corresponding age-bins and assigns</span>
+<span class="sd">        them a column in age_df.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="nb">bin</span> <span class="ow">in</span> <span class="n">age_bins</span><span class="p">:</span>
+            <span class="n">age_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">bin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">bin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">age_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="nb">bin</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="nb">bin</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">age_df</span>
+
+    <span class="c1"># create 90+ column for when there are more columns than 90</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">age_df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">91</span><span class="p">:</span>
+        <span class="c1"># create 90+ column summing all those from 90 and above.</span>
+        <span class="n">age_df</span><span class="p">[</span><span class="s1">&#39;90+&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">age_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">90</span><span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">age_df</span> <span class="o">=</span> <span class="n">_age_bin</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">age_bins</span><span class="p">)</span>
+        <span class="c1"># drop the original age columns</span>
+        <span class="n">age_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col_nms</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># drop the columns that we are replacing with 90+</span>
+        <span class="n">age_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">age_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">19</span><span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># moving first column to last so 90+ at the end.</span>
+        <span class="n">temp_cols</span> <span class="o">=</span> <span class="n">age_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">new_cols</span> <span class="o">=</span> <span class="n">temp_cols</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">temp_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">age_df</span> <span class="o">=</span> <span class="n">age_df</span><span class="p">[</span><span class="n">new_cols</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">age_df</span> <span class="o">=</span> <span class="n">_age_bin</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">age_bins</span><span class="p">)</span>
+        <span class="c1"># drop the original age columns</span>
+        <span class="n">age_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">col_nms</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># rename the 90+ column</span>
+        <span class="n">age_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;90+-90+&#39;</span><span class="p">:</span> <span class="s1">&#39;90+&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># age df has now been binned and cleaned</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="n">age_df</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.convert_east_north" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">convert_east_north</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Converts latitude and longitude coordinates to British National Grid
+Args:
+    df (pd.DataFrame): df including the longitude and latitude coordinates
+    long(str): The name of the longitude column in df
+    lat (str): The name of the latitude column in df
+Returns:
+    pd.DataFrame: dataframe including easting and northing coordinates.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">convert_east_north</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts latitude and longitude coordinates to British National Grid</span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): df including the longitude and latitude coordinates</span>
+<span class="sd">        long(str): The name of the longitude column in df</span>
+<span class="sd">        lat (str): The name of the latitude column in df</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: dataframe including easting and northing coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Easting&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Northing&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_bng</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">long</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">lat</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.create_tiploc_col" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">create_tiploc_col</span><span class="p">(</span><span class="n">naptan_df</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>naptan_df</code></b>
+                  (<code><span title="pandas.Dataframe">Dataframe</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>Naptan dataset</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column</p>
+            </div>
+          </li>
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>added for train stations</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">create_tiploc_col</span><span class="p">(</span><span class="n">naptan_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a Tiploc column from the ATCOCode column, in the NaPTAN dataset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        naptan_df (pd.Dataframe): Naptan dataset</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Dataframe (naptan_df): Naptan dataset with the new tiploc column</span>
+<span class="sd">        added for train stations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Applying only to train stations, RLY is the stop type for train stations</span>
+    <span class="n">rail_filter</span> <span class="o">=</span> <span class="n">naptan_df</span><span class="o">.</span><span class="n">StopType</span> <span class="o">==</span> <span class="s2">&quot;RLY&quot;</span>
+
+    <span class="c1"># Create a new pd.Dataframe for Tiploc by extracting upto 7 alpha</span>
+    <span class="c1"># characters</span>
+    <span class="n">tiploc_col</span> <span class="o">=</span> <span class="p">(</span><span class="n">naptan_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rail_filter</span><span class="p">]</span>
+                  <span class="o">.</span><span class="n">ATCOCode</span>
+                  <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;([A-Za-z]{1,7})&#39;</span><span class="p">)</span>
+                  <span class="p">)</span>
+    <span class="n">tiploc_col</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;tiploc_code&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Merge the new Tiploc column with the naptan_df</span>
+    <span class="n">naptan_df</span> <span class="o">=</span> <span class="n">naptan_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+        <span class="n">tiploc_col</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">naptan_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.disab_dict" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">disab_dict</span><span class="p">(</span><span class="n">la_pop_df</span><span class="p">,</span> <span class="n">pop_in_poly_df</span><span class="p">,</span> <span class="n">disability_dict</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates the dataframe including those who are and are not served by
+public transport and places it into a disability dictionary for each
+local authority of interest for the final csv output.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>la_pop_df</code></b>
+                  (<code><span title="gpd.GeoDataFrame">GeoDataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>GeoPandas Dataframe that includes
+                        output area codes and population estimates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pop_in_poly_df</code></b>
+                  (<code><span title="gpd.GeoDataFrame">GeoDataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A geodata frame with the points
+                                inside the polygon.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>disability_dict</code></b>
+                  (<code>dict</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dictionary to store the disability
+                        dataframe.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>local_auth</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The local authority of interest.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>disability_dict</code></b>(                <code>dict</code>
+)            –
+            <div class="doc-md-description">
+              <p>Dictionary with a disability total dataframe
+                for unserved and served populations for all given
+                local authorities.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">disab_dict</span><span class="p">(</span><span class="n">la_pop_df</span><span class="p">,</span> <span class="n">pop_in_poly_df</span><span class="p">,</span> <span class="n">disability_dict</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the dataframe including those who are and are not served by</span>
+<span class="sd">    public transport and places it into a disability dictionary for each</span>
+<span class="sd">    local authority of interest for the final csv output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes</span>
+<span class="sd">                                    output area codes and population estimates.</span>
+<span class="sd">        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points</span>
+<span class="sd">                                            inside the polygon.</span>
+<span class="sd">        disability_dict (dict): Dictionary to store the disability</span>
+<span class="sd">                                    dataframe.</span>
+<span class="sd">        local_auth (str): The local authority of interest.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        disability_dict (dict): Dictionary with a disability total dataframe</span>
+<span class="sd">                            for unserved and served populations for all given</span>
+<span class="sd">                            local authorities.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Calculating those served and not served by disability</span>
+    <span class="n">disab_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number_disabled&quot;</span><span class="p">]</span>
+
+    <span class="n">disab_servd_df</span> <span class="o">=</span> <span class="n">served_proportions_disagg</span><span class="p">(</span><span class="n">la_pop_df</span><span class="p">,</span>
+                                               <span class="n">pop_in_poly_df</span><span class="p">,</span>
+                                               <span class="n">disab_cols</span><span class="p">)</span>
+
+    <span class="c1"># Feeding the results to the reshaper</span>
+    <span class="n">disab_servd_df_out</span> <span class="o">=</span> <span class="n">do</span><span class="o">.</span><span class="n">reshape_for_output</span><span class="p">(</span><span class="n">disab_servd_df</span><span class="p">,</span>
+                                               <span class="n">id_col</span><span class="o">=</span><span class="n">disab_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                               <span class="n">local_auth</span><span class="o">=</span><span class="n">local_auth</span><span class="p">,</span>
+                                               <span class="n">id_rename</span><span class="o">=</span><span class="s2">&quot;Disability Status&quot;</span><span class="p">)</span>
+
+    <span class="c1"># The disability df is unusual. I think all rows correspond to people with</span>
+    <span class="c1"># disabilities only. There is no &quot;not-disabled&quot; status here (I think)</span>
+    <span class="n">disab_servd_df_out</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">to_replace</span><span class="o">=</span><span class="s2">&quot;number_disabled&quot;</span><span class="p">,</span>
+                               <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Disabled&quot;</span><span class="p">,</span>
+                               <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Calculating non-disabled people served and not served</span>
+    <span class="n">non_disab_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;number_non-disabled&quot;</span><span class="p">]</span>
+
+    <span class="n">non_disab_servd_df</span> <span class="o">=</span> <span class="n">served_proportions_disagg</span><span class="p">(</span>
+        <span class="n">pop_df</span><span class="o">=</span><span class="n">la_pop_df</span><span class="p">,</span>
+        <span class="n">pop_in_poly_df</span><span class="o">=</span><span class="n">pop_in_poly_df</span><span class="p">,</span>
+        <span class="n">cols_lst</span><span class="o">=</span><span class="n">non_disab_cols</span><span class="p">)</span>
+
+    <span class="c1"># Feeding the results to the reshaper</span>
+    <span class="n">non_disab_servd_df_out</span> <span class="o">=</span> <span class="n">do</span><span class="o">.</span><span class="n">reshape_for_output</span><span class="p">(</span>
+        <span class="n">non_disab_servd_df</span><span class="p">,</span>
+        <span class="n">id_col</span><span class="o">=</span><span class="n">disab_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">local_auth</span><span class="o">=</span><span class="n">local_auth</span><span class="p">,</span>
+        <span class="n">id_rename</span><span class="o">=</span><span class="s2">&quot;Disability Status&quot;</span><span class="p">)</span>
+
+    <span class="c1"># The disability df is unusual. I think all rows correspond to people with</span>
+    <span class="c1"># disabilities only. There is no &quot;not-disabled&quot; status here (I think)</span>
+    <span class="n">non_disab_servd_df_out</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">to_replace</span><span class="o">=</span><span class="s2">&quot;number_non-disabled&quot;</span><span class="p">,</span>
+                                   <span class="n">value</span><span class="o">=</span><span class="s2">&quot;Non-disabled&quot;</span><span class="p">,</span>
+                                   <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Concatting non-disabled and disabled dataframes</span>
+    <span class="n">non_disab_disab_servd_df_out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">non_disab_servd_df_out</span><span class="p">,</span> <span class="n">disab_servd_df_out</span><span class="p">])</span>
+
+    <span class="c1"># Output this local auth&#39;s disab df to the dict</span>
+    <span class="n">disability_dict</span><span class="p">[</span><span class="n">local_auth</span><span class="p">]</span> <span class="o">=</span> <span class="n">non_disab_disab_servd_df_out</span>
+
+    <span class="k">return</span> <span class="n">disability_dict</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.disab_disagg" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">disab_disagg</span><span class="p">(</span><span class="n">disability_df</span><span class="p">,</span> <span class="n">la_pop_df</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Calculates number of people in the population that are classified as
+    disabled or not disabled and this is merged onto the local authority
+    population dataframe.
+Args:
+    disability_df (pd.DataFrame): Dataframe that includes disability
+                                estimates for each output area.
+    la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes
+                            output area codes and population estimates.
+Returns:
+    gpd.GeoDataFrame: GeoPandas Dataframe that includes population
+                    estimates, geographical location, and proportion
+                    of disabled/non-disabled for each output area in
+                    the local authority chosen.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">disab_disagg</span><span class="p">(</span><span class="n">disability_df</span><span class="p">,</span> <span class="n">la_pop_df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates number of people in the population that are classified as</span>
+<span class="sd">        disabled or not disabled and this is merged onto the local authority</span>
+<span class="sd">        population dataframe.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        disability_df (pd.DataFrame): Dataframe that includes disability</span>
+<span class="sd">                                    estimates for each output area.</span>
+<span class="sd">        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes</span>
+<span class="sd">                                output area codes and population estimates.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        gpd.GeoDataFrame: GeoPandas Dataframe that includes population</span>
+<span class="sd">                        estimates, geographical location, and proportion</span>
+<span class="sd">                        of disabled/non-disabled for each output area in</span>
+<span class="sd">                        the local authority chosen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Getting the disab total</span>
+    <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;disb_total&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;disab_ltd_lot&quot;</span><span class="p">]</span>
+                                   <span class="o">+</span> <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;disab_ltd_little&quot;</span><span class="p">])</span>
+
+    <span class="c1"># Calcualting the total &quot;non-disabled&quot;</span>
+    <span class="n">la_pop_only</span> <span class="o">=</span> <span class="n">la_pop_df</span><span class="p">[[</span><span class="s1">&#39;OA11CD&#39;</span><span class="p">,</span> <span class="s1">&#39;pop_count&#39;</span><span class="p">]]</span>
+    <span class="n">disability_df</span> <span class="o">=</span> <span class="n">la_pop_only</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">disability_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;OA11CD&quot;</span><span class="p">)</span>
+    <span class="c1"># Putting the result back into the disability df</span>
+    <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;non-disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;pop_count&quot;</span><span class="p">]</span> <span class="o">-</span> \
+        <span class="n">disability_df</span><span class="p">[</span><span class="s1">&#39;disb_total&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Calculating the proportion of disabled people in each OA</span>
+    <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;proportion_disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">disability_df</span><span class="p">[</span><span class="s1">&#39;disb_total&#39;</span><span class="p">]</span>
+        <span class="o">/</span>
+        <span class="n">disability_df</span><span class="p">[</span><span class="s1">&#39;pop_count&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Calcualting the proportion of non-disabled people in each OA</span>
+    <span class="n">disability_df</span><span class="p">[</span><span class="s2">&quot;proportion_non-disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">disability_df</span><span class="p">[</span><span class="s1">&#39;non-disabled&#39;</span><span class="p">]</span>
+        <span class="o">/</span>
+        <span class="n">disability_df</span><span class="p">[</span><span class="s1">&#39;pop_count&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Slice disability df that only has the proportion disabled column and the</span>
+    <span class="c1"># OA11CD col</span>
+    <span class="n">disab_prop_df</span> <span class="o">=</span> <span class="n">disability_df</span><span class="p">[[</span>
+        <span class="s1">&#39;OA11CD&#39;</span><span class="p">,</span> <span class="s1">&#39;proportion_disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;proportion_non-disabled&#39;</span><span class="p">]]</span>
+
+    <span class="c1"># Merge the proportion disability df into main the pop df with a left join</span>
+    <span class="n">la_pop_df</span> <span class="o">=</span> <span class="n">la_pop_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">disab_prop_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;OA11CD&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Make the calculation of the number of people with disabilities in the</span>
+    <span class="c1"># year of the population estimates</span>
+    <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;number_disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">round</span>
+        <span class="p">(</span><span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;pop_count&quot;</span><span class="p">]</span>
+         <span class="o">*</span>
+         <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;proportion_disabled&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="c1"># la_pop_df[&quot;number_disabled&quot;] = la_pop_df[&quot;number_disabled&quot;].astype(int)</span>
+
+    <span class="c1"># Make the calculation of the number of non-disabled people in the year</span>
+    <span class="c1"># of the population estimates</span>
+    <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;number_non-disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">round</span>
+        <span class="p">(</span><span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;pop_count&quot;</span><span class="p">]</span>
+         <span class="o">*</span>
+         <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;proportion_non-disabled&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;number_non-disabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">la_pop_df</span><span class="p">[</span><span class="s2">&quot;number_non-disabled&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+        <span class="nb">int</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">la_pop_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.get_col_bins" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">get_col_bins</span><span class="p">(</span><span class="n">col_nms</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Function to group/bin the ages together in 5 year steps.</p>
+<p>Starts the sequence at age 0.
+    Will return the ages in a list of tuples.
+    The 0th position of the tuple being the lower limit
+    of the age bin, the 1st position of the tuple being
+    the upper limit.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>col_nms</code></b>
+                  (<code>list of str</code>)
+              –
+              <div class="doc-md-description">
+                <p>a list of the age columns as strings.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>list of tuples: a list of the ages with 5 year gaps.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_col_bins</span><span class="p">(</span><span class="n">col_nms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to group/bin the ages together in 5 year steps.</span>
+
+<span class="sd">    Starts the sequence at age 0.</span>
+<span class="sd">        Will return the ages in a list of tuples.</span>
+<span class="sd">        The 0th position of the tuple being the lower limit</span>
+<span class="sd">        of the age bin, the 1st position of the tuple being</span>
+<span class="sd">        the upper limit.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        col_nms (list of str): a list of the age columns as strings.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of tuples: a list of the ages with 5 year gaps.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Make a lists of starting and finishing indexes</span>
+    <span class="n">cols_start</span> <span class="o">=</span> <span class="n">col_nms</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">5</span><span class="p">]</span>
+    <span class="n">cols_fin</span> <span class="o">=</span> <span class="n">col_nms</span><span class="p">[</span><span class="mi">4</span><span class="p">::</span><span class="mi">5</span><span class="p">]</span>
+    <span class="c1"># Generating a list of tuples which will be the age groupings</span>
+    <span class="n">col_bins</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cols_start</span><span class="p">,</span> <span class="n">cols_fin</span><span class="p">)]</span>
+    <span class="c1"># Again adding &quot;90+&quot;, doubling it so it&#39;s doubled, like the other tuples</span>
+    <span class="n">col_bins</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cols_start</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="c1"># TODO: make this more intelligent. Only if there is one col name left</span>
+    <span class="c1"># over it should be doubled.</span>
+    <span class="k">return</span> <span class="n">col_bins</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.mid_year_age_estimates" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">mid_year_age_estimates</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">pop_estimates_df</span><span class="p">,</span> <span class="n">pop_year</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Takes mid-year population estimates for each small area in NI and uses proportions
+to calculate mid-year estimates for each age.
+Args:
+    age_df (pd.DataFrame): Census 2011 age estimates dataframe
+    pop_estimates_df (pd.DataFrame): population estimates for each small area dataframe
+    pop_year (str): population year</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">451</span>
+<span class="normal">452</span>
+<span class="normal">453</span>
+<span class="normal">454</span>
+<span class="normal">455</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span>
+<span class="normal">459</span>
+<span class="normal">460</span>
+<span class="normal">461</span>
+<span class="normal">462</span>
+<span class="normal">463</span>
+<span class="normal">464</span>
+<span class="normal">465</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span>
+<span class="normal">469</span>
+<span class="normal">470</span>
+<span class="normal">471</span>
+<span class="normal">472</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mid_year_age_estimates</span><span class="p">(</span><span class="n">age_df</span><span class="p">,</span> <span class="n">pop_estimates_df</span><span class="p">,</span> <span class="n">pop_year</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes mid-year population estimates for each small area in NI and uses proportions</span>
+<span class="sd">    to calculate mid-year estimates for each age.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        age_df (pd.DataFrame): Census 2011 age estimates dataframe</span>
+<span class="sd">        pop_estimates_df (pd.DataFrame): population estimates for each small area dataframe</span>
+<span class="sd">        pop_year (str): population year &quot;&quot;&quot;</span>
+    <span class="c1"># get all age columns in a list</span>
+    <span class="n">age_cols</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">101</span><span class="p">)]</span>
+    <span class="c1"># iterate through each age</span>
+    <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">age_cols</span><span class="p">)):</span>
+        <span class="c1"># calculates the proportions for each age and each SA code</span>
+        <span class="n">age_df</span><span class="p">[</span><span class="n">age_cols</span><span class="p">[</span><span class="n">age</span><span class="p">]]</span> <span class="o">=</span> <span class="n">age_df</span><span class="p">[</span><span class="n">age_cols</span><span class="p">[</span><span class="n">age</span><span class="p">]]</span><span class="o">/</span><span class="n">age_df</span><span class="p">[</span><span class="s1">&#39;All usual residents&#39;</span><span class="p">]</span>
+    <span class="n">age_df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;SA&#39;</span><span class="p">,</span> <span class="s1">&#39;All usual residents&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># merges pop df and proportions together</span>
+    <span class="n">pop_estimates_df</span> <span class="o">=</span> <span class="n">pop_estimates_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">age_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(),</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;Area_Code&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;SA Code&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+    <span class="c1"># calculates pop estimates for each age in each small area using proportions</span>
+    <span class="k">for</span> <span class="n">age</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">age_cols</span><span class="p">)):</span>   
+        <span class="n">pop_estimates_df</span><span class="p">[</span><span class="n">age_cols</span><span class="p">[</span><span class="n">age</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pop_estimates_df</span><span class="p">[</span><span class="n">age_cols</span><span class="p">[</span><span class="n">age</span><span class="p">]]</span><span class="o">*</span><span class="n">pop_estimates_df</span><span class="p">[</span><span class="n">pop_year</span><span class="p">]</span>
+    <span class="n">pop_estimates_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Area_Code&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pop_estimates_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.served_proportions_disagg" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">served_proportions_disagg</span><span class="p">(</span><span class="n">pop_df</span><span class="p">,</span> <span class="n">pop_in_poly_df</span><span class="p">,</span> <span class="n">cols_lst</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Calculates the number of people in each category, as specified by the column
+(e.g age range, or disability status) who are served and not served by
+public transport, and gives those as a proportion of the total.</p>
+<p>Note: the numeric values in the dataframe are return as strings for
+formatting reasons</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>pop_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>population dataframe.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pop_in_poly_df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>dataframe resulting in the points
+in polygons enquiry to count (sum) the population within the
+service area polygon.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>cols_lst</code></b>
+                  (<code><span title="typing.List">List</span>[str]</code>)
+              –
+              <div class="doc-md-description">
+                <p>a list of the column names in the population
+dataframe supplied which contain population figures, and are to
+be summed and assessed as served/unserved by public transport.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: a dataframe summarising</p>
+            </div>
+          </li>
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>i) the total number of people that column (e.g. age range, sex)</p>
+            </div>
+          </li>
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>ii) the number served by public transport</p>
+            </div>
+          </li>
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>iii) the proportion who are served by public transport</p>
+            </div>
+          </li>
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>iv) the proportion who are not served by public transport</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">served_proportions_disagg</span><span class="p">(</span><span class="n">pop_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                              <span class="n">pop_in_poly_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+                              <span class="n">cols_lst</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the number of people in each category, as specified by the column</span>
+<span class="sd">    (e.g age range, or disability status) who are served and not served by</span>
+<span class="sd">    public transport, and gives those as a proportion of the total.</span>
+
+<span class="sd">    Note: the numeric values in the dataframe are return as strings for</span>
+<span class="sd">    formatting reasons</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        pop_df (pd.DataFrame): population dataframe.</span>
+<span class="sd">        pop_in_poly_df (pd.DataFrame): dataframe resulting in the points</span>
+<span class="sd">            in polygons enquiry to count (sum) the population within the</span>
+<span class="sd">            service area polygon.</span>
+<span class="sd">        cols_lst (List[str]): a list of the column names in the population</span>
+<span class="sd">            dataframe supplied which contain population figures, and are to</span>
+<span class="sd">            be summed and assessed as served/unserved by public transport.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: a dataframe summarising</span>
+<span class="sd">        i) the total number of people that column (e.g. age range, sex)</span>
+<span class="sd">        ii) the number served by public transport</span>
+<span class="sd">        iii) the proportion who are served by public transport</span>
+<span class="sd">        iv) the proportion who are not served by public transport</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># First list the age bin columns</span>
+
+    <span class="n">pop_sums</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_lst</span><span class="p">:</span>
+        <span class="c1"># Total pop</span>
+        <span class="n">total_pop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pop_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="c1"># Served pop</span>
+        <span class="n">servd_pop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pop_in_poly_df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+        <span class="c1"># Unserved pop</span>
+        <span class="n">unsrvd_pop</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">total_pop</span> <span class="o">-</span> <span class="n">servd_pop</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">total_pop</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># If the total population for that column is 0</span>
+            <span class="c1"># this standard of zeros and Nones is returned</span>
+            <span class="n">pop_sums</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Total&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">total_pop</span><span class="p">),</span>
+                             <span class="s2">&quot;Served&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">servd_pop</span><span class="p">),</span>
+                             <span class="s2">&quot;Unserved&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">unsrvd_pop</span><span class="p">),</span>
+                             <span class="s2">&quot;Percentage served&quot;</span><span class="p">:</span> <span class="s2">&quot;None&quot;</span><span class="p">,</span>
+                             <span class="s2">&quot;Percentage unserved&quot;</span><span class="p">:</span> <span class="s2">&quot;None&quot;</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">total_pop</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pop_sums</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">_calc_proprtn_srvd_unsrvd</span><span class="p">(</span><span class="n">total_pop</span><span class="p">,</span>
+                                                      <span class="n">servd_pop</span><span class="p">,</span>
+                                                      <span class="n">unsrvd_pop</span><span class="p">)</span>
+
+    <span class="c1"># Make a df from the total and served pop</span>
+    <span class="n">tot_servd_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pop_sums</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tot_servd_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.slice_age_df" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">slice_age_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">col_nms</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Slices a dataframe according to the list of column names provided.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>df</code></b>
+                  (<code><span title="pandas.DataFrame">DataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>DataFrame to be sliced.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>col_nms</code></b>
+                  (<code><span title="typing.List">List</span>[str]</code>)
+              –
+              <div class="doc-md-description">
+                <p>column names as string in a list.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+            –
+            <div class="doc-md-description">
+              <p>pd.DataFrame: A dataframe sliced down to only the columns required.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">slice_age_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">col_nms</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Slices a dataframe according to the list of column names provided.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): DataFrame to be sliced.</span>
+<span class="sd">        col_nms (List[str]): column names as string in a list.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.DataFrame: A dataframe sliced down to only the columns required.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">age_df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">col_nms</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">age_df</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="src.data_transform.urban_rural_results" class="doc doc-heading">
+          <code class="highlight language-python"><span class="n">urban_rural_results</span><span class="p">(</span><span class="n">la_pop_df</span><span class="p">,</span> <span class="n">pop_in_poly_df</span><span class="p">,</span> <span class="n">urb_rur_dict</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Creates two dataframes, urban and rural and classifies proportion
+of people served and not served by public transport. This is placed into
+a urban rural dictionary for each local authority of interest for the
+final csv output.</p>
+
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+      <th class="field-name">Parameters:</th>
+      <td class="field-body">
+        <ul class="first simple">
+            <li>
+              <b><code>la_pop_df</code></b>
+                  (<code><span title="gpd.GeoDataFrame">GeoDataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>GeoPandas Dataframe that includes
+                        output area codes and population estimates.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>pop_in_poly_df</code></b>
+                  (<code><span title="gpd.GeoDataFrame">GeoDataFrame</span></code>)
+              –
+              <div class="doc-md-description">
+                <p>A geodata frame with the points
+                                inside the polygon.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>urb_rur_dict</code></b>
+                  (<code>dict</code>)
+              –
+              <div class="doc-md-description">
+                <p>Dictionary to store the urban rural dataframe.</p>
+              </div>
+            </li>
+            <li>
+              <b><code>local_auth</code></b>
+                  (<code>str</code>)
+              –
+              <div class="doc-md-description">
+                <p>The local authority of interest.</p>
+              </div>
+            </li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<table class="field-list">
+  <colgroup>
+    <col class="field-name" />
+    <col class="field-body" />
+  </colgroup>
+  <tbody valign="top">
+    <tr class="field">
+    <th class="field-name">Returns:</th>
+    <td class="field-body">
+      <ul class="first simple">
+          <li>
+<b><code>urb_rur_dict</code></b>(                <code>dict</code>
+)            –
+            <div class="doc-md-description">
+              <p>Dictionary with a disability total dataframe for
+                unserved and served populations for all given
+                local authorities.</p>
+            </div>
+          </li>
+      </ul>
+    </td>
+    </tr>
+  </tbody>
+</table>
+          <details class="quote">
+            <summary>Source code in <code>src/data_transform.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">urban_rural_results</span><span class="p">(</span><span class="n">la_pop_df</span><span class="p">,</span> <span class="n">pop_in_poly_df</span><span class="p">,</span> <span class="n">urb_rur_dict</span><span class="p">,</span> <span class="n">local_auth</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates two dataframes, urban and rural and classifies proportion</span>
+<span class="sd">    of people served and not served by public transport. This is placed into</span>
+<span class="sd">    a urban rural dictionary for each local authority of interest for the</span>
+<span class="sd">    final csv output.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        la_pop_df (gpd.GeoDataFrame): GeoPandas Dataframe that includes</span>
+<span class="sd">                                    output area codes and population estimates.</span>
+<span class="sd">        pop_in_poly_df (gpd.GeoDataFrame): A geodata frame with the points</span>
+<span class="sd">                                            inside the polygon.</span>
+<span class="sd">        urb_rur_dict (dict): Dictionary to store the urban rural dataframe.</span>
+<span class="sd">        local_auth (str): The local authority of interest.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        urb_rur_dict (dict): Dictionary with a disability total dataframe for</span>
+<span class="sd">                            unserved and served populations for all given</span>
+<span class="sd">                            local authorities.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Urban/Rural disaggregation</span>
+    <span class="c1"># split into two different dataframes</span>
+    <span class="n">urb_df</span> <span class="o">=</span> <span class="n">la_pop_df</span><span class="p">[</span><span class="n">la_pop_df</span><span class="o">.</span><span class="n">urb_rur_class</span> <span class="o">==</span> <span class="s2">&quot;urban&quot;</span><span class="p">]</span>
+    <span class="n">rur_df</span> <span class="o">=</span> <span class="n">la_pop_df</span><span class="p">[</span><span class="n">la_pop_df</span><span class="o">.</span><span class="n">urb_rur_class</span> <span class="o">==</span> <span class="s2">&quot;rural&quot;</span><span class="p">]</span>
+
+    <span class="n">urb_df_poly</span> <span class="o">=</span> <span class="n">pop_in_poly_df</span><span class="p">[</span><span class="n">pop_in_poly_df</span><span class="o">.</span><span class="n">urb_rur_class</span> <span class="o">==</span> <span class="s2">&quot;urban&quot;</span><span class="p">]</span>
+    <span class="n">rur_df_poly</span> <span class="o">=</span> <span class="n">pop_in_poly_df</span><span class="p">[</span><span class="n">pop_in_poly_df</span><span class="o">.</span><span class="n">urb_rur_class</span> <span class="o">==</span> <span class="s2">&quot;rural&quot;</span><span class="p">]</span>
+
+    <span class="n">urb_servd_df</span> <span class="o">=</span> <span class="n">served_proportions_disagg</span><span class="p">(</span><span class="n">pop_df</span><span class="o">=</span><span class="n">urb_df</span><span class="p">,</span>
+                                             <span class="n">pop_in_poly_df</span><span class="o">=</span><span class="n">urb_df_poly</span><span class="p">,</span>
+                                             <span class="n">cols_lst</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pop_count&#39;</span><span class="p">])</span>
+
+    <span class="n">rur_servd_df</span> <span class="o">=</span> <span class="n">served_proportions_disagg</span><span class="p">(</span><span class="n">pop_df</span><span class="o">=</span><span class="n">rur_df</span><span class="p">,</span>
+                                             <span class="n">pop_in_poly_df</span><span class="o">=</span><span class="n">rur_df_poly</span><span class="p">,</span>
+                                             <span class="n">cols_lst</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pop_count&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Renaming pop_count to either urban or rural</span>
+    <span class="n">urb_servd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pop_count&quot;</span><span class="p">:</span> <span class="s2">&quot;Urban&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rur_servd_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;pop_count&quot;</span><span class="p">:</span> <span class="s2">&quot;Rural&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Sending each to reshaper</span>
+    <span class="n">urb_servd_df_out</span> <span class="o">=</span> <span class="n">do</span><span class="o">.</span><span class="n">reshape_for_output</span><span class="p">(</span><span class="n">urb_servd_df</span><span class="p">,</span>
+                                             <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;Urban&quot;</span><span class="p">,</span>
+                                             <span class="n">local_auth</span><span class="o">=</span><span class="n">local_auth</span><span class="p">)</span>
+
+    <span class="n">rur_servd_df_out</span> <span class="o">=</span> <span class="n">do</span><span class="o">.</span><span class="n">reshape_for_output</span><span class="p">(</span><span class="n">rur_servd_df</span><span class="p">,</span>
+                                             <span class="n">id_col</span><span class="o">=</span><span class="s2">&quot;Rural&quot;</span><span class="p">,</span>
+                                             <span class="n">local_auth</span><span class="o">=</span><span class="n">local_auth</span><span class="p">)</span>
+
+    <span class="c1"># Renaming their columns to Urban/Rural</span>
+    <span class="n">urb_servd_df_out</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Urban&quot;</span><span class="p">:</span> <span class="s2">&quot;Urban/Rural&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rur_servd_df_out</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Rural&quot;</span><span class="p">:</span> <span class="s2">&quot;Urban/Rural&quot;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Combining urban and rural dfs</span>
+    <span class="n">urb_rur_servd_df_out</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">urb_servd_df_out</span><span class="p">,</span> <span class="n">rur_servd_df_out</span><span class="p">])</span>
+
+    <span class="c1"># Output this iteration&#39;s urb and rur df to the dict</span>
+    <span class="n">urb_rur_dict</span><span class="p">[</span><span class="n">local_auth</span><span class="p">]</span> <span class="o">=</span> <span class="n">urb_rur_servd_df_out</span>
+
+    <span class="k">return</span> <span class="n">urb_rur_dict</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data_output/" class="btn btn-neutral float-left" title="Data output"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../geospatial_mods/" class="btn btn-neutral float-right" title="Geospatial mods">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data_output/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../geospatial_mods/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

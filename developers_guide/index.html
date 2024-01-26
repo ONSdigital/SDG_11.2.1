@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/developers_guide/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>For Developers - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "For Developers";
+        var mkdocs_page_input_path = "developers_guide.md";
+        var mkdocs_page_url = "/developers_guide/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="#">Code Reference</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">For Developers</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/developers_guide.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="for-developers">For Developers</h1>
+<h2 id="requirements">Requirements</h2>
+<p>A number of problems with dependencies have been experienced while developing this, so it is strongly recommended that you use a virtual environment (either conda or venv) and use the provided requirements.txt to install the needed versions of packages.</p>
+<p><strong>Note for ONS staff:</strong> It is unlikely that you will be able to install all the needed dependencies to run this script, therefore it is recommended that your devlopment work is carried out on an off-network computer.</p>
+<p>Before starting this process, please ensure that <a href="https://docs.anaconda.com/anaconda/install/index.html">Anaconda3</a> and <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a> are installed. We recommend running the script using VSCode, as this is what we use in these instructions, and is downloadable <a href="https://code.visualstudio.com/download">here</a>.</p>
+<p>If you are using Windows, you will have to add the conda and python path into your Windows Path environment. For guidance, follow the tutorial <a href="https://www.datacamp.com/community/tutorials/installing-anaconda-windows">here</a>.</p>
+<h2 id="cloning-the-repository">Cloning the repository</h2>
+<p>The first step is setting up your SSH key for GitHub. The process will slightly vary depending on what OS you are running from. Here are useful tutorials for <a href="https://medium.com/devops-with-valentine/2021-how-to-set-up-your-ssh-key-for-github-on-windows-10-afe6e729a3c0">Windows 10</a> or <a href="https://www.atlassian.com/git/tutorials/git-ssh">Mac and Linux</a>. Further information on adding your SSH key to GitHub is linked <a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">here</a>.</p>
+<p>You should now have your SSH key set up. To clone the repository, we need to first go to the project directory (where you would like it saved on your local drive).</p>
+<pre><code>$ cd project-directory
+</code></pre>
+<p>Then activate use the SSH address to clone the repository</p>
+<pre><code>$ git clone SSH_address
+</code></pre>
+<p>You can then open the folder SDG_11.2.1 within VSCode using "Open Folder" in Source Control.</p>
+<h2 id="create-an-environment">Create an environment</h2>
+<p>Virtual environments are extremely useful when working on different projects as they can be set up in a way to only have packages installed in that environment and not globally - it does not affect base Python installation in any way.</p>
+<p>Create an environment called "SDG_11.2.1" with the version of Python that this was developed in</p>
+<pre><code>conda create --name SDG_11.2.1 python=3.8
+</code></pre>
+<p><strong>Troubleshooting:</strong> When creating the environment on Windows, it might fail with a HTTP error when trying to fetch package metadata. Following <a href="https://stackoverflow.com/questions/50125472/issues-with-installing-python-libraries-on-windows-condahttperror-http-000-co/62483686#62483686">these steps</a> should resolve the issue.</p>
+<h2 id="activate-the-environment">Activate the environment</h2>
+<p>This <a href="https://code.visualstudio.com/docs/python/environments">tutorial</a> under the 'Manually specify an interpreter' section allows you to add in a virtual environment to use. To select an interpreter, use CTRL+SHIFT+P or command+SHIFT+P then write 'Python: Select Interpreter' to which you can add a file path similar to '.venv/Scripts/python.exe'. You can also use the Find button to locate the specific file in your file system.</p>
+<p>After this has been set up, go to the project directory/wherever you have saved to on your local drive. On Windows this may look like:</p>
+<pre><code>$ cd C:\Users\name\project-directory
+</code></pre>
+<p>Then activate the environment</p>
+<pre><code>$ conda activate SDG_11.2.1
+</code></pre>
+<p>The above command will <strong>not work for Windows</strong> unless you have the Conda path linked to your Windows path environment (see <a href="https://www.datacamp.com/community/tutorials/installing-anaconda-windows">this tutorial</a>).</p>
+<p>If you do not have the Conda path linked, you can use the following for Windows:</p>
+<pre><code>$ activate SDG_11.2.1
+</code></pre>
+<p>Then you should see the environment name in brackets before the prompt, similar to:</p>
+<pre><code>(SDG_11.2.1) $
+</code></pre>
+<p><strong>Troubleshooting:</strong></p>
+<p>Activating the environment in the Powershell terminal does not work for Windows. Set the default terminal to Command Prompt and activate from here.</p>
+<ol>
+<li>Press CTRL+Shift+P and search for 'Terminal: Configure Terminal Settings'.</li>
+<li>Under the 'Terminal &gt; External: Windows Exec' section enter the path to your cmd. E.g.<pre><code>C:\WINDOWS\System32\cmd.exe
+</code></pre>
+</li>
+</ol>
+<p>Make sure you are using the correct Python interpreter by checking your Python path:</p>
+<p>In Linux:</p>
+<pre><code>$ which python
+</code></pre>
+<p>And in Windows use the following command in cmd or Anaconda prompt:</p>
+<pre><code>$ where python
+</code></pre>
+<p>Which should return something like:</p>
+<p>C:\Python36\envs\SDG_11.2.1\python.exe</p>
+<p>Showing your are using the Python from the virtual environment, not the base installation of Python.</p>
+<h2 id="installing-dependencies">Installing dependencies</h2>
+<p>First, ensure you are in the project directory</p>
+<pre><code>$ cd C:\Users\name\project-directory
+</code></pre>
+<p>To install the requirements write</p>
+<pre><code>conda install --file requirements.txt
+</code></pre>
+<p>This may throw an error if you do not have all the packages required</p>
+<pre><code>PackageNotFoundError: The following packages are not available from current channels
+</code></pre>
+<p>If this does, write the following with the package names that the error has shown you are missing:</p>
+<pre><code>pip install packagename
+</code></pre>
+<p>The script should now be set up to use.</p>
+<h2 id="setting-git-configuration">Setting Git configuration</h2>
+<p>To be able to contribute to the project via Git, you will need to add the email and user name associated to your account to the config file</p>
+<pre><code>git config --global user.email "email"
+
+git config --global user.name "username"
+</code></pre>
+<h2 id="pre-commit-hooks">Pre-commit hooks</h2>
+<p>In this project, we use pre-commit hooks to stop us from accidentally uploading files to GitHub. We have the <code>.pre-commit-config.yaml</code> which has the set up for the pre-commit hooks you will need. However, to ensure that they are active, it is essential to set up pre-commit hooks. The instructions below follows <a href="https://pre-commit.com/">this guidance</a>.</p>
+<p>You should have pre-commit installed as it is part of <code>requirements.txt</code>. You can check this by writing</p>
+<pre><code>pip freeze
+</code></pre>
+<p>on the command line which shows all the python packages installed in your virtual environment. If this has not installed, write:</p>
+<pre><code>pip install pre-commit
+</code></pre>
+<p>To set up the git hook scripts from the <code>.pre-commit-config.yaml</code>, run:</p>
+<pre><code>pre-commit install
+</code></pre>
+<p>Now this should have the hooks running when you try to commit. You can test this out by creating dummy data and trying to commit this to GitHub.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

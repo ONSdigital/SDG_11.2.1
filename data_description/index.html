@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/data_description/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Data Description - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Data Description";
+        var mkdocs_page_input_path = "data_description.md";
+        var mkdocs_page_url = "/data_description/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="./">Data Description</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#naptan">NaPTAN</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#derived-variables">Derived Variables</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#census-data">Census Data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#england-wales">England &amp; Wales</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#scotland">Scotland</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#northern-ireland">Northern Ireland</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#annual-population-estimates">Annual Population Estimates</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#local-authorities-la-boundary-data">Local Authorities (LA) Boundary Data</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#england-wales_1">England &amp; Wales</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#scotland_1">Scotland</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#northern-ireland_1">Northern Ireland</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="#">Code Reference</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building_docs/">Using mkdocs to edit these pages</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Data Description</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/data_description.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="data">Data</h1>
+<p>The Public Transport Availability project looks to assess the proportion of people who live near a public transport stop. Below is a description of the data sources used in order to perform this calculation. Most data sources are split into 3 sections: England &amp; Wales, Scotland, and Northern Ireland (NI).</p>
+<h2 id="naptan">NaPTAN</h2>
+<p>The National Public Transport Access Nodes (NaPTAN) dataset contains a list of all public transport access points in Great Britain including bus, rail and tram. This is open-source data and is publicly available. As of 3rd May 2022, the dataset includes around 435,000 public transport access points. The following columns are used within our calculations. The full schema for NapTAN can be found<a href="http://naptan.dft.gov.uk/naptan/schema/2.5/doc/NaPTANSchemaGuide-2.5-v0.67.pdf"> here</a>.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Column</strong></th>
+<th><strong>Description</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NaptanCode</td>
+<td>Seven- or eight-digit identifier for access point.</td>
+</tr>
+<tr>
+<td>CommonName</td>
+<td>Name of bus stop.</td>
+</tr>
+<tr>
+<td>Easting</td>
+<td>Uk Geocoding reference.</td>
+</tr>
+<tr>
+<td>Northing</td>
+<td></td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Whether an access point is active, inactive or pending.</td>
+</tr>
+<tr>
+<td>StopType</td>
+<td>The type of access point e.g bus or rail</td>
+</tr>
+</tbody>
+</table>
+<p>The dataset is filtered based on two conditions.</p>
+<ol>
+<li>The Status column must not be inactive. This ensures that historic public transport access points are not included in the calculations.</li>
+<li>The StopType is either a bus or rail public transport access point.</li>
+</ol>
+<p><img alt="" src="https://lh4.googleusercontent.com/aWHDDVx3u12vC8HnbD395w61y_wIi-K7sZ38TkHJV2EqifGdOD8t5cc4E7fdIN1dApuK-CSaxcFYJ28Vxg6jN1varhbk8_PDPuNj8lLD4kwfXOlg-GX8fk4EeVjV58fHmXw9hFiCC9vQjKUjmeztDA" /></p>
+<h2 id="derived-variables">Derived Variables</h2>
+<p>The StopType that are included are in the calculations are "RSE", "RLY", "RPL", "TMU", "MET", "PLT", "BCE", "BST","BCQ", "BCS","BCT". After filtering there are 383,662 public transport access points.</p>
+<p>A <strong>capacity_type</strong> variable is derived which classifies public transport as either high or low capacity. This is consistent with the UN <a href="https://unstats.un.org/sdgs/metadata/files/Metadata-11-02-01.pdf">definition</a>.</p>
+<p>A <strong>geometry</strong> variable is derived which creates a polygon around each public transport access point. The polygon for a low capacity bus stop is a circle with radius of 500 metres with the access point being the centre point. The polygon for high capacity is the same with a circle with a radius of 1000 metres. These polygons will be used to determine if a weighted centroid lives within the polygon.</p>
+<h2 id="census-data">Census Data</h2>
+<p>The census takes place every 10 years and aims to obtain information on all households in the UK and statistics are published at various geographic levels. Output area (OA) is a lower level geography which contains on average approximately 300 people. For the purposes of our calculations each OA will be grouped together into one household.</p>
+<p>In Northern Ireland, <a href="https://www.nisra.gov.uk/support/output-geography-census-2011/small-areas#:~:text=Small%20Areas%20were%20generally%20created,Electoral%20Wards%20in%20Northern%20Ireland.">small areas</a> are used as opposed to OAs. The use of OAs were replaced after the 2001 NI census and small areas have an approximate population of 400 people.</p>
+<p>Census data is used to calculate percentages of certain demographics which can then be applied to the annual population estimates. For example the annual population estimates do not include information on disability status. A proportion of people who are disabed can be calculated from the 2011 Census per OA and then applied to the population estimates data.</p>
+<h3 id="england-wales">England &amp; Wales</h3>
+<p>The <a href="https://data.gov.uk/dataset/5a08e622-1547-49ac-b626-d4f0d4067805/output-areas-december-2011-population-weighted-centroids">population weighted centroids</a> for OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.</p>
+<p>The <a href="https://www.ons.gov.uk/methodology/geography/geographicalproducts/ruralurbanclassifications/2011ruralurbanclassification">urban/rural classification</a> is used to classify if an OA is urban or rural. This is used to be able to calculate different estimates for each classification. The OA’s are classed as ‘urban’ if they were allocated to a 2011 built-up area with a population of 10,000 people or more. All other remaining OAs are classed as ‘rural’.</p>
+<p>The <a href="https://www.nomisweb.co.uk/sources/census_2011_qs">QS303EW</a>, a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on an OA basis. This information is transformed to be consistent with the <a href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/">GSS harmonized disability data</a> and allows us to produce estimates disaggregated by disability status.</p>
+<p>The <a href="https://www.nomisweb.co.uk/census/2011/qs104ew">QS104EW</a> contains sex population estimates for each OA.</p>
+<h3 id="scotland">Scotland</h3>
+<p>The <a href="https://www.nrscotland.gov.uk/statistics-and-data/geography/our-products/census-datasets/2011-census/2011-boundaries">population weighted centroids</a> for each OA from the 2011 census are used. These are OA’s containing where the midpoint of their population is. These are the points used to deduce whether an OA is contained within a service area.</p>
+<p>The <a href="https://www.isdscotland.org/Products-and-Services/GPD-Support/Geography/Urban-Rural-Classification/">urban/rural classification</a> is used to classify if an OA is urban or rural. The UR6_2013_2014 column is used to determine if an output area is rural or urban. An OA is classified as 'urban' if they were allocated to a 2013/14 built-up area with a population of 10,000 people or more. All other remaining OAs are classified as 'rural'. This is consistent with the England &amp; Wales definition.</p>
+<p>The <a href="https://www.nomisweb.co.uk/sources/census_2011_qsuk">QS303S</a>, a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on an OA basis. This information is transformed to be consistent with the <a href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/">GSS harmonized disability data</a> and allows us to produce estimates disaggregated by disability status.</p>
+<h3 id="northern-ireland">Northern Ireland</h3>
+<p>The <a href="https://www.nisra.gov.uk/support/geography/output-areas-census-2001">population weighted centroids</a> used in Northern Ireland are based on the 2001 NI census' OAs as no further updates to the data have been given. Since the 2011 census, Northern Ireland use small areas which are slightly different to OAs. There is a 1-1 lookup table which converts each OA to a small area so that we can use the population weighted centroids from the 2001 census.</p>
+<p>The <a href="https://www.nisra.gov.uk/publications/settlement-2015-documentation">urban/rural classification</a> classifies a NI small area to be urban or rural. We classified an urban area to be where a settlement has a population greater than 10,000. The NISRA classify an urban area as greater than 5,000 population which is inconsistent with our classification. The previous definition was chosen to be consistent between England &amp; Wales.</p>
+<p>The <a href="https://www.nisra.gov.uk/publications/2011-census-quick-statistics-tables-health">QS303NI</a>, a long-term health problem or disability dataset, derived from the 2011 census, contains disability information on a small area basis. This information is transformed to be consistent with the <a href="https://gss.civilservice.gov.uk/policy-store/measuring-disability-for-the-equality-act-2010/">GSS harmonized disability data</a> and allows us to produce estimates disaggregated by disability status.</p>
+<h2 id="annual-population-estimates">Annual Population Estimates</h2>
+<p>The ONS produces <a href="https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates">population estimates</a> every year for England &amp; Wales. This contains information on population estimates for each OA. This also contains splits of age and sex for England &amp; Wales <strong>only</strong>. These are annual so the year used is consistent with the calculation year.</p>
+<p>We also use NI <a href="https://www.nisra.gov.uk/statistics/population/population-estimates-small-areas">population estimates</a> from the Northern Ireland Statistics and Research Agency (NISRA) which give mid-year population estimates for small areas. These are not disaggregated by age and sex, so has to be calculated using proportions from 2011 census. This is explained in the calculation process.</p>
+<p>Scotland currently has no mid-year population estimates for OA, and we can only calculate population for each OA based on LA level.</p>
+<h2 id="local-authorities-la-boundary-data">Local Authorities (LA) Boundary Data</h2>
+<p>This section discusses the local authority boundaries data used for England &amp; Wales, Scotland, and Northern Ireland.</p>
+<h3 id="england-wales_1">England &amp; Wales</h3>
+<p>The boundaries of each <a href="https://data.gov.uk/dataset/51878530-7dd4-45df-b36b-9a0b01f3c136/local-authority-districts-december-2019-boundaries-uk-bgc">local authority</a> are used to ensure calculations are aggregated to an LA basis.</p>
+<p>This <a href="https://geoportal.statistics.gov.uk/search?collection=Dataset&amp;sort=name&amp;tags=all(LUP_OA_WD_LAD)">lookup file</a> between LA and OA is used as it is important when aggregating OA estimates to a LA level for England &amp; Wales.</p>
+<p>These boundaries and lookup files are annual so the year used is consistent with the calculation year.</p>
+<h3 id="scotland_1">Scotland</h3>
+<p>The boundaries of each <a href="https://data.spatialhub.scot/dataset/local_authority_boundaries-is">local authority</a> for Scotland use 2021 boundaries only at the  moment. We are able to access a LA 2011 boundary but there is no lookup table for this so are using LA2021 boundary data and <a href="https://geoportal.statistics.gov.uk/datasets/ons::postcode-to-output-area-to-lower-layer-super-output-area-to-middle-layer-super-output-area-to-local-authority-district-november-2021-lookup-in-the-uk/about">lookup table</a>. Future work will look to investigating the differences between LA 2011 boundaries and LA 2021 boundaries.</p>
+<p>Unfortunately, Scotland boundaries and lookup files are not annual so we cannot access more accurate data for other years.</p>
+<h3 id="northern-ireland_1">Northern Ireland</h3>
+<p>The same local authorities boundary file that is used in England &amp; Wales is also used for Northern Ireland.</p>
+<p>We used an OA to SA lookup file, as well as an SA to LA lookup file. This was due to only having population weighted centroids for each OA in 2011, meaning we converted each OA to an SA using a 1:1 lookup table. This meant we could then use an SA to LA lookup table to aggregate the SA estimates to LA level.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../data_quality/" class="btn btn-neutral float-left" title="Data Quality"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../comparison_to_EU_method/" class="btn btn-neutral float-right" title="EU and UK Methodology Comparison">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../data_quality/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../comparison_to_EU_method/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

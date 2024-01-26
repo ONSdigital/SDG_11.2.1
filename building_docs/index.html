@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://sdg-11-2-1.github.io/building_docs/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Using mkdocs to edit these pages - SDG 11.2.1 Documentation</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Using mkdocs to edit these pages";
+        var mkdocs_page_input_path = "building_docs.md";
+        var mkdocs_page_url = "/building_docs/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> SDG 11.2.1 Documentation
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../about/">About</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_quality/">Data Quality</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../data_description/">Data Description</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="" href="../methodology.md">Methodology</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../comparison_to_EU_method/">EU and UK Methodology Comparison</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Developers Guide</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../for_developers/">For Developers</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="#">Code Reference</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../main/">Main</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_ingest/">Data ingest</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_output/">Data output</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../data_transform/">Data transform</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../geospatial_mods/">Geospatial mods</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_NI/">SDG NI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../SDG_scotland/">SDG scotland</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="#">Time Table</a>
+    <ul>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_bus_timetable/">SDG bus timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../SDG_train_timetable/">SDG train timetable</a>
+                </li>
+                <li class="toctree-l3"><a class="reference internal" href="../time_table_utils/">Time table utils</a>
+                </li>
+    </ul>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="./">Using mkdocs to edit these pages</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#modifying-a-page">Modifying a page</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manually-deploying-pages-with-gh-deploy">Manually deploying pages with gh-deploy</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#repository-pages-settings">Repository "Pages" settings</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">SDG 11.2.1 Documentation</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Developers Guide</li>
+      <li class="breadcrumb-item active">Using mkdocs to edit these pages</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/ONSdigital/SDG_11.2.1/edit/master/docs/building_docs.md">Edit on SDG 11.2.1</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="using-mkdocs-to-edit-these-pages">Using mkdocs to edit these pages</h1>
+<h2 id="modifying-a-page">Modifying a page</h2>
+<p>If you want to edit an existing page, you need to edit the corresponding <code>.md</code> file which can be found in the <code>docs/</code> folder of this project. </p>
+<p>Follow these instructions:</p>
+<ol>
+<li>Create a new branch (with the example name of <code>my-page-edits</code>) using Git with the following command:</li>
+</ol>
+<p><code>git checkout -b my-page-edits</code></p>
+<ol>
+<li>
+<p>Make the necessary changes to the markdown files that you want to update. Git add and commit as usual. </p>
+</li>
+<li>
+<p>After committing your changes, run the following command to rebuild your site:</p>
+</li>
+</ol>
+<p><code>mkdocs build</code></p>
+<ol>
+<li>
+<p>After running the build command, mkdocs will create a new set of HTML files in the 'site/' directory, replacing the previous version of your site.</p>
+</li>
+<li>
+<p>Before pushing, it's a good idea to see the changes on your local machine. To preview your changes, you can run the following command to launch a local server:</p>
+</li>
+</ol>
+<p><code>mkdocs serve</code></p>
+<p>Open your web browser and navigate to http://localhost:8000 to see your changes in action.</p>
+<ol>
+<li>
+<p>If you are happy with your changes, you can push your updated branch to your Git repository. </p>
+</li>
+<li>
+<p>After that create a pull request to <code>main</code> and the Github Action (controlled by this yaml <code>.github/workflows/pages.yml</code>) should trigger the re-building and deployment of the pages. </p>
+</li>
+</ol>
+<h2 id="manually-deploying-pages-with-gh-deploy">Manually deploying pages with <code>gh-deploy</code></h2>
+<p>You can deploy any changes you have made locally using <code>mkdocs gh-deploy</code>.</p>
+<p>Look for more guidance in the <a href="https://www.mkdocs.org/user-guide/deploying-your-docs/">mkdocs official documentation</a></p>
+<h2 id="repository-pages-settings">Repository "Pages" settings</h2>
+<p>You should select the "gh-pages" branch as the source branch in the Pages section of Github's Pages settings.</p>
+<p>Here are the steps to follow:</p>
+<pre><code>Go to your Github repository's settings page.
+Scroll down to the "Pages" section.
+Under "Source", select "gh-pages" from the dropdown menu.
+Click "Save".
+</code></pre>
+<p>This tells Github to serve your pages from the "gh-pages" branch of your repository, which is where mkdocs gh-deploy will push your documentation.</p>
+<p>Note that it may take a few minutes for your changes to take effect on the Github Pages site.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../time_table_utils/" class="btn btn-neutral float-left" title="Time table utils"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../time_table_utils/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
