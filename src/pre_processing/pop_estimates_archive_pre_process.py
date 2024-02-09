@@ -31,7 +31,8 @@ db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 input_folder = "data/population_estimates/2002-2012"
 
 # Define the years to process
-years = list(range(2002, 2013))
+# years = list(range(2002, 2013))
+years = [2011]
 
 # Define an empty dictionary to store the dataframes for each year
 year_data = {}
@@ -79,13 +80,23 @@ def create_connection(database_path: str) -> DuckDBPyConnection:
 
 
 def load_all_csvs(con, csv_folder, output_table_name):
-    """Loads all the population csv files in a folder into a DuckDB database."""
+    """Loads all the population csv files in a folder into a DuckDB database.
+    
+    Lists all the csv files in the csv_folder, and loads them into a DuckDB database.
+    Counts the number of records loaded into the database and logs the result.
+    Also returns the name of the table that the data was loaded into.
+    """
 
     # Check that csv folder exists
     if not pl.Path(csv_folder).exists():
         raise ValueError(f"Folder {csv_folder} does not exist.")
 
     duckdbLogger.info(f"Loading all csv files")
+    
+    # List all the csvs in the csv_folder
+    csv_files = list(pl.Path(csv_folder).glob("*.csv"))
+    duckdbLogger.info(f"Found {csv_files} in {csv_folder}")
+    
     
     load_csv_query = f"""
     CREATE TABLE IF NOT EXISTS {output_table_name}
@@ -96,9 +107,16 @@ def load_all_csvs(con, csv_folder, output_table_name):
     #
     con.execute(load_csv_query)
 
+    # SQL query to count the unique codes in column "OA11CD" in the table
+    count_query = f"SELECT COUNT(DISTINCT OA11CD) FROM {output_table_name};"
+    
+    # Log how many records have been loaded
+    duckdbLogger.info(f"Loaded {con.execute(count_query).fetchall()} records into {output_table_name}")
+
     duckdbLogger.info(f"Finished loading all csv files in {csv_folder} into {output_table_name}")
     
     return output_table_name
+
 
 def query_database(con, query, year=None):
     """Queries a DuckDB database and returns the name of a temporary table.
