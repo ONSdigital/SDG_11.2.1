@@ -21,6 +21,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_ingest import path_or_url, GCPBucket
+import data_ingest as di
 
 
 bucket = GCPBucket()
@@ -49,8 +50,8 @@ db_file_path = "data/population_estimates/2002-2012/pop_est_2002-2012.db"
 input_folder = "data/population_estimates/2002-2012"
 
 # Define the years to process
-# years = list(range(2002, 2013))
-years = [2011]
+years = list(range(2002, 2013))
+#years = [2011]
 
 # Define an empty dictionary to store the dataframes for each year
 year_data = {}
@@ -141,15 +142,27 @@ def load_all_csvs(con,
         con.execute(f"SET s3_access_key_id={access_key}") 
         con.execute(f"SET s3_secret_access_key='{secret}';")
 
-        file_list = bucket.get_file_names()
+        #file_list = bucket.get_file_names()
+        file_list = di.get_abspath_or_list_files(dir=csv_folder, list_or_abs="list", extension="xls")
 
-        file_list = [i for i in file_list if i.startswith(f'{csv_folder}')]
+        #file_list = [i for i in file_list if i.startswith(f'{csv_folder}/')]
         
 
 
         for file in file_list:
-            
-            load_csv_query = f""""""
+            xlFile = pd.ExcelFile(file)
+            for i in range(len(years)):
+                year_df = pd.read_excel(xlFile, sheet_name=i)
+                year_df['year'] = years[i]
+                read_df_query = f"""CREATE TABLE IF NOT EXISTS {output_table_name};
+                    INSERT INTO output_table_name SELECT * FROM AS year_df"""
+                con.execute(read_df_query)
+                #insert_df_query = f"""INSERT INTO {output_table_name} SELECT * FROM
+                 #                       year_df"""
+                #con.execute(insert_df_query)
+                
+
+
     
     con.execute(load_csv_query)
 
@@ -389,7 +402,7 @@ def main():
     # and return the name of the temp table
     temp_table_names = []
     duckdbLogger.info("Starting to load data for each year into a temp table")
-    for year in years[:1]:
+    for year in years:
         duckdbLogger.info(f"Extracting data for year {year}")
 
         year_col=f"Population_{year}"
