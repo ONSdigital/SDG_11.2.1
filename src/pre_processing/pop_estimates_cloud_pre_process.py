@@ -7,9 +7,18 @@ import duckdb
 import uuid
 from typing import List, Dict
 from duckdb import DuckDBPyConnection
+#from fsspec import filesystem
 import logging
 import pandas as pd
 import yaml
+import sys
+import os
+
+# this line will throw an exception if the appropriate filesystem interface is not installed
+#duckdb.register_filesystem(filesystem('gcs'))
+
+# add the parent directory to the path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from data_ingest import path_or_url, GCPBucket
 
@@ -122,17 +131,23 @@ def load_all_csvs(con,
     if cloud_or_local == 'cloud':
         access_key = secrets['access_key']
         secret = secrets['secret']  
+
+        # install and load httpfs for GCS
+        con.execute("INSTALL httpfs;")
+        con.execute("LOAD httpfs;")
+        con.execute("INSTALL spatial;")
+        con.execute("LOAD spatial;")
+        con.execute("SET s3_endpoint='storage.googleapis.com'")
+        con.execute(f"SET s3_access_key_id={access_key}") 
+        con.execute(f"SET s3_secret_access_key='{secret}';")
+
+        file_list = bucket.get_file_names()
+
+        file_list = [i for i in file_list if i.startswith(f'{csv_folder}')]
         
-        create_secret_query = f"""CREATE SECRET (
-                TYPE GCS,
-                KEY_ID {access_key},
-                SECRET {secret},
-        )"""
-        con.execute(create_secret_query)
-        
-        file_list = bucket.get_file_list(csv_folder)
-        
-        for file in file:
+
+
+        for file in file_list:
             
             load_csv_query = f""""""
     
@@ -364,7 +379,10 @@ def main():
     # Run query to load all the csv data in one go and create the table
     table_name = load_all_csvs(con=con, 
                                csv_folder=input_folder, 
-                               output_table_name="all_pop_estimates",)
+                               output_table_name="all_pop_estimates",
+                               cloud_or_local="cloud",
+                               secrets=secrets,
+                               bucket=bucket)
 
 
     # For each of those years, load the data for all regions into a temp table
