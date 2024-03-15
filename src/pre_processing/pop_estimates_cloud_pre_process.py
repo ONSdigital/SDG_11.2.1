@@ -13,6 +13,7 @@ import pandas as pd
 import yaml
 import sys
 import os
+import re
 
 # this line will throw an exception if the appropriate filesystem interface is not installed
 #duckdb.register_filesystem(filesystem('gcs'))
@@ -20,8 +21,7 @@ import os
 # add the parent directory to the path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from data_ingest import path_or_url, GCPBucket
-import data_ingest as di
+from data_ingest import path_or_url, GCPBucket, capture_region, get_abspath_or_list_files
 
 
 bucket = GCPBucket()
@@ -128,6 +128,7 @@ def load_all_csvs(con,
         FROM read_csv_auto('{csv_folder}/*.csv', header=true, columns={column_types}, delim=',', auto_detect=false);
         """
         # This code currently gives an empty dataframe
+        con.execute(load_csv_query)
     
     if cloud_or_local == 'cloud':
         access_key = secrets['access_key']
@@ -142,10 +143,7 @@ def load_all_csvs(con,
         con.execute(f"SET s3_access_key_id={access_key}") 
         con.execute(f"SET s3_secret_access_key='{secret}';")
 
-        #file_list = bucket.get_file_names()
-        file_list = di.get_abspath_or_list_files(dir=csv_folder, list_or_abs="list", extension="xls")
-
-        #file_list = [i for i in file_list if i.startswith(f'{csv_folder}/')]
+        file_list = get_abspath_or_list_files(dir=csv_folder, list_or_abs="list", extension="xls")
         
 
 
@@ -154,25 +152,125 @@ def load_all_csvs(con,
             for i in range(len(years)):
                 year_df = pd.read_excel(xlFile, sheet_name=i)
                 year_df['year'] = years[i]
-                read_df_query = f"""CREATE TABLE IF NOT EXISTS {output_table_name};
-                    INSERT INTO output_table_name SELECT * FROM AS year_df"""
-                con.execute(read_df_query)
-                #insert_df_query = f"""INSERT INTO {output_table_name} SELECT * FROM
-                 #                       year_df"""
-                #con.execute(insert_df_query)
-                
+                if i==0:
+                    read_df_query = f"""CREATE TABLE IF NOT EXISTS {output_table_name}
+                                        AS SELECT * FROM year_df"""
+                    con.execute(read_df_query)
+                else:
+                    insert_df_query = f"""INSERT INTO {output_table_name} SELECT * FROM
+                                        year_df"""
+                    con.execute(insert_df_query)
+
+            # TODO: Load a workbook for every region for a specific year
 
 
+def load_all_wbs(con, 
+                  xls_folder,
+                  cloud_or_local="cloud",
+                  secrets=secrets, bucket=bucket):
+    """Loads all the population xlsx by region files into a DuckDB database.
+    Args:
+        con (duckDB.connection): connection to the database
+        xls_folder (str): Folder to extract 
+    """
     
-    con.execute(load_csv_query)
+    # if cloud_or_local == 'local':
+        # Check that csv folder exists
+        # if not pl.Path(xls_folder).exists():
+        #     raise ValueError(f"Folder {xls_folder} does not exist.")
+
+        # duckdbLogger.info(f"Loading all csv files")
+        
+        # # List all the csvs in the csv_folder
+        # csv_files = list(pl.Path(xls_folder).glob("*.csv"))
+        # duckdbLogger.info(f"Found {csv_files} in {xls_folder}")
+    
+    
+        # load_csv_query = f"""
+        # CREATE TABLE IF NOT EXISTS {output_table_name}
+        # AS SELECT *
+        # FROM read_csv_auto('{xls_folder}/*.csv', header=true, columns={column_types}, delim=',', auto_detect=false);
+        # """
+        # # This code currently gives an empty dataframe
+        # con.execute(load_csv_query)
+    
+    if cloud_or_local == 'cloud':
+        access_key = secrets['access_key']
+        secret = secrets['secret']  
+
+        # install and load httpfs for GCS
+        con.execute("INSTALL httpfs;")
+        con.execute("LOAD httpfs;")
+        con.execute("INSTALL spatial;")
+        con.execute("LOAD spatial;")
+        con.execute("SET s3_endpoint='storage.googleapis.com'")
+        con.execute(f"SET s3_access_key_id={access_key}") 
+        con.execute(f"SET s3_secret_access_key='{secret}';")
+
+        file_list = get_abspath_or_list_files(dir=xls_folder, list_or_abs="list", extension="xls")   
+
+        for file_name in file_list:
+            # The code below extracts the region name which we use to find in the tables list
+            patt = re.compile('^(.*unformatted[-]?)(?P<region>.*)(-mid2002-mid2012\.xls)')
+            region_name = re.search(patt, file_name).group("region")
+            table_name = region_name.replace("-", " ").replace(' ', '_').title()
+
+            # below code finds all table names in the database
+            con.execute('SHOW TABLES')
+            tables = con.fetchall()
+            tables_list = [item[0] for item in tables]
+            
+            if not table_name in tables_list:
+                # read entire excel file
+                xlFile = pd.ExcelFile(file_name)
+                for i, year in enumerate(years):
+                    # read in specific year tab in order
+                    year_df = pd.read_excel(xlFile, sheet_name=i)
+                    # adds in year col which tells us the year for pop estimate in each region
+                    year_df['year'] = year
+                    # we create table if year is 2002 as it's the first year
+                    if year==2002:
+                        read_df_query = f"""CREATE TABLE IF NOT EXISTS '{table_name}'
+                                            AS SELECT * FROM year_df"""
+                        con.execute(read_df_query)
+                    # if >2002 then we insert pop estimate data for other years into existing table
+                    else:
+                        insert_df_query = f"""INSERT INTO '{table_name}' SELECT * FROM
+                                            year_df"""
+                        con.execute(insert_df_query)
+                duckdbLogger.info(f"Created {table_name} table") 
+            else:
+                # code below determines if any years are missing from existing region table
+                years_df = con.execute(f"""SELECT DISTINCT year FROM {table_name}""").df()
+                years_set = set(years_df['year'])
+                actual_years = set(range(2002,2013))
+                years_to_create = years_set - actual_years
+
+                if years_to_create:
+                    xlFile = pd.ExcelFile(file_name)
+                    for year in years_to_create:
+                        # below code creates missing years and inserts into existing region table
+                        i = actual_years.index(year)
+                        year_df = pd.read_excel(xlFile, sheet_name=i)
+                        year_df['year'] = years[year]
+                        insert_df_query = f"""INSERT INTO {table_name} SELECT * FROM
+                                            year_df"""
+                        con.execute(insert_df_query)
+                    duckdbLogger.info(f"Added {years_to_create} into {table_name} table")
+        
+        duckdbLogger.info(f"All regions and all years read into database")
+
+
+            
+
 
     # SQL query to count the unique codes in column "OA11CD" in the table
-    count_query = f"SELECT COUNT(DISTINCT OA11CD) FROM {output_table_name};"
+    #count_query = f"SELECT COUNT(DISTINCT OA11CD) FROM {output_table_name};"
     
     # Log how many records have been loaded
-    duckdbLogger.info(f"Loaded {con.execute(count_query).fetchall()} records into {output_table_name}")
+    #duckdbLogger.info(f"Loaded {con.execute(count_query).fetchall()} records into {output_table_name}")
 
-    duckdbLogger.info(f"Finished loading all csv files in {csv_folder} into {output_table_name}")
+    duckdbLogger.info(f"Finished loading all xlsx files in {xls_folder} into {output_table_name}")
     
     return output_table_name
 
@@ -222,7 +320,12 @@ def pivot_sex_tables(con, tables_dict: Dict[str, str], year: str):
     Returns:
         Three dataframes representing the pivoted males, females, and both sex-specific tables.
     """
-    
+    ### For this we will want:
+    # for all ages: sex=1, and sex=2
+    # for males: sex=1
+    # for females: sex=2
+    # we do not need to pivot!
+
     year_col=f"Population_{year}"
     
     duckdbLogger.info(f"Starting the pivot process. Year column is: {year_col}")
@@ -250,6 +353,8 @@ def pivot_sex_tables(con, tables_dict: Dict[str, str], year: str):
     return {"persons": persons_sexes_table, "males": male_table, "females": female_table}
 
 def create_all_ages_col(con: DuckDBPyConnection, table_name: str, year: int, config: dict) -> None:
+    # We do not need this anymore! 
+    ################################
     ages_col_str = [f'"{str(age)}"' for age in config["age_lst"]]
     ages_col_str = "+".join(ages_col_str)
 
@@ -281,6 +386,10 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     """
     # Generate a unique name for the temporary table
     # table_name = f"temp_{uuid.uuid4().hex}"
+
+    ### TODO: want to have all cols but sex and LAD11CD
+    # The age cols can be extracted from config file (age_lst)
+    # Need OA11CD and all ages (rather than Age)
 
     # Construct the SQL query for the males sex group
     male_query = f"""
@@ -390,8 +499,8 @@ def main():
     con = create_connection(db_file_path)
 
     # Run query to load all the csv data in one go and create the table
-    table_name = load_all_csvs(con=con, 
-                               csv_folder=input_folder, 
+    table_name = load_all_wbs(con=con, 
+                               xls_folder=input_folder, 
                                output_table_name="all_pop_estimates",
                                cloud_or_local="cloud",
                                secrets=secrets,
@@ -405,31 +514,16 @@ def main():
     for year in years:
         duckdbLogger.info(f"Extracting data for year {year}")
 
-        year_col=f"Population_{year}"
+        table_year = query_database(f"""SELECT * FROM {table_name}
+                     WHERE year={year};""")
+
+        ### TODO: We want to extract the year in the year column in output_table_name here!
 
         # Get the three sex disaggregated tables
-        persons_table, male_table, female_table = age_pop_by_sex(con, table_name, year)
+        persons_table, male_table, female_table = age_pop_by_sex(con, table_year, year)
 
         # Pack names and tables into a dictionary
         all_three_tables = {"persons": persons_table, "males": male_table, "females": female_table}
-
-        # Pivot the dataframe to a wide format
-        all_three_tables = pivot_sex_tables(con, all_three_tables, year)
-        
-        
-        for name in all_three_tables.keys():
-        
-            # Rename the 90+ col and get rid of leading zeros
-            rename_table_column(con, all_three_tables[name], "90", "90+")
-                        
-            for i in range(10):
-                old_column_name = f"{i:02d}"  # This will be '00', '01', '02', ..., '09'
-                new_column_name = str(i)  # This will be '0', '1', '2', ..., '9'
-                rename_table_column(con, all_three_tables[name], old_column_name, new_column_name)
-                          
-            create_all_ages_col(con, all_three_tables[name], year, config)
-        
-            
             
         # Create the folder for the year, and return its path
         output_folder = create_output_folder(year)

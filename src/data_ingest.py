@@ -70,7 +70,7 @@ class GCPBucket:
 
         The URL should be able to be used by our data ingest functions
             to download any file."""
-        expiration = datetime.utcnow() + timedelta(hours=1)
+        expiration = datetime.utcnow() + timedelta(hours=6)
         url = self.bucket.blob(object_name).generate_signed_url(
             expiration,
             method='GET',
