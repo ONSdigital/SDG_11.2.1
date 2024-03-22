@@ -166,6 +166,7 @@ def load_all_csvs(con,
 
 def load_all_wbs(con, 
                   xls_folder,
+                  output_table_name="all_pop_estimates",
                   cloud_or_local="cloud",
                   secrets=secrets, bucket=bucket):
     """Loads all the population xlsx by region files into a DuckDB database.
@@ -207,7 +208,11 @@ def load_all_wbs(con,
         con.execute(f"SET s3_access_key_id={access_key}") 
         con.execute(f"SET s3_secret_access_key='{secret}';")
 
-        file_list = get_abspath_or_list_files(dir=xls_folder, list_or_abs="list", extension="xls")   
+        file_list = get_abspath_or_list_files(dir=xls_folder, list_or_abs="list", extension="xls")
+        
+        # Create a list to store the table names
+        table_name_list=[] 
+        
 
         for file_name in file_list:
             # The code below extracts the region name which we use to find in the tables list
@@ -240,6 +245,7 @@ def load_all_wbs(con,
                         con.execute(insert_df_query)
                 duckdbLogger.info(f"Created {table_name} table") 
             else:
+                duckdbLogger.info(f"{table_name} table already exists in database")
                 # code below determines if any years are missing from existing region table
                 years_df = con.execute(f"""SELECT DISTINCT year FROM {table_name}""").df()
                 years_set = set(years_df['year'])
@@ -257,22 +263,61 @@ def load_all_wbs(con,
                                             year_df"""
                         con.execute(insert_df_query)
                     duckdbLogger.info(f"Added {years_to_create} into {table_name} table")
+                else:
+                    duckdbLogger.info(f"All years already in {table_name} table")
         
-        duckdbLogger.info(f"All regions and all years read into database")
-
-
             
+            # Append the table name to the list
+            table_name_list.append(table_name) 
+            
+        duckdbLogger.info(f"All regions and all years read into database")
+        
+        return table_name_list
 
 
-    # SQL query to count the unique codes in column "OA11CD" in the table
-    #count_query = f"SELECT COUNT(DISTINCT OA11CD) FROM {output_table_name};"
-    
-    # Log how many records have been loaded
-    #duckdbLogger.info(f"Loaded {con.execute(count_query).fetchall()} records into {output_table_name}")
+def create_yearly_tables_all_regions(con, table_name_list):
+    """Extracts all data for one year, from each table (representing a geographic region).
+    Creates a new table called "pop_estimate_{year}" containing data for all regions for that year.
+    Args:
+        con (duckDB.connection): connection to the database
+        table_name_list (list): List of table names
+    """
+    # Define the range of years
+    years = range(2002, 2013)
 
-    duckdbLogger.info(f"Finished loading all xlsx files in {xls_folder} into {output_table_name}")
-    
-    return output_table_name
+    yearly_table_names = []
+
+    # Iterate over each year
+    for year in years:
+        # Define the new table name
+        yearly_table_name = f"pop_estimate_{year}"
+
+        # SQL query to create a new table for the specific year
+        create_query = f"CREATE TABLE IF NOT EXISTS {yearly_table_name} AS SELECT * FROM {table_name_list[0]} WHERE year = {year}"
+
+        # Execute the SQL query
+        con.execute(create_query)
+
+        # Iterate over each table name in the list, starting from the second table
+        for region_table_name in table_name_list[1:]:
+            # SQL query to extract data for the specific year and insert into the new table
+            insert_query = f"INSERT INTO {yearly_table_name} SELECT * FROM {region_table_name} WHERE year = {year}"
+
+            # Execute the SQL insert query
+            con.execute(insert_query)
+
+        # Log the creation of the new table
+        duckdbLogger.info(f"Created table {yearly_table_name} for year {year} with data from all regions")
+
+        # Append the new table name to the list
+        yearly_table_names.append(yearly_table_name)
+        
+    # Log the completion of the function
+    duckdbLogger.info("Successfully created all yearly tables with data from all regions")
+
+    return yearly_table_names
+
+
 
 
 def query_database(con, query, year=None):
@@ -376,7 +421,7 @@ def rename_table_column(con, table_name, old_col_name, new_col_name):
     
     con.execute(query)
 
-def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
+def age_pop_by_sex(con: duckdb.DuckDBPyConnection, year_table_name, config, year: int):
     """"Uses SQL to get the data for three sex groups and drops the sex column.
 
     Args:
@@ -384,6 +429,10 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
         table_name: The name of the table which corresponds to one year of data
         year: An integer representing the year to query.
     """
+    
+    age_lst = config["age_lst"]
+    
+    
     # Generate a unique name for the temporary table
     # table_name = f"temp_{uuid.uuid4().hex}"
 
@@ -393,19 +442,23 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
 
     # Construct the SQL query for the males sex group
     male_query = f"""
-        SELECT OA11CD, Age, LAD11CD, Population_{year}
-        FROM {table_name}
+        SELECT OA11CD, {", ".join(age_lst)}  
+        FROM {year_table_name}
         WHERE Sex = 1;"""
 
     # Construct the SQL query for the females sex group
     female_query = f"""
-        SELECT OA11CD, Age, LAD11CD, Population_{year}
-        FROM {table_name}
+        SELECT OA11CD, {", ".join(age_lst)}  
+        FROM {year_table_name}
         WHERE Sex = 2;"""
+        
     # Construct the SQL query for both sex groups
+    age_sum = ", ".join(f"SUM({age}) AS {age}" for age in age_lst)
+
     persons_query = f"""
-        SELECT OA11CD, Age, LAD11CD, Population_{year}
-        FROM {table_name};"""
+        SELECT OA11CD, LAD11CD, {age_sum}  
+        FROM {year_table_name}
+        GROUP BY OA11CD, LAD11CD;"""
 
     # Get a dataframe for sex == 1
     duckdbLogger.info("Executing query for males table")
@@ -423,10 +476,7 @@ def age_pop_by_sex(con: duckdb.DuckDBPyConnection, table_name, year: int):
     return male_table, female_table, persons_table
 
 
-    # Get combined sexes dataframe
-    persons_table = query_database(con, persons_query)
-    
-    return male_table, female_table, persons_table
+
 
 
 
@@ -499,44 +549,36 @@ def main():
     con = create_connection(db_file_path)
 
     # Run query to load all the csv data in one go and create the table
-    table_name = load_all_wbs(con=con, 
+    table_name_list = load_all_wbs(con=con, 
                                xls_folder=input_folder, 
-                               output_table_name="all_pop_estimates",
                                cloud_or_local="cloud",
                                secrets=secrets,
                                bucket=bucket)
 
+    yearly_table_names = create_yearly_tables_all_regions(con, table_name_list)
+    
+    year_table_name = yearly_table_names[10]
 
-    # For each of those years, load the data for all regions into a temp table
-    # and return the name of the temp table
-    temp_table_names = []
-    duckdbLogger.info("Starting to load data for each year into a temp table")
-    for year in years:
-        duckdbLogger.info(f"Extracting data for year {year}")
+    year = 2011
 
-        table_year = query_database(f"""SELECT * FROM {table_name}
-                     WHERE year={year};""")
+    duckdbLogger.info(f"Starting the process for year {year} and table {year_table_name}")
 
-        ### TODO: We want to extract the year in the year column in output_table_name here!
+    ### TODO: We want to extract the year in the year column in output_table_name here!
 
-        # Get the three sex disaggregated tables
-        persons_table, male_table, female_table = age_pop_by_sex(con, table_year, year)
+    # Get the three sex disaggregated tables
+    persons_table, male_table, female_table = age_pop_by_sex(con, year_table_name, config=config, year=year)
 
-        # Pack names and tables into a dictionary
-        all_three_tables = {"persons": persons_table, "males": male_table, "females": female_table}
+    # Pack names and tables into a dictionary
+    all_three_tables = {"persons": persons_table, "males": male_table, "females": female_table}
             
-        # Create the folder for the year, and return its path
-        output_folder = create_output_folder(year)
+    # Create the folder for the year, and return its path
+    output_folder = create_output_folder(year)
 
-        # Write out the pivoted tables as CSV files
-        # write_table_to_csv(con, all_three_tables,
-        #                    output_folder=output_folder,
-        #                    year=year)
-        
-        write_table_to_xlsx(con = con,
-                        table_dict = all_three_tables,
-                        output_folder = output_folder,
-                        year=year)
+    # Write the tables to xlsx files        
+    write_table_to_xlsx(con = con,
+                    table_dict = all_three_tables,
+                    output_folder = output_folder,
+                    year=year)
     
     # drop the all pop estimates table so it can be run again
     con.execute(f"""DROP TABLE all_pop_estimates;""")
